@@ -159,8 +159,8 @@ RectTransform:
   m_Father: {fileID: 1098732044}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.15, y: 0.4}
-  m_AnchorMax: {x: 0.85, y: 0.6}
+  m_AnchorMin: {x: 0.2, y: 0.45}
+  m_AnchorMax: {x: 0.8, y: 0.55}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.34, y: 0.5}
@@ -284,9 +284,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   privacyManagerTab: 0
   accountId: 22
-  propertyId: 7639
-  propertyName: tcfv2.mobile.webview
-  pmId: 122058
+  propertyId: 10589
+  propertyName: http://sid-multi-campaign.com
+  pmId: 404472
   authID: 
 --- !u!1 &519420028
 GameObject:
@@ -601,7 +601,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

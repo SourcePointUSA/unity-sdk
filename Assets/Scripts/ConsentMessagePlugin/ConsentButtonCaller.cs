@@ -8,11 +8,11 @@ public class ConsentButtonCaller : MonoBehaviour
     [SerializeField]
     int accountId = 22;
     [SerializeField]
-    int propertyId = 7639;
+    int propertyId = 10589;
     [SerializeField]
-    string propertyName = "tcfv2.mobile.webview";
+    string propertyName = "http://sid-multi-campaign.com";
     [SerializeField]
-    string pmId = "122058";
+    string pmId = "404472";
     [SerializeField]
     string authID = null;
 
