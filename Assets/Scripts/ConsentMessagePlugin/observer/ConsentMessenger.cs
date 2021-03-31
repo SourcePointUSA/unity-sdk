@@ -1,0 +1,50 @@
+﻿using System;
+using UnityEngine;
+
+namespace GdprConsentLib
+{
+    public static class ConsentMessenger
+    { 
+        public static void AddListener<T>(GameObject go) where T : IConsentEventHandler
+        {
+            BroadcastReceivers.RegisterBroadcastReceiver<T>(go);
+        }
+
+        public static void RemoveListener<T>(GameObject go) where T : IConsentEventHandler
+        {
+            BroadcastReceivers.UnregisterBroadcastReceiver<T>(go);
+        }
+
+        public static void Broadcast<T>(params object[] list) where T : IConsentEventHandler
+        {
+            Util.LogWarning("T == " + typeof(T).Name);
+            switch (typeof(T).Name)
+            {
+                //case IOnConsentMessageReady messReady: break; //TODO
+                case nameof(IOnConsentReadyEventHandler):
+                    Util.Log("consentReady");
+                    SpConsents consents = (SpConsents)list[0];
+                    BroadcastExecuteEvents.Execute<IOnConsentReadyEventHandler>(null, (i, d) => i.OnConsentReady(consents));
+                    break;
+                case nameof(IOnConsentActionEventHandler):
+                    Util.Log("actionReady");
+                    CONSENT_ACTION_TYPE actionType = (CONSENT_ACTION_TYPE)list[0];
+                    BroadcastExecuteEvents.Execute<IOnConsentActionEventHandler>(null, (i, d) => i.OnConsentAction(actionType));
+                    break;
+                case nameof(IOnConsentErrorEventHandler):
+                    Util.Log("error");
+                    Exception exception= (Exception)list[0];
+                    BroadcastExecuteEvents.Execute<IOnConsentErrorEventHandler>(null, (i, d) => i.OnConsentError(exception));
+                    break;
+                case nameof(IOnConsentUIReadyEventHandler):
+                    Util.Log("uiReady");
+                    BroadcastExecuteEvents.Execute<IOnConsentUIReadyEventHandler>(null, (i,d) => i.OnConsentUIReady());
+                    break;
+                case nameof(IOnConsentUIFinishedEventHandler):
+                    Util.Log("uiFinished");
+                    BroadcastExecuteEvents.Execute<IOnConsentUIFinishedEventHandler>(null, (i,d) => i.OnConsentUIFinished());
+                    break;
+            }   
+        }
+    }
+}
