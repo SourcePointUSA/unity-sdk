@@ -5,7 +5,7 @@ Your plug &amp; play CMP for Unity
 
 Take a note that right now SDK is working with Android OS only. We will add other platforms in the nearest future!
 
-To instantiate & trigger Consent Message Web View you must call static function `ConsentWrapperV6.Instance.CallConsentAAR` along with accountId, propertyId, propertyName, pmId and privacyManagerTab.
+To instantiate & trigger Consent Message Web View you must call function `ConsentWrapperV6.Instance.CallConsentAAR` along with accountId, propertyId, propertyName, pmId and privacyManagerTab.
 ```
   ConsentWrapperV6.Instance.CallConsentAAR(22,                              //accountId
                                            10589,                           //propertyId
