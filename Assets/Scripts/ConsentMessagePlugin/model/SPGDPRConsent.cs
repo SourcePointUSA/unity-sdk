@@ -2,11 +2,13 @@
 
 namespace GdprConsentLib
 {
+    [System.Serializable]
     public class SPGDPRConsent
     {
-        GDPRConsent consent;
-        bool applies = false;
+        public GDPRConsent consent;
+        public bool applies = false;
 
+        /*
         public SPGDPRConsent(AndroidJavaObject nativeSpGdpr)
         {
             Util.LogError("SPGDPRConsent constructor starts...");
@@ -28,5 +30,6 @@ namespace GdprConsentLib
             this.consent = consent;
             this.applies = applies;
         }
+        */
     }
 }

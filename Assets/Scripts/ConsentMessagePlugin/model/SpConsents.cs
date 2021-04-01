@@ -31,7 +31,7 @@ namespace GdprConsentLib
                 ccpa = value;
             }
         }
-
+        /*
         public SpConsents(AndroidJavaObject spConsents)
         {
             //this.nativeConsents = spConsents;
@@ -57,5 +57,6 @@ namespace GdprConsentLib
             this.gdpr = gdpr;
             this.ccpa = ccpa;
         }
+        */
     }
 }

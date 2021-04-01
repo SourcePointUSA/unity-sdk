@@ -2,11 +2,13 @@
 
 namespace GdprConsentLib
 {
+    [System.Serializable]
     public class SPCCPAConsent
     {
-        CCPAConsent consent;
-        bool applies = false;
+        public CCPAConsent consent;
+        public bool applies = false;
 
+        /*
         public SPCCPAConsent(AndroidJavaObject nativeSpCcpa)
         {
             bool applies = nativeSpCcpa.Call<bool>("getApplies");
@@ -24,5 +26,6 @@ namespace GdprConsentLib
             this.consent = consent;
             this.applies = applies;
         }
+        */
     }
 }

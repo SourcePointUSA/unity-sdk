@@ -4,18 +4,20 @@ using UnityEngine;
 
 namespace GdprConsentLib
 {
+    [System.Serializable]
     public class GDPRConsent
     {
         //TODO: investigate analogue of java.lang.List (List<object> ?)
-        IList /*List<object>*/ acceptedCategories;
-        IList acceptedVendors;
-        IList specialFeatures;
-        IList legIntCategories;
+        public IList /*List<object>*/ acceptedCategories;
+        public IList acceptedVendors;
+        public IList specialFeatures;
+        public IList legIntCategories;
         string euconsent;
         Dictionary<string, object> tcData;
         Dictionary<string, object> vendorsGrants;
         string /*JSONObject*/ thisContent;
 
+        /*
         public GDPRConsent(AndroidJavaObject nativeGdpr)
         {
             var cats = nativeGdpr.Call<IList>("getAcceptedCategories");
@@ -30,5 +32,6 @@ namespace GdprConsentLib
             this.thisContent = nativeGdpr.Call<AndroidJavaObject>("getThisContent").Call<string>("toString");
             Util.Log("thisContent -> " + thisContent);
         }
+        */
     }
 }
