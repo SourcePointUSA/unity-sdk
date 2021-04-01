@@ -284,8 +284,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   privacyManagerTab: 0
   accountId: 22
-  propertyId: 10589
-  propertyName: http://sid-multi-campaign.com
+  propertyId: 4082
+  propertyName: http://dan.multicampaign.com
   pmId: 404472
   authID: 
 --- !u!1 &519420028
