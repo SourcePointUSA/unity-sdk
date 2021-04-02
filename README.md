@@ -76,7 +76,7 @@ void Awake()
 * Every interface from `IConsentEventHandler` list should be registered as a listener separately. Only registered `gameobject`'s methods are invoked. The according methods (such as `OnConsentError` in this example) will be invoked automatically when event triggers!
 
 * Also you should unregister your listener when it becomes unnecessary due to garbage collection. `OnDestroy` is enough for our purposes:
-```
+```c#
 private void OnDestroy()
 {
     ConsentMessenger.RemoveListener<IOnConsentErrorEventHandler>(this.gameObject);
