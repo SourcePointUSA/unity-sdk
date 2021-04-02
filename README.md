@@ -64,7 +64,7 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentErrorEventHandler
     }
 }
 ```
-* Register your `gameobject` (which implements any `IOnConsentErrorEventHandler` interface obviously) as an event listener with `ConsentMessenger.AddListener` static method. It can be registered any time before you call the `CallConsentAAR` method (`Awake`, `Start` is enough, but you can adopt registration to your own logic)
+* Register your `gameobject` (which implements any `IConsentEventHandler` interface obviously) as an event listener with `ConsentMessenger.AddListener` static method. It can be registered any time before you call the `CallConsentAAR` method (`Awake`, `Start` is enough, but you can adopt registration to your own logic)
 ```c#
 void Awake()
 {
