@@ -6,7 +6,7 @@ Your plug &amp; play CMP for Unity
 Take a note that right now SDK is working with Android OS only. We will add other platforms in the nearest future!
 
 To instantiate & trigger Consent Message Web View you must call function `ConsentWrapperV6.Instance.CallConsentAAR` along with accountId, propertyId, propertyName, pmId and privacyManagerTab.
-```
+```c#
   ConsentWrapperV6.Instance.CallConsentAAR(22,                              //accountId
                                            10589,                           //propertyId
                                            "http://sid-multi-campaign.com", //propertyName
@@ -14,7 +14,7 @@ To instantiate & trigger Consent Message Web View you must call function `Consen
                                            PRIVACY_MANAGER_TAB.DEFAULT);    //privacyManagerTab
 ```
 If you want to use it with authID (this is an optional feature) you should call it like this:
-```
+```c#
   ConsentWrapperV6.Instance.CallConsentAAR(22,                              //accountId
                                            10589,                           //propertyId
                                            "http://sid-multi-campaign.com", //propertyName
@@ -25,7 +25,7 @@ If you want to use it with authID (this is an optional feature) you should call 
 SDK will construct the Web View which is ready to interact with and will show it to user.
 
 Once you did this, you may be interested in tracking progess and receiving updates of user interaction. We provide you such interfaces to do this:
-```
+```c#
 IOnConsentUIReadyEventHandler,    //Triggers when user web view ui is ready and about to show
 IOnConsentActionEventHandler,     //Triggers when user made an action, provides you instance of enum CONSENT_ACTION_TYPE
 IOnConsentErrorEventHandler,      //
@@ -34,7 +34,7 @@ IOnConsentReadyEventHandler       //
 ```
 
 General workflow:
-```
+```c#
 using GdprConsentLib;
 using System;
 using System.Collections;
