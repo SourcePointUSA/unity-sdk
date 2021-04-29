@@ -6,7 +6,7 @@ namespace GdprConsentLib
 {
     public class SpClientProxy : AndroidJavaProxy
     {
-        static readonly string NativeJavaInterfaceName = "com.sourcepoint.cmplibrary.SpClient";
+        static readonly string NativeJavaInterfaceName = "com.sourcepoint.cmplibrary.UnitySpClient";
 
         public SpClientProxy() : base(new AndroidJavaClass(NativeJavaInterfaceName)) { }
 
