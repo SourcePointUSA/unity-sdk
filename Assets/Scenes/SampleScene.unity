@@ -284,11 +284,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18afced539efb94ab9a409bcc8770c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  privacyManagerTab: 0
+  privacyManagerTab: 1
   accountId: 22
   propertyId: 4122
-  propertyName: http://carm.uw.con
-  pmId: 404472
+  propertyName: mobile.multicampaign.demo
+  pmId: 12595
   authID: 
 --- !u!114 &83923773
 MonoBehaviour:
