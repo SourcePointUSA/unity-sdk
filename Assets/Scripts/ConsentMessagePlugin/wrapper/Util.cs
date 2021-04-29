@@ -21,7 +21,7 @@ namespace GdprConsentLib
 
         public static void LogError(string message)
         {
-            if(enableLogging)
+            //if(enableLogging)
                 Debug.LogError(message);
         }
     }
