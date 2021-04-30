@@ -10,9 +10,6 @@ public partial class ConsentWrapperV6
 
     private AndroidJavaObject consentLib;
     AndroidJavaObject activity;
-    Dictionary<PRIVACY_MANAGER_TAB, string> privacyManagerTabToJavaEnumKey;
-    Dictionary<CAMPAIGN_ENV, string> campaignEnvToJavaEnumKey;
-    Dictionary<MESSAGE_LANGUAGE, string> messageLanguageToJavaKey;
     SpClientProxy spClient;
 
     private static ConsentWrapperV6 instance;
@@ -38,7 +35,6 @@ public partial class ConsentWrapperV6
         Util.Log("Activity is OK");
         spClient = new SpClientProxy();
         Util.Log("spClient is OK");
-        InitializeMapping();
     }
 
     public void CallConsentAAR(int accountId, int propertyId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab, string authID = null)
@@ -65,7 +61,7 @@ public partial class ConsentWrapperV6
         }
 #endif
     }
-
+    
     internal void CallShowView(AndroidJavaObject view)
     {
         consentLib.Call("showView", view);
@@ -85,7 +81,7 @@ public partial class ConsentWrapperV6
         AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
         Util.Log("SpConfig is OK");
         AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
-        msgLang.Set("value", messageLanguageToJavaKey[MESSAGE_LANGUAGE.ENGLISH]);
+        msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(MESSAGE_LANGUAGE.ENGLISH));
         Util.Log("MessageLanguage is OK");
         AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient, msgLang);
         Util.Log("consentLib is OK");
@@ -117,7 +113,7 @@ public partial class ConsentWrapperV6
     private AndroidJavaObject ConstructGDPRCampaign(/* CAMPAIGN_TYPE campaignType, */ CAMPAIGN_ENV environment)
     {
         AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
-        campaignEnv.Set("value", campaignEnvToJavaEnumKey[environment]);
+        campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
         Util.Log("campaignEnv is OK");
         AndroidJavaObject legislation = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
         AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", "location", "EU");
@@ -132,7 +128,7 @@ public partial class ConsentWrapperV6
     private AndroidJavaObject ConstructCCPACampaign(/* CAMPAIGN_TYPE campaignType, */ CAMPAIGN_ENV environment)
     {
         AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
-        campaignEnv.Set("value", campaignEnvToJavaEnumKey[environment]);
+        campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
         Util.Log("campaignEnv is OK");
         AndroidJavaObject legislation = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
         AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", "location", "EU");
@@ -147,7 +143,7 @@ public partial class ConsentWrapperV6
     private AndroidJavaObject ConstructPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
     {
         AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab");
-        privacyManagerTabK.Set("key", privacyManagerTabToJavaEnumKey[tab]);
+        privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
         Util.Log("PMTab is OK");
         return privacyManagerTabK;
     }
@@ -213,67 +209,6 @@ public partial class ConsentWrapperV6
         catch (Exception ex) { Util.LogError(ex.Message); }
         finally { Util.Log("loadMessage(authId: String) DONE"); }
     }
-
-    #region Mapper
-    private void InitializeMapping()
-    {
-        InitializePrivacyManagerTabMapping();
-        InitializeCampaignEnvMapping();
-        InitializeMessageLanguageMapping();
-    }
-
-    private void InitializeMessageLanguageMapping()
-    {
-        messageLanguageToJavaKey = new Dictionary<MESSAGE_LANGUAGE, string>();
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.BULGARIAN, MESSAGE_LANGUAGE_STRING_KEY.BULGARIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.CHINESE, MESSAGE_LANGUAGE_STRING_KEY.CHINESE);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.CROATIAN, MESSAGE_LANGUAGE_STRING_KEY.CROATIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.CZECH, MESSAGE_LANGUAGE_STRING_KEY.CZECH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.DANISH, MESSAGE_LANGUAGE_STRING_KEY.DANISH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.DUTCH, MESSAGE_LANGUAGE_STRING_KEY.DUTCH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.ENGLISH, MESSAGE_LANGUAGE_STRING_KEY.ENGLISH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.ESTONIAN, MESSAGE_LANGUAGE_STRING_KEY.ESTONIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.FINNISH, MESSAGE_LANGUAGE_STRING_KEY.FINNISH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.FRENCH, MESSAGE_LANGUAGE_STRING_KEY.FRENCH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.GAELIC, MESSAGE_LANGUAGE_STRING_KEY.GAELIC);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.GERMAN, MESSAGE_LANGUAGE_STRING_KEY.GERMAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.GREEK, MESSAGE_LANGUAGE_STRING_KEY.GREEK);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.HUNGARIAN, MESSAGE_LANGUAGE_STRING_KEY.HUNGARIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.ICELANDIC, MESSAGE_LANGUAGE_STRING_KEY.ICELANDIC);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.ITALIAN, MESSAGE_LANGUAGE_STRING_KEY.ITALIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.JAPANESE, MESSAGE_LANGUAGE_STRING_KEY.JAPANESE);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.LATVIAN, MESSAGE_LANGUAGE_STRING_KEY.LATVIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.LITHUANIAN, MESSAGE_LANGUAGE_STRING_KEY.LITHUANIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.NORWEGIAN, MESSAGE_LANGUAGE_STRING_KEY.NORWEGIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.POLISH, MESSAGE_LANGUAGE_STRING_KEY.POLISH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.PORTUGEESE, MESSAGE_LANGUAGE_STRING_KEY.PORTUGEESE);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.ROMANIAN, MESSAGE_LANGUAGE_STRING_KEY.ROMANIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.RUSSIAN, MESSAGE_LANGUAGE_STRING_KEY.RUSSIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SERBIAN_CYRILLIC, MESSAGE_LANGUAGE_STRING_KEY.SERBIAN_CYRILLIC);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SERBIAN_LATIN, MESSAGE_LANGUAGE_STRING_KEY.SERBIAN_LATIN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SLOVAKIAN, MESSAGE_LANGUAGE_STRING_KEY.SLOVAKIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SLOVENIAN, MESSAGE_LANGUAGE_STRING_KEY.SLOVENIAN);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SPANISH, MESSAGE_LANGUAGE_STRING_KEY.SPANISH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SWEDISH, MESSAGE_LANGUAGE_STRING_KEY.SWEDISH);
-        messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.TURKISH, MESSAGE_LANGUAGE_STRING_KEY.TURKISH);
-    }
-
-    private void InitializeCampaignEnvMapping()
-    {
-        campaignEnvToJavaEnumKey = new Dictionary<CAMPAIGN_ENV, string>();
-        campaignEnvToJavaEnumKey.Add(CAMPAIGN_ENV.PUBLIC, CAMPAIGN_ENV_STRING_KEY.PUBLIC);
-        campaignEnvToJavaEnumKey.Add(CAMPAIGN_ENV.STAGE, CAMPAIGN_ENV_STRING_KEY.STAGE);
-    }
-
-    private void InitializePrivacyManagerTabMapping()
-    {
-        privacyManagerTabToJavaEnumKey = new Dictionary<PRIVACY_MANAGER_TAB, string>();
-        privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.DEFAULT, PRIVACY_MANAGER_TAB_STRING_KEY.DEFAULT);
-        privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.PURPOSES, PRIVACY_MANAGER_TAB_STRING_KEY.PURPOSES);
-        privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.VENDORS, PRIVACY_MANAGER_TAB_STRING_KEY.VENDORS);
-        privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.FEATURES, PRIVACY_MANAGER_TAB_STRING_KEY.FEATURES);
-    }
-    #endregion
 
     #region Helper UnityUtils methods usage
     internal static AndroidJavaObject ConvertArrayToList(AndroidJavaObject[] array)
