@@ -288,7 +288,7 @@ MonoBehaviour:
   accountId: 22
   propertyId: 4122
   propertyName: mobile.multicampaign.demo
-  pmId: 12595
+  pmId: 13111
   authID: 
 --- !u!114 &83923773
 MonoBehaviour:
