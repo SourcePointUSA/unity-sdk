@@ -74,13 +74,13 @@ public partial class ConsentWrapperV6
         Util.Log("C# : View removal passed to Android's consent lib");
     }
 
-    private AndroidJavaObject ConsrtuctLib(int accountId, int propertyId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab/*, MESSAGE_LANGUAGE LANGUAGE*/)
+    private AndroidJavaObject ConsrtuctLib(int accountId, int propertyId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab/*, MESSAGE_LANGUAGE language*/)
     {
         AndroidJavaObject gdprCampaign = ConstructGDPRCampaign(CAMPAIGN_ENV.PUBLIC);
         AndroidJavaObject ccpaCampaign = ConstructCCPACampaign(CAMPAIGN_ENV.PUBLIC);
         AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
         Util.Log("SpConfig is OK");
-       
+        //AndroidJavaObject msgLang = ConstructMessageLanguage(language);
         AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient/*, msgLang*/);
         Util.Log("consentLib is OK");
         return lib;
