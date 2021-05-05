@@ -80,10 +80,8 @@ public partial class ConsentWrapperV6
         AndroidJavaObject ccpaCampaign = ConstructCCPACampaign(CAMPAIGN_ENV.PUBLIC);
         AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
         Util.Log("SpConfig is OK");
-        AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
-        msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(MESSAGE_LANGUAGE.ENGLISH));
-        Util.Log("MessageLanguage is OK");
-        AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient, msgLang);
+       
+        AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient/*, msgLang*/);
         Util.Log("consentLib is OK");
         return lib;
     }
@@ -165,6 +163,14 @@ public partial class ConsentWrapperV6
         }
         Util.Log("CampaignType is OK");
         return type;
+    }
+
+    private AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
+    {
+        AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
+        msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
+        Util.Log("MessageLanguage is OK");
+        return msgLang;
     }
 
     private void RunOnUiThread(Action action)
