@@ -35,24 +35,87 @@ public partial class ConsentWrapperV6
         Util.Log("Activity is OK");
         spClient = new SpClientProxy();
         Util.Log("spClient is OK");
+        //loadMessage()
     }
 
-    public void CallConsentAAR(int accountId, int propertyId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab, string authID = null)
+    public void InitializeLib(CAMPAIGN_TYPE campaignType,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, PRIVACY_MANAGER_TAB tab, MESSAGE_LANGUAGE language)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
         {
             try
             {
-                consentLib = ConsrtuctLib(accountId, propertyId, propertyName, pmId, tab);
+                AndroidJavaObject type = ConstructCampaignType(campaignType);
+                AndroidJavaObject campaign = ConstructCampaign(type/*, enviroment*/);
+                AndroidJavaObject privacyManagerTab = ConstructPrivacyManagerTab(tab);
+                AndroidJavaObject msgLang = ConstructMessageLanguage(language);
+                consentLib = ConsrtuctLib(campaign,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
+                //if (string.IsNullOrEmpty(authID))
+                //{
+                //    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type,*/ campaignType); });
+                //}
+                //else
+                //{
+                //    //TODO: check InvokeLoadMessageWithAuthID
+                //    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
+                //}
+            }
+            catch (Exception e)
+            {
+                Util.LogError(e.Message);
+            }
+        }
+#endif
+    }
+
+    public void LoadMessage(CAMPAIGN_TYPE campaignType, string authID = null)
+    {
+#if UNITY_ANDROID
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            try
+            {
                 if (string.IsNullOrEmpty(authID))
                 {
-                    RunOnUiThread(delegate { InvokeLoadMessage(pmId, tab); });
+                    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type,*/ campaignType); });
                 }
                 else
                 {
-                    RunOnUiThread( delegate { InvokeLoadMessageWithAuthID(authID); });
+                    //TODO: check InvokeLoadMessageWithAuthID
+                    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
                 }
+            }
+            catch (Exception e)
+            {
+                Util.LogError(e.Message);
+            }
+        }
+#endif
+    }
+
+    public void CallConsentAAR(CAMPAIGN_TYPE campaignType,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab, MESSAGE_LANGUAGE language)
+    {
+#if UNITY_ANDROID
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            try
+            {
+                AndroidJavaObject type = ConstructCampaignType(campaignType);
+                AndroidJavaObject privacyManagerTab = ConstructPrivacyManagerTab(tab);
+                RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
+
+                //AndroidJavaObject campaign = ConstructCampaign(type/*, enviroment*/);
+                //AndroidJavaObject msgLang = ConstructMessageLanguage(language);
+                //consentLib = ConsrtuctLib(campaign,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
+                //if (string.IsNullOrEmpty(authID))
+                //{
+                //    RunOnUiThread(delegate { InvokeLoadMessage(pmId, privacyManagerTab, type, campaignType); });
+                //}
+                //else
+                //{
+                //    //TODO: check InvokeLoadMessageWithAuthID
+                //    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
+                //}
             }
             catch (Exception e)
             {
@@ -74,19 +137,21 @@ public partial class ConsentWrapperV6
         Util.Log("C# : View removal passed to Android's consent lib");
     }
 
-    private AndroidJavaObject ConsrtuctLib(int accountId, int propertyId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab/*, MESSAGE_LANGUAGE language*/)
+    private AndroidJavaObject ConsrtuctLib(AndroidJavaObject campaign,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, /*AndroidJavaObject privacyManagerTab,*/ AndroidJavaObject language)
     {
-        AndroidJavaObject gdprCampaign = ConstructGDPRCampaign(CAMPAIGN_ENV.PUBLIC);
-        AndroidJavaObject ccpaCampaign = ConstructCCPACampaign(CAMPAIGN_ENV.PUBLIC);
-        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
-        Util.Log("SpConfig is OK");
-        //AndroidJavaObject msgLang = ConstructMessageLanguage(language);
+        //AndroidJavaObject gdprCampaign = ConstructGDPRCampaign(enviroment);
+        //AndroidJavaObject ccpaCampaign = ConstructCCPACampaign(enviroment);
+        //AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
+
+        //AndroidJavaObject campaign = ConstructCampaign(campaignType/*, enviroment*/);
+        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, /*privacyManagerTab,*/ language, new AndroidJavaObject[] { campaign });
+
         AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient/*, msgLang*/);
         Util.Log("consentLib is OK");
         return lib;
     }
 
-    private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, AndroidJavaObject[] spCampaigns)
+    private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName,/* AndroidJavaObject privacyManagerTab,*/ AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
     {
         AndroidJavaObject spConfig;
         using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
@@ -95,19 +160,148 @@ public partial class ConsentWrapperV6
             Util.Log("addAccountId is OK");
             SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPropertyName", propertyName);
             Util.Log("addPropertyName is OK");
+            //SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPrivacyManagerTab", privacyManagerTab);
+            //Util.Log("addPrivacyManagerTab is OK");       
+            SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageLanguage", language);
+            Util.Log("addMessageLanguage is OK");
 
             foreach (AndroidJavaObject camp in spCampaigns)
             {
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", camp);
+                //SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", ConstructCampaignType(CAMPAIGN_TYPE.GDPR));
+                //SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", ConstructCampaignType(CAMPAIGN_TYPE.CCPA));
                 Util.Log("addCampaign is OK");
             }
 
             spConfig = SpConfigDataBuilderClass.Call<AndroidJavaObject>("build");
             Util.Log("build() is OK");
         }
+        Util.Log("SpConfig is OK");
         return spConfig;
     }
+    
+    private AndroidJavaObject ConstructPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
+    {
+        AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab");
+        privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
+        Util.Log("PMTab is OK");
+        return privacyManagerTabK;
+    }
 
+    private AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType/*, CAMPAIGN_ENV campaignEnvironment*/)
+    {
+        //AndroidJavaObject env = ConstructCampaignEnv(campaignEnvironment);
+        AndroidJavaObject param = ConstructTargetingParam("location", "EU");
+        AndroidJavaObject paramList = ConvertArrayToList(new AndroidJavaObject[] { param });
+        AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, /*campaignEnv,*/ paramList);
+        Util.Log($"Campaign {campaignType} is OK");
+        return campaign;
+    }
+
+    private AndroidJavaObject ConstructCampaignType(CAMPAIGN_TYPE campaignType)
+    {
+        AndroidJavaObject type = null;
+        switch (campaignType)
+        {
+            case CAMPAIGN_TYPE.GDPR:
+                type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, 0);
+                break;
+            case CAMPAIGN_TYPE.CCPA:
+                type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, 0);
+                break;
+            default:
+                Util.LogError("CampaignType is NULL. How did you get there?");
+                break;
+        }
+        Util.Log($"CampaignType {campaignType} is OK");
+        return type;
+    }
+
+    private AndroidJavaObject ConstructTargetingParam(string key, string value)
+    {
+        AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", key, value);
+        Util.Log("TargetingParam is OK");
+        return targetingParam;
+    }
+
+    private AndroidJavaObject ConstructCampaignEnv(CAMPAIGN_ENV environment)
+    {
+        AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
+        campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
+        Util.Log("campaignEnv is OK");
+        return campaignEnv;
+    }
+
+    private AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
+    {
+        AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
+        msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
+        Util.Log("MessageLanguage is OK");
+        return msgLang;
+    }
+
+    private void RunOnUiThread(Action action)
+    {
+        Util.Log(">>>STARTING RUNNABLE ON UI THREAD!");
+        activity.Call("runOnUiThread", new AndroidJavaRunnable(action));
+    }
+
+    private void InvokeLoadMessage(/*string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType,*/ CAMPAIGN_TYPE campaignTypeForLog)
+    {
+        Util.Log("InvokeLoadMessage() STARTING...");
+        try
+        {
+            consentLib.Call("loadMessage");
+            //var pmTab = ConstructPrivacyManagerTab(tab);
+            //var legitGDPR = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
+            //var legitCCPA = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
+
+
+            //consentLib.Call("loadPrivacyManager", "13111", pmTab, legitGDPR);
+            //Util.Log("loadPrivacyManager() with GDPR is OK...");
+
+            //if one by one >>> Oh no, an error! java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidResponseWebMessageException: Error trying to build the gdpr body to send consents.
+            //java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidRequestException: {"err":"Localstate does not have CCPA attribute."}
+
+            //consentLib.Call("loadPrivacyManager", "14967", pmTab, legitCCPA);
+            //Util.Log("loadPrivacyManager() with CCPA is OK...");
+
+
+            Util.Log($"loadMessage() with {campaignTypeForLog} is OK...");
+        }
+        catch (Exception ex) { Util.LogError(ex.Message); }
+        finally { Util.Log($"InvokeLoadMessage() with {campaignTypeForLog} DONE"); }
+    }
+
+    private void InvokeLoadPrivacyManager(string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType, CAMPAIGN_TYPE campaignTypeForLog)
+    {
+        Util.Log("InvokeLoadPrivacyManager() STARTING...");
+        try
+        {
+            consentLib.Call("loadPrivacyManager", pmId, tab, campaignType);
+            //var pmTab = ConstructPrivacyManagerTab(tab);
+            //var legitGDPR = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
+            //var legitCCPA = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
+
+            //consentLib.Call("loadPrivacyManager", pmId, tab, campaignType);
+
+            //consentLib.Call("loadPrivacyManager", "13111", pmTab, legitGDPR);
+            //Util.Log("loadPrivacyManager() with GDPR is OK...");
+
+            //if one by one >>> Oh no, an error! java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidResponseWebMessageException: Error trying to build the gdpr body to send consents.
+            //java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidRequestException: {"err":"Localstate does not have CCPA attribute."}
+
+            //consentLib.Call("loadPrivacyManager", "14967", pmTab, legitCCPA);
+            //Util.Log("loadPrivacyManager() with CCPA is OK...");
+
+
+            Util.Log($"loadPrivacyManager() with {campaignTypeForLog} is OK...");
+        }
+        catch (Exception ex) { Util.LogError(ex.Message); }
+        finally { Util.Log($"InvokeLoadPrivacyManager() with {campaignTypeForLog} DONE"); }
+    }
+
+    #region OLD
     private AndroidJavaObject ConstructGDPRCampaign(/* CAMPAIGN_TYPE campaignType, */ CAMPAIGN_ENV environment)
     {
         AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
@@ -137,49 +331,8 @@ public partial class ConsentWrapperV6
         Util.Log("CCPACampaign is OK");
         return ccpaCampaign;
     }
-    
-    private AndroidJavaObject ConstructPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
-    {
-        AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab");
-        privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
-        Util.Log("PMTab is OK");
-        return privacyManagerTabK;
-    }
 
-    private AndroidJavaObject ConstructCampaignType(CAMPAIGN_TYPE campaignType)
-    {
-        AndroidJavaObject type = null;
-        switch (campaignType)
-        {
-            case CAMPAIGN_TYPE.GDPR:
-                type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, 0);
-                break;
-            case CAMPAIGN_TYPE.CCPA:
-                type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, 0);
-                break;
-            default:
-                Util.LogError("CampaignType is NULL. How did you get there?");
-                break;
-        }
-        Util.Log("CampaignType is OK");
-        return type;
-    }
-
-    private AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
-    {
-        AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
-        msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
-        Util.Log("MessageLanguage is OK");
-        return msgLang;
-    }
-
-    private void RunOnUiThread(Action action)
-    {
-        Util.Log(">>>STARTING RUNNABLE ON UI THREAD!");
-        activity.Call("runOnUiThread", new AndroidJavaRunnable(action));
-    }
-
-    private void InvokeLoadMessage(string pmId, PRIVACY_MANAGER_TAB tab)
+    private void InvokeLoadMessageOld(string pmId, PRIVACY_MANAGER_TAB tab)
     {
         Util.Log("InvokeLoadMessage() STARTING...");
         try
@@ -203,8 +356,9 @@ public partial class ConsentWrapperV6
         }
         catch (Exception ex) { Util.LogError(ex.Message); }
         finally { Util.Log("InvokeLoadMessage() DONE"); }
-    } 
-    
+    }
+    #endregion
+
     private void InvokeLoadMessageWithAuthID(string authID)
     {
         Util.Log("loadMessage(authId: String) STARTING...");
