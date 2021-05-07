@@ -12,11 +12,14 @@ public class ConsentEventHandlerForTest : MonoBehaviour, IOnConsentUIReadyEventH
     
     void Awake()
     {
-        ConsentMessenger.AddListener<IOnConsentUIReadyEventHandler>(this.gameObject);
-        ConsentMessenger.AddListener<IOnConsentActionEventHandler>(this.gameObject);
-        ConsentMessenger.AddListener<IOnConsentErrorEventHandler>(this.gameObject);
-        ConsentMessenger.AddListener<IOnConsentUIFinishedEventHandler>(this.gameObject);
-        ConsentMessenger.AddListener<IOnConsentReadyEventHandler>(this.gameObject);
+        if (isEnabled)
+        {
+            ConsentMessenger.AddListener<IOnConsentUIReadyEventHandler>(this.gameObject);
+            ConsentMessenger.AddListener<IOnConsentActionEventHandler>(this.gameObject);
+            ConsentMessenger.AddListener<IOnConsentErrorEventHandler>(this.gameObject);
+            ConsentMessenger.AddListener<IOnConsentUIFinishedEventHandler>(this.gameObject);
+            ConsentMessenger.AddListener<IOnConsentReadyEventHandler>(this.gameObject);
+        }
     }
 
     public void OnConsentUIReady()
@@ -47,10 +50,13 @@ public class ConsentEventHandlerForTest : MonoBehaviour, IOnConsentUIReadyEventH
 
     private void OnDestroy()
     {
-        ConsentMessenger.RemoveListener<IOnConsentUIReadyEventHandler>(this.gameObject);
-        ConsentMessenger.RemoveListener<IOnConsentActionEventHandler>(this.gameObject);
-        ConsentMessenger.RemoveListener<IOnConsentErrorEventHandler>(this.gameObject);
-        ConsentMessenger.RemoveListener<IOnConsentUIFinishedEventHandler>(this.gameObject);
-        ConsentMessenger.RemoveListener<IOnConsentReadyEventHandler>(this.gameObject);
+        if (isEnabled)
+        {
+            ConsentMessenger.RemoveListener<IOnConsentUIReadyEventHandler>(this.gameObject);
+            ConsentMessenger.RemoveListener<IOnConsentActionEventHandler>(this.gameObject);
+            ConsentMessenger.RemoveListener<IOnConsentErrorEventHandler>(this.gameObject);
+            ConsentMessenger.RemoveListener<IOnConsentUIFinishedEventHandler>(this.gameObject);
+            ConsentMessenger.RemoveListener<IOnConsentReadyEventHandler>(this.gameObject);
+        }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GdprConsentLib
 {
-    enum CAMPAIGN_TYPE
+    public enum CAMPAIGN_TYPE
     {
         GDPR,
         CCPA,
