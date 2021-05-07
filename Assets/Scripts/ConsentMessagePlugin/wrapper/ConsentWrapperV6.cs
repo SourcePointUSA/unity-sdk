@@ -38,18 +38,28 @@ public partial class ConsentWrapperV6
         //loadMessage()
     }
 
-    public void InitializeLib(CAMPAIGN_TYPE campaignType,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, PRIVACY_MANAGER_TAB tab, MESSAGE_LANGUAGE language)
+    public void InitializeLib(List<CAMPAIGN_TYPE> spCampaigns,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, MESSAGE_LANGUAGE language)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
         {
             try
             {
-                AndroidJavaObject type = ConstructCampaignType(campaignType);
-                AndroidJavaObject campaign = ConstructCampaign(type/*, enviroment*/);
-                AndroidJavaObject privacyManagerTab = ConstructPrivacyManagerTab(tab);
                 AndroidJavaObject msgLang = ConstructMessageLanguage(language);
-                consentLib = ConsrtuctLib(campaign,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
+
+                AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
+                foreach (CAMPAIGN_TYPE type in spCampaigns)
+                {
+                    AndroidJavaObject typeAJO = ConstructCampaignType(type);
+                    AndroidJavaObject campaign = ConstructCampaign(typeAJO/*, enviroment*/);
+                    campaigns[spCampaigns.IndexOf(type)] = campaign;
+                }
+
+                consentLib = ConsrtuctLib(campaigns,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
+
+
+
+
                 //if (string.IsNullOrEmpty(authID))
                 //{
                 //    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type,*/ campaignType); });
@@ -68,7 +78,7 @@ public partial class ConsentWrapperV6
 #endif
     }
 
-    public void LoadMessage(CAMPAIGN_TYPE campaignType, string authID = null)
+    public void LoadMessage(string authID = null)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
@@ -77,7 +87,7 @@ public partial class ConsentWrapperV6
             {
                 if (string.IsNullOrEmpty(authID))
                 {
-                    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type,*/ campaignType); });
+                    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type, campaignType*/); });
                 }
                 else
                 {
@@ -93,7 +103,7 @@ public partial class ConsentWrapperV6
 #endif
     }
 
-    public void CallConsentAAR(CAMPAIGN_TYPE campaignType,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, string pmId, PRIVACY_MANAGER_TAB tab, MESSAGE_LANGUAGE language)
+    public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType,/* CAMPAIGN_ENV enviroment, int accountId, string propertyName,*/ string pmId, PRIVACY_MANAGER_TAB tab/*, MESSAGE_LANGUAGE language*/)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
@@ -124,7 +134,16 @@ public partial class ConsentWrapperV6
         }
 #endif
     }
-    
+
+    internal void Dispose()
+    {
+        if(consentLib!=null)
+        {
+            Util.Log("Disposing consentLib...");
+            consentLib.Call("dispose");
+        }
+    }
+
     internal void CallShowView(AndroidJavaObject view)
     {
         consentLib.Call("showView", view);
@@ -137,14 +156,14 @@ public partial class ConsentWrapperV6
         Util.Log("C# : View removal passed to Android's consent lib");
     }
 
-    private AndroidJavaObject ConsrtuctLib(AndroidJavaObject campaign,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, /*AndroidJavaObject privacyManagerTab,*/ AndroidJavaObject language)
+    private AndroidJavaObject ConsrtuctLib(AndroidJavaObject[] campaigns,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, /*AndroidJavaObject privacyManagerTab,*/ AndroidJavaObject language)
     {
         //AndroidJavaObject gdprCampaign = ConstructGDPRCampaign(enviroment);
         //AndroidJavaObject ccpaCampaign = ConstructCCPACampaign(enviroment);
         //AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
 
         //AndroidJavaObject campaign = ConstructCampaign(campaignType/*, enviroment*/);
-        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, /*privacyManagerTab,*/ language, new AndroidJavaObject[] { campaign });
+        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, /*privacyManagerTab,*/ language, campaigns);
 
         AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient/*, msgLang*/);
         Util.Log("consentLib is OK");
@@ -246,7 +265,7 @@ public partial class ConsentWrapperV6
         activity.Call("runOnUiThread", new AndroidJavaRunnable(action));
     }
 
-    private void InvokeLoadMessage(/*string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType,*/ CAMPAIGN_TYPE campaignTypeForLog)
+    private void InvokeLoadMessage(/*string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType,*/)
     {
         Util.Log("InvokeLoadMessage() STARTING...");
         try
@@ -255,7 +274,6 @@ public partial class ConsentWrapperV6
             //var pmTab = ConstructPrivacyManagerTab(tab);
             //var legitGDPR = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
             //var legitCCPA = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
-
 
             //consentLib.Call("loadPrivacyManager", "13111", pmTab, legitGDPR);
             //Util.Log("loadPrivacyManager() with GDPR is OK...");
@@ -267,10 +285,10 @@ public partial class ConsentWrapperV6
             //Util.Log("loadPrivacyManager() with CCPA is OK...");
 
 
-            Util.Log($"loadMessage() with {campaignTypeForLog} is OK...");
+            Util.Log($"loadMessage() is OK...");
         }
         catch (Exception ex) { Util.LogError(ex.Message); }
-        finally { Util.Log($"InvokeLoadMessage() with {campaignTypeForLog} DONE"); }
+        finally { Util.Log($"InvokeLoadMessage() DONE"); }
     }
 
     private void InvokeLoadPrivacyManager(string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType, CAMPAIGN_TYPE campaignTypeForLog)
