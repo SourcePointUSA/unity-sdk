@@ -46,7 +46,6 @@ public partial class ConsentWrapperV6
             try
             {
                 AndroidJavaObject msgLang = ConstructMessageLanguage(language);
-
                 AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
                 foreach (CAMPAIGN_TYPE type in spCampaigns)
                 {
@@ -54,21 +53,7 @@ public partial class ConsentWrapperV6
                     AndroidJavaObject campaign = ConstructCampaign(typeAJO/*, enviroment*/);
                     campaigns[spCampaigns.IndexOf(type)] = campaign;
                 }
-
                 consentLib = ConsrtuctLib(campaigns,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
-
-
-
-
-                //if (string.IsNullOrEmpty(authID))
-                //{
-                //    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type,*/ campaignType); });
-                //}
-                //else
-                //{
-                //    //TODO: check InvokeLoadMessageWithAuthID
-                //    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
-                //}
             }
             catch (Exception e)
             {
@@ -113,19 +98,6 @@ public partial class ConsentWrapperV6
                 AndroidJavaObject type = ConstructCampaignType(campaignType);
                 AndroidJavaObject privacyManagerTab = ConstructPrivacyManagerTab(tab);
                 RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
-
-                //AndroidJavaObject campaign = ConstructCampaign(type/*, enviroment*/);
-                //AndroidJavaObject msgLang = ConstructMessageLanguage(language);
-                //consentLib = ConsrtuctLib(campaign,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
-                //if (string.IsNullOrEmpty(authID))
-                //{
-                //    RunOnUiThread(delegate { InvokeLoadMessage(pmId, privacyManagerTab, type, campaignType); });
-                //}
-                //else
-                //{
-                //    //TODO: check InvokeLoadMessageWithAuthID
-                //    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
-                //}
             }
             catch (Exception e)
             {
