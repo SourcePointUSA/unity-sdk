@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class ConsentWrapperV6
+public class ConsentWrapperV6
 {
-    static readonly string androidPluginName = "com.sourcepoint.cmplibrary.creation.FactoryKt";
-    AndroidJavaClass pluginBuilderClass;
-
     private AndroidJavaObject consentLib;
     AndroidJavaObject activity;
     SpClientProxy spClient;
+
+    AndroidJavaConstruct constructor;
 
     private static ConsentWrapperV6 instance;
     public static ConsentWrapperV6 Instance
@@ -32,12 +31,12 @@ public partial class ConsentWrapperV6
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
         {
-            pluginBuilderClass = new AndroidJavaClass(androidPluginName);
-            Util.Log("plugin class is OK");
-            activity = GetActivity();
+            activity = AndroidJavaConstruct.GetActivity();
             Util.Log("Activity is OK");
             spClient = new SpClientProxy();
             Util.Log("spClient is OK");
+            this.constructor = new AndroidJavaConstruct();
+            Util.Log("AndroidJavaConstruct obj is OK");
         }
 #endif
     }
@@ -49,15 +48,15 @@ public partial class ConsentWrapperV6
         {
             try
             {
-                AndroidJavaObject msgLang = ConstructMessageLanguage(language);
+                AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
                 AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
                 foreach (CAMPAIGN_TYPE type in spCampaigns)
                 {
-                    AndroidJavaObject typeAJO = ConstructCampaignType(type);
-                    AndroidJavaObject campaign = ConstructCampaign(typeAJO);
+                    AndroidJavaObject typeAJO = constructor.ConstructCampaignType(type);
+                    AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO);
                     campaigns[spCampaigns.IndexOf(type)] = campaign;
                 }
-                consentLib = ConsrtuctLib(campaigns, accountId, propertyName, msgLang);
+                consentLib = constructor.ConsrtuctLib(campaigns, accountId, propertyName, msgLang, this.activity, this.spClient);
             }
             catch (Exception e)
             {
@@ -99,8 +98,8 @@ public partial class ConsentWrapperV6
         {
             try
             {
-                AndroidJavaObject type = ConstructCampaignType(campaignType);
-                AndroidJavaObject privacyManagerTab = ConstructPrivacyManagerTab(tab);
+                AndroidJavaObject type = constructor.ConstructCampaignType(campaignType);
+                AndroidJavaObject privacyManagerTab = constructor.ConstructPrivacyManagerTab(tab);
                 RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
             }
             catch (Exception e)
@@ -115,6 +114,7 @@ public partial class ConsentWrapperV6
     {
         if(consentLib!=null)
         {
+            constructor.Dispose();
             Util.Log("Disposing consentLib...");
             consentLib.Call("dispose");
         }
@@ -130,98 +130,6 @@ public partial class ConsentWrapperV6
     {
         consentLib.Call("removeView", view);
         Util.Log("C# : View removal passed to Android's consent lib");
-    }
-
-    private AndroidJavaObject ConsrtuctLib(AndroidJavaObject[] campaigns, int accountId, string propertyName, AndroidJavaObject language)
-    {
-        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, language, campaigns);
-        AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient);
-        Util.Log("consentLib is OK");
-        return lib;
-    }
-
-    private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
-    {
-        AndroidJavaObject spConfig;
-        using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
-        {
-            SpConfigDataBuilderClass.Call<AndroidJavaObject>("addAccountId", accountId);
-            Util.Log("addAccountId is OK");
-            SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPropertyName", propertyName);
-            Util.Log("addPropertyName is OK");
-            SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageLanguage", language);
-            Util.Log("addMessageLanguage is OK");
-
-            foreach (AndroidJavaObject camp in spCampaigns)
-            {
-                SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", camp);
-                Util.Log("addCampaign is OK");
-            }
-
-            spConfig = SpConfigDataBuilderClass.Call<AndroidJavaObject>("build");
-            Util.Log("build() is OK");
-        }
-        Util.Log("SpConfig is OK");
-        return spConfig;
-    }
-    
-    private AndroidJavaObject ConstructPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
-    {
-        AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab");
-        privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
-        Util.Log("PMTab is OK");
-        return privacyManagerTabK;
-    }
-
-    private AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType)
-    {
-        AndroidJavaObject param = ConstructTargetingParam("location", "EU");
-        AndroidJavaObject paramList = ConvertArrayToList(new AndroidJavaObject[] { param });
-        AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, paramList);
-        Util.Log($"Campaign {campaignType} is OK");
-        return campaign;
-    }
-
-    private AndroidJavaObject ConstructCampaignType(CAMPAIGN_TYPE campaignType)
-    {
-        AndroidJavaObject type = null;
-        switch (campaignType)
-        {
-            case CAMPAIGN_TYPE.GDPR:
-                type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, 0);
-                break;
-            case CAMPAIGN_TYPE.CCPA:
-                type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, 0);
-                break;
-            default:
-                Util.LogError("CampaignType is NULL. How did you get there?");
-                break;
-        }
-        Util.Log($"CampaignType {campaignType} is OK");
-        return type;
-    }
-
-    private AndroidJavaObject ConstructTargetingParam(string key, string value)
-    {
-        AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", key, value);
-        Util.Log("TargetingParam is OK");
-        return targetingParam;
-    }
-
-    private AndroidJavaObject ConstructCampaignEnv(CAMPAIGN_ENV environment)
-    {
-        AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
-        campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
-        Util.Log("campaignEnv is OK");
-        return campaignEnv;
-    }
-
-    private AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
-    {
-        AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
-        msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
-        Util.Log("MessageLanguage is OK");
-        return msgLang;
     }
 
     private void RunOnUiThread(Action action)
@@ -264,36 +172,4 @@ public partial class ConsentWrapperV6
         catch (Exception ex) { Util.LogError(ex.Message); }
         finally { Util.Log("loadMessage(authId: String) DONE"); }
     }
-
-    #region Helper UnityUtils methods usage
-    internal static AndroidJavaObject ConvertArrayToList(AndroidJavaObject[] array)
-    {
-        AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils");
-        Util.Log("C# : passing Array to List conversion to Android's UnityUtils...");
-        AndroidJavaObject list = UnityUtils.CallStatic<AndroidJavaObject>("targetingParamArrayToList", new AndroidJavaObject[][] { array });
-        return list;
-    }
-
-    internal static Exception ConvertThrowableToError(AndroidJavaObject rawErr)
-    {
-        AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils");
-        try
-        {
-            Util.Log("C# : passing Throwable to Exception conversion to Android's UnityUtils...");
-            UnityUtils.CallStatic("throwableToException", rawErr);
-        }
-        catch (AndroidJavaException exception)
-        {
-            return exception;
-        }
-        return new NotImplementedException();
-    }
-
-    private AndroidJavaObject GetActivity()
-    {
-        AndroidJavaClass javaUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        AndroidJavaObject activity = javaUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        return activity;
-    }
-    #endregion
 }

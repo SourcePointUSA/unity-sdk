@@ -55,7 +55,7 @@ namespace GdprConsentLib
         void onError(AndroidJavaObject rawThrowableObject)
         {
             Util.Log("I've reached the C# onError : " + rawThrowableObject.ToString());
-            Exception exception = ConsentWrapperV6.ConvertThrowableToError(rawThrowableObject);
+            Exception exception = UnityUtils.ConvertThrowableToError(rawThrowableObject);
             Util.Log("Exception converted successfully : " + exception.ToString());
             ConsentMessenger.Broadcast<IOnConsentErrorEventHandler>(exception);
         }
