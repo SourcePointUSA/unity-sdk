@@ -29,16 +29,20 @@ public partial class ConsentWrapperV6
 
     ConsentWrapperV6()
     {
-        pluginBuilderClass = new AndroidJavaClass(androidPluginName);
-        Util.Log("plugin class is OK");
-        activity = GetActivity();
-        Util.Log("Activity is OK");
-        spClient = new SpClientProxy();
-        Util.Log("spClient is OK");
-        //loadMessage()
+#if UNITY_ANDROID
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            pluginBuilderClass = new AndroidJavaClass(androidPluginName);
+            Util.Log("plugin class is OK");
+            activity = GetActivity();
+            Util.Log("Activity is OK");
+            spClient = new SpClientProxy();
+            Util.Log("spClient is OK");
+        }
+#endif
     }
 
-    public void InitializeLib(List<CAMPAIGN_TYPE> spCampaigns,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, MESSAGE_LANGUAGE language)
+    public void InitializeLib(List<CAMPAIGN_TYPE> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
@@ -50,10 +54,10 @@ public partial class ConsentWrapperV6
                 foreach (CAMPAIGN_TYPE type in spCampaigns)
                 {
                     AndroidJavaObject typeAJO = ConstructCampaignType(type);
-                    AndroidJavaObject campaign = ConstructCampaign(typeAJO/*, enviroment*/);
+                    AndroidJavaObject campaign = ConstructCampaign(typeAJO);
                     campaigns[spCampaigns.IndexOf(type)] = campaign;
                 }
-                consentLib = ConsrtuctLib(campaigns,/* enviroment,*/ accountId, propertyName, /*privacyManagerTab,*/ msgLang);
+                consentLib = ConsrtuctLib(campaigns, accountId, propertyName, msgLang);
             }
             catch (Exception e)
             {
@@ -72,7 +76,7 @@ public partial class ConsentWrapperV6
             {
                 if (string.IsNullOrEmpty(authID))
                 {
-                    RunOnUiThread(delegate { InvokeLoadMessage(/*pmId, privacyManagerTab, type, campaignType*/); });
+                    RunOnUiThread(delegate { InvokeLoadMessage(); });
                 }
                 else
                 {
@@ -88,7 +92,7 @@ public partial class ConsentWrapperV6
 #endif
     }
 
-    public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType,/* CAMPAIGN_ENV enviroment, int accountId, string propertyName,*/ string pmId, PRIVACY_MANAGER_TAB tab/*, MESSAGE_LANGUAGE language*/)
+    public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
@@ -128,21 +132,15 @@ public partial class ConsentWrapperV6
         Util.Log("C# : View removal passed to Android's consent lib");
     }
 
-    private AndroidJavaObject ConsrtuctLib(AndroidJavaObject[] campaigns,/* CAMPAIGN_ENV enviroment,*/ int accountId, string propertyName, /*AndroidJavaObject privacyManagerTab,*/ AndroidJavaObject language)
+    private AndroidJavaObject ConsrtuctLib(AndroidJavaObject[] campaigns, int accountId, string propertyName, AndroidJavaObject language)
     {
-        //AndroidJavaObject gdprCampaign = ConstructGDPRCampaign(enviroment);
-        //AndroidJavaObject ccpaCampaign = ConstructCCPACampaign(enviroment);
-        //AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, new AndroidJavaObject[] { gdprCampaign, ccpaCampaign });
-
-        //AndroidJavaObject campaign = ConstructCampaign(campaignType/*, enviroment*/);
-        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, /*privacyManagerTab,*/ language, campaigns);
-
-        AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient/*, msgLang*/);
+        AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, language, campaigns);
+        AndroidJavaObject lib = pluginBuilderClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient);
         Util.Log("consentLib is OK");
         return lib;
     }
 
-    private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName,/* AndroidJavaObject privacyManagerTab,*/ AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
+    private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
     {
         AndroidJavaObject spConfig;
         using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
@@ -151,16 +149,12 @@ public partial class ConsentWrapperV6
             Util.Log("addAccountId is OK");
             SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPropertyName", propertyName);
             Util.Log("addPropertyName is OK");
-            //SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPrivacyManagerTab", privacyManagerTab);
-            //Util.Log("addPrivacyManagerTab is OK");       
             SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageLanguage", language);
             Util.Log("addMessageLanguage is OK");
 
             foreach (AndroidJavaObject camp in spCampaigns)
             {
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", camp);
-                //SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", ConstructCampaignType(CAMPAIGN_TYPE.GDPR));
-                //SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", ConstructCampaignType(CAMPAIGN_TYPE.CCPA));
                 Util.Log("addCampaign is OK");
             }
 
@@ -179,12 +173,11 @@ public partial class ConsentWrapperV6
         return privacyManagerTabK;
     }
 
-    private AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType/*, CAMPAIGN_ENV campaignEnvironment*/)
+    private AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType)
     {
-        //AndroidJavaObject env = ConstructCampaignEnv(campaignEnvironment);
         AndroidJavaObject param = ConstructTargetingParam("location", "EU");
         AndroidJavaObject paramList = ConvertArrayToList(new AndroidJavaObject[] { param });
-        AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, /*campaignEnv,*/ paramList);
+        AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, paramList);
         Util.Log($"Campaign {campaignType} is OK");
         return campaign;
     }
@@ -237,26 +230,12 @@ public partial class ConsentWrapperV6
         activity.Call("runOnUiThread", new AndroidJavaRunnable(action));
     }
 
-    private void InvokeLoadMessage(/*string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType,*/)
+    private void InvokeLoadMessage()
     {
         Util.Log("InvokeLoadMessage() STARTING...");
         try
         {
             consentLib.Call("loadMessage");
-            //var pmTab = ConstructPrivacyManagerTab(tab);
-            //var legitGDPR = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
-            //var legitCCPA = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
-
-            //consentLib.Call("loadPrivacyManager", "13111", pmTab, legitGDPR);
-            //Util.Log("loadPrivacyManager() with GDPR is OK...");
-
-            //if one by one >>> Oh no, an error! java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidResponseWebMessageException: Error trying to build the gdpr body to send consents.
-            //java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidRequestException: {"err":"Localstate does not have CCPA attribute."}
-
-            //consentLib.Call("loadPrivacyManager", "14967", pmTab, legitCCPA);
-            //Util.Log("loadPrivacyManager() with CCPA is OK...");
-
-
             Util.Log($"loadMessage() is OK...");
         }
         catch (Exception ex) { Util.LogError(ex.Message); }
@@ -269,85 +248,11 @@ public partial class ConsentWrapperV6
         try
         {
             consentLib.Call("loadPrivacyManager", pmId, tab, campaignType);
-            //var pmTab = ConstructPrivacyManagerTab(tab);
-            //var legitGDPR = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
-            //var legitCCPA = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
-
-            //consentLib.Call("loadPrivacyManager", pmId, tab, campaignType);
-
-            //consentLib.Call("loadPrivacyManager", "13111", pmTab, legitGDPR);
-            //Util.Log("loadPrivacyManager() with GDPR is OK...");
-
-            //if one by one >>> Oh no, an error! java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidResponseWebMessageException: Error trying to build the gdpr body to send consents.
-            //java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidRequestException: {"err":"Localstate does not have CCPA attribute."}
-
-            //consentLib.Call("loadPrivacyManager", "14967", pmTab, legitCCPA);
-            //Util.Log("loadPrivacyManager() with CCPA is OK...");
-
-
             Util.Log($"loadPrivacyManager() with {campaignTypeForLog} is OK...");
         }
         catch (Exception ex) { Util.LogError(ex.Message); }
         finally { Util.Log($"InvokeLoadPrivacyManager() with {campaignTypeForLog} DONE"); }
     }
-
-    #region OLD
-    private AndroidJavaObject ConstructGDPRCampaign(/* CAMPAIGN_TYPE campaignType, */ CAMPAIGN_ENV environment)
-    {
-        AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
-        campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
-        Util.Log("campaignEnv is OK");
-        AndroidJavaObject legislation = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
-        AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", "location", "EU");
-        Util.Log("TargetingParam is OK");
-        AndroidJavaObject[] arr = new AndroidJavaObject[] { targetingParam };
-        AndroidJavaObject list = ConvertArrayToList(arr);
-        AndroidJavaObject gdprCampaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", legislation, /*campaignEnv,*/ list);
-        Util.Log("GDPRCampaign is OK");
-        return gdprCampaign;
-    }
-
-    private AndroidJavaObject ConstructCCPACampaign(/* CAMPAIGN_TYPE campaignType, */ CAMPAIGN_ENV environment)
-    {
-        AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
-        campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
-        Util.Log("campaignEnv is OK");
-        AndroidJavaObject legislation = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
-        AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", "location", "EU");
-        Util.Log("TargetingParam is OK");
-        AndroidJavaObject[] arr = new AndroidJavaObject[] { targetingParam };
-        AndroidJavaObject list = ConvertArrayToList(arr);
-        AndroidJavaObject ccpaCampaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", legislation, /*campaignEnv,*/ list);
-        Util.Log("CCPACampaign is OK");
-        return ccpaCampaign;
-    }
-
-    private void InvokeLoadMessageOld(string pmId, PRIVACY_MANAGER_TAB tab)
-    {
-        Util.Log("InvokeLoadMessage() STARTING...");
-        try
-        {
-            var pmTab = ConstructPrivacyManagerTab(tab);
-            var legitGDPR = ConstructCampaignType(CAMPAIGN_TYPE.GDPR);
-            var legitCCPA = ConstructCampaignType(CAMPAIGN_TYPE.CCPA);
-            //consentLib.Call("loadPrivacyManager", pmId, pmTab, legitGDPR);
-
-            consentLib.Call("loadPrivacyManager", "13111", pmTab, legitGDPR);
-            Util.Log("loadPrivacyManager() with GDPR is OK...");
-
-            //if one by one >>> Oh no, an error! java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidResponseWebMessageException: Error trying to build the gdpr body to send consents.
-            //java.lang.Exception: com.sourcepoint.cmplibrary.exception.InvalidRequestException: {"err":"Localstate does not have CCPA attribute."}
-
-            consentLib.Call("loadPrivacyManager", "14967", pmTab, legitCCPA);
-            Util.Log("loadPrivacyManager() with CCPA is OK...");
-
-            consentLib.Call("loadMessage");
-            Util.Log("loadMessage() is OK...");
-        }
-        catch (Exception ex) { Util.LogError(ex.Message); }
-        finally { Util.Log("InvokeLoadMessage() DONE"); }
-    }
-    #endregion
 
     private void InvokeLoadMessageWithAuthID(string authID)
     {
