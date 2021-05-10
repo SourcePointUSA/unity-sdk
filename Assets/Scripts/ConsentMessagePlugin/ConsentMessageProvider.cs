@@ -17,6 +17,7 @@ public class ConsentMessageProvider : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
         ConsentWrapperV6.Instance.InitializeLib(this.allCampaignTypesToLoad,
                                                 this.accountId,
                                                 this.propertyName,
