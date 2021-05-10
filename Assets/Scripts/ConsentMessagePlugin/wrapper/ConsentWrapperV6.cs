@@ -117,6 +117,7 @@ public class ConsentWrapperV6
             constructor.Dispose();
             Util.Log("Disposing consentLib...");
             consentLib.Call("dispose");
+            Util.Log("Disposing consentLib successfully done");
         }
     }
 
