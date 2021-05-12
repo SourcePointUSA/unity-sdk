@@ -1,11 +1,21 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GdprConsentLib
 {
     public static class Util 
     {
-        internal static readonly bool enableLogging = false;
+        private static readonly bool enableLogging = false;
+        private static readonly bool enableDebugging = false;
+
+        static Util()
+        {
+            EnableGarbageCollectorDebugging();
+        }
+
+        public static void EnableGarbageCollectorDebugging()
+        {
+            AndroidJNIHelper.debug = enableDebugging;
+        }
 
         public static void Log(string message)
         {
