@@ -9,8 +9,8 @@ namespace GdprConsentLib
         {
             using (AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils"))
             {
-                Util.Log("C# : passing Array to List conversion to Android's UnityUtils...");
-                AndroidJavaObject list = UnityUtils.CallStatic<AndroidJavaObject>("targetingParamArrayToList", new AndroidJavaObject[][] { array });
+                DebugUtil.Log("C# : passing Array to List conversion to Android's UnityUtils...");
+                AndroidJavaObject list = UnityUtils.CallStatic<AndroidJavaObject>("arrayToList", new AndroidJavaObject[][] { array });
                 return list;
             }
         }
@@ -21,7 +21,7 @@ namespace GdprConsentLib
             {
                 try
                 {
-                    Util.Log("C# : passing Throwable to Exception conversion to Android's UnityUtils...");
+                    DebugUtil.Log("C# : passing Throwable to Exception conversion to Android's UnityUtils...");
                     UnityUtils.CallStatic("throwableToException", rawErr);
                 }
                 catch (AndroidJavaException exception)
@@ -29,6 +29,22 @@ namespace GdprConsentLib
                     return exception;
                 }
                 return new NotImplementedException();
+            }
+        }
+
+        internal static void CallCustomConsentGDPR(AndroidJavaObject spConsentLib, string[] vendors, string[] categories, string[] legIntCategories, UnityCustomConsentGDPRProxy successCallback)
+        {
+            using (AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils"))
+            {
+                try
+                {
+                    DebugUtil.Log("C# : passing call of customConsentGDPR Android's UnityUtils...");
+                    UnityUtils.CallStatic("callCustomConsentGDPR", spConsentLib, vendors, categories, legIntCategories, successCallback);
+                }
+                catch (AndroidJavaException exception)
+                {
+                    DebugUtil.LogError(exception.Message);
+                }
             }
         }
     }

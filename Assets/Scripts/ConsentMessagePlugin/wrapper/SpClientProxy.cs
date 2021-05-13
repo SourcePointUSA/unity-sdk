@@ -15,7 +15,7 @@ namespace GdprConsentLib
          */
         void onUIReady(AndroidJavaObject view)
         {
-            Util.Log("I've reached the C# onUIReady");
+            DebugUtil.Log("I've reached the C# onUIReady");
             ConsentWrapperV6.Instance.CallShowView(view);
             ConsentMessenger.Broadcast<IOnConsentUIReadyEventHandler>();
         }
@@ -25,7 +25,7 @@ namespace GdprConsentLib
          */
         void onUIFinished(AndroidJavaObject view)
         {
-            Util.Log("I've reached the C# onUIFinished");
+            DebugUtil.Log("I've reached the C# onUIFinished");
             ConsentWrapperV6.Instance.CallRemoveView(view);
             ConsentMessenger.Broadcast<IOnConsentUIFinishedEventHandler>();
         }
@@ -33,13 +33,13 @@ namespace GdprConsentLib
         void onAction(AndroidJavaObject view, AndroidJavaObject actionType)
         {
             CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE)actionType.Call<int>("getCode");
-            Util.Log("I've reached the C# onAction: " + unwrappedType);
+            DebugUtil.Log("I've reached the C# onAction: " + unwrappedType);
             ConsentMessenger.Broadcast<IOnConsentActionEventHandler>(unwrappedType);
         }
 
         void onConsentReady(string spConsents) 
         {
-            Util.Log("I've reached the C# onConsentReady with json string: " + spConsents);
+            DebugUtil.Log("I've reached the C# onConsentReady with json string: " + spConsents);
             //SPCCPAConsent spCcpaConsent = JsonUtility.FromJson<SPCCPAConsent>(spConsents);
             //Util.LogError(">>>spCcpaConsent.applies "+spCcpaConsent.applies+ " , consent is... " + spCcpaConsent.consent);
             //if (spCcpaConsent.consent != null)
@@ -54,9 +54,9 @@ namespace GdprConsentLib
 
         void onError(AndroidJavaObject rawThrowableObject)
         {
-            Util.Log("I've reached the C# onError : " + rawThrowableObject.ToString());
+            DebugUtil.Log("I've reached the C# onError : " + rawThrowableObject.ToString());
             Exception exception = UnityUtils.ConvertThrowableToError(rawThrowableObject);
-            Util.Log("Exception converted successfully : " + exception.ToString());
+            DebugUtil.Log("Exception converted successfully : " + exception.ToString());
             ConsentMessenger.Broadcast<IOnConsentErrorEventHandler>(exception);
         }
 
@@ -80,7 +80,7 @@ namespace GdprConsentLib
          */
         void onMessageReady(AndroidJavaObject spMessage)//(message: SPMessage)
         {
-            Util.Log("I've reached the C# onMessageReady");
+            DebugUtil.Log("I've reached the C# onMessageReady");
             //TODO
             //ConsentMessenger.Broadcast<IOnConsentMessageReady>(unwrappedspMessage);
         }

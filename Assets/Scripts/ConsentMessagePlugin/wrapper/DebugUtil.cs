@@ -4,7 +4,7 @@ namespace GdprConsentLib
 {
     public static class DebugUtil 
     {
-        private static readonly bool enableLogging = true;
+        private static readonly bool enableLogging = false;
         private static readonly bool enableDebugging = false;
 
         static DebugUtil()

@@ -16,4 +16,12 @@ public class ConsentButtonCaller : MonoBehaviour
                                                      this.pmId,
                                                      this.privacyManagerTab);
     }
+
+    public void OnCustomConsentButtonClick()
+    {
+        ConsentWrapperV6.Instance.CustomConsentGDPR(new string[] { "5fbe6f050d88c7d28d765d47" },
+                                                    new string[] { "60657acc9c97c400122f21f3" },
+                                                    new string[] { },
+                                                    delegate (string spConsentsJson) { Debug.Log($"I am your callback! {spConsentsJson}"); });
+    }
 }
