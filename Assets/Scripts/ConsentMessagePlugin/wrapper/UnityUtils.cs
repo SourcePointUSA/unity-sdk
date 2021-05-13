@@ -5,9 +5,11 @@ namespace GdprConsentLib
 {
     public static class UnityUtils
     {
+        const string UnityUtilsPackageName = "com.sourcepoint.cmplibrary.unity3d.UnityUtils";
+
         internal static AndroidJavaObject ConvertArrayToList(AndroidJavaObject[] array)
         {
-            using (AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils"))
+            using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
             {
                 DebugUtil.Log("C# : passing Array to List conversion to Android's UnityUtils...");
                 AndroidJavaObject list = UnityUtils.CallStatic<AndroidJavaObject>("arrayToList", new AndroidJavaObject[][] { array });
@@ -17,7 +19,7 @@ namespace GdprConsentLib
 
         internal static Exception ConvertThrowableToError(AndroidJavaObject rawErr)
         {
-            using (AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils"))
+            using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
             {
                 try
                 {
@@ -34,7 +36,7 @@ namespace GdprConsentLib
 
         internal static void CallCustomConsentGDPR(AndroidJavaObject spConsentLib, string[] vendors, string[] categories, string[] legIntCategories, UnityCustomConsentGDPRProxy successCallback)
         {
-            using (AndroidJavaClass UnityUtils = new AndroidJavaClass("com.sourcepoint.cmplibrary.util.UnityUtils"))
+            using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
             {
                 try
                 {
