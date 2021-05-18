@@ -833,7 +833,7 @@ MonoBehaviour:
   allCampaignTypesToLoad: 0000000001000000
   language: 7
   accountId: 22
-  propertyName: sid-multi-campaign.com
+  propertyName: mobile.multicampaign.demo
   authID: 
 --- !u!1 &1248455012
 GameObject:
