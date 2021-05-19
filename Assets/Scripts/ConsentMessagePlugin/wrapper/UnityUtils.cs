@@ -34,7 +34,7 @@ namespace GdprConsentLib
             }
         }
 
-        internal static void CallCustomConsentGDPR(AndroidJavaObject spConsentLib, string[] vendors, string[] categories, string[] legIntCategories, UnityCustomConsentGDPRProxy successCallback)
+        internal static void CallCustomConsentGDPR(AndroidJavaObject spConsentLib, string[] vendors, string[] categories, string[] legIntCategories, CustomConsentClient successCallback)
         {
             using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
             {
