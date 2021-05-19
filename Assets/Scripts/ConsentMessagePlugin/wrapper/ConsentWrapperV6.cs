@@ -56,7 +56,14 @@ public class ConsentWrapperV6
                     AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO, type);
                     campaigns[spCampaigns.IndexOf(type)] = campaign;
                 }
-                consentLib = constructor.ConsrtuctLib(campaigns, accountId, propertyName, messageTimeout, msgLang, this.activity, this.spClient);
+                AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId:accountId, 
+                                                                           propertyName: propertyName,
+                                                                           messageTimeout: messageTimeout,
+                                                                           language: msgLang, 
+                                                                           spCampaigns: campaigns);
+                consentLib = constructor.ConsrtuctLib(spConfig: spConfig, 
+                                                      activity: this.activity,
+                                                      spClient: this.spClient);
             }
             catch (Exception e)
             {
