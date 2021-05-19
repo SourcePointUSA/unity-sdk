@@ -33,21 +33,5 @@ namespace GdprConsentLib
                 return new NotImplementedException();
             }
         }
-
-        internal static void CallCustomConsentGDPR(AndroidJavaObject spConsentLib, string[] vendors, string[] categories, string[] legIntCategories, CustomConsentClient successCallback)
-        {
-            using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
-            {
-                try
-                {
-                    DebugUtil.Log("C# : passing call of customConsentGDPR Android's UnityUtils...");
-                    UnityUtils.CallStatic("callCustomConsentGDPR", spConsentLib, vendors, categories, legIntCategories, successCallback);
-                }
-                catch (AndroidJavaException exception)
-                {
-                    DebugUtil.LogError(exception.Message);
-                }
-            }
-        }
     }
 }

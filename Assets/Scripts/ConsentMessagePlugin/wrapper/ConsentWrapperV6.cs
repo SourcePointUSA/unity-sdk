@@ -112,7 +112,7 @@ public class ConsentWrapperV6
 
     public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<string> onSuccessDelegate)
     {
-        UnityUtils.CallCustomConsentGDPR(consentLib, vendors, categories, legIntCategories, new CustomConsentClient(onSuccessDelegate));
+        consentLib.Call("customConsentGDPR", vendors, categories, legIntCategories, new CustomConsentClient(onSuccessDelegate));
     }
 
     internal void Dispose()
