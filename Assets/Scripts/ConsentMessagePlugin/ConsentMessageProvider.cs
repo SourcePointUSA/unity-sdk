@@ -13,6 +13,8 @@ public class ConsentMessageProvider : MonoBehaviour
     [SerializeField]
     string propertyName = "sid-multi-campaign.com";
     [SerializeField]
+    long messageTimeout = 3000;
+    [SerializeField]
     string authID = null;
 
     private void Awake()
@@ -21,7 +23,8 @@ public class ConsentMessageProvider : MonoBehaviour
         ConsentWrapperV6.Instance.InitializeLib(this.allCampaignTypesToLoad,
                                                 this.accountId,
                                                 this.propertyName,
-                                                this.language);
+                                                this.language,
+                                                this.messageTimeout);
     }
 
     private void OnApplicationPause(bool pause)

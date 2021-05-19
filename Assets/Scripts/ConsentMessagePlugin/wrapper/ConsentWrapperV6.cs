@@ -41,7 +41,7 @@ public class ConsentWrapperV6
 #endif
     }
 
-    public void InitializeLib(List<CAMPAIGN_TYPE> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language)
+    public void InitializeLib(List<CAMPAIGN_TYPE> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
@@ -56,7 +56,7 @@ public class ConsentWrapperV6
                     AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO, type);
                     campaigns[spCampaigns.IndexOf(type)] = campaign;
                 }
-                consentLib = constructor.ConsrtuctLib(campaigns, accountId, propertyName, msgLang, this.activity, this.spClient);
+                consentLib = constructor.ConsrtuctLib(campaigns, accountId, propertyName, messageTimeout, msgLang, this.activity, this.spClient);
             }
             catch (Exception e)
             {

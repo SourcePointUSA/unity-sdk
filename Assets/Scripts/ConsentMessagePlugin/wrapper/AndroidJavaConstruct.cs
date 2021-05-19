@@ -25,9 +25,9 @@ namespace GdprConsentLib
             return activity;
         }
 
-        internal AndroidJavaObject ConsrtuctLib(AndroidJavaObject[] campaigns, int accountId, string propertyName, AndroidJavaObject language, AndroidJavaObject activity, SpClientProxy spClient)
+        internal AndroidJavaObject ConsrtuctLib(AndroidJavaObject[] campaigns, int accountId, string propertyName, long messageTimeout, AndroidJavaObject language, AndroidJavaObject activity, SpClientProxy spClient)
         {
-            AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, language, campaigns);
+            AndroidJavaObject spConfig = ConstructSpConfig(accountId, propertyName, messageTimeout, language, campaigns);
             AndroidJavaObject lib = pluginFactoryClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient);
             DebugUtil.Log("consentLib is OK");
             return lib;
@@ -77,7 +77,7 @@ namespace GdprConsentLib
             return msgLang;
         }
         
-        private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
+        private AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, long messageTimeout, AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
         {
             AndroidJavaObject spConfig;
             using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
@@ -88,6 +88,8 @@ namespace GdprConsentLib
                 DebugUtil.Log("addPropertyName is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageLanguage", language);
                 DebugUtil.Log("addMessageLanguage is OK");
+                SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageTimeout", messageTimeout);
+                DebugUtil.Log("addMessageTimeout is OK");
 
                 foreach (AndroidJavaObject camp in spCampaigns)
                 {
