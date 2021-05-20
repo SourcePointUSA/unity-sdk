@@ -41,8 +41,8 @@ public class ConsentWrapperV6
 #endif
     }
 
-    public void InitializeLib(List<CAMPAIGN_TYPE> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout)
-    {
+    public void InitializeLib(List<SpCampaignScriptableObject> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout)
+    { 
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -50,11 +50,18 @@ public class ConsentWrapperV6
             {
                 AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
                 AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
-                foreach (CAMPAIGN_TYPE type in spCampaigns)
+                foreach (SpCampaignScriptableObject sp in spCampaigns)
                 {
-                    AndroidJavaObject typeAJO = constructor.ConstructCampaignType(type);
-                    AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO, type);
-                    campaigns[spCampaigns.IndexOf(type)] = campaign;
+                    AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.campaignTypeToLoad);
+                    AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.targetingParams.Count];
+                    foreach(TargetingParamScriptableObject tp in sp.targetingParams)
+                    {
+                        AndroidJavaObject param = constructor.ConstructTargetingParam(tp.key, tp.value);
+                        paramsArray[sp.targetingParams.IndexOf(tp)] = param;
+                    }
+                    AndroidJavaObject paramsList = UnityUtils.ConvertArrayToList(paramsArray);
+                    AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.campaignTypeToLoad);
+                    campaigns[spCampaigns.IndexOf(sp)] = campaign;
                 }
                 AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId:accountId, 
                                                                            propertyName: propertyName,

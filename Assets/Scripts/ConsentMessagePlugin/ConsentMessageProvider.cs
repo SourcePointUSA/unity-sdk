@@ -5,7 +5,7 @@ using UnityEngine;
 public class ConsentMessageProvider : MonoBehaviour
 {
     [SerializeField]
-    List<CAMPAIGN_TYPE> allCampaignTypesToLoad;
+    List<SpCampaignScriptableObject> allSpCampaignsToLoad;
     [SerializeField]
     MESSAGE_LANGUAGE language = MESSAGE_LANGUAGE.ENGLISH;
     [SerializeField]
@@ -20,7 +20,7 @@ public class ConsentMessageProvider : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        ConsentWrapperV6.Instance.InitializeLib(this.allCampaignTypesToLoad,
+        ConsentWrapperV6.Instance.InitializeLib(this.allSpCampaignsToLoad,
                                                 this.accountId,
                                                 this.propertyName,
                                                 this.language,

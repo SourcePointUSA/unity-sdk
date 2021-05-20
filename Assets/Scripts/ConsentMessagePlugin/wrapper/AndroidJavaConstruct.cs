@@ -40,11 +40,9 @@ namespace GdprConsentLib
             return privacyManagerTabK;
         }
 
-        internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, CAMPAIGN_TYPE campaignTypeForLog)
+        internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, AndroidJavaObject targetingParams, CAMPAIGN_TYPE campaignTypeForLog)
         {
-            AndroidJavaObject param = ConstructTargetingParam("location", "EU");
-            AndroidJavaObject paramList = UnityUtils.ConvertArrayToList(new AndroidJavaObject[] { param });
-            AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, paramList);
+            AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, targetingParams);
             DebugUtil.Log($"Campaign {campaignTypeForLog} is OK");
             return campaign;
         }
@@ -103,7 +101,7 @@ namespace GdprConsentLib
             return spConfig;
         }
 
-        private AndroidJavaObject ConstructTargetingParam(string key, string value)
+        internal AndroidJavaObject ConstructTargetingParam(string key, string value)
         {
             AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", key, value);
             DebugUtil.Log("TargetingParam is OK");
