@@ -830,9 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8425b133d022ba49baffbec5737312b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allSpCampaignsToLoad:
-  - {fileID: 11400000, guid: 22cf1dc4fc2a2e849a63a90edab1bc30, type: 2}
-  - {fileID: 11400000, guid: 1e0d1eccdf6949f49a9de6518af35df5, type: 2}
+  allCampaignTypesToLoad: 0000000001000000
   language: 7
   accountId: 22
   propertyName: mobile.multicampaign.demo

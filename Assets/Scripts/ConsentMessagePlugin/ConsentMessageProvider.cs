@@ -5,7 +5,7 @@ using UnityEngine;
 public class ConsentMessageProvider : MonoBehaviour
 {
     [SerializeField]
-    List<SpCampaignScriptableObject> allSpCampaignsToLoad;
+    List<CAMPAIGN_TYPE> allCampaignTypesToLoad;
     [SerializeField]
     MESSAGE_LANGUAGE language = MESSAGE_LANGUAGE.ENGLISH;
     [SerializeField]
@@ -20,11 +20,31 @@ public class ConsentMessageProvider : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        ConsentWrapperV6.Instance.InitializeLib(this.allSpCampaignsToLoad,
-                                                this.accountId,
-                                                this.propertyName,
-                                                this.language,
-                                                this.messageTimeout);
+        List<SpCampaign> spCampaigns = new List<SpCampaign>();
+        if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.GDPR))
+        {
+            List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
+            SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
+            spCampaigns.Add(gdpr);
+        }
+        if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.CCPA))
+        {
+            List<TargetingParam> ccpaParams = new List<TargetingParam> { new TargetingParam("location", "US") };
+            SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
+            spCampaigns.Add(ccpa);
+        }
+        if (spCampaigns.Count > 0)
+        {
+            ConsentWrapperV6.Instance.InitializeLib(spCampaigns,
+                                                    this.accountId,
+                                                    this.propertyName,
+                                                    this.language,
+                                                    this.messageTimeout);
+        }
+        else
+        {
+            throw new System.Exception("You should add at least one SpCampaign to use CMP!");
+        }
     }
 
     private void OnApplicationPause(bool pause)
