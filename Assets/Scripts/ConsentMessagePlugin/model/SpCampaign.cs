@@ -5,15 +5,6 @@ using UnityEngine;
 
 namespace GdprConsentLib
 {
-    [CreateAssetMenu(fileName = "SpCampaign", menuName = "new SpCampaign", order = 51)]
-    public class SpCampaignScriptableObject : ScriptableObject
-    {
-        [SerializeField]
-        public CAMPAIGN_TYPE campaignTypeToLoad;
-        [SerializeField]
-        public List<TargetingParamScriptableObject> targetingParams;
-    }
-
     public class SpCampaign
     {
         private CAMPAIGN_TYPE campaignType;
