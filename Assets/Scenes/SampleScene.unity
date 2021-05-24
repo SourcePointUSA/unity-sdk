@@ -1041,8 +1041,7 @@ GameObject:
   - component: {fileID: 2071415506}
   - component: {fileID: 2071415505}
   - component: {fileID: 2071415504}
-  - component: {fileID: 2071415503}
-  - component: {fileID: 2071415502}
+  - component: {fileID: 2071415501}
   m_Layer: 5
   m_Name: CustomConsentGDPR
   m_TagString: Untagged
@@ -1070,7 +1069,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -0.0000004628243, y: 0}
   m_Pivot: {x: 0.34, y: 0.5}
---- !u!114 &2071415502
+--- !u!114 &2071415501
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1079,25 +1078,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2071415499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b926ca1233ca91a45a653881a69d2d54, type: 3}
+  m_Script: {fileID: 11500000, guid: 711f586a99e47b742bfda723eb7a6f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEnabled: 1
---- !u!114 &2071415503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2071415499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e18afced539efb94ab9a409bcc8770c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  campaignType: 1
-  privacyManagerTab: 1
-  pmId: 
+  vendors:
+  - 5fbe6f050d88c7d28d765d47
+  categories:
+  - 60657acc9c97c400122f21f3
+  legIntCategories: []
 --- !u!114 &2071415504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1142,8 +1130,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2071415503}
-        m_TargetAssemblyTypeName: ConsentButtonCaller, Assembly-CSharp
+      - m_Target: {fileID: 2071415501}
+        m_TargetAssemblyTypeName: CustomConsentButtonCaller, Assembly-CSharp
         m_MethodName: OnCustomConsentButtonClick
         m_Mode: 1
         m_Arguments:
