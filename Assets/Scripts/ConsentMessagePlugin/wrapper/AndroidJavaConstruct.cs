@@ -34,7 +34,7 @@ namespace GdprConsentLib
 
         internal AndroidJavaObject ConstructPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
         {
-            AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab");
+            AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab), (int)tab);
             privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
             DebugUtil.Log("PMTab is OK");
             return privacyManagerTabK;
@@ -53,10 +53,10 @@ namespace GdprConsentLib
             switch (campaignType)
             {
                 case CAMPAIGN_TYPE.GDPR:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, 0);
+                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, (int)campaignType);
                     break;
                 case CAMPAIGN_TYPE.CCPA:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, 1);
+                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, (int)campaignType);
                     break;
                 default:
                     DebugUtil.LogError("CampaignType is NULL. How did you get there?");
@@ -68,7 +68,7 @@ namespace GdprConsentLib
 
         internal AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
         {
-            AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage");
+            AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang), (int)lang);
             msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
             DebugUtil.Log("MessageLanguage is OK");
             return msgLang;
@@ -110,7 +110,7 @@ namespace GdprConsentLib
 
         private AndroidJavaObject ConstructCampaignEnv(CAMPAIGN_ENV environment)
         {
-            AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv");
+            AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment), (int)environment);
             campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
             DebugUtil.Log("campaignEnv is OK");
             return campaignEnv;
