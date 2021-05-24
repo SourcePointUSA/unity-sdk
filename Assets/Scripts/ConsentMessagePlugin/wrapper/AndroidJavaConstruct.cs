@@ -56,7 +56,7 @@ namespace GdprConsentLib
                     type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, 0);
                     break;
                 case CAMPAIGN_TYPE.CCPA:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, 0);
+                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, 1);
                     break;
                 default:
                     DebugUtil.LogError("CampaignType is NULL. How did you get there?");
