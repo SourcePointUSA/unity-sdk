@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.EventSystems;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public interface IOnConsentErrorEventHandler : IConsentEventHandler
     {

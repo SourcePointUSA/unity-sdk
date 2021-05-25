@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public class SpClientProxy : AndroidJavaProxy
     {

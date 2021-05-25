@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     [System.Serializable]
     public class SPCCPAConsent

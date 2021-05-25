@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public static class CmpJavaToUnityUtils
     {

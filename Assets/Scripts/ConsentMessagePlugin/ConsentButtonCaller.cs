@@ -1,4 +1,4 @@
-using GdprConsentLib;
+using ConsentManagementProviderLib;
 using UnityEngine;
 
 public class ConsentButtonCaller : MonoBehaviour

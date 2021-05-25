@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public enum CONSENT_ACTION_TYPE 
     {

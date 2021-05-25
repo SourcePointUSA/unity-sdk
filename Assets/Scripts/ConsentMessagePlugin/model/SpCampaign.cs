@@ -1,9 +1,6 @@
-using GdprConsentLib;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public class SpCampaign
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     [System.Serializable]
     public class CCPAConsent

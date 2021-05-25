@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public class CustomConsentClient : AndroidJavaProxy
     {

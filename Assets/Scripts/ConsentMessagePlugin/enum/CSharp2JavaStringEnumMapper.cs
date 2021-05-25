@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     public static class CSharp2JavaStringEnumMapper
     {

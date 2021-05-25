@@ -1,4 +1,4 @@
-﻿namespace GdprConsentLib
+﻿namespace ConsentManagementProviderLib
 {
     public enum PRIVACY_MANAGER_TAB
     {

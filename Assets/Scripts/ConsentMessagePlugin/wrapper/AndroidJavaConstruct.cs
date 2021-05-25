@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GdprConsentLib
+namespace ConsentManagementProviderLib
 {
     internal class AndroidJavaConstruct 
     {
