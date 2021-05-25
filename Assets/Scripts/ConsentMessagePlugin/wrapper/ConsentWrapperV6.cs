@@ -93,7 +93,6 @@ public class ConsentWrapperV6
                 }
                 else
                 {
-                    //TODO: check InvokeLoadMessageWithAuthID
                     RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
                 }
             }
