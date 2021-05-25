@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GdprConsentLib
 {
-    public static class UnityUtils
+    public static class CmpJavaToUnityUtils
     {
         const string UnityUtilsPackageName = "com.sourcepoint.cmplibrary.unity3d.UnityUtils";
 

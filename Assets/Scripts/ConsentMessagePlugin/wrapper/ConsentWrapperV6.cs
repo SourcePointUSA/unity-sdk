@@ -59,7 +59,7 @@ public class ConsentWrapperV6
                         AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);
                         paramsArray[sp.TargetingParams.IndexOf(tp)] = param;
                     }
-                    AndroidJavaObject paramsList = UnityUtils.ConvertArrayToList(paramsArray);
+                    AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
                     AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
                     campaigns[spCampaigns.IndexOf(sp)] = campaign;
                 }
