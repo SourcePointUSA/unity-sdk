@@ -17,7 +17,7 @@ namespace GdprConsentLib
 
         public static void Broadcast<T>(params object[] list) where T : IConsentEventHandler
         {
-            DebugUtil.LogWarning("T == " + typeof(T).Name);
+            CmpDebugUtil.LogWarning("T == " + typeof(T).Name);
             switch (typeof(T).Name)
             {
                 //case IOnConsentMessageReady messReady: break; //TODO

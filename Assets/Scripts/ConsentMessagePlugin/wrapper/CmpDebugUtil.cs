@@ -2,12 +2,12 @@
 
 namespace GdprConsentLib
 {
-    public static class DebugUtil 
+    public static class CmpDebugUtil 
     {
         private static readonly bool enableLogging = false;
         private static readonly bool enableDebugging = false;
 
-        static DebugUtil()
+        static CmpDebugUtil()
         {
             EnableGarbageCollectorDebugging();
         }

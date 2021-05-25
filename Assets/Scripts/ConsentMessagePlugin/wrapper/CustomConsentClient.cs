@@ -16,7 +16,7 @@ namespace GdprConsentLib
 
         void transferCustomConsentToUnity(string spConsentsJson) //TODO: SPCustomConsents
         {
-            DebugUtil.Log("transferCustomConsentToUnitySide c#-side custom consent ->" + spConsentsJson.ToString());
+            CmpDebugUtil.Log("transferCustomConsentToUnitySide c#-side custom consent ->" + spConsentsJson.ToString());
             callback?.Invoke(spConsentsJson);
         }
     }

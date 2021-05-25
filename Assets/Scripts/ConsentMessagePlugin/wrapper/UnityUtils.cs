@@ -11,7 +11,7 @@ namespace GdprConsentLib
         {
             using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
             {
-                DebugUtil.Log("C# : passing Array to List conversion to Android's UnityUtils...");
+                CmpDebugUtil.Log("C# : passing Array to List conversion to Android's UnityUtils...");
                 AndroidJavaObject list = UnityUtils.CallStatic<AndroidJavaObject>("arrayToList", new AndroidJavaObject[][] { array });
                 return list;
             }
@@ -23,7 +23,7 @@ namespace GdprConsentLib
             {
                 try
                 {
-                    DebugUtil.Log("C# : passing Throwable to Exception conversion to Android's UnityUtils...");
+                    CmpDebugUtil.Log("C# : passing Throwable to Exception conversion to Android's UnityUtils...");
                     UnityUtils.CallStatic("throwableToException", rawErr);
                 }
                 catch (AndroidJavaException exception)

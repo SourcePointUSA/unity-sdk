@@ -7,7 +7,7 @@ public static class BroadcastExecuteEvents
     {
         var handlers = BroadcastReceivers.GetHandlersForEvent<T>();
         if (handlers == null) return;
-            DebugUtil.Log($"{typeof(T).Name} has {handlers.Count} invokable instances");
+        CmpDebugUtil.Log($"{typeof(T).Name} has {handlers.Count} invokable instances");
         foreach (var handler in handlers)
         {
             ExecuteEvents.Execute<T>(handler, eventData, functor);

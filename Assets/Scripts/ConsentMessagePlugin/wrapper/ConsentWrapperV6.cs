@@ -32,11 +32,11 @@ public class ConsentWrapperV6
         if (Application.platform == RuntimePlatform.Android)
         {
             activity = AndroidJavaConstruct.GetActivity();
-            DebugUtil.Log("Activity is OK");
+            CmpDebugUtil.Log("Activity is OK");
             spClient = new SpClientProxy();
-            DebugUtil.Log("spClient is OK");
+            CmpDebugUtil.Log("spClient is OK");
             this.constructor = new AndroidJavaConstruct();
-            DebugUtil.Log("AndroidJavaConstruct obj is OK");
+            CmpDebugUtil.Log("AndroidJavaConstruct obj is OK");
         }
 #endif
     }
@@ -74,7 +74,7 @@ public class ConsentWrapperV6
             }
             catch (Exception e)
             {
-                DebugUtil.LogError(e.Message);
+                CmpDebugUtil.LogError(e.Message);
             }
         }
 #endif
@@ -99,7 +99,7 @@ public class ConsentWrapperV6
             }
             catch (Exception e)
             {
-                DebugUtil.LogError(e.Message);
+                CmpDebugUtil.LogError(e.Message);
             }
         }
 #endif
@@ -118,7 +118,7 @@ public class ConsentWrapperV6
             }
             catch (Exception e)
             {
-                DebugUtil.LogError(e.Message);
+                CmpDebugUtil.LogError(e.Message);
             }
         }
 #endif
@@ -134,62 +134,62 @@ public class ConsentWrapperV6
         if(consentLib!=null)
         {
             constructor.Dispose();
-            DebugUtil.Log("Disposing consentLib...");
+            CmpDebugUtil.Log("Disposing consentLib...");
             consentLib.Call("dispose");
-            DebugUtil.Log("Disposing consentLib successfully done");
+            CmpDebugUtil.Log("Disposing consentLib successfully done");
         }
     }
 
     internal void CallShowView(AndroidJavaObject view)
     {
         consentLib.Call("showView", view);
-        DebugUtil.Log("C# : View showing passed to Android's consent lib");
+        CmpDebugUtil.Log("C# : View showing passed to Android's consent lib");
     }
 
     internal void CallRemoveView(AndroidJavaObject view)
     {
         consentLib.Call("removeView", view);
-        DebugUtil.Log("C# : View removal passed to Android's consent lib");
+        CmpDebugUtil.Log("C# : View removal passed to Android's consent lib");
     }
 
     private void RunOnUiThread(Action action)
     {
-        DebugUtil.Log(">>>STARTING RUNNABLE ON UI THREAD!");
+        CmpDebugUtil.Log(">>>STARTING RUNNABLE ON UI THREAD!");
         activity.Call("runOnUiThread", new AndroidJavaRunnable(action));
     }
 
     private void InvokeLoadMessage()
     {
-        DebugUtil.Log("InvokeLoadMessage() STARTING...");
+        CmpDebugUtil.Log("InvokeLoadMessage() STARTING...");
         try
         {
             consentLib.Call("loadMessage");
-            DebugUtil.Log($"loadMessage() is OK...");
+            CmpDebugUtil.Log($"loadMessage() is OK...");
         }
-        catch (Exception ex) { DebugUtil.LogError(ex.Message); }
-        finally { DebugUtil.Log($"InvokeLoadMessage() DONE"); }
+        catch (Exception ex) { CmpDebugUtil.LogError(ex.Message); }
+        finally { CmpDebugUtil.Log($"InvokeLoadMessage() DONE"); }
     }
 
     private void InvokeLoadPrivacyManager(string pmId, AndroidJavaObject tab, AndroidJavaObject campaignType, CAMPAIGN_TYPE campaignTypeForLog)
     {
-        DebugUtil.Log("InvokeLoadPrivacyManager() STARTING...");
+        CmpDebugUtil.Log("InvokeLoadPrivacyManager() STARTING...");
         try
         {
             consentLib.Call("loadPrivacyManager", pmId, tab, campaignType);
-            DebugUtil.Log($"loadPrivacyManager() with {campaignTypeForLog} is OK...");
+            CmpDebugUtil.Log($"loadPrivacyManager() with {campaignTypeForLog} is OK...");
         }
-        catch (Exception ex) { DebugUtil.LogError(ex.Message); }
-        finally { DebugUtil.Log($"InvokeLoadPrivacyManager() with {campaignTypeForLog} DONE"); }
+        catch (Exception ex) { CmpDebugUtil.LogError(ex.Message); }
+        finally { CmpDebugUtil.Log($"InvokeLoadPrivacyManager() with {campaignTypeForLog} DONE"); }
     }
 
     private void InvokeLoadMessageWithAuthID(string authID)
     {
-        DebugUtil.Log("loadMessage(authId: String) STARTING...");
+        CmpDebugUtil.Log("loadMessage(authId: String) STARTING...");
         try
         {
             consentLib.Call("loadMessage", authID);
         }
-        catch (Exception ex) { DebugUtil.LogError(ex.Message); }
-        finally { DebugUtil.Log("loadMessage(authId: String) DONE"); }
+        catch (Exception ex) { CmpDebugUtil.LogError(ex.Message); }
+        finally { CmpDebugUtil.Log("loadMessage(authId: String) DONE"); }
     }
 }

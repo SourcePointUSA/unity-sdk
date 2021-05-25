@@ -38,7 +38,7 @@ namespace GdprConsentLib
             }
             else
             {
-                DebugUtil.LogWarning($"{go.name} is not subscribed to handle {typeof(T)}");
+                CmpDebugUtil.LogWarning($"{go.name} is not subscribed to handle {typeof(T)}");
             }
         }
     }

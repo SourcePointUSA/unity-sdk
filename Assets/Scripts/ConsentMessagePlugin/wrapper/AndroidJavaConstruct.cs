@@ -13,7 +13,7 @@ namespace GdprConsentLib
             if (Application.platform == RuntimePlatform.Android)
             {
                 this.pluginFactoryClass = new AndroidJavaClass(androidPluginName);
-                DebugUtil.Log("plugin class is OK");
+                CmpDebugUtil.Log("plugin class is OK");
             }
 #endif
         }
@@ -28,7 +28,7 @@ namespace GdprConsentLib
         internal AndroidJavaObject ConsrtuctLib(AndroidJavaObject spConfig, AndroidJavaObject activity, SpClientProxy spClient)
         {
             AndroidJavaObject lib = pluginFactoryClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient);
-            DebugUtil.Log("consentLib is OK");
+            CmpDebugUtil.Log("consentLib is OK");
             return lib;
         }
 
@@ -36,14 +36,14 @@ namespace GdprConsentLib
         {
             AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab), (int)tab);
             privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
-            DebugUtil.Log("PMTab is OK");
+            CmpDebugUtil.Log("PMTab is OK");
             return privacyManagerTabK;
         }
 
         internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, AndroidJavaObject targetingParams, CAMPAIGN_TYPE campaignTypeForLog)
         {
             AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, targetingParams);
-            DebugUtil.Log($"Campaign {campaignTypeForLog} is OK");
+            CmpDebugUtil.Log($"Campaign {campaignTypeForLog} is OK");
             return campaign;
         }
 
@@ -59,10 +59,10 @@ namespace GdprConsentLib
                     type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, (int)campaignType);
                     break;
                 default:
-                    DebugUtil.LogError("CampaignType is NULL. How did you get there?");
+                    CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");
                     break;
             }
-            DebugUtil.Log($"CampaignType {campaignType} is OK");
+            CmpDebugUtil.Log($"CampaignType {campaignType} is OK");
             return type;
         }
 
@@ -70,7 +70,7 @@ namespace GdprConsentLib
         {
             AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang), (int)lang);
             msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
-            DebugUtil.Log("MessageLanguage is OK");
+            CmpDebugUtil.Log("MessageLanguage is OK");
             return msgLang;
         }
         
@@ -80,31 +80,31 @@ namespace GdprConsentLib
             using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
             {
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addAccountId", accountId);
-                DebugUtil.Log("addAccountId is OK");
+                CmpDebugUtil.Log("addAccountId is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPropertyName", propertyName);
-                DebugUtil.Log("addPropertyName is OK");
+                CmpDebugUtil.Log("addPropertyName is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageLanguage", language);
-                DebugUtil.Log("addMessageLanguage is OK");
+                CmpDebugUtil.Log("addMessageLanguage is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageTimeout", messageTimeout);
-                DebugUtil.Log("addMessageTimeout is OK");
+                CmpDebugUtil.Log("addMessageTimeout is OK");
 
                 foreach (AndroidJavaObject camp in spCampaigns)
                 {
                     SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", camp);
-                    DebugUtil.Log("addCampaign is OK");
+                    CmpDebugUtil.Log("addCampaign is OK");
                 }
 
                 spConfig = SpConfigDataBuilderClass.Call<AndroidJavaObject>("build");
-                DebugUtil.Log("build() is OK");
+                CmpDebugUtil.Log("build() is OK");
             }
-            DebugUtil.Log("SpConfig is OK");
+            CmpDebugUtil.Log("SpConfig is OK");
             return spConfig;
         }
 
         internal AndroidJavaObject ConstructTargetingParam(string key, string value)
         {
             AndroidJavaObject targetingParam = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.TargetingParam", key, value);
-            DebugUtil.Log("TargetingParam is OK");
+            CmpDebugUtil.Log("TargetingParam is OK");
             return targetingParam;
         }
 
@@ -112,7 +112,7 @@ namespace GdprConsentLib
         {
             AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment), (int)environment);
             campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
-            DebugUtil.Log("campaignEnv is OK");
+            CmpDebugUtil.Log("campaignEnv is OK");
             return campaignEnv;
         }
 
