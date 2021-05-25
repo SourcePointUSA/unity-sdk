@@ -1,5 +1,4 @@
-﻿using GdprConsentLib;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace GdprConsentLib
@@ -40,15 +39,6 @@ namespace GdprConsentLib
         void onConsentReady(string spConsents) 
         {
             DebugUtil.Log("I've reached the C# onConsentReady with json string: " + spConsents);
-            //SPCCPAConsent spCcpaConsent = JsonUtility.FromJson<SPCCPAConsent>(spConsents);
-            //Util.LogError(">>>spCcpaConsent.applies "+spCcpaConsent.applies+ " , consent is... " + spCcpaConsent.consent);
-            //if (spCcpaConsent.consent != null)
-            //{
-            //    Util.LogError(">>>spCcpaConsent.consent.status is... " + spCcpaConsent.consent.status);
-            //    Util.LogError(">>>spCcpaConsent.consent.uspstring is... " + spCcpaConsent.consent.uspstring);
-            //    Util.LogError(">>>spCcpaConsent.consent.rejectedVendors is... " + (spCcpaConsent.consent.rejectedVendors != null ? spCcpaConsent.consent.rejectedVendors.Count.ToString() : "NULL"));
-            //    Util.LogError(">>>spCcpaConsent.consent.rejectedCategories is... " + (spCcpaConsent.consent.rejectedCategories != null ? spCcpaConsent.consent.rejectedCategories.Count.ToString() : "NULL"));
-            //}
             ConsentMessenger.Broadcast<IOnConsentReadyEventHandler>(spConsents);
         }
 
@@ -63,16 +53,6 @@ namespace GdprConsentLib
         #region Not implemented or implemented partially
         void onConsentReady(AndroidJavaObject spConsents)
         {
-            //TODO:
-            //Util.Log("I've reached the C# onConsentReady");
-            //try
-            //{
-            //unwrappedSpConsent is c# object which takes java.lang.Object in constructor; constructor accesses java.lang.Object fields and set result to C# object 
-            //SpConsents unwrappedSpConsent = new SpConsents(spConsents);
-            //Util.LogError("Works!");
-            //ConsentMessenger.Broadcast<IOnConsentReadyEventHandler>(unwrappedSpConsent);
-            //}
-            //catch (Exception ex) { Util.LogError(ex.Message); }
         }
 
         /**
