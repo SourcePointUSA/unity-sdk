@@ -4,7 +4,7 @@ namespace GdprConsentLib
 {
     public static class CmpDebugUtil 
     {
-        private static bool enableLogging = true;
+        private static bool enableLogging = false;
         private static bool enableDebugging = false;
 
         static CmpDebugUtil()
