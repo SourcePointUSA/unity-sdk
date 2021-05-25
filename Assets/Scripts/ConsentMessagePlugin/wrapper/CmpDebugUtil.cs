@@ -4,17 +4,24 @@ namespace GdprConsentLib
 {
     public static class CmpDebugUtil 
     {
-        private static readonly bool enableLogging = false;
-        private static readonly bool enableDebugging = false;
+        private static bool enableLogging = true;
+        private static bool enableDebugging = false;
 
         static CmpDebugUtil()
         {
-            EnableGarbageCollectorDebugging();
+            EnableGarbageCollectorDebugging(enableDebugging);
+            EnableCmpLogs(enableLogging);
         }
 
-        public static void EnableGarbageCollectorDebugging()
+        public static void EnableCmpLogs(bool enable)
         {
-            AndroidJNIHelper.debug = enableDebugging;
+            enableLogging = enable;
+        }
+
+        public static void EnableGarbageCollectorDebugging(bool enable)
+        {
+            enableDebugging = enable;
+            AndroidJNIHelper.debug = enable;
         }
 
         public static void Log(string message)
