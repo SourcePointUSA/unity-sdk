@@ -1,16 +1,18 @@
-﻿using ConsentManagementProviderLib;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
 
-public static class BroadcastExecuteEvents
+namespace ConsentManagementProviderLib
 {
-    public static void Execute<T>(BaseEventData eventData, ExecuteEvents.EventFunction<T> functor) where T : IConsentEventHandler
+    public static class BroadcastExecuteEvents
     {
-        var handlers = BroadcastReceivers.GetHandlersForEvent<T>();
-        if (handlers == null) return;
-        CmpDebugUtil.Log($"{typeof(T).Name} has {handlers.Count} invokable instances");
-        foreach (var handler in handlers)
+        public static void Execute<T>(BaseEventData eventData, ExecuteEvents.EventFunction<T> functor) where T : IConsentEventHandler
         {
-            ExecuteEvents.Execute<T>(handler, eventData, functor);
+            var handlers = BroadcastReceivers.GetHandlersForEvent<T>();
+            if (handlers == null) return;
+            CmpDebugUtil.Log($"{typeof(T).Name} has {handlers.Count} invokable instances");
+            foreach (var handler in handlers)
+            {
+                ExecuteEvents.Execute<T>(handler, eventData, functor);
+            }
         }
     }
 }
