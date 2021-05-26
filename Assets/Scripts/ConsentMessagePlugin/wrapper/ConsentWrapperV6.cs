@@ -6,10 +6,11 @@ using UnityEngine;
 public class ConsentWrapperV6
 {
     private AndroidJavaObject consentLib;
-    AndroidJavaObject activity;
-    SpClientProxy spClient;
+    private AndroidJavaObject activity;
+    private SpClientProxy spClient;
 
-    AndroidJavaConstruct constructor;
+    private AndroidJavaConstruct constructor;
+    private GameObject mainThreadBroadcastEventsExecutor;
 
     private static ConsentWrapperV6 instance;
     public static ConsentWrapperV6 Instance
@@ -41,9 +42,20 @@ public class ConsentWrapperV6
 #endif
     }
 
+    private void CreateBroadcastExecutorGO()
+    {
+        if (mainThreadBroadcastEventsExecutor != null) return;
+        else
+        {
+            mainThreadBroadcastEventsExecutor = new GameObject();
+            mainThreadBroadcastEventsExecutor.AddComponent<BroadcastEventsExecutor>();
+        }
+    }
+
     public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout)
-    { 
+    {
 #if UNITY_ANDROID
+        CreateBroadcastExecutorGO();
         if (Application.platform == RuntimePlatform.Android)
         {
             try

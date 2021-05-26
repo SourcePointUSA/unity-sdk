@@ -24,21 +24,21 @@ namespace ConsentManagementProviderLib
                 case nameof(IOnConsentReadyEventHandler):
                     //SpConsents consents = (SpConsents)list[0];
                     string jsonConsents = (string)list[0];
-                    BroadcastExecuteEvents.Execute<IOnConsentReadyEventHandler>(null, (i, d) => i.OnConsentReady(jsonConsents));
+                    BroadcastEventDispatcher.Execute<IOnConsentReadyEventHandler>(null, (i, d) => i.OnConsentReady(jsonConsents));
                     break;
                 case nameof(IOnConsentActionEventHandler):
                     CONSENT_ACTION_TYPE actionType = (CONSENT_ACTION_TYPE)list[0];
-                    BroadcastExecuteEvents.Execute<IOnConsentActionEventHandler>(null, (i, d) => i.OnConsentAction(actionType));
+                    BroadcastEventDispatcher.Execute<IOnConsentActionEventHandler>(null, (i, d) => i.OnConsentAction(actionType));
                     break;
                 case nameof(IOnConsentErrorEventHandler):
                     Exception exception= (Exception)list[0];
-                    BroadcastExecuteEvents.Execute<IOnConsentErrorEventHandler>(null, (i, d) => i.OnConsentError(exception));
+                    BroadcastEventDispatcher.Execute<IOnConsentErrorEventHandler>(null, (i, d) => i.OnConsentError(exception));
                     break;
                 case nameof(IOnConsentUIReadyEventHandler):
-                    BroadcastExecuteEvents.Execute<IOnConsentUIReadyEventHandler>(null, (i,d) => i.OnConsentUIReady());
+                    BroadcastEventDispatcher.Execute<IOnConsentUIReadyEventHandler>(null, (i,d) => i.OnConsentUIReady());
                     break;
                 case nameof(IOnConsentUIFinishedEventHandler):
-                    BroadcastExecuteEvents.Execute<IOnConsentUIFinishedEventHandler>(null, (i,d) => i.OnConsentUIFinished());
+                    BroadcastEventDispatcher.Execute<IOnConsentUIFinishedEventHandler>(null, (i,d) => i.OnConsentUIFinished());
                     break;
             }   
         }
