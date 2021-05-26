@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   campaignType: 0
   privacyManagerTab: 1
-  pmId: 13111
+  pmId: 488393
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &759187202
 RectTransform:
   m_ObjectHideFlags: 0
@@ -773,7 +773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8425b133d022ba49baffbec5737312b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allCampaignTypesToLoad: 0000000001000000
+  allCampaignTypesToLoad: 00000000
   language: 7
   accountId: 22
   propertyName: mobile.multicampaign.demo
