@@ -1,36 +1,50 @@
-# Unity-sdk
+# Unity-SDK
 Your plug &amp; play CMP for Unity
 
 # Usage - Instantiate Consent UI
 
 Take a note that right now SDK is working with Android OS only. We will add other platforms in the nearest future!
 
-To instantiate & trigger Consent Message Web View you must call function `ConsentWrapperV6.Instance.CallConsentAAR` along with accountId, propertyId, propertyName, pmId and privacyManagerTab.
+First of all, you need to construct `List<SpCampaign>` which contains the SpCampaign objects which consist of `CAMPAIGN_TYPE` along with `TargetingParams` you need.
 ```c#
-ConsentWrapperV6.Instance.CallConsentAAR(22,                              //accountId
-                                         10589,                           //propertyId
-                                         "http://sid-multi-campaign.com", //propertyName
-                                         "404472",                        //pmId
-                                         PRIVACY_MANAGER_TAB.DEFAULT);    //privacyManagerTab
+List<SpCampaign> spCampaigns = new List<SpCampaign>();
+List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
+SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
+spCampaigns.Add(gdpr);
 ```
-If you want to use it with authID (this is an optional feature) you should call it like this:
-```c#
-ConsentWrapperV6.Instance.CallConsentAAR(22,                              //accountId
-                                         10589,                           //propertyId
-                                         "http://sid-multi-campaign.com", //propertyName
-                                         "404472",                        //pmId
-                                         PRIVACY_MANAGER_TAB.DEFAULT,     //privacyManagerTab
-                                         "Place_your_authID_here");       //authID
-```
-SDK will construct the Web View which is ready to interact with and will show it to user.
 
-`PRIVACY_MANAGER_TAB` it's the tab which is selected to be shown first:
+To instantiate & trigger Consent Message Web View you must call function `ConsentWrapperV6.Instance.InitializeLib` in `Awake` along with spCampaigns, accountId, propertyName and language. You can also specify `messageTimeout` if you want, by default it is set to 3000 **milliseconds**.
 ```c#
-DEFAULT, 
-PURPOSES,
-VENDORS,
-FEATURES
+ConsentWrapperV6.Instance.InitializeLib(spCampaigns: spCampaigns,
+                                        accountId: 22,
+                                        propertyName: "sid-multi-campaign.com",
+                                        language: MESSAGE_LANGUAGE.ENGLISH);
 ```
+Take a note that it may take some time to initialize CMP library, so we strongly suggest you to do this in `Awake`. SDK will construct the Web View which is ready to interact with and will show it to user.
+
+To have a healthy flow of CMP library we also reccomend you to add next code pieces:
+
+1. If user changes app focus during the first layer message flow, we need to re-show it once user got back to app. Next code piece will bring it up to user the consent message, if there any not resolved messages. 
+```c#
+private void OnApplicationPause(bool pause)
+{
+    if (!pause)
+    {
+        ConsentWrapperV6.Instance.LoadMessage(authId: authID);
+    }
+}
+```
+If there is a consent profile associated with authId ("JohDoe"), the SDK will bring the consent data from the server, overwriting whatever was stored in the device.
+
+2. In order to free memory, necessary to call `Dispose` like this: 
+```c#
+private void OnDestroy()
+{
+    ConsentWrapperV6.Instance.Dispose();
+}
+```
+
+# Usage - Handling Consent Callbacks
 
 Once you did this, you may be interested in tracking progess and receiving updates of user interaction. We provide you such list of `IConsentEventHandler` interfaces to do this:
 ```c#
@@ -43,16 +57,19 @@ IOnConsentReadyEventHandler       //Triggers when server succesfully reacted to 
 
 CONSENT_ACTION_TYPE can be the following:
 ```c#
-SAVE_AND_EXIT = 1,
-PM_DISMISS = 2,
-ACCEPT_ALL = 11,
-SHOW_OPTIONS = 12,
-REJECT_ALL = 13,
-MSG_CANCEL = 15,
+public enum CONSENT_ACTION_TYPE 
+{
+    SAVE_AND_EXIT = 1,
+    PM_DISMISS = 2,
+    ACCEPT_ALL = 11,
+    SHOW_OPTIONS = 12,
+    REJECT_ALL = 13,
+    MSG_CANCEL = 15,
+}
 ```
 
 # Usage - Workflow of handling callbacks using interfaces:
-Once you created your own `MonoBehaviour` script and attached this component to your `GameObject` you should:
+Once you created your own script which derives from `MonoBehaviour` and attached this component to your `GameObject` you should:
 * Inherit your script from any quantity of interfaces from `IConsentEventHandler` lsit you interested in and implement it's method(s)
 For example, let's suppose you want to handle Exception callback via `IOnConsentErrorEventHandler`, and you already implemented `IOnConsentErrorEventHandler` inheritance and `OnConsentError` method in your script and attached this script to generic `GameObject` in hierarchy. What's next?
 ```c#
@@ -64,16 +81,15 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentErrorEventHandler
     }
 }
 ```
-* Register your `gameobject` (which implements any `IConsentEventHandler` interface obviously) as an event listener with `ConsentMessenger.AddListener` static method. It can be registered any time before you call the `CallConsentAAR` method (`Awake`, `Start` is enough, but you can adopt registration to your own logic)
+* Register your `gameobject` (which implements any inheritor of `IConsentEventHandler` interface) as an event listener with `ConsentMessenger.AddListener` static method. It can be registered any time before you call the `CallConsentAAR` method (`Awake`, `Start` is enough, but you can adopt registration to your own logic)
 ```c#
 void Awake()
 {
     ConsentMessenger.AddListener<IOnConsentErrorEventHandler>(this.gameObject);
 }
 ``` 
- ⤤ Adds current `gameobject` as listener for `IOnConsentErrorEventHandler` events ⤣ 
-
-* Every interface from `IConsentEventHandler` list should be registered as a listener separately. Only registered `gameobject`'s methods are invoked. The according methods (such as `OnConsentError` in this example) will be invoked automatically when event triggers!
+ ⤤ Adds current `gameObject` as listener for `IOnConsentErrorEventHandler` events ⤣ 
+Please take a note that the event will be executed on all components of the game object that can handle it, regardless of whether they are subscribed or not if at least one have registered the gameObject as listener.
 
 * Also you should unregister your listener when it becomes unnecessary due to garbage collection. `OnDestroy` is enough for our purposes:
 ```c#
@@ -82,17 +98,20 @@ private void OnDestroy()
     ConsentMessenger.RemoveListener<IOnConsentErrorEventHandler>(this.gameObject);
 }
 ```
-* BOOM! The solution is ready, configurate it and deploy directly to production!
+* BOOM! The solution is ready, configurate it and deploy!
  
-Both calling & handling workflow are implemented in the `ConsentButtonCaller` and `ConsentEventHandler` scripts accordingly. Feel free to use this components! 
+Both calling & handling workflow are implemented in the `ConsentButtonCaller` and `ConsentEventHandler` scripts of example app accordingly. Feel free to use this components! 
 ```c#
-using GdprConsentLib;
+using ConsentManagementProviderLib;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReadyEventHandler, IOnConsentActionEventHandler, IOnConsentErrorEventHandler, IOnConsentUIFinishedEventHandler, IOnConsentReadyEventHandler
+public class ConsentEventHandler : MonoBehaviour, 
+                                   IOnConsentUIReadyEventHandler, 
+                                   IOnConsentActionEventHandler, 
+                                   IOnConsentErrorEventHandler, 
+                                   IOnConsentUIFinishedEventHandler, 
+                                   IOnConsentReadyEventHandler
 {
     void Awake()
     {
@@ -123,9 +142,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReadyEventHandler,
         Debug.LogWarning("User has interacted with the web view consent message and it is disappeared!");
     }
 
-    public void OnConsentReady(SpConsents consents)
+    public void OnConsentReady(string jsonConsents)
     {
-        Debug.Log("The user interaction on series of consent messages is done. You can continue user's gaming experience!");
+        Debug.Log($"The user interaction on consent messages is done. Consent info: {jsonConsents} \n If it was the last from the series of consents, you can continue user's gaming experience!");
     }
 
     private void OnDestroy()
