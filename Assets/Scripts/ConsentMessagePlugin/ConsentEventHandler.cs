@@ -12,10 +12,10 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReadyEventHandler,
     {
         if (isEnabled)
         {
+            ConsentMessenger.AddListener<IOnConsentUIFinishedEventHandler>(this.gameObject);
             ConsentMessenger.AddListener<IOnConsentUIReadyEventHandler>(this.gameObject);
             ConsentMessenger.AddListener<IOnConsentActionEventHandler>(this.gameObject);
             ConsentMessenger.AddListener<IOnConsentErrorEventHandler>(this.gameObject);
-            ConsentMessenger.AddListener<IOnConsentUIFinishedEventHandler>(this.gameObject);
             ConsentMessenger.AddListener<IOnConsentReadyEventHandler>(this.gameObject);
         }
     }

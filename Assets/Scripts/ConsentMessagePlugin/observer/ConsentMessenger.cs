@@ -4,7 +4,22 @@ using UnityEngine;
 namespace GdprConsentLib
 {
     public static class ConsentMessenger
-    { 
+    {
+        private static GameObject iOSListenerGO;
+        
+        static ConsentMessenger()
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            CreateHelperIOSListener();
+#endif
+        }
+
+        private static void CreateHelperIOSListener()
+        {
+            iOSListenerGO = new GameObject();
+            iOSListenerGO.AddComponent<CMPiOSListenerHelper>();
+        }
+
         public static void AddListener<T>(GameObject go) where T : IConsentEventHandler
         {
             BroadcastReceivers.RegisterBroadcastReceiver<T>(go);
