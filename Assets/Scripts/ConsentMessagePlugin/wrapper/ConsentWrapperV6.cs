@@ -48,6 +48,7 @@ public class ConsentWrapperV6
         else
         {
             mainThreadBroadcastEventsExecutor = new GameObject();
+            mainThreadBroadcastEventsExecutor.name = "CMPAndroidListenerHelper";
             mainThreadBroadcastEventsExecutor.AddComponent<BroadcastEventsExecutor>();
         }
     }
