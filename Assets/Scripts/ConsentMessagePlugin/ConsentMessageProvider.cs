@@ -35,11 +35,11 @@ public class ConsentMessageProvider : MonoBehaviour
         }
         if (spCampaigns.Count > 0)
         {
-            ConsentWrapperV6.Instance.InitializeLib(spCampaigns,
-                                                    this.accountId,
-                                                    this.propertyName,
-                                                    this.language,
-                                                    this.messageTimeout);
+            ConsentWrapperV6.Instance.InitializeLib(spCampaigns: spCampaigns,
+                                                    accountId: this.accountId,
+                                                    propertyName: this.propertyName,
+                                                    language: this.language,
+                                                    messageTimeout: this.messageTimeout);
         }
         else
         {
@@ -51,7 +51,7 @@ public class ConsentMessageProvider : MonoBehaviour
     {
         if (!pause)
         {
-            ConsentWrapperV6.Instance.LoadMessage(authID);
+            ConsentWrapperV6.Instance.LoadMessage(authId: authID);
         }
     }
 

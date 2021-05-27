@@ -53,7 +53,7 @@ public class ConsentWrapperV6
         }
     }
 
-    public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout)
+    public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout = 3000)
     {
 #if UNITY_ANDROID
         CreateBroadcastExecutorGO();
@@ -93,20 +93,20 @@ public class ConsentWrapperV6
 #endif
     }
 
-    public void LoadMessage(string authID = null)
+    public void LoadMessage(string authId = null)
     {
 #if UNITY_ANDROID
         if (Application.platform == RuntimePlatform.Android)
         {
             try
             {
-                if (string.IsNullOrEmpty(authID))
+                if (string.IsNullOrEmpty(authId))
                 {
                     RunOnUiThread(delegate { InvokeLoadMessage(); });
                 }
                 else
                 {
-                    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authID); });
+                    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authId); });
                 }
             }
             catch (Exception e)
