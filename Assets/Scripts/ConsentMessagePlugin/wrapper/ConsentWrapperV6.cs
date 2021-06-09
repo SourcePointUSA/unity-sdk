@@ -56,9 +56,9 @@ public class ConsentWrapperV6
     public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout = 3000)
     {
 #if UNITY_ANDROID
-        CreateBroadcastExecutorGO();
         if (Application.platform == RuntimePlatform.Android)
         {
+            CreateBroadcastExecutorGO();
             try
             {
                 AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);

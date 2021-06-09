@@ -53,10 +53,10 @@ namespace ConsentManagementProviderLib
             switch (campaignType)
             {
                 case CAMPAIGN_TYPE.GDPR:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, (int)campaignType);
+                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, (int)CAMPAIGN_TYPE_ANDROID.GDPR); //GDPR has ordinal 0 in Java enum!
                     break;
                 case CAMPAIGN_TYPE.CCPA:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, (int)campaignType);
+                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, (int)CAMPAIGN_TYPE_ANDROID.CCPA); //CCPA has ordinal 1 in Java enum!
                     break;
                 default:
                     CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");
