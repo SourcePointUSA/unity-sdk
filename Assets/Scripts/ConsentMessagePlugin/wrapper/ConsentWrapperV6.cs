@@ -66,7 +66,9 @@ public class ConsentWrapperV6
                 foreach (SpCampaign sp in spCampaigns)
                 {
                     AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.CampaignType);
-                    AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count];
+                    AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count+1];
+                    //adding environment as last TargetingParam in paramsArray
+                    paramsArray[paramsArray.Length-1] = constructor.ConstructTargetingParam("campaignEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(sp.Environment));
                     foreach (TargetingParam tp in sp.TargetingParams)
                     {
                         AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);

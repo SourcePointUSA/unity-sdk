@@ -24,13 +24,13 @@ public class ConsentMessageProvider : MonoBehaviour
         if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.GDPR))
         {
             List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
-            SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
+            SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, CAMPAIGN_ENV.PUBLIC, gdprParams);
             spCampaigns.Add(gdpr);
         }
         if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.CCPA))
         {
             List<TargetingParam> ccpaParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-            SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
+            SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, CAMPAIGN_ENV.PUBLIC, ccpaParams);
             spCampaigns.Add(ccpa);
         }
         if (spCampaigns.Count > 0)
