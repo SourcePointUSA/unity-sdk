@@ -72,6 +72,7 @@ namespace GdprConsentLib
             messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SPANISH, MESSAGE_LANGUAGE_STRING_KEY.SPANISH);
             messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.SWEDISH, MESSAGE_LANGUAGE_STRING_KEY.SWEDISH);
             messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.TURKISH, MESSAGE_LANGUAGE_STRING_KEY.TURKISH);
+            messageLanguageToJavaKey.Add(MESSAGE_LANGUAGE.CATALAN, MESSAGE_LANGUAGE_STRING_KEY.CATALAN);
         }
 
         private static void InitializeCampaignEnvMapping()
