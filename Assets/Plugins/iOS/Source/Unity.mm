@@ -3,32 +3,75 @@
 //  Modified by Dimas
 
 #import <Foundation/Foundation.h>
-#import "ViewController.h"
+#import "UnityController.h"
 
-static ViewController *adsPlugin = nil;
+static UnityController * unityBridgePlugin = nil;
 
 extern "C"
 {
-    void _initializeSDKTest() {
-        if (adsPlugin == nil)
-            adsPlugin = [[ViewController alloc] init];
-        [adsPlugin testUnity];
+    void _setUnityCallback (const char * gameObjectName){
+        if (unityBridgePlugin == nil)
+            unityBridgePlugin = [[UnityController alloc] init];
+        [unityBridgePlugin setUnityCallback: gameObjectName];
+    }
+
+    void _addTargetingParamForCampaignType(int campaignType, char * key, char * value)
+    {
+        [unityBridgePlugin addTargetingParamForCampaignType:campaignType :key :value];
+    }
+
+    void _consrtuctLib(int accountId, char* propName, int arrSize, int campaignTypes[], int campaignEnvironments[], long timeOutSeconds)
+    {
+        [unityBridgePlugin consrtuctLib:accountId _:propName _:arrSize _:campaignTypes _: campaignEnvironments _: timeOutSeconds];
+    }
+
+    void _loadMessage(char * authId)
+    {
+        [unityBridgePlugin loadMessage:authId];
+    }
+
+    void _setMessageLanguage(int langId)
+    {
+        [unityBridgePlugin setMessageLanguage:langId];
+    }
+
+    void _loadGDPRPrivacyManager(char * pmId, int tabId)
+    {
+        [unityBridgePlugin loadGDPRPrivacyManager:pmId _:tabId];
+    }
+
+    void _loadCCPAPrivacyManager(char * pmId, int tabId)
+    {
+        [unityBridgePlugin loadCCPAPrivacyManager:pmId _:tabId];
+    }
+
+    void _cleanDict()
+    {
+        [unityBridgePlugin cleanDict];
+    }
+
+    void _cleanArrays()
+    {
+        [unityBridgePlugin cleanArrays];
     }
     
-    void _loadMessage(int accountId, int propertyId, char * propertyName, char * pmId) {
-        /*
-         TODO:
-            targetingParams:targetingParameter
-            campaignEnv: GDPRCampaignEnvPublic
-         */
-        if (adsPlugin == nil)
-            adsPlugin = [[ViewController alloc] init];
-        [adsPlugin loadMessage: accountId _:propertyId _:propertyName _:pmId];
+    void _customConsentGDPRWithVendors()
+    {
+        [unityBridgePlugin customConsentGDPRWithVendors];
     }
-    
-    void _setUnityCallback (const char * gameObjectName){//}, const char * methodName) {
-        if (adsPlugin == nil)
-            adsPlugin = [[ViewController alloc] init];
-        [adsPlugin setUnityCallback: gameObjectName];//_:methodName];
+
+    void _addVendor(char* vendor)
+    {
+        [unityBridgePlugin addVendor:vendor];
+    }
+
+    void _addCategory(char* category)
+    {
+        [unityBridgePlugin addCategory:category];
+    }
+
+    void _addLegIntCategory(char* legIntCategory)
+    {
+        [unityBridgePlugin addLegIntCategory:legIntCategory];
     }
 }
