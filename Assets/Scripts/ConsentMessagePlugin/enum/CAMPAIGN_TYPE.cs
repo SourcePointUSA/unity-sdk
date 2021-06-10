@@ -5,8 +5,10 @@ namespace GdprConsentLib
 {
     public enum CAMPAIGN_TYPE
     {
-        GDPR,
-        CCPA,
+        GDPR = 0,
+        IOS14 = 1, //exist ios only
+        CCPA = 2,
+        // UNKNOWN = 3 //exist ios only
     }
 
     internal static class CAMPAIGN_TYPE_STRING_KEY
