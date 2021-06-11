@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using GdprConsentLib;
+using ConsentManagementProviderLib;
 using UnityEngine;
 
 public class iOSConsentButtonCaller : MonoBehaviour
