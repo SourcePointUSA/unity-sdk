@@ -11,7 +11,7 @@ using System.Linq;
 using UnityEditor.iOS.Xcode.Extensions;
 using Debug = UnityEngine.Debug;
 
-public static class SwiftPostProcess
+public static class CMPPostProcessBuild
 {
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
@@ -25,30 +25,25 @@ public static class SwiftPostProcess
 
             ConfigureFrameworks(pbxProject, targetGuid);
             SwiftBridgingHeader(pbxProject, targetGuid);
-            EnableSwift(pbxProject, targetGuid);
+            // EnableSwift(pbxProject, targetGuid);
             EnableCppModules(pbxProject);
 
             string unityMainGUID = pbxProject.GetUnityMainTargetGuid();
             const string defaultLocationInProj = "Plugins/iOS";
-            const string coreFrameworkName = "ConsentViewController.framework";
+            const string coreFrameworkName = "ConsentViewController.xcframework";
             // string framework = Path.Combine(defaultLocationInProj, coreFrameworkName);
             // string fileGuid = pbxProject.AddFile(framework, "Frameworks/" + framework, PBXSourceTree.Sdk);
             ///// string fileGuid = pbxProject.AddFile(framework, "Frameworks/" + coreFrameworkName, PBXSourceTree.Sdk);
-
             // PBXProjectExtensions.AddFileToEmbedFrameworks(pbxProject, unityMainGUID, fileGuid);
-            
-            
             // PBXProjectExtensions.AddFileToCopyFilesWithSubfolder();
             // pbxProject.AddFile("/Users/wombatmbp17/Documents/Projects/iOS-CMP-Test/Frameworks/Plugins/iOS/Source", )
-            
             //LinkBinaryWithLibraries(pbxProject, unityMainGUID);
             
-            if(pbxProject.ContainsFramework(unityMainGUID, "ConsentViewController.framework" ))
+            if(pbxProject.ContainsFramework(unityMainGUID, "ConsentViewController.xcframework" ))
             {
                 Debug.LogWarning("Framewrok exists");
                 
                 Debug.LogWarning("LinkBinaryWithLibraries -> ...");
-
                 // pbxProject.AddFileToEmbedFrameworks(unityMainGUID, "ConsentViewController.framework");
                 Debug.LogWarning("AddFileToEmbedFrameworks -> ...");
             }
@@ -57,11 +52,10 @@ public static class SwiftPostProcess
         }
     }
 
-    static void LinkBinaryWithLibraries(PBXProject pbxProject, string targetGuid)
+    static void LinkBinaryWithLibraries(PBXProject pbxProject, string targetGuid, string frameworkName)
     {
         //"true" will add the framework in the "Link Binary With Libraries" section with status "Optional", "false" will be "Required".
-        pbxProject.AddFrameworkToProject(targetGuid, "ConsentViewController.framework", false);
-        // pbxProject.AddFrameworksBuildPhase(targetGuid, "ConsentViewController.framework", false);
+        pbxProject.AddFrameworkToProject(targetGuid, frameworkName, false);
     }
     
     static void ConfigureFrameworks(PBXProject pbxProject, string targetGuid)
@@ -77,11 +71,8 @@ public static class SwiftPostProcess
     static void SwiftBridgingHeader(PBXProject pbxProject, string targetGuid)
     {
         pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
-        // pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/Test_framework/Source/UnityPlugin-Bridging-Header.h");
         pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/Source/UnityPlugin-Bridging-Header.h");
-        // pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "UnityIosPlugin-Swift.h");
-        // pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "Obc-C_Example-Swift.h");
-        pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "ConsentViewController-Swift.h");
+        pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "UnityController.h");
     }
     
     static void EnableSwift(PBXProject pbxProject, string targetGuid)
