@@ -25,6 +25,7 @@ namespace ConsentManagementProviderLib
                                                         propertyName: propertyName,
                                                         language: language,
                                                         messageTimeoutInSeconds: messageTimeoutInSeconds);
+                ConsentWrapperIOS.Instance.LoadMessage();
             }
 #endif
         }

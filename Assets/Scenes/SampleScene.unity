@@ -773,10 +773,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allCampaignTypesToLoad: 00000000
-  language: 7
+  language: 1
   accountId: 22
   propertyName: mobile.multicampaign.demo
-  messageTimeout: 3
+  messageTimeoutInSeconds: 3
   authID: 
 --- !u!114 &1221699451
 MonoBehaviour:

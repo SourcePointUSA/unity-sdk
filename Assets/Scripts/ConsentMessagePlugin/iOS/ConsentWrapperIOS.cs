@@ -98,7 +98,7 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
-        public void LoadMessage(string authId)
+        public void LoadMessage(string authId = null)
         {
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
