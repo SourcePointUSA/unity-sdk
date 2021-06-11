@@ -26,7 +26,6 @@ public class iOSConsentButtonCaller : MonoBehaviour
     private static extern void _loadGDPRPrivacyManager(string pmId, int tabId);
     [DllImport("__Internal")]
     private static extern void _loadCCPAPrivacyManager(string pmId, int tabId);
-
     [DllImport("__Internal")]
     private static extern void _cleanDict();
     [DllImport("__Internal")]
@@ -43,13 +42,6 @@ public class iOSConsentButtonCaller : MonoBehaviour
     [SerializeField] 
     private bool ONLY = false;
     
-/*
-  typedef SWIFT_ENUM(NSInteger, SPCampaignEnv, open) {
-  SPCampaignEnvStage = 0,
-  SPCampaignEnvPublic = 1,
-}; 
- */
-
     private void Awake()
     {
         if (ONLY)

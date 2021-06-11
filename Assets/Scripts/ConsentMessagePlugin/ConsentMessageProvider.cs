@@ -13,7 +13,7 @@ public class ConsentMessageProvider : MonoBehaviour
     [SerializeField]
     string propertyName = "sid-multi-campaign.com";
     [SerializeField]
-    long messageTimeout = 3000;
+    long messageTimeoutInSeconds = 3;
     [SerializeField]
     string authID = null;
 
@@ -35,11 +35,11 @@ public class ConsentMessageProvider : MonoBehaviour
         }
         if (spCampaigns.Count > 0)
         {
-            ConsentWrapperV6.Instance.InitializeLib(spCampaigns: spCampaigns,
-                                                    accountId: this.accountId,
-                                                    propertyName: this.propertyName,
-                                                    language: this.language,
-                                                    messageTimeout: this.messageTimeout);
+            CMP.Initialize(spCampaigns: spCampaigns,
+                           accountId: this.accountId,
+                           propertyName: this.propertyName,
+                           language: this.language,
+                           messageTimeoutInSeconds: this.messageTimeoutInSeconds);
         }
         else
         {
@@ -51,12 +51,12 @@ public class ConsentMessageProvider : MonoBehaviour
     {
         if (!pause)
         {
-            ConsentWrapperV6.Instance.LoadMessage(authId: authID);
+            CMP.LoadMessage(authId: authID);
         }
     }
 
     private void OnDestroy()
     {
-        ConsentWrapperV6.Instance.Dispose();
+        CMP.Dispose();
     }
 }

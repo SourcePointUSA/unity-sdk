@@ -1,3 +1,4 @@
+using ConsentManagementProviderLib;
 using UnityEngine;
 
 public class CustomConsentButtonCaller : MonoBehaviour
@@ -11,10 +12,10 @@ public class CustomConsentButtonCaller : MonoBehaviour
 
     public void OnCustomConsentButtonClick()
     {
-        ConsentWrapperV6.Instance.CustomConsentGDPR(vendors: this.vendors,
-                                                    categories: this.categories,
-                                                    legIntCategories: this.legIntCategories,
-                                                    onSuccessDelegate: SuccessDelegate);
+        CMP.CustomConsentGDPR(vendors: this.vendors,
+                              categories: this.categories,
+                              legIntCategories: this.legIntCategories,
+                              onSuccessDelegate: SuccessDelegate);
     }
 
     private void SuccessDelegate(string spConsentsJson)

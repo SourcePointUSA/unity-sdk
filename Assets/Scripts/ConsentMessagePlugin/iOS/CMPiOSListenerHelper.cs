@@ -5,19 +5,27 @@ using UnityEngine;
 
 public class CMPiOSListenerHelper : MonoBehaviour
 {
-    
+
 #if UNITY_IOS && !UNITY_EDITOR_OSX
     [DllImport("__Internal")]
     private static extern void _setUnityCallback(string gameObjectName);
 #endif
-    
+
+    private Action<String> onCustomConsentsGDPRSuccessAction;
+
     private void Awake()
     {
         gameObject.name = "CMPiOSListenerHelper";
 #if UNITY_IOS && !UNITY_EDITOR_OSX
         CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
+        DontDestroyOnLoad(this.gameObject);
         _setUnityCallback(gameObject.name);
 #endif
+    }
+
+    internal void SetCustomConsentsGDPRSuccessAction(Action<string> action)
+    {
+        this.onCustomConsentsGDPRSuccessAction = action;
     }
 
     void Callback(string message)
@@ -60,6 +68,7 @@ public class CMPiOSListenerHelper : MonoBehaviour
     void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
     {
         CmpDebugUtil.Log("OnCustomConsentGDPRCallback IOS_CALLBACK_RECEIVED: " + jsonSPGDPRConsent);
-        //delegate.invoke
+        //TODO: unwrapping
+        onCustomConsentsGDPRSuccessAction?.Invoke(jsonSPGDPRConsent);
     }
 }

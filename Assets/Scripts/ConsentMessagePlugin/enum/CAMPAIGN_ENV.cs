@@ -5,8 +5,8 @@ namespace ConsentManagementProviderLib
 {
     public enum CAMPAIGN_ENV
     {
-        STAGE,
-        PUBLIC
+        STAGE = 0,
+        PUBLIC = 1,
     }
 
     internal static class CAMPAIGN_ENV_STRING_KEY

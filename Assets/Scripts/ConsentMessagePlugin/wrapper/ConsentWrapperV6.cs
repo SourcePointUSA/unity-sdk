@@ -54,7 +54,7 @@ namespace ConsentManagementProviderLib
             }
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeout = 3000)
+        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeoutMilliSeconds = 3000)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
@@ -81,7 +81,7 @@ namespace ConsentManagementProviderLib
                     }
                     AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
                                                                                propertyName: propertyName,
-                                                                               messageTimeout: messageTimeout,
+                                                                               messageTimeout: messageTimeoutMilliSeconds,
                                                                                language: msgLang,
                                                                                spCampaigns: campaigns);
                     consentLib = constructor.ConsrtuctLib(spConfig: spConfig,

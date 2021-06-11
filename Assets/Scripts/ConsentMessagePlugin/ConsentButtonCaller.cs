@@ -12,8 +12,8 @@ public class ConsentButtonCaller : MonoBehaviour
 
     public void OnConsentButtonClick()
     {
-        ConsentWrapperV6.Instance.LoadPrivacyManager(this.campaignType,
-                                                     this.pmId,
-                                                     this.privacyManagerTab);
+        CMP.LoadPrivacyManager(campaignType: this.campaignType,
+                               pmId: this.pmId,
+                               tab: this.privacyManagerTab);
     }
 }

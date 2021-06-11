@@ -776,7 +776,7 @@ MonoBehaviour:
   language: 7
   accountId: 22
   propertyName: mobile.multicampaign.demo
-  messageTimeout: 3000
+  messageTimeout: 3
   authID: 
 --- !u!114 &1221699451
 MonoBehaviour:
