@@ -8,7 +8,7 @@ public class CMPiOSListenerHelper : MonoBehaviour
     
 #if UNITY_IOS && !UNITY_EDITOR_OSX
     [DllImport("__Internal")]
-    private static extern void _setUnityCallback(string gameObjectName);//, string methodName);
+    private static extern void _setUnityCallback(string gameObjectName);
 #endif
     
     private void Awake()
@@ -28,6 +28,7 @@ public class CMPiOSListenerHelper : MonoBehaviour
     void OnConsentReady(string message)
     {
         DebugUtil.Log("OnConsentReady IOS_CALLBACK_RECEIVED: " + message);
+        ConsentMessenger.Broadcast<IOnConsentMessageReady>();
     }
 
     void OnConsentUIReady(string message)
@@ -54,5 +55,11 @@ public class CMPiOSListenerHelper : MonoBehaviour
         DebugUtil.LogError("OnErrorCallback IOS_CALLBACK_RECEIVED: " + jsonError);
         Exception ex = new Exception(jsonError);
         ConsentMessenger.Broadcast<IOnConsentErrorEventHandler>(ex);
+    }
+
+    void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
+    {
+        DebugUtil.Log("OnCustomConsentGDPRCallback IOS_CALLBACK_RECEIVED: " + jsonSPGDPRConsent);
+        //delegate.invoke
     }
 }
