@@ -8,10 +8,10 @@
 @interface UnityController ()<SPDelegate> {
     SPConsentManager * consentManager;
     NSString* goNameStr;
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> * params; //clean
-    NSMutableArray<NSString *> * vendorsArr;            //clean
-    NSMutableArray<NSString *> * categoriesArr;         //clean
-    NSMutableArray<NSString *> * legIntCategoriesArr;   //clean
+    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> * params;
+    NSMutableArray<NSString *> * vendorsArr;
+    NSMutableArray<NSString *> * categoriesArr;
+    NSMutableArray<NSString *> * legIntCategoriesArr;
 }
 @property(nonatomic, copy) NSString* goNameStr;
 @end
@@ -250,6 +250,7 @@
                     legIntCategories:legIntCategoriesArr
                     handler:(void (^ _Nonnull)(SPGDPRConsent * _Nonnull)) ^(SPGDPRConsent * gdprUserConsent)
     {
+        NSLog(@"customConsentGDPRWithVendors");
         UnitySendMessage([self getGOName], "OnCustomConsentGDPRCallback", [self convertNSStringToChar:[gdprUserConsent toJSON]]);
     }];
 }
@@ -277,6 +278,7 @@
 
 - (void)onErrorWithError:(SPError * _Nonnull)error {
     NSLog(@"onErrorWithError");
+    NSLog(@"Error desc : %@", error.description);
     if(error != nil){
         UnitySendMessage([self getGOName], "OnErrorCallback", [error.description cStringUsingEncoding:NSUTF8StringEncoding]);
     }
@@ -284,6 +286,7 @@
 
 - (void)onConsentReadyWithUserData:(SPUserData *)userData {
     NSLog(@"onConsentReady");
+    NSLog(@"%s", [self convertNSStringToChar:[userData toJSON]]);
     UnitySendMessage([self getGOName], "OnConsentReady", [self convertNSStringToChar:[userData toJSON]]);
 }
 
