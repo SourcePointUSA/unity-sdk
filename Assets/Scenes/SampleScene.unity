@@ -447,7 +447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18afced539efb94ab9a409bcc8770c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  campaignType: 1
+  campaignType: 2
   privacyManagerTab: 1
   pmId: 14967
 --- !u!114 &759187206

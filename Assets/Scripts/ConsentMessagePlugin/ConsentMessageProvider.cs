@@ -33,6 +33,19 @@ public class ConsentMessageProvider : MonoBehaviour
             SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, CAMPAIGN_ENV.PUBLIC, ccpaParams);
             spCampaigns.Add(ccpa);
         }
+        if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.GDPR))
+        {
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                List<TargetingParam> ios14Params = new List<TargetingParam>();
+                SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.IOS14, CAMPAIGN_ENV.PUBLIC, ios14Params);
+                spCampaigns.Add(ccpa);
+            }
+            else
+            {
+                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
+            }
+        }
         if (spCampaigns.Count > 0)
         {
             CMP.Initialize(spCampaigns: spCampaigns,

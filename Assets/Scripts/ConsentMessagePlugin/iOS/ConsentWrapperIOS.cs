@@ -69,7 +69,6 @@ namespace ConsentManagementProviderLib
 
         public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeoutInSeconds = 3)
         {
-
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanDict();
             int campaignsAmount = spCampaigns.Count;
@@ -100,7 +99,6 @@ namespace ConsentManagementProviderLib
 
         public void LoadMessage(string authId = null)
         {
-
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _loadMessage(authId);
 #endif
@@ -108,7 +106,6 @@ namespace ConsentManagementProviderLib
 
         public void LoadGDPRPrivacyManager(string pmId, PRIVACY_MANAGER_TAB tab)
         {
-
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _loadGDPRPrivacyManager(pmId, (int)tab);
 #endif
@@ -116,7 +113,6 @@ namespace ConsentManagementProviderLib
 
         public void LoadCCPAPrivacyManager(string pmId, PRIVACY_MANAGER_TAB tab)
         {
-
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _loadCCPAPrivacyManager(pmId, (int)tab);
 #endif
@@ -124,7 +120,6 @@ namespace ConsentManagementProviderLib
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<string> onSuccessDelegate)
         {
-
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanArrays();
             foreach (string vendor in vendors)
