@@ -1,3 +1,4 @@
+using System;
 using ConsentManagementProviderLib;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,6 +59,11 @@ public class ConsentMessageProvider : MonoBehaviour
         {
             throw new System.Exception("You should add at least one SpCampaign to use CMP!");
         }
+    }
+
+    private void Start()
+    {
+        CMP.LoadMessage(authId: authID);
     }
 
     private void OnApplicationPause(bool pause)
