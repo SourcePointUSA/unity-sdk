@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ConsentManagementProviderLib
 {
-    public class SpGdprConsentIOS
+    public class SpGdprConsent
     {
         [JsonInclude]
         public string euconsent;

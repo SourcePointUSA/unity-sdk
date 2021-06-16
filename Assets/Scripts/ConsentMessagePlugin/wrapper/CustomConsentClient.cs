@@ -1,23 +1,42 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
+using System.Text.Json;
 
 namespace ConsentManagementProviderLib
 {
     public class CustomConsentClient : AndroidJavaProxy
     {
         static readonly string NativeJavaInterfaceName = "com.sourcepoint.cmplibrary.consent.CustomConsentClient";
-        Action<string> callback;
+        Action<SpGdprConsent> callback;
 
-        public CustomConsentClient(Action<string> callback) : base(new AndroidJavaClass(NativeJavaInterfaceName)) 
+        public CustomConsentClient(Action<SpGdprConsent> callback) : base(new AndroidJavaClass(NativeJavaInterfaceName)) 
         {
             this.callback = callback;
         }
 
-        void transferCustomConsentToUnity(string spConsentsJson) //TODO: SPCustomConsents
+        void transferCustomConsentToUnity(string spConsentsJson)
         {
             CmpDebugUtil.Log("transferCustomConsentToUnitySide c#-side custom consent ->" + spConsentsJson.ToString());
-            callback?.Invoke(spConsentsJson);
+            SpCustomConsentAndroid parsed = null;
+            try
+            {
+                parsed = JsonSerializer.Deserialize<SpCustomConsentAndroid>(spConsentsJson);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Something went wrong while parsing the json data; null will be returned. \n Exception message: " + ex.Message);
+            }
+            finally
+            {
+                if (parsed == null)
+                {
+                    callback?.Invoke(null);
+                }
+                else
+                {
+                    callback?.Invoke(parsed.gdpr);
+                }
+            }
         }
     }
 }

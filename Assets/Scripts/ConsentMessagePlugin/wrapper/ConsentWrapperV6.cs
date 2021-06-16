@@ -139,7 +139,7 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
-        public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<string> onSuccessDelegate)
+        public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<SpGdprConsent> onSuccessDelegate)
         {
             consentLib.Call("customConsentGDPR", vendors, categories, legIntCategories, new CustomConsentClient(onSuccessDelegate));
         }
