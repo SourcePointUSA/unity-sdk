@@ -1,4 +1,3 @@
-using System;
 using ConsentManagementProviderLib;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,14 +63,6 @@ public class ConsentMessageProvider : MonoBehaviour
     private void Start()
     {
         CMP.LoadMessage(authId: authID);
-    }
-
-    private void OnApplicationPause(bool pause)
-    {
-        if (!pause)
-        {
-            CMP.LoadMessage(authId: authID);
-        }
     }
 
     private void OnDestroy()
