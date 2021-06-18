@@ -1,15 +1,16 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace ConsentManagementProviderLib
 {
     public class SpGdprConsent
     {
-        [JsonInclude]
-        public string euconsent;
-        [JsonInclude]
-        public Dictionary<string, object> TCData;
-        [JsonInclude]
-        public Dictionary<string, SpVendorGrant> grants;
+        [JsonInclude] public bool applies;
+        [JsonInclude] public GdprConsent consents;
+
+        public SpGdprConsent(bool applies, GdprConsent consents)
+        {
+            this.applies = applies;
+            this.consents = consents;
+        }
     }
 }

@@ -70,7 +70,7 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
-        public static void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<SpGdprConsent> onSuccessDelegate)
+        public static void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)

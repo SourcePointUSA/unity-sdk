@@ -6,9 +6,31 @@ namespace ConsentManagementProviderLib
 {
     public static class JsonUnwrapper
     {
-        public static SpGdprConsent UnwrapSpGdprConsent(SpGdprConsentWrapper wrapped)
+        public static GdprConsent UnwrapGdprConsent(string json)
         {
-            SpGdprConsent unwrapped = new SpGdprConsent
+            GdprConsentWrapper wrapped = JsonSerializer.Deserialize<GdprConsentWrapper>(json);
+            GdprConsent unwrapped = UnwrapGdprConsent(wrapped);
+            return unwrapped;
+        }
+
+        public static SpConsents UnwrapSpConsents(string json)
+        {
+            SpConsentsWrapper wrapped = JsonSerializer.Deserialize<SpConsentsWrapper>(json);
+            SpGdprConsent unwrappedGdpr = UnwrapSpGdprConsent(wrapped.gdpr);
+            SpCcpaConsent unwrappedCcpa = UnwrapSpCcpaConsent(wrapped.ccpa);
+            return new SpConsents(unwrappedGdpr, unwrappedCcpa);
+        }
+        
+        private static SpGdprConsent UnwrapSpGdprConsent(SpGdprConsentWrapper wrappedGdpr)
+        {
+            bool applies = ((JsonElement) wrappedGdpr.applies).GetBoolean();
+            GdprConsent consent = UnwrapGdprConsent(wrappedGdpr.consents);
+            return new SpGdprConsent (applies, consent);
+        }
+        
+        private static GdprConsent UnwrapGdprConsent(GdprConsentWrapper wrapped)
+        {
+            GdprConsent unwrapped = new GdprConsent
             {
                 euconsent = wrapped.euconsent,
                 TCData = wrapped.TCData,
@@ -27,7 +49,19 @@ namespace ConsentManagementProviderLib
             return unwrapped;
         }
 
-        private static void PrintGrants(SpGdprConsent unwrapped)
+        private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapper wrappedCcpa)
+        {
+            bool applies = ((JsonElement) wrappedCcpa.applies).GetBoolean();
+            CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
+            return new SpCcpaConsent(applies, consent);
+        }
+
+        private static CcpaConsent UnwrapCcpaConsent(CcpaConsentWrapper wrapped)
+        {
+            return new CcpaConsent(wrapped.status, wrapped.uspstring, wrapped.rejectedVendors, wrapped.rejectedCategories);
+        }
+
+        private static void PrintGrants(GdprConsent unwrapped)
         {
             var grants = unwrapped.grants;
             foreach (var k in grants.Keys)

@@ -1,4 +1,3 @@
 <linker>
     <assembly fullname="System.Text.Json" preserve="all"/>
-
 </linker>

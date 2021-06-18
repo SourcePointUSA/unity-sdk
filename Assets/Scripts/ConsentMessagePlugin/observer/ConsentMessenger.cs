@@ -20,11 +20,9 @@ namespace ConsentManagementProviderLib
             CmpDebugUtil.LogWarning("T == " + typeof(T).Name);
             switch (typeof(T).Name)
             {
-                //case IOnConsentMessageReady messReady: break; //TODO
                 case nameof(IOnConsentReadyEventHandler):
-                    //SpConsents consents = (SpConsents)list[0];
-                    string jsonConsents = (string)list[0];
-                    BroadcastEventDispatcher.Execute<IOnConsentReadyEventHandler>(null, (i, d) => i.OnConsentReady(jsonConsents));
+                    SpConsents consents = (SpConsents)list[0];
+                    BroadcastEventDispatcher.Execute<IOnConsentReadyEventHandler>(null, (i, d) => i.OnConsentReady(consents));
                     break;
                 case nameof(IOnConsentActionEventHandler):
                     CONSENT_ACTION_TYPE actionType = (CONSENT_ACTION_TYPE)list[0];

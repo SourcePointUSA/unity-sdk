@@ -18,7 +18,7 @@ public class CustomConsentButtonCaller : MonoBehaviour
                               onSuccessDelegate: SuccessDelegate);
     }
 
-    private void SuccessDelegate(SpGdprConsent customConsent)
+    private void SuccessDelegate(GdprConsent customConsent)
     {
         Debug.Log($"I am your success callback!");
     }

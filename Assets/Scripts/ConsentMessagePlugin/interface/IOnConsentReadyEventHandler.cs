@@ -4,7 +4,6 @@ namespace ConsentManagementProviderLib
 {
     public interface IOnConsentReadyEventHandler : IConsentEventHandler
     {
-        //void OnConsentReady(SpConsents consents);
-        void OnConsentReady(string jsonConsents);
+        void OnConsentReady(SpConsents consents);
     }
 }

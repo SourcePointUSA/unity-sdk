@@ -4,6 +4,6 @@ namespace ConsentManagementProviderLib
     public class SpCustomConsentAndroid
     {
         [JsonInclude]
-        public SpCustomGdprAndroid gdpr;
+        public CustomGdprAndroid gdpr;
     }
 }

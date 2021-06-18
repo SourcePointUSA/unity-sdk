@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ConsentManagementProviderLib
 {
-    public class SpCustomGdprAndroid : SpGdprConsent
+    public class CustomGdprAndroid : GdprConsent
     {
         [JsonInclude]
         public string addtlConsent;

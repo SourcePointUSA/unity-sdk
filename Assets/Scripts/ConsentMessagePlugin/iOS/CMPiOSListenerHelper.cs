@@ -14,7 +14,7 @@ namespace ConsentManagementProviderLib
     private static extern void _setUnityCallback(string gameObjectName);
 #endif
 
-        private Action<SpGdprConsent> onCustomConsentsGDPRSuccessAction;
+        private Action<GdprConsent> onCustomConsentsGDPRSuccessAction;
 
         private void Awake()
         {
@@ -26,7 +26,7 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
-        internal void SetCustomConsentsGDPRSuccessAction(Action<SpGdprConsent> action)
+        internal void SetCustomConsentsGDPRSuccessAction(Action<GdprConsent> action)
         {
             this.onCustomConsentsGDPRSuccessAction = action;
         }
@@ -39,9 +39,21 @@ namespace ConsentManagementProviderLib
         void OnConsentReady(string message)
         {
             CmpDebugUtil.Log("OnConsentReady IOS_CALLBACK_RECEIVED: " + message);
-            //TODO: Deserialize JSON
-            // JsonUtility.FromJson<>(message);
-            ConsentMessenger.Broadcast<IOnConsentMessageReady>();
+            SpConsents spConsents = null;
+            try
+            { 
+                spConsents = JsonUnwrapper.UnwrapSpConsents(message);
+            }
+            catch (Exception ex)
+            {
+                 Debug.LogError(
+                    "Something went wrong while parsing the json data; null will be returned. \n Exception message: " +
+                    ex.Message);
+            }
+            finally
+            {
+                ConsentMessenger.Broadcast<IOnConsentMessageReady>(spConsents);
+            }
         }
 
         void OnConsentUIReady(string message)
@@ -73,25 +85,28 @@ namespace ConsentManagementProviderLib
         void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
         {
             CmpDebugUtil.Log("OnCustomConsentGDPRCallback IOS_CALLBACK_RECEIVED: " + jsonSPGDPRConsent);
+            GdprConsent unwrapped = null;
             try
             {
-                SpGdprConsentWrapper parsed = JsonSerializer.Deserialize<SpGdprConsentWrapper>(jsonSPGDPRConsent);
-                if (parsed == null)
-                {
-                    onCustomConsentsGDPRSuccessAction?.Invoke(null);
-                }
-                else
-                {
-                    SpGdprConsent unwrapped = JsonUnwrapper.UnwrapSpGdprConsent(parsed);
-                    onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
-                }
+                unwrapped = JsonUnwrapper.UnwrapGdprConsent(jsonSPGDPRConsent);
+
             }
             catch (Exception ex)
             {
                 Debug.LogError(
                     "Something went wrong while parsing the json data; null will be returned. \n Exception message: " +
                     ex.Message);
-                onCustomConsentsGDPRSuccessAction?.Invoke(null);
+            }
+            finally
+            {
+                if (unwrapped == null)
+                {
+                    onCustomConsentsGDPRSuccessAction?.Invoke(null);
+                }
+                else
+                {
+                    onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
+                }
             }
         }
     }

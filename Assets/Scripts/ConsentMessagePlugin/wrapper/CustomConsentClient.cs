@@ -7,9 +7,9 @@ namespace ConsentManagementProviderLib
     public class CustomConsentClient : AndroidJavaProxy
     {
         static readonly string NativeJavaInterfaceName = "com.sourcepoint.cmplibrary.consent.CustomConsentClient";
-        Action<SpGdprConsent> callback;
+        Action<GdprConsent> callback;
 
-        public CustomConsentClient(Action<SpGdprConsent> callback) : base(new AndroidJavaClass(NativeJavaInterfaceName)) 
+        public CustomConsentClient(Action<GdprConsent> callback) : base(new AndroidJavaClass(NativeJavaInterfaceName)) 
         {
             this.callback = callback;
         }

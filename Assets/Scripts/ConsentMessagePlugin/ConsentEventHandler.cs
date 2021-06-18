@@ -33,9 +33,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReadyEventHandler,
         Debug.LogWarning("User has interacted with the web view consent message and it is disappeared!");
     }
 
-    public void OnConsentReady(string jsonConsents)
+    public void OnConsentReady(SpConsents spConsents)
     {
-        Debug.Log($"The user interaction on consent messages is done. Consent info: {jsonConsents} \n If it was the last from the series of consents, you can continue user's gaming experience!");
+        Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; \n If it was the last from the series of consents, you can continue user's gaming experience!");
     }
 
     private void OnDestroy()
