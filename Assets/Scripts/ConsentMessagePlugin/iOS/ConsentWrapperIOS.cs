@@ -118,7 +118,7 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
-        public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<string> onSuccessDelegate)
+        public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<SpGdprConsent> onSuccessDelegate)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanArrays();
