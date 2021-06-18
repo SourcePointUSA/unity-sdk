@@ -33,7 +33,7 @@ public class ConsentMessageProvider : MonoBehaviour
             SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, CAMPAIGN_ENV.PUBLIC, ccpaParams);
             spCampaigns.Add(ccpa);
         }
-        if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.GDPR))
+        if (allCampaignTypesToLoad.Contains(CAMPAIGN_TYPE.IOS14))
         {
             if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
