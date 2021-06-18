@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -74,69 +73,26 @@ namespace ConsentManagementProviderLib
         void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
         {
             CmpDebugUtil.Log("OnCustomConsentGDPRCallback IOS_CALLBACK_RECEIVED: " + jsonSPGDPRConsent);
-            SpGdprConsentWrapper parsed = null;
             try
             {
-                parsed = JsonSerializer.Deserialize<SpGdprConsentWrapper>(jsonSPGDPRConsent);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(
-                    "Something went wrong while parsing the json data; null will be returned. \n Exception message: " +
-                    ex.Message);
-            }
-            finally
-            {
+                SpGdprConsentWrapper parsed = JsonSerializer.Deserialize<SpGdprConsentWrapper>(jsonSPGDPRConsent);
                 if (parsed == null)
                 {
                     onCustomConsentsGDPRSuccessAction?.Invoke(null);
                 }
                 else
                 {
-                    SpGdprConsent unwrapped = new SpGdprConsent();
-                    unwrapped.euconsent = parsed.euconsent;
-                    unwrapped.TCData = parsed.TCData;
-                    unwrapped.grants = new Dictionary<string, SpVendorGrant>();
-                    foreach (KeyValuePair<string, SpVendorGrantWrapper> vendorGrantWrapper in parsed.grants)
-                    {
-                        bool isGranted = ((JsonElement) vendorGrantWrapper.Value.vendorGrant).GetBoolean();
-                        Dictionary<string, bool> purposeGrants = new Dictionary<string, bool>();
-                        foreach (KeyValuePair<string, object> purpGrant in vendorGrantWrapper.Value.purposeGrants)
-                        {
-                            if (purposeGrants.ContainsKey(vendorGrantWrapper.Key))
-                            {
-                                Debug.LogError("Dude1");
-                            }
-
-                            purposeGrants.Add(purpGrant.Key, ((JsonElement) purpGrant.Value).GetBoolean());
-                        }
-
-                        if (unwrapped.grants.ContainsKey(vendorGrantWrapper.Key))
-                        {
-                            Debug.LogError("Dude2");
-                        }
-
-                        unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
-
-                    }
-
-                    var aaaaa = unwrapped.grants;
-                    foreach (var k in aaaaa.Keys)
-                    {
-                        Debug.Log("-----");
-                        Debug.Log($"prpses for {k} äre granted..? {aaaaa[k].vendorGrant}");
-                        foreach (var j in aaaaa[k].purposeGrants.Keys)
-                        {
-                            Debug.Log(j + "   " + aaaaa[k].purposeGrants[j]);
-                        }
-                    }
-
+                    SpGdprConsent unwrapped = JsonUnwrapper.UnwrapSpGdprConsent(parsed);
                     onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.LogError(
+                    "Something went wrong while parsing the json data; null will be returned. \n Exception message: " +
+                    ex.Message);
+                onCustomConsentsGDPRSuccessAction?.Invoke(null);
+            }
         }
     }
-    
-
 }
-
