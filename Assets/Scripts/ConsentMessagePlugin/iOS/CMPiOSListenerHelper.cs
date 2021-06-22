@@ -52,7 +52,7 @@ namespace ConsentManagementProviderLib
             }
             finally
             {
-                ConsentMessenger.Broadcast<IOnConsentMessageReady>(spConsents);
+                ConsentMessenger.Broadcast<IOnConsentReadyEventHandler>(spConsents);
             }
         }
 
@@ -89,7 +89,6 @@ namespace ConsentManagementProviderLib
             try
             {
                 unwrapped = JsonUnwrapper.UnwrapGdprConsent(jsonSPGDPRConsent);
-
             }
             catch (Exception ex)
             {

@@ -39,7 +39,8 @@ namespace ConsentManagementProviderLib
         void onConsentReady(string spConsents) 
         {
             CmpDebugUtil.Log("I've reached the C# onConsentReady with json string: " + spConsents);
-            ConsentMessenger.Broadcast<IOnConsentReadyEventHandler>(spConsents);
+            SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+            ConsentMessenger.Broadcast<IOnConsentReadyEventHandler>(consents);
         }
 
         void onError(AndroidJavaObject rawThrowableObject)
