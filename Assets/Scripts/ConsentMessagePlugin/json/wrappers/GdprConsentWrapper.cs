@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Json
 {
-    public class GdprConsentWrapper
+    internal class GdprConsentWrapper
     {
         [JsonInclude] public string euconsent;
         [JsonInclude] public Dictionary<string, object> TCData;

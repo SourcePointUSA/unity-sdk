@@ -1,6 +1,6 @@
 ﻿using UnityEngine.EventSystems;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.EventHandlerInterface
 {
     public interface IConsentEventHandler : IEventSystemHandler { }
 }

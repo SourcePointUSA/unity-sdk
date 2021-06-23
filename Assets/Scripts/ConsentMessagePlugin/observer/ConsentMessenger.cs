@@ -1,4 +1,6 @@
 ﻿using System;
+using ConsentManagementProviderLib.EventHandlerInterface;
+using ConsentManagementProviderLib.Observer;
 using UnityEngine;
 
 namespace ConsentManagementProviderLib
@@ -20,23 +22,23 @@ namespace ConsentManagementProviderLib
             CmpDebugUtil.LogWarning("T == " + typeof(T).Name);
             switch (typeof(T).Name)
             {
-                case nameof(IOnConsentReadyEventHandler):
+                case nameof(IOnConsentReady):
                     SpConsents consents = (SpConsents)list[0];
-                    BroadcastEventDispatcher.Execute<IOnConsentReadyEventHandler>(null, (i, d) => i.OnConsentReady(consents));
+                    BroadcastEventDispatcher.Execute<IOnConsentReady>(null, (i, d) => i.OnConsentReady(consents));
                     break;
-                case nameof(IOnConsentActionEventHandler):
+                case nameof(IOnConsentAction):
                     CONSENT_ACTION_TYPE actionType = (CONSENT_ACTION_TYPE)list[0];
-                    BroadcastEventDispatcher.Execute<IOnConsentActionEventHandler>(null, (i, d) => i.OnConsentAction(actionType));
+                    BroadcastEventDispatcher.Execute<IOnConsentAction>(null, (i, d) => i.OnConsentAction(actionType));
                     break;
-                case nameof(IOnConsentErrorEventHandler):
+                case nameof(IOnConsentError):
                     Exception exception= (Exception)list[0];
-                    BroadcastEventDispatcher.Execute<IOnConsentErrorEventHandler>(null, (i, d) => i.OnConsentError(exception));
+                    BroadcastEventDispatcher.Execute<IOnConsentError>(null, (i, d) => i.OnConsentError(exception));
                     break;
-                case nameof(IOnConsentUIReadyEventHandler):
-                    BroadcastEventDispatcher.Execute<IOnConsentUIReadyEventHandler>(null, (i,d) => i.OnConsentUIReady());
+                case nameof(IOnConsentUIReady):
+                    BroadcastEventDispatcher.Execute<IOnConsentUIReady>(null, (i,d) => i.OnConsentUIReady());
                     break;
-                case nameof(IOnConsentUIFinishedEventHandler):
-                    BroadcastEventDispatcher.Execute<IOnConsentUIFinishedEventHandler>(null, (i,d) => i.OnConsentUIFinished());
+                case nameof(IOnConsentUIFinished):
+                    BroadcastEventDispatcher.Execute<IOnConsentUIFinished>(null, (i,d) => i.OnConsentUIFinished());
                     break;
             }   
         }

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using ConsentMessagePlugin.Android;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Enum
 {
-    public static class CSharp2JavaStringEnumMapper
+    internal static class CSharp2JavaStringEnumMapper
     {
         static Dictionary<PRIVACY_MANAGER_TAB, string> privacyManagerTabToJavaEnumKey;
         static Dictionary<CAMPAIGN_ENV, string> campaignEnvToJavaEnumKey;

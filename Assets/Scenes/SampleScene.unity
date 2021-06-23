@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 83923772}
         m_TargetAssemblyTypeName: ConsentButtonCaller, Assembly-CSharp
-        m_MethodName: OnConsentButtonClick
+        m_MethodName: OnPrivacyManagerButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -496,7 +496,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 759187205}
         m_TargetAssemblyTypeName: ConsentButtonCaller, Assembly-CSharp
-        m_MethodName: OnConsentButtonClick
+        m_MethodName: OnPrivacyManagerButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -913,7 +913,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 452f1dbd601b2d44a9037bfb2ffdb411, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cde34c4d1043485b904e8fb269708e5e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

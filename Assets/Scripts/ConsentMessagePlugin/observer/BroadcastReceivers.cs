@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ConsentManagementProviderLib.EventHandlerInterface;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Observer
 {
-    public static class BroadcastReceivers 
+    internal static class BroadcastReceivers 
     {
         private static readonly IDictionary<Type, IList<GameObject>> BroadcastsReceivers = new Dictionary<Type, IList<GameObject>>();
 

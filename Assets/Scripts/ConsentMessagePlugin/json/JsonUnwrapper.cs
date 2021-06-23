@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Json
 {
-    public static class JsonUnwrapper
+    internal static class JsonUnwrapper
     {
         // ccpa - status, uspstring, rejectedVendors, rejectedCategories
         // gdpr - euconsent, grants

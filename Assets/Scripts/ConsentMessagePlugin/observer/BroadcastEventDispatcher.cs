@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ConsentManagementProviderLib.EventHandlerInterface;
 using UnityEngine.EventSystems;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Observer
 {
-    public static class BroadcastEventDispatcher
+    internal static class BroadcastEventDispatcher
     {
         public static Queue<Action> actions = new Queue<Action>();
 

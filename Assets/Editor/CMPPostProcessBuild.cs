@@ -29,8 +29,9 @@ public static class CMPPostProcessBuild
             EnableCppModules(pbxProject);
 
             string unityMainGUID = pbxProject.GetUnityMainTargetGuid();
-            const string defaultLocationInProj = "Plugins/iOS";
-            const string coreFrameworkName = "ConsentViewController.xcframework";
+            // const string defaultLocationInProj = "Plugins/iOS";
+            // const string coreFrameworkName = "ConsentViewController.xcframework";
+            
             // string framework = Path.Combine(defaultLocationInProj, coreFrameworkName);
             // string fileGuid = pbxProject.AddFile(framework, "Frameworks/" + framework, PBXSourceTree.Sdk);
             ///// string fileGuid = pbxProject.AddFile(framework, "Frameworks/" + coreFrameworkName, PBXSourceTree.Sdk);

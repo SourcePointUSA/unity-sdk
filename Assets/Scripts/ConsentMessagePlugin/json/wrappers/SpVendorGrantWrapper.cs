@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Json
 {
-    public class SpVendorGrantWrapper
+    internal class SpVendorGrantWrapper
     {
         [JsonInclude]
         public object vendorGrant;

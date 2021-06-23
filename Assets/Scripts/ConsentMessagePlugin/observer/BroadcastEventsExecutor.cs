@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Observer
 {
-    public class BroadcastEventsExecutor : MonoBehaviour
+    internal class BroadcastEventsExecutor : MonoBehaviour
     {
         private void Awake()
         {

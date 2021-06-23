@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Json
 {
-    public class SpCcpaConsentWrapperAndroid : CcpaConsentWrapper
+    internal class SpCcpaConsentWrapperAndroid : CcpaConsentWrapper
     {
         [JsonInclude] public object newUser;
         [JsonInclude] public object rejectedAll;

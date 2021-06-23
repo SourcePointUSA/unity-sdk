@@ -1,9 +1,10 @@
-﻿using UnityEngine.EventSystems;
+﻿using ConsentManagementProviderLib.EventHandlerInterface;
+using UnityEngine.EventSystems;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.EventHandlerInterface
 {
     public interface IOnConsentMessageReady : IConsentEventHandler
     {
-        void OnConsentMessageReady(/*object spMessage*/);
+        // void OnConsentMessageReady(/*object spMessage*/);
     }
 }

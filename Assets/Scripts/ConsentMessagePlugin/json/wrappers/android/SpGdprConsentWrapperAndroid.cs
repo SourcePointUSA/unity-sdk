@@ -1,10 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProviderLib.Json
 {
-    public class SpGdprConsentWrapperAndroid : GdprConsentWrapper
+    internal class SpGdprConsentWrapperAndroid : GdprConsentWrapper
     {
-        // no TCFdata here
+        // no TCdata here
         [JsonInclude] public object consentedToAll;
         [JsonInclude] public string addtlConsent;
         [JsonInclude] public string dateCreated;
