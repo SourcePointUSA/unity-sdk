@@ -217,20 +217,20 @@ To use xcframework functionality you should tie it with your xcode project.
 4. Select `Build Phase`
 5. Add `ConsentViewController.xcframework` to `EmbedFramework` section
 6. Tick the `Copy only when installing` checkbox to hassle-free building for device.
-7. Select `UnityFramework ` target
+7. Select `UnityFramework` target
 8. Add `ConsentViewController.xcframework` to `Link Binary With Libraries` section
 
 Take a note: Unity may handle XCFramework in wrong way if you store it in your Unity project and have any import settings applied. In such case, go to `UnityFramework` target > `Build Phases` > `Link Binary With Libraries` and delete all entries of `ConsentViewController.framework` (But make sure that **xcframework** is still there)
 
 ## iOS – Enabling `New Build System`
 With release of ios14 Apple presented .xcframework to replace old .framework which requires modern build system. On the other hand, Unity enables `Legacy Build System (Deprecated)` so it is necessary to switch the `Build System` to new one.
-1. Go to `Project` > `Project Settings` .
+1. Go to `Project` > `Project Settings`.
 2. Switch `Build System` to `New Build System (Default)`.
 
 ## iOS – Adding tracking disclaimer to `info.plist`
 This feature is also reqired by Apple due to new privacy terms.
 1. Find in Project Navigator and open `info.plist` file. 
-2. Click `+`icon which adds new row. 
+2. Click `+` icon which adds new row. 
 3. Add following as a key: `Privacy - Tracking Usage Description`
 4. Add following as a value `This identifier will be used to deliver personalized ads to you.`
 
