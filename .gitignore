@@ -9,7 +9,8 @@
 /[Uu]ser[Ss]ettings/
 
 # Unzipped ConsentViewController.xcframework
-/ConsentViewController.xcframework/*
+Assets/ConsentManagementProvider/xcframework/ConsentViewController.xcframework/*
+Assets/ConsentManagementProvider/xcframework/ConsentViewController.xcframework.meta
 
 # Visual Studio cache directory
 .vs/
