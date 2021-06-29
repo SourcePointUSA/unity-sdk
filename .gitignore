@@ -8,6 +8,9 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+# Unzipped ConsentViewController.xcframework
+/ConsentViewController.xcframework/*
+
 # Visual Studio cache directory
 .vs/
 
