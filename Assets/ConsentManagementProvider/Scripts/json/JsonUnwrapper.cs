@@ -20,8 +20,16 @@ namespace ConsentManagementProviderLib.Json
         public static SpConsents UnwrapSpConsentsAndroid(string json)
         {
             SpConsentsWrapperAndroid wrapped = JsonSerializer.Deserialize<SpConsentsWrapperAndroid>(json);
-            SpGdprConsent unwrappedGdpr = UnwrapSpGdprConsentAndroid(wrapped.gdpr);
-            SpCcpaConsent unwrappedCcpa = UnwrapSpCcpaConsentAndroid(wrapped.ccpa);
+            SpGdprConsent unwrappedGdpr = null;
+            SpCcpaConsent unwrappedCcpa = null;
+            if (wrapped.gdpr!= null)
+            {
+                unwrappedGdpr = UnwrapSpGdprConsentAndroid(wrapped.gdpr);
+            }
+            if (wrapped.ccpa != null)
+            {
+                 unwrappedCcpa = UnwrapSpCcpaConsentAndroid(wrapped.ccpa);
+            }
             return new SpConsents(unwrappedGdpr, unwrappedCcpa);
         }
 
@@ -62,8 +70,16 @@ namespace ConsentManagementProviderLib.Json
         public static SpConsents UnwrapSpConsents(string json)
         {
             SpConsentsWrapper wrapped = JsonSerializer.Deserialize<SpConsentsWrapper>(json);
-            SpGdprConsent unwrappedGdpr = UnwrapSpGdprConsent(wrapped.gdpr);
-            SpCcpaConsent unwrappedCcpa = UnwrapSpCcpaConsent(wrapped.ccpa);
+            SpGdprConsent unwrappedGdpr = null;
+            if (wrapped.gdpr != null)
+            {
+                unwrappedGdpr = UnwrapSpGdprConsent(wrapped.gdpr);
+            }
+            SpCcpaConsent unwrappedCcpa = null;
+            if (wrapped.ccpa != null)
+            {
+                unwrappedCcpa = UnwrapSpCcpaConsent(wrapped.ccpa);
+            }
             return new SpConsents(unwrappedGdpr, unwrappedCcpa);
         }
         
