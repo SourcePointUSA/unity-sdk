@@ -216,8 +216,9 @@ To use xcframework functionality you should tie it with your xcode project.
 3. Then select `Unity-iPhone` target
 4. Select `Build Phase`
 5. Add `ConsentViewController.xcframework` to `EmbedFramework` section
-6. Select `UnityFramework ` target
-7. Add `ConsentViewController.xcframework` to `Link Binary With Libraries` section
+6. Tick the `Copy only when installing` checkbox to hassle-free building for device.
+7. Select `UnityFramework ` target
+8. Add `ConsentViewController.xcframework` to `Link Binary With Libraries` section
 
 Take a note: Unity may handle XCFramework in wrong way if you store it in your Unity project and have any import settings applied. In such case, go to `UnityFramework` target > `Build Phases` > `Link Binary With Libraries` and delete all entries of `ConsentViewController.framework` (But make sure that **xcframework** is still there)
 
