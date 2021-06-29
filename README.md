@@ -219,7 +219,7 @@ To use xcframework functionality you should tie it with your xcode project.
 6. Select `UnityFramework ` target
 7. Add `ConsentViewController.xcframework` to `Link Binary With Libraries` section
 
-Additional step: Unity may handle XCFramework in wrong way if you store it in your Unity project. In such case, go to `UnityFramework` target > `Build Phases` > `Link Binary With Libraries` and delete two entries of `ConsentViewController.framework` (But make sure that **xcframework** is still there)
+Take a note: Unity may handle XCFramework in wrong way if you store it in your Unity project and have any import settings applied. In such case, go to `UnityFramework` target > `Build Phases` > `Link Binary With Libraries` and delete all entries of `ConsentViewController.framework` (But make sure that **xcframework** is still there)
 
 ## iOS – Enabling `New Build System`
 With release of ios14 Apple presented .xcframework to replace old .framework which requires modern build system. On the other hand, Unity enables `Legacy Build System (Deprecated)` so it is necessary to switch the `Build System` to new one.
