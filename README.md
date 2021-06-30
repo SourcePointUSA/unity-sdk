@@ -233,9 +233,3 @@ This feature is also reqired by Apple due to new privacy terms.
 2. Click `+` icon which adds new row. 
 3. Add following as a key: `Privacy - Tracking Usage Description`
 4. Add following as a value `This identifier will be used to deliver personalized ads to you.`
-
-## iOS – Enabling Objective-C Exceptions
-Due to usage of exceptions, it is necessary to enable them.
-1. Find in Project Navigator the `Unity-Iphone` icon. Usually it is topmost. Click it.
-2. Select `Unity-Iphone` project.
-3. Go to `Build Settings`. Find `Enable Objective-C Exceptions` and set it to `Yes`.
