@@ -63,7 +63,7 @@
 - (void) setUnityCallback:(const char *)gameObjectName {
     NSString* goString = [NSString stringWithFormat:@"%s", gameObjectName];
     goNameStr = goString;
-    NSLog(@"RECEIVED FROM C#: %@", goNameStr);
+//    NSLog(@"RECEIVED FROM C#: %@", goNameStr);
     [self initDict];
     [self initArrays];
 }
@@ -74,7 +74,7 @@
         NSNumber * campaignType = [NSNumber numberWithInt:i];
         [params setValue:[NSMutableDictionary dictionary] forKey:[campaignType stringValue]];
     }
-    NSLog(@"initDict => params %@", params);
+//    NSLog(@"initDict => params %@", params);
 }
 
 -(void)cleanDict {
@@ -98,11 +98,11 @@
     NSString * nsKey = [self convertCharToNSString:key];
     NSNumber * nsCampaignType = [NSNumber numberWithInt:campaignType];
     
-    NSLog(@"campType: %@ K= %@ V= %@",nsCampaignType,nsKey,nsVal);
+//    NSLog(@"campType: %@ K= %@ V= %@",nsCampaignType,nsKey,nsVal);
     NSMutableDictionary<NSString *, NSString *> * campaignParams = params[[nsCampaignType stringValue]];
     [campaignParams setObject:nsVal forKey:nsKey];
     
-    NSLog(@"campaignParams => %@", params);
+//    NSLog(@"campaignParams => %@", params);
 }
 
 -(void) consrtuctLib : (int) accountId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int[]) campaignEnvironments _: (long) timeOutSeconds 
@@ -129,7 +129,7 @@
             for (int index=0; index < arrSize; index++)
             {
                 SPCampaignType type = campaignTypes[index];
-                NSLog(@"and type is... %ld", (long)type);
+//                NSLog(@"and type is... %ld", (long)type);
                 
                 NSNumber * nsCampaignType = [NSNumber numberWithInt:index];
                 NSMutableDictionary<NSString *, NSString *> * campaignParams = params[[nsCampaignType stringValue]];
@@ -196,10 +196,10 @@
         NSString * nsAuthId = [self convertCharToNSString: authId];
         if ([nsAuthId isEqual: @""] || authId == nil) {
             [consentManager loadMessageForAuthId: NULL];
-            NSLog(@"loadMessage");
+//            NSLog(@"loadMessage");
         }else{
             [consentManager loadMessageForAuthId: nsAuthId];
-            NSLog(@"loadMessage with authId");
+//            NSLog(@"loadMessage with authId");
         }
     }
 }
@@ -224,7 +224,7 @@
     if([self checkIfConsentManagerNotNull]){
         SPMessageLanguage lang = langId;
         consentManager.messageLanguage = lang;
-        NSLog(@"Message Lang is set %ld", (long)lang);
+//        NSLog(@"Message Lang is set %ld", (long)lang);
     }
 }
 
@@ -250,20 +250,20 @@
                     legIntCategories:legIntCategoriesArr
                     handler:(void (^ _Nonnull)(SPGDPRConsent * _Nonnull)) ^(SPGDPRConsent * gdprUserConsent)
     {
-        NSLog(@"customConsentGDPRWithVendors");
+//        NSLog(@"customConsentGDPRWithVendors");
         UnitySendMessage([self getGOName], "OnCustomConsentGDPRCallback", [self convertNSStringToChar:[gdprUserConsent toJSON]]);
     }];
 }
 
 - (void)onSPUIReady:(SPMessageViewController * _Nonnull)controller {
-    NSLog(@"onSPUIReady");
+//    NSLog(@"onSPUIReady");
     UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
     [top presentViewController: controller animated:YES completion: nil];
     UnitySendMessage([self getGOName], "OnConsentUIReady", "onSPUIReady from iOS!");
 }
 
 - (void)onAction:(SPAction * _Nonnull)action from:(SPMessageViewController * _Nonnull)controller {
-    NSLog(@"onAction");
+//    NSLog(@"onAction");
     NSInteger actionTypeId = ((NSInteger)action.type);
     NSString *tmp = [NSString stringWithFormat:@"%ld", actionTypeId];
     const char *str = [tmp UTF8String];
@@ -271,22 +271,22 @@
 }
 
 - (void)onSPUIFinished:(SPMessageViewController * _Nonnull)controller {
-    NSLog(@"onSPUIFinished");
+//    NSLog(@"onSPUIFinished");
     UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
     [top dismissViewControllerAnimated:true completion:nil];
 }
 
 - (void)onErrorWithError:(SPError * _Nonnull)error {
-    NSLog(@"onErrorWithError");
-    NSLog(@"Error desc : %@", error.description);
+//    NSLog(@"onErrorWithError");
+//    NSLog(@"Error desc : %@", error.description);
     if(error != nil){
         UnitySendMessage([self getGOName], "OnErrorCallback", [error.description cStringUsingEncoding:NSUTF8StringEncoding]);
     }
 }
 
 - (void)onConsentReadyWithUserData:(SPUserData *)userData {
-    NSLog(@"onConsentReady");
-    NSLog(@"%s", [self convertNSStringToChar:[userData toJSON]]);
+//    NSLog(@"onConsentReady");
+//    NSLog(@"%s", [self convertNSStringToChar:[userData toJSON]]);
     UnitySendMessage([self getGOName], "OnConsentReady", [self convertNSStringToChar:[userData toJSON]]);
 }
 
