@@ -16,49 +16,26 @@ public static class CMPPostProcessBuild
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
+        // const string defaultLocationInProj = "Plugins/iOS";
+        // const string coreFrameworkName = "ConsentViewController.xcframework";
         if (buildTarget == BuildTarget.iOS)
         {
-            string projPath = buildPath + "/Unity-Iphone.xcodeproj/project.pbxproj";
             PBXProject pbxProject = new PBXProject();
+            string projPath = buildPath + "/Unity-Iphone.xcodeproj/project.pbxproj";
             pbxProject.ReadFromFile(projPath);
-            var targetGuid = pbxProject.TargetGuidByName(PBXProject.GetUnityTestTargetName());
-
-            ConfigureFrameworks(pbxProject, targetGuid);
-            SwiftBridgingHeader(pbxProject, targetGuid);
-            // EnableSwift(pbxProject, targetGuid);
+            string unityMainTargetGuid = pbxProject.GetUnityMainTargetGuid();
+            
+            ConfigureFrameworks(pbxProject, unityMainTargetGuid);
+            TieBridgingHeader(pbxProject, unityMainTargetGuid);
             EnableCppModules(pbxProject);
-
-            string unityMainGUID = pbxProject.GetUnityMainTargetGuid();
-            // const string defaultLocationInProj = "Plugins/iOS";
-            // const string coreFrameworkName = "ConsentViewController.xcframework";
-            
-            // string framework = Path.Combine(defaultLocationInProj, coreFrameworkName);
-            // string fileGuid = pbxProject.AddFile(framework, "Frameworks/" + framework, PBXSourceTree.Sdk);
-            ///// string fileGuid = pbxProject.AddFile(framework, "Frameworks/" + coreFrameworkName, PBXSourceTree.Sdk);
-            // PBXProjectExtensions.AddFileToEmbedFrameworks(pbxProject, unityMainGUID, fileGuid);
-            // PBXProjectExtensions.AddFileToCopyFilesWithSubfolder();
-            // pbxProject.AddFile("/Users/wombatmbp17/Documents/Projects/iOS-CMP-Test/Frameworks/Plugins/iOS/Source", )
+            EnableObjectiveCExceptions(pbxProject);
             //LinkBinaryWithLibraries(pbxProject, unityMainGUID);
-            
-            if(pbxProject.ContainsFramework(unityMainGUID, "ConsentViewController.xcframework" ))
-            {
-                Debug.LogWarning("Framewrok exists");
-                
-                Debug.LogWarning("LinkBinaryWithLibraries -> ...");
-                // pbxProject.AddFileToEmbedFrameworks(unityMainGUID, "ConsentViewController.framework");
-                Debug.LogWarning("AddFileToEmbedFrameworks -> ...");
-            }
-            
+            // EnableSwift(pbxProject, targetGuid);
+
             pbxProject.WriteToFile(projPath);
         }
     }
 
-    static void LinkBinaryWithLibraries(PBXProject pbxProject, string targetGuid, string frameworkName)
-    {
-        //"true" will add the framework in the "Link Binary With Libraries" section with status "Optional", "false" will be "Required".
-        pbxProject.AddFrameworkToProject(targetGuid, frameworkName, false);
-    }
-    
     static void ConfigureFrameworks(PBXProject pbxProject, string targetGuid)
     {
         pbxProject.AddBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks $(PROJECT_DIR)/lib/$(CONFIGURATION) $(inherited)");
@@ -69,11 +46,29 @@ public static class CMPPostProcessBuild
             "@executable_path/../Frameworks/$(EXECUTABLE_PATH)");
     }
     
-    static void SwiftBridgingHeader(PBXProject pbxProject, string targetGuid)
+    static void TieBridgingHeader(PBXProject pbxProject, string targetGuid)
     {
         pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
         pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/Source/UnityPlugin-Bridging-Header.h");
         pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "UnityController.h");
+    }
+    
+    static void EnableCppModules(PBXProject pbxProject)
+    {
+        pbxProject.AddBuildProperty(pbxProject.GetUnityMainTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
+        pbxProject.AddBuildProperty(pbxProject.GetUnityFrameworkTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
+    }
+
+    static void EnableObjectiveCExceptions(PBXProject pbxProject)
+    {
+        pbxProject.SetBuildProperty (pbxProject.GetUnityMainTargetGuid(), "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
+        pbxProject.SetBuildProperty (pbxProject.GetUnityFrameworkTargetGuid(), "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
+    }
+    
+    static void LinkBinaryWithLibraries(PBXProject pbxProject, string targetGuid, string frameworkName)
+    {
+        //"true" will add the framework in the "Link Binary With Libraries" section with status "Optional", "false" will be "Required".
+        pbxProject.AddFrameworkToProject(targetGuid, frameworkName, false);
     }
     
     static void EnableSwift(PBXProject pbxProject, string targetGuid)
@@ -83,11 +78,4 @@ public static class CMPPostProcessBuild
         pbxProject.AddBuildProperty(targetGuid, "COREML_CODEGEN_LANGUAGE", "Swift");
         pbxProject.AddBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
     }
-    
-    static void EnableCppModules(PBXProject pbxProject)
-    {
-        pbxProject.AddBuildProperty(pbxProject.GetUnityMainTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
-        pbxProject.AddBuildProperty(pbxProject.GetUnityFrameworkTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
-    }
-
 }
