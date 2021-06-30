@@ -23,6 +23,8 @@ Assets/ConsentManagementProvider/xcframework/ConsentViewController.xcframework.m
 
 # Builds
 *.apk
+DemoBuilds/ios_demo/*
+!DemoBuilds/ios_demo/ios_demo.zip
 
 # Exclude specific demo builds
 !ConsentManagementProviderDemo.apk
