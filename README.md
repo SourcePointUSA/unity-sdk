@@ -23,8 +23,8 @@ using ConsentManagementProviderLib;
     spCampaigns.Add(ccpa);
     
     List<TargetingParam> ios14Params = new List<TargetingParam>();
-    SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.IOS14, CAMPAIGN_ENV.PUBLIC, ios14Params);
-    spCampaigns.Add(ccpa);
+    SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, CAMPAIGN_ENV.PUBLIC, ios14Params);
+    spCampaigns.Add(ios14);
 ```
 
 1. To instantiate & trigger Consent Message Web View you must call function `CMP.Initialize` in `Awake` along with spCampaigns, accountId, propertyName and language. You can also specify `messageTimeout` if you want, by default it is set to 3 **seconds**.
