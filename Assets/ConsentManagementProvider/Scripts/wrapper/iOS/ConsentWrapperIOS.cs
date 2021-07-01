@@ -33,7 +33,7 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _addTargetingParamForCampaignType(int campaignType, string key, string value);
         [DllImport("__Internal")]
-        private static extern void _consrtuctLib(int accountId, string propName, int arrSize, int[] campaignTypes, int[] campaignEnvironments, long timeOutSeconds);
+        private static extern void _consrtuctLib(int accountId, string propName, int arrSize, int[] campaignTypes, int campaignsEnvironment, long timeOutSeconds);
         [DllImport("__Internal")]
         private static extern void _setMessageLanguage(int langId);
         [DllImport("__Internal")]
@@ -67,14 +67,12 @@ namespace ConsentManagementProviderLib.iOS
             iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeoutInSeconds = 3)
+        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanDict();
             int campaignsAmount = spCampaigns.Count;
             int[] campaignTypes = new int[campaignsAmount];
-            int[] campaignEnvironments = new int[campaignsAmount];
-
             foreach(SpCampaign sp in spCampaigns)
             {
                 foreach(TargetingParam tp in sp.TargetingParams)
@@ -85,13 +83,12 @@ namespace ConsentManagementProviderLib.iOS
             for (int i=0; i<campaignsAmount; i++)
             {
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
-                campaignEnvironments[i] = (int)spCampaigns[i].Environment;
             }
             _consrtuctLib(accountId: accountId,
                           propName: propertyName,
                           arrSize: campaignsAmount,
                           campaignTypes: campaignTypes,
-                          campaignEnvironments: campaignEnvironments,
+                          campaignsEnvironment: (int) campaignsEnvironment,
                           timeOutSeconds: messageTimeoutInSeconds);
             _setMessageLanguage((int)language);
 #endif

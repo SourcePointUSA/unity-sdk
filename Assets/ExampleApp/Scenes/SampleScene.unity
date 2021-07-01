@@ -772,10 +772,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8425b133d022ba49baffbec5737312b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allCampaignTypesToLoad: 00000000
+  allCampaignTypesToLoad: 0000000001000000
   language: 1
   accountId: 22
   propertyName: mobile.multicampaign.demo
+  campaignEnvironment: 1
   messageTimeoutInSeconds: 3
   authID: 
 --- !u!114 &1221699451

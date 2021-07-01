@@ -1,6 +1,5 @@
 //  UnityController.h
-//  Unity-iPhone
-//  Created by Wombat MBP 17 on 31.05.2021.
+//  Created by Dmytro Fedko on 31.05.2021.
 
 #import <UIKit/UIKit.h>
 
@@ -8,7 +7,7 @@
 
 -(void) setUnityCallback :(const char *)gameObjectName;
 
--(void) consrtuctLib : (int) accountId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int[]) campaignEnvironments _: (long) timeOutSeconds;
+-(void) consrtuctLib : (int) accountId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int) campaignsEnvironment _: (long) timeOutSeconds;
 
 -(void) loadMessage : (char*) authId;
 

@@ -1,6 +1,5 @@
 //  Unity.mm
-//  Created by Vilas on 12/04/21.
-//  Modified by Dimas
+//  Created by Vilas Mane and Dmytro Fedko on 12/04/21.
 
 #import <Foundation/Foundation.h>
 #import "UnityController.h"
@@ -20,9 +19,9 @@ extern "C"
         [unityBridgePlugin addTargetingParamForCampaignType:campaignType :key :value];
     }
 
-    void _consrtuctLib(int accountId, char* propName, int arrSize, int campaignTypes[], int campaignEnvironments[], long timeOutSeconds)
+    void _consrtuctLib(int accountId, char* propName, int arrSize, int campaignTypes[], int campaignsEnvironment, long timeOutSeconds)
     {
-        [unityBridgePlugin consrtuctLib:accountId _:propName _:arrSize _:campaignTypes _: campaignEnvironments _: timeOutSeconds];
+        [unityBridgePlugin consrtuctLib:accountId _:propName _:arrSize _:campaignTypes _: campaignsEnvironment _: timeOutSeconds];
     }
 
     void _loadMessage(char * authId)

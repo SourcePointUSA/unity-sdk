@@ -8,9 +8,10 @@ namespace ConsentManagementProviderLib
 {
     public static class CMP
     {
-        public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeoutInSeconds = 3)
+        public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
 #if UNITY_ANDROID
+            //TODO  campaignsEnvironment
             if (Application.platform == RuntimePlatform.Android)
             {
                 ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
@@ -26,6 +27,7 @@ namespace ConsentManagementProviderLib
                                                         accountId: accountId,
                                                         propertyName: propertyName,
                                                         language: language,
+                                                        campaignsEnvironment: campaignsEnvironment,
                                                         messageTimeoutInSeconds: messageTimeoutInSeconds);
             }
 #endif
