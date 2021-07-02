@@ -41,19 +41,12 @@ public class ConsentMessageProvider : MonoBehaviour
             SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, ios14Params);
             spCampaigns.Add(ios14);
         }
-        if (spCampaigns.Count > 0)
-        {
-            CMP.Initialize(spCampaigns: spCampaigns,
-                           accountId: this.accountId,
-                           propertyName: this.propertyName,
-                           language: this.language,
-                           campaignsEnvironment: campaignEnvironment,
-                           messageTimeoutInSeconds: this.messageTimeoutInSeconds);
-        }
-        else
-        {
-            throw new System.Exception("You should add at least one SpCampaign to use CMP!");
-        }
+        CMP.Initialize(spCampaigns: spCampaigns,
+                       accountId: this.accountId,
+                       propertyName: this.propertyName,
+                       language: this.language,
+                       campaignsEnvironment: campaignEnvironment,
+                       messageTimeoutInSeconds: this.messageTimeoutInSeconds);
     }
 
     private void Start()

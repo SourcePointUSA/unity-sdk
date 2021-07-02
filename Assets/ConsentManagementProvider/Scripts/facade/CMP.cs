@@ -11,17 +11,18 @@ namespace ConsentManagementProviderLib
     {
         public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
+            if(!IsSpCampaignsValid(spCampaigns))
+            { 
+                return;
+            }
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
-                List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
-                if (ios14 != null && ios14.Count > 0)
+                //excluding ios14 campaign if any
+                RemoveIos14SpCampaign(ref spCampaigns);
+                if (!IsSpCampaignsValid(spCampaigns))
                 {
-                    Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
-                    foreach (SpCampaign ios in ios14)
-                    {
-                        spCampaigns.Remove(ios);
-                    }
+                    return;
                 }
                 ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                             accountId: accountId,
@@ -41,6 +42,30 @@ namespace ConsentManagementProviderLib
                                                         messageTimeoutInSeconds: messageTimeoutInSeconds);
             }
 #endif
+        }
+
+        private static void RemoveIos14SpCampaign(ref List<SpCampaign> spCampaigns)
+        {
+            List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
+            if (ios14 != null && ios14.Count > 0)
+            {
+                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
+                foreach (SpCampaign ios in ios14)
+                {
+                    spCampaigns.Remove(ios);
+                }
+            }
+        }
+
+        private static bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
+        {
+            //check if there more than 0 campaign
+            if (spCampaigns.Count == 0)
+            {
+                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
+                return false;
+            }
+            return true;
         }
 
         public static void LoadMessage(string authId = null)
