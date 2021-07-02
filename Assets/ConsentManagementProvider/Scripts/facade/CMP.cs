@@ -18,6 +18,7 @@ namespace ConsentManagementProviderLib
                                                             accountId: accountId,
                                                             propertyName: propertyName,
                                                             language: language,
+                                                            campaignsEnvironment: campaignsEnvironment,
                                                             messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
             }
 #elif UNITY_IOS && !UNITY_EDITOR_OSX

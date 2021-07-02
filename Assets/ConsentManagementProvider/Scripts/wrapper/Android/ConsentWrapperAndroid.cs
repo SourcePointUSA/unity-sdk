@@ -57,7 +57,7 @@ namespace ConsentManagementProviderLib.Android
             }
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, long messageTimeoutMilliSeconds = 3000)
+        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
@@ -70,9 +70,7 @@ namespace ConsentManagementProviderLib.Android
                     foreach (SpCampaign sp in spCampaigns)
                     {
                         AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.CampaignType);
-                        AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count + 1];
-                        //adding environment as last TargetingParam in paramsArray
-                        paramsArray[paramsArray.Length - 1] = constructor.ConstructTargetingParam("campaignEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(sp.Environment));
+                        AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count];
                         foreach (TargetingParam tp in sp.TargetingParams)
                         {
                             AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);
@@ -86,6 +84,7 @@ namespace ConsentManagementProviderLib.Android
                                                                                propertyName: propertyName,
                                                                                messageTimeout: messageTimeoutMilliSeconds,
                                                                                language: msgLang,
+                                                                               campaignsEnvironment: campaignsEnvironment,
                                                                                spCampaigns: campaigns);
                     consentLib = constructor.ConsrtuctLib(spConfig: spConfig,
                                                           activity: this.activity,

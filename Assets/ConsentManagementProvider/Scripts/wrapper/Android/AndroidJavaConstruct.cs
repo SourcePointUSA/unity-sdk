@@ -78,7 +78,7 @@ namespace ConsentManagementProviderLib.Android
             return msgLang;
         }
         
-        internal AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, long messageTimeout, AndroidJavaObject language, AndroidJavaObject[] spCampaigns)
+        internal AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, long messageTimeout, AndroidJavaObject language, CAMPAIGN_ENV campaignsEnvironment, AndroidJavaObject[] spCampaigns)
         {
             AndroidJavaObject spConfig;
             using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
@@ -91,6 +91,9 @@ namespace ConsentManagementProviderLib.Android
                 CmpDebugUtil.Log("addMessageLanguage is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageTimeout", messageTimeout);
                 CmpDebugUtil.Log("addMessageTimeout is OK");
+                AndroidJavaObject env = ConstructCampaignEnv(campaignsEnvironment);
+                SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaignsEnv", env);
+                CmpDebugUtil.Log("addCampaignsEnv is OK");
 
                 foreach (AndroidJavaObject camp in spCampaigns)
                 {
@@ -114,8 +117,8 @@ namespace ConsentManagementProviderLib.Android
 
         private AndroidJavaObject ConstructCampaignEnv(CAMPAIGN_ENV environment)
         {
-            AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment), (int)environment);
-            campaignEnv.Set("value", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
+            AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignsEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment), (int)environment);
+            campaignEnv.Set("env", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
             CmpDebugUtil.Log("campaignEnv is OK");
             return campaignEnv;
         }
