@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConsentManagementProviderLib.Android;
 using ConsentManagementProviderLib.iOS;
 using UnityEngine;
@@ -13,6 +14,15 @@ namespace ConsentManagementProviderLib
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
+                List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
+                if (ios14 != null && ios14.Count > 0)
+                {
+                    Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
+                    foreach (SpCampaign ios in ios14)
+                    {
+                        spCampaigns.Remove(ios);
+                    }
+                }
                 ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                             accountId: accountId,
                                                             propertyName: propertyName,
