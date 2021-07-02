@@ -11,7 +11,6 @@ namespace ConsentManagementProviderLib
         public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
 #if UNITY_ANDROID
-            //TODO  campaignsEnvironment
             if (Application.platform == RuntimePlatform.Android)
             {
                 ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
