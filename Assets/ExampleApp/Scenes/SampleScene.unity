@@ -414,7 +414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &759187202
 RectTransform:
   m_ObjectHideFlags: 0
@@ -772,7 +772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8425b133d022ba49baffbec5737312b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allCampaignTypesToLoad: 0000000001000000
+  allCampaignTypesToLoad: 000000000100000002000000
   language: 1
   accountId: 22
   propertyName: mobile.multicampaign.demo
