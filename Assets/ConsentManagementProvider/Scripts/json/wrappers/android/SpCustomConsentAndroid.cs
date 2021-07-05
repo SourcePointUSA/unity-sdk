@@ -2,9 +2,8 @@
 
 namespace ConsentManagementProviderLib.Json
 {
-    internal class SpConsentsWrapperAndroid
+    internal class SpCustomConsentAndroid
     {
-        [JsonInclude] public CcpaConsentWrapper ccpa;
         [JsonInclude] public SpGdprConsentWrapperAndroid gdpr;
     }
 }

@@ -5,6 +5,7 @@ namespace ConsentManagementProviderLib.Json
 {
     internal class CcpaConsentWrapper
     {
+        [JsonInclude] public string uuid;
         [JsonInclude] public string status;
         [JsonInclude] public string uspstring;
         [JsonInclude] public string[] rejectedVendors;

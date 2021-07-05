@@ -5,9 +5,7 @@ namespace ConsentManagementProviderLib.Json
 {
     internal class SpVendorGrantWrapper
     {
-        [JsonInclude]
-        public object vendorGrant;
-        [JsonInclude]
-        public Dictionary<string, object> purposeGrants;
+        [JsonInclude] public object vendorGrant;
+        [JsonInclude] public Dictionary<string, object> purposeGrants;
     }
 }

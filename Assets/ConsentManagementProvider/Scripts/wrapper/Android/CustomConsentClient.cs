@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using System.Text.Json;
+using ConsentManagementProviderLib.Json;
 
 namespace ConsentManagementProviderLib.Android
 {
@@ -21,7 +21,7 @@ namespace ConsentManagementProviderLib.Android
             SpCustomConsentAndroid parsed = null;
             try
             {
-                parsed = JsonSerializer.Deserialize<SpCustomConsentAndroid>(spConsentsJson);
+                parsed = JsonUnwrapper.UnwrapSpCustomConsentAndroid(spConsentsJson);
             }
             catch (Exception ex)
             {
@@ -35,8 +35,9 @@ namespace ConsentManagementProviderLib.Android
                 }
                 else
                 {
-                    customGdprConsent = parsed.gdpr;
-                    callback?.Invoke(parsed.gdpr);
+                    var spGdpr = JsonUnwrapper.UnwrapSpGdprConsentAndroid(parsed.gdpr);
+                    customGdprConsent = spGdpr.consents;
+                    callback?.Invoke(customGdprConsent);
                 }
             }
         }
