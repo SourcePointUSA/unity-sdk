@@ -24,7 +24,9 @@
 }
 
 - (NSString*)convertCharToNSString:(char*)str{
-    return [NSString stringWithFormat:@"%s", str];
+    NSString * ns = [NSString stringWithFormat:@"%s", str];
+//    NSString * ns = [[NSString alloc] initWithBytes:str length:sizeof(str) encoding:NSASCIIStringEncoding];
+    return ns;
 }
 
 - (const char*)getGOName{
@@ -32,7 +34,7 @@
 }
 
 - (SPError *) checkIfPropNameNotNull:(char*) propName {
-    NSString* nsPropName = [NSString stringWithFormat:@"%s", propName];
+    NSString* nsPropName = [self convertCharToNSString:propName];
     if(propName == nil || [nsPropName isEqualToString : @""]){
         SPError *myErr = [SPError errorWithDomain:@"SPConsentManager"
                                   code:100
@@ -60,7 +62,7 @@
 }
 
 - (void) setUnityCallback:(const char *)gameObjectName {
-    NSString* goString = [NSString stringWithFormat:@"%s", gameObjectName];
+    NSString* goString = [self convertCharToNSString:gameObjectName];
     goNameStr = goString;
 //    NSLog(@"RECEIVED FROM C#: %@", goNameStr);
     [self initDict];
@@ -77,7 +79,11 @@
 }
 
 -(void)cleanDict {
-    [params removeAllObjects];
+    for (int i=0; i<=2; i++) {
+        NSNumber * campaignType = [NSNumber numberWithInt:i];
+        NSMutableDictionary<NSString *, NSString *> * campDict = params[[campaignType stringValue]];
+        [campDict removeAllObjects];
+    }
 }
 
 -(void)initArrays {
@@ -96,12 +102,11 @@
     NSString * nsVal = [self convertCharToNSString:value];
     NSString * nsKey = [self convertCharToNSString:key];
     NSNumber * nsCampaignType = [NSNumber numberWithInt:campaignType];
-    
 //    NSLog(@"campType: %@ K= %@ V= %@",nsCampaignType,nsKey,nsVal);
     NSMutableDictionary<NSString *, NSString *> * campaignParams = params[[nsCampaignType stringValue]];
     [campaignParams setObject:nsVal forKey:nsKey];
-    
-//    NSLog(@"campaignParams => %@", params);
+//    NSLog(@"campaignParams => %@", campaignParams);
+//    NSLog(@"params => %@", params);
 }
 
 -(void) consrtuctLib : (int) accountId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int) campaignsEnvironment _: (long) timeOutSeconds 
@@ -111,7 +116,7 @@
     {
         [self onErrorWithError:err];
     }else{
-        NSString* nsPropName = [NSString stringWithFormat:@"%s", propName];
+        NSString* nsPropName = [self convertCharToNSString:propName];;
         
         @try
         {
@@ -211,6 +216,7 @@
     if([self checkIfConsentManagerNotNull]){
         NSString * nsPmId = [self convertCharToNSString:pmId];
         SPPrivacyManagerTab tab = tabId;
+//        NSLog(@"pmId %s", pmId);
         [consentManager loadCCPAPrivacyManagerWithId:nsPmId tab:tab];
     }
 }
@@ -246,6 +252,7 @@
                     handler:(void (^ _Nonnull)(SPGDPRConsent * _Nonnull)) ^(SPGDPRConsent * gdprUserConsent)
     {
 //        NSLog(@"customConsentGDPRWithVendors");
+//        NSLog(@">>>>> %@", [gdprUserConsent toJSON]);
         UnitySendMessage([self getGOName], "OnCustomConsentGDPRCallback", [self convertNSStringToChar:[gdprUserConsent toJSON]]);
     }];
 }
@@ -281,7 +288,7 @@
 
 - (void)onConsentReadyWithUserData:(SPUserData *)userData {
 //    NSLog(@"onConsentReady");
-//    NSLog(@"%s", [self convertNSStringToChar:[userData toJSON]]);
+//    NSLog(@">>>>> %s", [self convertNSStringToChar:[userData toJSON]]);
     UnitySendMessage([self getGOName], "OnConsentReady", [self convertNSStringToChar:[userData toJSON]]);
 }
 
