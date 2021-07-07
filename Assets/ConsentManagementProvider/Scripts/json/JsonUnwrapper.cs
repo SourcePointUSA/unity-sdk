@@ -99,8 +99,9 @@ namespace ConsentManagementProviderLib.Json
         {
             GdprConsent unwrapped = new GdprConsent
             {
+                uuid = wrapped.uuid,
                 euconsent = wrapped.euconsent,
-                // TCData = wrapped.TCData,
+                TCData = wrapped.TCData,
                 grants = new Dictionary<string, SpVendorGrant>()
             };
             foreach (KeyValuePair<string, SpVendorGrantWrapper> vendorGrantWrapper in wrapped.grants)
