@@ -6,6 +6,7 @@ namespace ConsentManagementProviderLib.Observer
     {
         private void Awake()
         {
+            gameObject.name = "CMP_BroadcastEventsExecutor";
             DontDestroyOnLoad(this.gameObject);
         }
 

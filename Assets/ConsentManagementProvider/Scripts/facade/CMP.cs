@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using ConsentManagementProviderLib.Android;
 using ConsentManagementProviderLib.iOS;
+using ConsentManagementProviderLib.Observer;
 using UnityEngine;
 
 namespace ConsentManagementProviderLib
 {
     public static class CMP
     {
+        private static GameObject mainThreadBroadcastEventsExecutor;
+
         public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
             if(!IsSpCampaignsValid(spCampaigns))
@@ -18,6 +21,7 @@ namespace ConsentManagementProviderLib
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
+                CreateBroadcastExecutorGO();
                 //excluding ios14 campaign if any
                 RemoveIos14SpCampaign(ref spCampaigns);
                 if (!IsSpCampaignsValid(spCampaigns))
@@ -34,6 +38,7 @@ namespace ConsentManagementProviderLib
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
             if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
+                CreateBroadcastExecutorGO();
                 ConsentWrapperIOS.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                         accountId: accountId,
                                                         propertyName: propertyName,
@@ -43,31 +48,7 @@ namespace ConsentManagementProviderLib
             }
 #endif
         }
-
-        private static void RemoveIos14SpCampaign(ref List<SpCampaign> spCampaigns)
-        {
-            List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
-            if (ios14 != null && ios14.Count > 0)
-            {
-                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
-                foreach (SpCampaign ios in ios14)
-                {
-                    spCampaigns.Remove(ios);
-                }
-            }
-        }
-
-        private static bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
-        {
-            //check if there more than 0 campaign
-            if (spCampaigns.Count == 0)
-            {
-                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
-                return false;
-            }
-            return true;
-        }
-
+        
         public static void LoadMessage(string authId = null)
         {
 #if UNITY_ANDROID
@@ -178,5 +159,38 @@ namespace ConsentManagementProviderLib
             }
 #endif
         }
+        
+        #region private methods
+        private static void CreateBroadcastExecutorGO()
+        {
+            if (mainThreadBroadcastEventsExecutor != null) return;
+            mainThreadBroadcastEventsExecutor = new GameObject();
+            mainThreadBroadcastEventsExecutor.AddComponent<BroadcastEventsExecutor>();
+        }
+
+        private static void RemoveIos14SpCampaign(ref List<SpCampaign> spCampaigns)
+        {
+            List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
+            if (ios14 != null && ios14.Count > 0)
+            {
+                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
+                foreach (SpCampaign ios in ios14)
+                {
+                    spCampaigns.Remove(ios);
+                }
+            }
+        }
+
+        private static bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
+        {
+            //check if there more than 0 campaign
+            if (spCampaigns.Count == 0)
+            {
+                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
+                return false;
+            }
+            return true;
+        }
+        #endregion
     }
 }

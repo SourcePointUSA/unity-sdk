@@ -13,7 +13,6 @@ namespace ConsentManagementProviderLib.Android
         private SpClientProxy spClient;
 
         private AndroidJavaConstruct constructor;
-        private GameObject mainThreadBroadcastEventsExecutor;
         private CustomConsentClient customConsentClient;
         
         private static ConsentWrapperAndroid instance;
@@ -46,23 +45,11 @@ namespace ConsentManagementProviderLib.Android
 #endif
         }
 
-        private void CreateBroadcastExecutorGO()
-        {
-            if (mainThreadBroadcastEventsExecutor != null) return;
-            else
-            {
-                mainThreadBroadcastEventsExecutor = new GameObject();
-                mainThreadBroadcastEventsExecutor.name = "CMPAndroidListenerHelper";
-                mainThreadBroadcastEventsExecutor.AddComponent<BroadcastEventsExecutor>();
-            }
-        }
-
         public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
-                CreateBroadcastExecutorGO();
                 try
                 {
                     AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
