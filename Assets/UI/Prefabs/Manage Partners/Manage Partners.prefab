@@ -1038,7 +1038,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5051334608794716806}
-  - component: {fileID: 2381007080511234911}
   m_Layer: 5
   m_Name: CMP_Cell (15)
   m_TagString: Untagged
@@ -1064,28 +1063,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2381007080511234911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724436537331133055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &745993478879456181
 GameObject:
   m_ObjectHideFlags: 0
@@ -5198,7 +5177,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4449589043839122324}
-  - component: {fileID: 2375689061250755266}
   m_Layer: 5
   m_Name: CMP_Cell (5)
   m_TagString: Untagged
@@ -5224,28 +5202,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2375689061250755266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2554146880886172595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &2554914480537097691
 GameObject:
   m_ObjectHideFlags: 0
@@ -6719,7 +6677,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7696716704030471902}
-  - component: {fileID: 6231587126943350774}
   m_Layer: 5
   m_Name: CMP_Cell (3)
   m_TagString: Untagged
@@ -6745,28 +6702,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6231587126943350774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3352932209357947145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &3449352914255062363
 GameObject:
   m_ObjectHideFlags: 0
@@ -6776,7 +6713,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5394574411619425449}
-  - component: {fileID: 2736082240408254164}
   m_Layer: 5
   m_Name: CMP_Cell (11)
   m_TagString: Untagged
@@ -6802,28 +6738,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2736082240408254164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3449352914255062363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &3558512150873090804
 GameObject:
   m_ObjectHideFlags: 0
@@ -6833,7 +6749,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027504548730812984}
-  - component: {fileID: 607138703451361948}
   m_Layer: 5
   m_Name: CMP_Cell (12)
   m_TagString: Untagged
@@ -6859,28 +6774,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &607138703451361948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3558512150873090804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &3560765323522889670
 GameObject:
   m_ObjectHideFlags: 0
@@ -7544,7 +7439,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2021539939043508087}
-  - component: {fileID: 2987534713281835465}
   m_Layer: 5
   m_Name: CMP_Cell (9)
   m_TagString: Untagged
@@ -7570,28 +7464,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2987534713281835465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3807242173642505759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &3838582205029062495
 GameObject:
   m_ObjectHideFlags: 0
@@ -8577,7 +8451,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5813809659099771277}
-  - component: {fileID: 1994627149858784426}
   m_Layer: 5
   m_Name: CMP_Cell (6)
   m_TagString: Untagged
@@ -8603,28 +8476,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1994627149858784426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4203090327749049392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &4303062755987981162
 GameObject:
   m_ObjectHideFlags: 0
@@ -10166,7 +10019,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6498111949745013809}
-  - component: {fileID: 4303283491854843539}
   m_Layer: 5
   m_Name: CMP_Cell
   m_TagString: Untagged
@@ -10192,28 +10044,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4303283491854843539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4961628813427989604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &5003324797196043689
 GameObject:
   m_ObjectHideFlags: 0
@@ -10260,7 +10092,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 85756426930269947}
-  - component: {fileID: 5636211628611276304}
   m_Layer: 5
   m_Name: CMP_Cell (13)
   m_TagString: Untagged
@@ -10286,28 +10117,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5636211628611276304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5013618617539475938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &5019120566205726160
 GameObject:
   m_ObjectHideFlags: 0
@@ -11767,7 +11578,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9002405400102980890}
-  - component: {fileID: 7511023811226918725}
   m_Layer: 5
   m_Name: CMP_Cell (4)
   m_TagString: Untagged
@@ -11793,28 +11603,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7511023811226918725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5778308971288028117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &5888723301275866204
 GameObject:
   m_ObjectHideFlags: 0
@@ -11944,7 +11734,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 110.497154}
+  m_AnchoredPosition: {x: 0, y: 110.49787}
   m_SizeDelta: {x: 844.13715, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4387701531741949736
@@ -11966,10 +11756,10 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -11986,7 +11776,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
-  m_VerticalFit: 1
+  m_VerticalFit: 2
 --- !u!1 &5947333553931717102
 GameObject:
   m_ObjectHideFlags: 0
@@ -12835,7 +12625,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7962277404073577414}
-  - component: {fileID: 7400541218577184587}
   m_Layer: 5
   m_Name: CMP_Cell (10)
   m_TagString: Untagged
@@ -12861,28 +12650,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7400541218577184587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6311841909269136145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &6327740131216412896
 GameObject:
   m_ObjectHideFlags: 0
@@ -13200,7 +12969,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8224887378968653137}
-  - component: {fileID: 6740677139584997860}
   m_Layer: 5
   m_Name: CMP_Cell (2)
   m_TagString: Untagged
@@ -13226,28 +12994,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6740677139584997860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6583537494091981643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &6599821540425013701
 GameObject:
   m_ObjectHideFlags: 0
@@ -13412,7 +13160,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6126218709148770067}
-  - component: {fileID: 3499727571932427322}
   m_Layer: 5
   m_Name: CMP_Cell (1)
   m_TagString: Untagged
@@ -13438,28 +13185,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3499727571932427322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6695580491344381824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &6703987221347506759
 GameObject:
   m_ObjectHideFlags: 0
@@ -14467,7 +14194,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3067831342750928317}
-  - component: {fileID: 9070213832456552943}
   m_Layer: 5
   m_Name: CMP_Cell (7)
   m_TagString: Untagged
@@ -14493,28 +14219,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &9070213832456552943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7419558440409785155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &7461645523917760047
 GameObject:
   m_ObjectHideFlags: 0
@@ -15223,7 +14929,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 726162514228200179}
-  - component: {fileID: 985079623136704392}
   m_Layer: 5
   m_Name: CMP_Cell (14)
   m_TagString: Untagged
@@ -15249,28 +14954,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &985079623136704392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7962031436697004374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &7962712034426918967
 GameObject:
   m_ObjectHideFlags: 0
@@ -16828,7 +16513,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8976801802791036759}
-  - component: {fileID: 5858312107972449668}
   m_Layer: 5
   m_Name: CMP_Cell (8)
   m_TagString: Untagged
@@ -16854,28 +16538,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.13715, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5858312107972449668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8899970211095488280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 80
-  m_PreferredWidth: -1
-  m_PreferredHeight: 83.36798
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &8926235175403570033
 GameObject:
   m_ObjectHideFlags: 0
