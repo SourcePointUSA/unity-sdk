@@ -1,22 +1,24 @@
+﻿using Assets.UI.Scripts.Util;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Assets.UI.Scripts.Util;
+using UnityEngine.UI;
 
-public class CmpButtonAnimatorController : TextColorAnimationController, IPointerEnterHandler, IPointerExitHandler
+public class CmpHomeButtonAnimatorController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private Text text;
     private readonly string scaleUp = "SCALE_UP";
     private readonly string scaleDown = "SCALE_DOWN";
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        base.SetActiveState();
+        text.fontStyle = FontStyle.Bold;
         StartCoroutine(animator.TriggerAnimation(scaleUp));
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        base.SetIdleState();
+        text.fontStyle = FontStyle.Normal;
         StartCoroutine(animator.TriggerAnimation(scaleDown));
     }
 }
