@@ -1,0 +1,1024 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &808640602360427904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4552303215744441670}
+  m_Layer: 5
+  m_Name: Viewport
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4552303215744441670
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808640602360427904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5083459192896609399}
+  m_Father: {fileID: 4774390766663347600}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 844.137, y: 879.64}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &904394347397035132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7144473634647656488}
+  - component: {fileID: 636779415963817395}
+  - component: {fileID: 1809823992172495447}
+  m_Layer: 5
+  m_Name: Manage Partners
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7144473634647656488
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904394347397035132}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2784036275590977847}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -62.17615}
+  m_SizeDelta: {x: 475.9265, y: 124.3523}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &636779415963817395
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904394347397035132}
+  m_CullTransparentMesh: 1
+--- !u!114 &1809823992172495447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904394347397035132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.1764706, g: 0.07058824, b: 0.28235295, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 60
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 60
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: Privacy Policy
+--- !u!1 &3713974525001826894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8203091593055216937}
+  - component: {fileID: 8566185724718698471}
+  m_Layer: 5
+  m_Name: Privacy Policy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8203091593055216937
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3713974525001826894}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5066728162516205082}
+  - {fileID: 2784036275590977847}
+  - {fileID: 4473401574110513635}
+  - {fileID: 6725031445802573594}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8566185724718698471
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3713974525001826894}
+  m_CullTransparentMesh: 1
+--- !u!1 &3744320866026225683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1608125542908806107}
+  - component: {fileID: 4271201184376805051}
+  - component: {fileID: 8134145858078121555}
+  m_Layer: 5
+  m_Name: Shadow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1608125542908806107
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3744320866026225683}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5066728162516205082}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4271201184376805051
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3744320866026225683}
+  m_CullTransparentMesh: 1
+--- !u!114 &8134145858078121555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3744320866026225683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 5a81d89b1c4460c4bb05d2e6d7fff8b3, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4354702316897218455
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4570626464917992885}
+  - component: {fileID: 9138263437197966455}
+  - component: {fileID: 4088072682623342798}
+  m_Layer: 5
+  m_Name: Blur
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4570626464917992885
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354702316897218455}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5066728162516205082}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &9138263437197966455
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354702316897218455}
+  m_CullTransparentMesh: 1
+--- !u!114 &4088072682623342798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4354702316897218455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 585f1ca1315597a4983077182ec46a00, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4401701967782565226
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4774390766663347600}
+  - component: {fileID: 5997765807962598705}
+  - component: {fileID: 6868259133731069981}
+  m_Layer: 5
+  m_Name: Scroll Group
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4774390766663347600
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4401701967782565226}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4552303215744441670}
+  m_Father: {fileID: 6725031445802573594}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.88000005, y: 0.9331217}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5997765807962598705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4401701967782565226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 0, y: 0}
+--- !u!114 &6868259133731069981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4401701967782565226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Content: {fileID: 5083459192896609399}
+  m_Horizontal: 0
+  m_Vertical: 1
+  m_MovementType: 1
+  m_Elasticity: 0.1
+  m_Inertia: 1
+  m_DecelerationRate: 0.135
+  m_ScrollSensitivity: 5
+  m_Viewport: {fileID: 4774390766663347600}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &5914090385657712393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5083459192896609399}
+  - component: {fileID: 4387701531741949736}
+  - component: {fileID: 7727765797293760985}
+  m_Layer: 5
+  m_Name: "\u0421ontent"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5083459192896609399
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5914090385657712393}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 3014835567908443640}
+  m_Father: {fileID: 4552303215744441670}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: -2911.167}
+  m_SizeDelta: {x: 845.61, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4387701531741949736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5914090385657712393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 1
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &7727765797293760985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5914090385657712393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
+--- !u!1 &6599821540425013701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6725031445802573594}
+  m_Layer: 5
+  m_Name: RightGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6725031445802573594
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6599821540425013701}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4774390766663347600}
+  m_Father: {fileID: 8203091593055216937}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 1, y: 0.8728519}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -0.0000010430813, y: -0.0000076293945}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &6614678482403158378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2784036275590977847}
+  m_Layer: 0
+  m_Name: TopGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2784036275590977847
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6614678482403158378}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7144473634647656488}
+  m_Father: {fileID: 8203091593055216937}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.78873205}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 46.09027}
+  m_SizeDelta: {x: 0, y: -92.1805}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &8237697142898168458
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3014835567908443640}
+  - component: {fileID: 3043057108435889630}
+  - component: {fileID: 2630783084079558843}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3014835567908443640
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8237697142898168458}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5083459192896609399}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 845.61, y: 7581.61}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3043057108435889630
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8237697142898168458}
+  m_CullTransparentMesh: 1
+--- !u!114 &2630783084079558843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8237697142898168458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 15
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 15
+    m_MaxSize: 30
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt
+    luctus tempus. Nulla condimentum efficitur nibh, sit amet convallis arcu luctus
+    at. Integer lorem augue, malesuada ut quam sit amet, commodo pretium ipsum. Nunc
+    aliquam metus quis orci aliquam, non euismod nisl tristique. Vestibulum malesuada
+    tincidunt dui, id euismod diam dignissim at. Cras accumsan hendrerit ligula,
+    eget cursus arcu. Nullam in nulla tortor. Ut fringilla facilisis sapien ut rhoncus.
+    Vivamus malesuada ultricies justo euismod molestie. Aenean eu pretium nulla.
+    Proin lobortis leo augue, ut commodo nulla bibendum vel. Nunc ultricies mollis
+    sem non ultrices. Class aptent taciti sociosqu ad litora torquent per conubia
+    nostra, per inceptos himenaeos. Nulla tempor venenatis turpis, id elementum ante
+    placerat in.
+
+
+
+    Aliquam erat volutpat. Duis eget diam aliquam, lobortis nunc
+    ac, condimentum mauris. Vestibulum quis enim turpis. Vestibulum non maximus sapien,
+    a bibendum elit. Maecenas vestibulum nunc in turpis porttitor varius. Duis pretium
+    enim magna, et molestie sem tristique tristique. Ut rutrum, nulla vitae venenatis
+    tristique, ipsum tortor ultrices felis, a rutrum tortor odio eu erat. Donec facilisis
+    nibh est, a imperdiet neque ultricies a. Suspendisse neque eros, egestas vel
+    dui sit amet, semper auctor tortor. Vivamus feugiat, tortor ac laoreet gravida,
+    erat sapien accumsan purus, ac commodo elit leo eget metus. Vivamus blandit faucibus
+    ligula vel sollicitudin. Class aptent taciti sociosqu ad litora torquent per
+    conubia nostra, per inceptos himenaeos. Nullam porttitor tincidunt bibendum.
+
+
+
+    Donec
+    lacinia in nisl ac tempor. Pellentesque diam tellus, venenatis tempor tempus
+    in, elementum vel nisi. Nullam imperdiet purus erat, non gravida ipsum porta
+    quis. Vestibulum vehicula leo vel velit tempus, vel consequat ipsum vestibulum.
+    Aliquam ultrices, tellus non fermentum semper, libero nunc feugiat arcu, sit
+    amet pretium felis risus ac nunc. Vestibulum pretium elementum velit vitae rutrum.
+    Donec hendrerit nisi turpis. Duis auctor, dolor id fringilla tempor, dolor diam
+    consequat neque, eget laoreet risus risus at justo. Quisque iaculis tellus quis
+    risus condimentum hendrerit. Ut bibendum velit in tristique sollicitudin. Nullam
+    luctus ut sapien id scelerisque. Nulla metus nibh, dictum eget mi vitae, euismod
+    interdum neque. Maecenas et lorem id nisl elementum elementum. Nunc tempor mi
+    nisl, quis interdum purus iaculis et. Nunc ac laoreet tortor. Cras mi massa,
+    convallis a interdum eu, sollicitudin et ligula.
+
+
+
+    Quisque et finibus tellus.
+    Praesent facilisis tellus a imperdiet consequat. Ut purus orci, hendrerit et
+    sollicitudin nec, mattis ut dui. Nam venenatis a eros ac condimentum. Quisque
+    quis auctor augue, id sollicitudin ante. Vestibulum in maximus ex. Praesent fringilla
+    consectetur urna, nec posuere erat placerat non. Curabitur egestas, mi et rhoncus
+    aliquet, enim turpis auctor nisi, eu sodales sem nibh sed tortor. Vestibulum
+    mattis ornare varius. Pellentesque rhoncus sodales libero non mollis. Phasellus
+    non mi dignissim, rutrum dui at, suscipit turpis. Vestibulum ante ipsum primis
+    in faucibus orci luctus et ultrices posuere cubilia curae;
+
+
+
+    Donec id lacus
+    quis ante pulvinar porttitor. Aliquam egestas, libero sed euismod lobortis, leo
+    massa elementum dui, vitae iaculis mauris justo eget odio. Pellentesque scelerisque
+    consectetur ipsum. Mauris a urna eros. Ut vestibulum ultrices fringilla. Ut posuere
+    elit est, ut facilisis neque lobortis et. Cras blandit diam elit, eget consectetur
+    libero ornare id. Cras lobortis commodo urna, id tristique lorem fringilla id.
+    Phasellus sit amet turpis hendrerit, scelerisque magna eu, efficitur erat. Nulla
+    facilisi. Morbi feugiat felis sed tellus sagittis, at elementum tellus finibus.
+    Praesent lobortis ante lectus, quis aliquam turpis tristique sed. In convallis
+    non dolor id bibendum. In sed mi augue. Interdum et malesuada fames ac ante ipsum
+    primis in faucibus.
+
+
+
+    Vestibulum id faucibus tellus. Curabitur sagittis
+    arcu non odio imperdiet, nec tristique odio elementum. Ut tincidunt non elit
+    eu vestibulum. Sed vulputate pulvinar nibh ac tincidunt. Vivamus eu convallis
+    velit. Maecenas et dapibus lorem. Suspendisse pulvinar urna ut consectetur tristique.
+    Mauris odio augue, pellentesque id eros quis, ultricies pharetra risus. Maecenas
+    dictum ipsum dui, nec varius sem varius ac.
+
+
+
+    Ut urna felis, tincidunt id
+    nisi efficitur, condimentum imperdiet est. Suspendisse in eros nec dui vestibulum
+    eleifend. Vestibulum imperdiet pretium libero eget posuere. Etiam nec massa diam.
+    Nullam accumsan justo nec nunc sodales aliquet. Praesent fringilla turpis lorem,
+    ac molestie urna convallis ac. Aliquam ultrices pretium elit, ut tempor neque
+    cursus ac. Nam id quam elementum, lobortis turpis a, suscipit elit. Curabitur
+    sit amet neque vitae tellus pharetra elementum nec gravida tortor. Praesent felis
+    justo, ultricies eget ex eu, commodo sagittis dui. Aenean mollis accumsan venenatis.
+    Sed nisi dolor, ornare sit amet erat sit amet, porta euismod eros.
+
+
+
+    In
+    arcu purus, ultrices rutrum enim at, tempus euismod elit. Duis eget auctor diam.
+    Quisque euismod, lectus blandit posuere facilisis, risus tellus pretium quam,
+    id efficitur ipsum turpis eu nibh. Sed at elit fringilla, mattis ex ullamcorper,
+    elementum ante. Vestibulum id volutpat quam, et pretium nibh. Nulla fermentum
+    sit amet mauris eu ornare. Aliquam sodales fringilla consequat.
+
+
+
+    Phasellus
+    vitae odio sed urna consequat porttitor. Donec accumsan rhoncus dolor et posuere.
+    Maecenas imperdiet porta diam at iaculis. Aliquam ornare lectus ac mi laoreet
+    placerat. Phasellus faucibus diam congue metus rhoncus, nec congue dolor sagittis.
+    Cras quis ipsum congue, laoreet leo at, mollis arcu. Praesent vestibulum, ante
+    at vehicula laoreet, tortor ipsum ultrices metus, in imperdiet urna orci in mauris.
+    Aenean euismod turpis a dui tincidunt tempus eu quis dolor. Nullam dapibus faucibus
+    nibh, at fermentum ipsum. Nulla eleifend diam non mi congue convallis a a magna.
+    Donec auctor sem a venenatis efficitur. Suspendisse et blandit sem. Pellentesque
+    habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+    Suspendisse eu venenatis ex. Proin rhoncus ullamcorper est, mattis consequat
+    tortor rhoncus et. Suspendisse id arcu in nisi ornare efficitur id ut nulla.
+
+
+
+    Curabitur
+    vel mi arcu. Ut aliquet, enim eu viverra tincidunt, nulla lacus finibus ex, ac
+    tincidunt augue ante vitae urna. Nam consequat metus eu rhoncus finibus. Nullam
+    laoreet volutpat justo, vel viverra mi blandit pharetra. Duis vel erat risus.
+    Vivamus vehicula augue sit amet orci lobortis cursus. Nullam nec commodo arcu.
+    Sed suscipit sagittis nisl et hendrerit. Etiam ex massa, sollicitudin in efficitur
+    non, sodales a erat. Aenean aliquet dignissim est, vitae vestibulum nisl tincidunt
+    at. In vel varius mi. Sed finibus a magna a congue. Duis bibendum aliquet lectus
+    nec viverra.
+
+
+
+    Etiam eleifend facilisis gravida. Duis lacinia orci sed ipsum
+    vestibulum, eget aliquet ligula faucibus. Sed interdum mauris ut tempus tempor.
+    Sed suscipit ullamcorper turpis, eu aliquet risus lacinia non. Aenean lacinia
+    porta nunc. Proin vitae convallis lacus. Aenean euismod, lacus ac malesuada interdum,
+    purus neque eleifend enim, at congue ex felis vel quam. Morbi laoreet mauris
+    ac mattis tempor. Integer tincidunt auctor magna, quis ultrices orci condimentum
+    sit amet. Vivamus fringilla sollicitudin posuere.
+
+
+
+    Nullam faucibus enim
+    at erat auctor cursus. Aenean nec mollis mi. Integer ac placerat odio. Proin
+    sed mauris libero. Praesent eget eros porttitor, rutrum quam lobortis, condimentum
+    libero. Suspendisse semper ante quis cursus scelerisque. Ut sit amet lacinia
+    turpis. Mauris eget dictum massa. Quisque quis ullamcorper dolor. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
+    turpis egestas. Sed congue eu tellus ac egestas.
+
+
+
+    Mauris aliquam neque
+    dui, quis maximus purus tincidunt eu. Sed id ipsum egestas, pharetra urna vitae,
+    scelerisque dui. Integer at turpis euismod, dictum eros eget, vulputate elit.
+    Cras maximus, ante quis porttitor efficitur, ante nulla egestas ex, non posuere
+    arcu eros a lorem. Phasellus rhoncus arcu a fermentum dictum. Donec commodo enim
+    arcu, nec faucibus quam feugiat in. Donec erat enim, bibendum vel tristique a,
+    maximus quis nisi. Fusce condimentum dolor velit, eu dignissim orci tristique
+    vitae. Duis malesuada pretium dui. In iaculis scelerisque massa eget vehicula.
+    Nam id mollis neque.
+
+
+
+    Nunc congue sapien nec posuere malesuada. Integer
+    tincidunt urna a elit fringilla, in mattis felis ornare. Etiam molestie bibendum
+    rutrum. Fusce lacinia elementum dignissim. In vel nibh maximus orci euismod ultrices.
+    Donec ut eros in nibh lobortis varius. Sed aliquet augue auctor ligula semper,
+    non rhoncus velit vulputate. Praesent eu felis enim. Pellentesque molestie maximus
+    arcu vel lacinia. Duis efficitur sed elit vitae consequat. Pellentesque varius
+    mattis massa. Fusce condimentum, tellus in malesuada fringilla, felis nisl lobortis
+    eros, sed commodo dui leo sed felis. Pellentesque nulla neque, bibendum sed metus
+    ac, auctor pharetra metus. Pellentesque congue non nisl at porttitor. Donec at
+    mauris a enim volutpat sodales.
+
+
+
+    Sed feugiat, augue id congue venenatis,
+    lectus arcu sollicitudin massa, sed varius urna enim a turpis. Vestibulum quis
+    massa a justo cursus lacinia ac in urna. Nullam vel rhoncus nibh, vitae tincidunt
+    magna. Duis ut massa ut sapien dictum sodales at eget augue. Morbi posuere nunc
+    nisl, sit amet pulvinar libero mattis quis. Sed vel eleifend ante, id pulvinar
+    urna. In ultricies in ligula eget luctus. Etiam ac consequat nibh, at lobortis
+    lacus. Aliquam dapibus laoreet semper. Nam blandit suscipit suscipit. Curabitur
+    sed lectus et neque feugiat eleifend nec id ante. Praesent tempus tempus sem
+    ut porttitor.
+
+
+
+    Phasellus ut nisi sit amet felis consequat aliquam sed hendrerit
+    magna. Curabitur in tellus id velit elementum pellentesque. Fusce euismod maximus
+    leo quis sollicitudin. Nam nulla ligula, convallis vitae eleifend nec, convallis
+    blandit tortor. Aliquam id dolor malesuada nibh ultrices euismod ut quis metus.
+    Pellentesque magna dolor, elementum vel risus lacinia, eleifend pellentesque
+    nulla. Maecenas sit amet mattis diam. Suspendisse sapien nulla, dictum vel aliquam
+    at, tincidunt et elit. Curabitur lacinia ex ut eros aliquam euismod.
+
+
+
+    Fusce
+    fringilla vulputate leo eu pulvinar. Ut rhoncus nibh sit amet nulla ornare, ut
+    lobortis nunc malesuada. Sed sit amet magna vitae nisl viverra lacinia id vitae
+    ex. Sed cursus, urna ac facilisis placerat, eros purus commodo eros, sit amet
+    sollicitudin velit orci egestas nunc. Pellentesque nec efficitur tortor, et convallis
+    ante. Aenean ut gravida tortor, eget faucibus eros. Class aptent taciti sociosqu
+    ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus eu dapibus
+    urna. In porta felis et faucibus congue. Nunc interdum lacus ut massa consectetur,
+    vestibulum scelerisque mi euismod. Praesent bibendum placerat velit, in rutrum
+    turpis fermentum vitae.'
+--- !u!1 &8693410995409417280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5066728162516205082}
+  - component: {fileID: 7951188122935633690}
+  - component: {fileID: 9076767679563038538}
+  m_Layer: 5
+  m_Name: BG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5066728162516205082
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8693410995409417280}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1608125542908806107}
+  - {fileID: 4570626464917992885}
+  m_Father: {fileID: 8203091593055216937}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7951188122935633690
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8693410995409417280}
+  m_CullTransparentMesh: 1
+--- !u!114 &9076767679563038538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8693410995409417280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &1906839952608001855
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8203091593055216937}
+    m_Modifications:
+    - target: {fileID: 92496837364422497, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_Name
+      value: LeftGroup
+      objectReference: {fileID: 0}
+    - target: {fileID: 2611222020570772417, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_Text
+      value: Close
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.8728519
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -0.0000076293945
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692972436120560196, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894272902349577730, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406523069944560728, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: m_Name
+      value: CloseButton
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+--- !u!224 &4473401574110513635 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2621873241139918556, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+  m_PrefabInstance: {fileID: 1906839952608001855}
+  m_PrefabAsset: {fileID: 0}
