@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using System.Diagnostics;
-
 using System.IO;
 using System.Linq;
 using UnityEditor.iOS.Xcode.Extensions;
