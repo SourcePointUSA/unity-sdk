@@ -8,16 +8,11 @@ using UnityEngine;
 
 public static class NativeUiJsonDeserializer
 {
-    public static Dictionary<string, List<CmpUiElement>> localization;
+    public static Dictionary<string, List<CmpUiElementModel>> localization;
 
-    // static void Main(string[] args)
-    // {
-    //     localization = NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM);
-    // }
-
-    public static Dictionary<string, List<CmpUiElement>> DeserializeNativePm(string json)
+    public static Dictionary<string, List<CmpUiElementModel>> DeserializeNativePm(string json)
     {
-        Dictionary<string, List<CmpUiElement>> result = new Dictionary<string, List<CmpUiElement>>();
+        Dictionary<string, List<CmpUiElementModel>> result = new Dictionary<string, List<CmpUiElementModel>>();
         using (JsonDocument document = JsonDocument.Parse(json))
         {
             JsonElement root = document.RootElement;
@@ -32,7 +27,7 @@ public static class NativeUiJsonDeserializer
                     viewIdStr = viewId.GetString();
                     if (!string.IsNullOrEmpty(viewIdStr))
                     {
-                        result.Add(viewIdStr, new List<CmpUiElement>());
+                        result.Add(viewIdStr, new List<CmpUiElementModel>());
                     }
                     else
                     {
@@ -53,7 +48,7 @@ public static class NativeUiJsonDeserializer
                     {
                         // if (!String.IsNullOrEmpty(text.GetString()))
                         // Console.WriteLine(id.GetString() + " | " + text.GetString());
-                        result[viewIdStr].Add(new CmpText(id.GetString(), type.GetString(), name.GetString(),
+                        result[viewIdStr].Add(new CmpTextModel(id.GetString(), type.GetString(), name.GetString(),
                             text.GetString()));
                     }
                     else if (viewElement.TryGetProperty("type", out JsonElement sliderType)
@@ -64,7 +59,7 @@ public static class NativeUiJsonDeserializer
                              && sliderSettings.TryGetProperty("rightText", out JsonElement rightText))
                     {
                         // Console.WriteLine("\n\n " + leftText + " | " + rightText);
-                        result[viewIdStr].Add(new CmpSlider(id.GetString(), type.GetString(), name.GetString(),
+                        result[viewIdStr].Add(new CmpSliderModel(id.GetString(), type.GetString(), name.GetString(),
                             leftText.GetString(), rightText.GetString()));
                     }
                     else if (viewElement.TryGetProperty("type", out JsonElement nativeImageType)
@@ -74,7 +69,7 @@ public static class NativeUiJsonDeserializer
                              && nativeImageSettings.TryGetProperty("src", out JsonElement src))
                     {
                         // Console.WriteLine("\n " + src + "\n");
-                        result[viewIdStr].Add(new CmpNativeImage(id.GetString(), type.GetString(), name.GetString(),
+                        result[viewIdStr].Add(new CmpNativeImageModel(id.GetString(), type.GetString(), name.GetString(),
                             src.GetString()));
                     }
                     else if (viewElement.TryGetProperty("type", out JsonElement longButtonType)
@@ -86,7 +81,7 @@ public static class NativeUiJsonDeserializer
                              && longButtonSettings.TryGetProperty("customText", out JsonElement customText))
                     {
                         // Console.WriteLine("\n\n " + onText + " | " + offText + " | " + customText);
-                        result[viewIdStr].Add(new CmpLongButton(id.GetString(), type.GetString(), name.GetString(),
+                        result[viewIdStr].Add(new CmpLongButtonModel(id.GetString(), type.GetString(), name.GetString(),
                             onText.GetString(), offText.GetString(), customText.GetString()));
                     }
                 }

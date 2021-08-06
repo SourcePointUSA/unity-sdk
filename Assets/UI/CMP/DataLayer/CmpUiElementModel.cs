@@ -1,4 +1,4 @@
-public abstract class CmpUiElement
+public abstract class CmpUiElementModel
 {
     private string id;
     private string type;
@@ -8,7 +8,7 @@ public abstract class CmpUiElement
     public string Type => type;
     public string Name => name;
 
-    protected CmpUiElement(string id, string type, string name)
+    protected CmpUiElementModel(string id, string type, string name)
     {
         this.id = id;
         this.type = type;

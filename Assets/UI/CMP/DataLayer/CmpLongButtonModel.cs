@@ -1,4 +1,4 @@
-public class CmpLongButton : CmpUiElement
+public class CmpLongButtonModel : CmpUiElementModel
 {
     private string onText;
     private string offText;
@@ -8,7 +8,7 @@ public class CmpLongButton : CmpUiElement
     public string OffText => offText;
     public string CustomText => customText;
     
-    public CmpLongButton(string id, string type, string name, string onText, string offText, string customText) : base(id, type, name)
+    public CmpLongButtonModel(string id, string type, string name, string onText, string offText, string customText) : base(id, type, name)
     {
         this.onText = onText;
         this.offText = offText;
