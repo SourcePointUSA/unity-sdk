@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 5794635016909121420}
   - component: {fileID: 1959033376322278613}
   - component: {fileID: 3474340918923122715}
+  - component: {fileID: 8024149794515225096}
   m_Layer: 5
   m_Name: CMP Button
   m_TagString: Untagged
@@ -262,3 +263,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e711e614afc6244aa02ef9689f0b2d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8024149794515225096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8280488842828553695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 
+  localizedText: {fileID: 3467658812652655174}
