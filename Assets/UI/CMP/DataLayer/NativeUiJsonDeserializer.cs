@@ -44,6 +44,9 @@ public static class NativeUiJsonDeserializer
                     viewElement.TryGetProperty("name", out JsonElement name);
 
                     if (viewElement.TryGetProperty("settings", out JsonElement settings)
+                        && viewElement.TryGetProperty("type", out JsonElement nativeTextType)
+                        && nativeTextType.GetString() != null
+                        && nativeTextType.GetString().Equals("NativeText")
                         && settings.TryGetProperty("text", out JsonElement text))
                     {
                         // if (!String.IsNullOrEmpty(text.GetString()))
@@ -78,11 +81,51 @@ public static class NativeUiJsonDeserializer
                              && viewElement.TryGetProperty("settings", out JsonElement longButtonSettings)
                              && longButtonSettings.TryGetProperty("onText", out JsonElement onText)
                              && longButtonSettings.TryGetProperty("offText", out JsonElement offText)
-                             && longButtonSettings.TryGetProperty("customText", out JsonElement customText))
+                             && longButtonSettings.TryGetProperty("customText", out JsonElement customText)
+                             && longButtonSettings.TryGetProperty("onFocusBackgroundColor", out JsonElement onFocusBackgroundColor)
+                             && longButtonSettings.TryGetProperty("onUnfocusBackgroundColor", out JsonElement onUnfocusBackgroundColor))
                     {
                         // Console.WriteLine("\n\n " + onText + " | " + offText + " | " + customText);
+
+                        //bool startFocus = false;
+                        //if (longButtonSettings.TryGetProperty("startFocus", out JsonElement startFocusJE))
+                        //{
+                        //    startFocus = startFocusJE.GetBoolean();
+                        //}
+
                         result[viewIdStr].Add(new CmpLongButtonModel(id.GetString(), type.GetString(), name.GetString(),
-                            onText.GetString(), offText.GetString(), customText.GetString()));
+                            onText.GetString(), offText.GetString(), customText.GetString(), /*startFocus,*/ onFocusBackgroundColor.GetString(), onUnfocusBackgroundColor.GetString()));
+                    }
+                    else if (viewElement.TryGetProperty("type", out JsonElement cookieTableType)
+                             && cookieTableType.GetString() != null
+                             && cookieTableType.GetString().Equals("CookieTable")
+                             && viewElement.TryGetProperty("settings", out JsonElement cookieTableSettings)
+                             && cookieTableSettings.TryGetProperty("nameText", out JsonElement cookieName)
+                             && cookieTableSettings.TryGetProperty("categoryText", out JsonElement categoryText)
+                             && cookieTableSettings.TryGetProperty("domainText", out JsonElement domainText)
+                             && cookieTableSettings.TryGetProperty("durationText", out JsonElement durationText)
+                        )
+                    {
+                        result[viewIdStr].Add(new CmpCookieTableModel(id.GetString(), type.GetString(), name.GetString(),
+                            cookieName.GetString(), categoryText.GetString(), domainText.GetString(), durationText.GetString()));
+                    }
+                    else if(viewElement.TryGetProperty("type", out JsonElement nativeButtonType)
+                             && nativeButtonType.GetString() != null
+                             && nativeButtonType.GetString().Equals("NativeButton")
+                             && viewElement.TryGetProperty("settings", out JsonElement nativeButtonSettings)
+                             && nativeButtonSettings.TryGetProperty("text", out JsonElement nativeButtonText)
+                             && nativeButtonSettings.TryGetProperty("startFocus", out JsonElement startFocus)
+                             && viewElement.TryGetProperty("onFocusBackgroundColor", out JsonElement nativeButtonOnFocusBackgroundColor)
+                             && viewElement.TryGetProperty("onUnfocusBackgroundColor", out JsonElement nativeButtonOnUnfocusBackgroundColor)
+                             && viewElement.TryGetProperty("onFocusTextColor", out JsonElement nativeButtonOnFocusTextColor)
+                             && viewElement.TryGetProperty("onUnfocusTextColor", out JsonElement nativeButtonOnUnfocusTextColor))
+                    {
+                        result[viewIdStr].Add(new CmpNativeButtonModel(id.GetString(), type.GetString(), name.GetString(),
+                            startFocus.GetBoolean(), nativeButtonText.GetString(), nativeButtonOnFocusBackgroundColor.GetString(), nativeButtonOnUnfocusBackgroundColor.GetString(), nativeButtonOnFocusTextColor.GetString(), nativeButtonOnUnfocusTextColor.GetString()));
+                    }
+                    else
+                    {
+                        Debug.LogError(">>>DAFUQ >:C " + id.GetString());
                     }
                 }
             }

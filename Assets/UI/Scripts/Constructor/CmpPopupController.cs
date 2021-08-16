@@ -6,9 +6,12 @@ public class CmpPopupController : MonoBehaviour
 {
     [SerializeField] private string viewId;
     [SerializeField] private List<CmpLocalizationUiElement> uiElements;
+    [SerializeField] private List<string> postponedElementId;
+    private Dictionary<string, CmpUiElementModel> postponedElements;
 
     private void Awake()
     {
+        postponedElements = new Dictionary<string, CmpUiElementModel>();
         StartCoroutine(WaitNetworkCoroutine());
     }
 
@@ -19,6 +22,23 @@ public class CmpPopupController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         MapLocazliation();
+        MapPostponedLocalization();
+    }
+
+    private void MapPostponedLocalization()
+    {
+        foreach (var elementId in postponedElementId)
+        {
+            CmpUiElementModel initializer = CmpLocalizationMapper.GetCmpUiElement(viewId, elementId);
+            if (initializer != null)
+            {
+                postponedElements[elementId] = initializer;
+            }
+            else
+            {
+                Debug.LogError(">>>DAFUQ >:C " + elementId);
+            }
+        }
     }
 
     private void MapLocazliation()
@@ -32,7 +52,7 @@ public class CmpPopupController : MonoBehaviour
             }
             else
             {
-                Debug.LogError(">>>DAFUQ >:C");
+                Debug.LogError(">>>DAFUQ >:C " + ui.ID);
             }
         }
     }

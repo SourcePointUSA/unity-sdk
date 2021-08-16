@@ -14,5 +14,6 @@ public class CmpLongButtonUiController : CmpLocalizationUiElement
         offText.text = longButton.OffText;
         customText.text = longButton.CustomText;
         model = longButton;
+        // TODO: onFsocusColorCode, onUnfocusColorCode
     }
 }

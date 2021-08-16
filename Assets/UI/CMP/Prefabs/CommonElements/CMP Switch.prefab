@@ -247,6 +247,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7392843833645622691}
   - component: {fileID: 2494187825845619336}
+  - component: {fileID: 7965488488333087675}
   m_Layer: 5
   m_Name: CMP Switch
   m_TagString: Untagged
@@ -293,6 +294,21 @@ MonoBehaviour:
   rightRectTrans: {fileID: 4461790959047103438}
   leftColorController: {fileID: 2163333178248132629}
   rightColorController: {fileID: 4271404668235801299}
+--- !u!114 &7965488488333087675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503635184753587715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 097041d0c3fb40938658933f5d252bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 
+  leftLocalizedText: {fileID: 4363825562169595349}
+  rightLocalizedText: {fileID: 5924043589505956653}
 --- !u!1 &1775604435246401530
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,11 +376,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 29
+    m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 2
+    m_MaxSize: 24
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -439,11 +455,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 29
+    m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 2
+    m_MaxSize: 24
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
