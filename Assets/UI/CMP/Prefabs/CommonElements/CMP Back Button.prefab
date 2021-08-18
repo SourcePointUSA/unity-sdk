@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 7744440400656528091}
   - component: {fileID: 6986907725181070351}
   - component: {fileID: 6720512217207304552}
-  - component: {fileID: 5389667301352632561}
   - component: {fileID: 5737001546384803437}
+  - component: {fileID: 8825074646857693421}
   m_Layer: 0
   m_Name: CMP Back Button
   m_TagString: Untagged
@@ -135,20 +135,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5389667301352632561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5335478064490894260}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: BackButton
-  localizedText: {fileID: 8324841832504815734}
 --- !u!114 &5737001546384803437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +148,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupToDestroy: {fileID: 0}
+--- !u!114 &8825074646857693421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5335478064490894260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923abbb009772714e8e78a0f7cb79903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: BackButton
+  localizedText: {fileID: 8324841832504815734}
+  button: {fileID: 6720512217207304552}
 --- !u!1 &5860440606563731503
 GameObject:
   m_ObjectHideFlags: 0

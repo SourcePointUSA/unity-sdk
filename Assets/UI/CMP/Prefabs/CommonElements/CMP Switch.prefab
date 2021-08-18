@@ -309,6 +309,10 @@ MonoBehaviour:
   id: 
   leftLocalizedText: {fileID: 4363825562169595349}
   rightLocalizedText: {fileID: 5924043589505956653}
+  leftColorController: {fileID: 2163333178248132629}
+  rightColorController: {fileID: 4271404668235801299}
+  bg: {fileID: 6206959181915835811}
+  activeBg: {fileID: 6651882675612009809}
 --- !u!1 &1775604435246401530
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,11 +380,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 24
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 24
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -455,11 +459,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 24
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 24
+    m_MaxSize: 23
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

@@ -1,10 +1,13 @@
+using Assets.UI.Scripts.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CmpPopupController : MonoBehaviour
 {
     [SerializeField] private string viewId;
+    [SerializeField] private Image bg;
     [SerializeField] private List<CmpLocalizationUiElement> uiElements;
     [SerializeField] private List<string> postponedElementId;
     private Dictionary<string, CmpUiElementModel> postponedElements;
@@ -21,8 +24,14 @@ public class CmpPopupController : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+        SetBgColor();
         MapLocazliation();
         MapPostponedLocalization();
+    }
+
+    private void SetBgColor()
+    {
+        bg.color = GraphicExtension.HexToColor(NativeUiJsonDeserializer.popupBgColors[viewId]);
     }
 
     private void MapPostponedLocalization()

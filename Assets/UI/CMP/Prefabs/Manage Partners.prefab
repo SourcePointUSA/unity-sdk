@@ -2421,14 +2421,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewId: VendorsView
+  bg: {fileID: 9076767679563038538}
   uiElements:
   - {fileID: 1614284714261393052}
-  - {fileID: 229269332741736483}
+  - {fileID: 3719269908754530367}
   - {fileID: 1325342552620699671}
   - {fileID: 15221379731424970}
   - {fileID: 1639501411870164722}
-  - {fileID: 4989168009822357678}
-  - {fileID: 480487179379922610}
+  - {fileID: 5629758664334776584}
+  - {fileID: 988248719021278996}
   - {fileID: 2186597917180935199}
   postponedElementId:
   - VendorButton
@@ -3229,7 +3230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4570626464917992885
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7571,15 +7572,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39ce8269adedda147b905b35131da12e, type: 3}
---- !u!114 &229269332741736483 stripped
+--- !u!114 &3719269908754530367 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5389667301352632561, guid: 39ce8269adedda147b905b35131da12e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8825074646857693421, guid: 39ce8269adedda147b905b35131da12e, type: 3}
   m_PrefabInstance: {fileID: 5324792858566146258}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 923abbb009772714e8e78a0f7cb79903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &3320311992529056068 stripped
@@ -8541,9 +8542,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3743361389146088501, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: id
+      value: AcceptAllButton
+      objectReference: {fileID: 0}
     - target: {fileID: 4102472684713637267, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
       propertyPath: id
       value: AcceptAllButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098890558293064233, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+      propertyPath: id
+      value: SaveButton
       objectReference: {fileID: 0}
     - target: {fileID: 8897129894349958031, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
       propertyPath: id
@@ -8572,26 +8581,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4989168009822357678 stripped
+--- !u!114 &5629758664334776584 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4102472684713637267, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3743361389146088501, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
   m_PrefabInstance: {fileID: 9066868603070790973}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 87ddd471944fc3043b66f753511e0cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &480487179379922610 stripped
+--- !u!114 &988248719021278996 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8897129894349958031, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8098890558293064233, guid: aaf0585ac6fadeb42a4b161a7c2e48f6, type: 3}
   m_PrefabInstance: {fileID: 9066868603070790973}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 87ddd471944fc3043b66f753511e0cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &712920801101094254 stripped

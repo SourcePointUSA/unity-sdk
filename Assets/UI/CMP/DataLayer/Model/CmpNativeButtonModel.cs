@@ -6,6 +6,7 @@
     private string onUnfocusBackgroundColor;
     private string onFocusTextColor;
     private string onUnfocusTextColor;
+    private FontModel font;
 
     public string Text => text;
     public bool StartFocus => startFocus;
@@ -13,8 +14,9 @@
     public string OnUnfocusBackgroundColor => onUnfocusBackgroundColor;
     public string OnFocusTextColor => onFocusTextColor;
     public string OnUnfocusTextColor => onUnfocusTextColor;
+    public FontModel Font => font;
 
-    public CmpNativeButtonModel(string id, string type, string name, bool startFocus, string text, string onFocusBackgroundColor,
+    public CmpNativeButtonModel(string id, string type, string name, FontModel font, bool startFocus, string text, string onFocusBackgroundColor,
         string onUnfocusBackgroundColor, string onFocusTextColor, string onUnfocusTextColor) : base(id, type, name)
     {
         this.startFocus = startFocus;
@@ -23,5 +25,6 @@
         this.onUnfocusBackgroundColor = onUnfocusBackgroundColor;
         this.onFocusTextColor = onFocusTextColor;
         this.onUnfocusTextColor = onUnfocusTextColor;
+        this.font = font;
     }
 }

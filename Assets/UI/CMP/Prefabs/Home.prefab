@@ -1436,15 +1436,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewId: HomeView
+  bg: {fileID: 9076767679563038538}
   uiElements:
   - {fileID: 4384663597198041110}
-  - {fileID: 4989168009822357678}
-  - {fileID: 1275300263726870222}
-  - {fileID: 7397911915151660232}
-  - {fileID: 480487179379922610}
+  - {fileID: 5629758664334776584}
+  - {fileID: 1922817856518012776}
+  - {fileID: 7905884164003513710}
+  - {fileID: 988248719021278996}
   - {fileID: 3082967284764111497}
   - {fileID: 159217396195112175}
   - {fileID: 122869906983910757}
+  postponedElementId: []
 --- !u!1 &3744320866026225683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1653,7 +1655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4570626464917992885
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4060,9 +4062,13 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: InstantiatePrefabController, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+    - target: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: id
       value: NavVendorsButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+      propertyPath: id
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8280488842828553695, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: m_Name
@@ -4070,15 +4076,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
---- !u!114 &7397911915151660232 stripped
+--- !u!114 &7905884164003513710 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
   m_PrefabInstance: {fileID: 716397837140893376}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8870715444076839711}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 87ddd471944fc3043b66f753511e0cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &3638750808781840072 stripped
@@ -4190,9 +4196,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+    - target: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: id
       value: AcceptAllButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+      propertyPath: id
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8280488842828553695, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: m_Name
@@ -4205,15 +4215,15 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4291464928130187272, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
   m_PrefabInstance: {fileID: 3055292564781318822}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4989168009822357678 stripped
+--- !u!114 &5629758664334776584 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
   m_PrefabInstance: {fileID: 3055292564781318822}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 87ddd471944fc3043b66f753511e0cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &7633752217585671354
@@ -4323,9 +4333,13 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: InstantiatePrefabController, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+    - target: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: id
       value: NavPrivacyPolicyButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+      propertyPath: id
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8280488842828553695, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: m_Name
@@ -4333,15 +4347,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
---- !u!114 &480487179379922610 stripped
+--- !u!114 &988248719021278996 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
   m_PrefabInstance: {fileID: 7633752217585671354}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1953081786068812133}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 87ddd471944fc3043b66f753511e0cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &5944419108793883826 stripped
@@ -4461,9 +4475,13 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: InstantiatePrefabController, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+    - target: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: id
       value: NavCategoriesButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+      propertyPath: id
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8280488842828553695, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
       propertyPath: m_Name
@@ -4481,14 +4499,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4291464928130187272, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
   m_PrefabInstance: {fileID: 9144919048339612870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1275300263726870222 stripped
+--- !u!114 &1922817856518012776 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8024149794515225096, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7225603162125949870, guid: dfe3f3df73a8e7c4a8b9a5570ed9f9d7, type: 3}
   m_PrefabInstance: {fileID: 9144919048339612870}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 865662921254762777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Script: {fileID: 11500000, guid: 87ddd471944fc3043b66f753511e0cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
