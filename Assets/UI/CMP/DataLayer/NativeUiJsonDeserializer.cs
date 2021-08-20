@@ -8,8 +8,67 @@ using UnityEngine;
 
 public static class NativeUiJsonDeserializer
 {
-    //public static Dictionary<string, List<CmpUiElementModel>> localization;
     public static Dictionary<string, string> popupBgColors;
+
+    //static NativeUiJsonDeserializer()
+    //{
+    //    DeserializeExtraCall(JSONSTUB.extraCall);
+    //}
+
+    public static void DeserializeExtraCall(string json)
+    {
+        using (JsonDocument document = JsonDocument.Parse(json))
+        {
+            JsonElement root = document.RootElement;
+            if (root.TryGetProperty("stacks", out JsonElement stacks))
+            {
+                foreach (JsonElement stack in stacks.EnumerateArray())
+                {
+                    //TODO: Deserialize stack ...
+                }
+            }
+            if (root.TryGetProperty("categories", out JsonElement categories))
+            {
+                foreach (JsonElement category in categories.EnumerateArray())
+                {
+                    CmpCategoryModel cat = JsonSerializer.Deserialize<CmpCategoryModel>(category.GetRawText());
+                    //TODO: add somewhere
+                }
+            }
+            if (root.TryGetProperty("specialPurposes", out JsonElement specialPurposes))
+            {
+                foreach (JsonElement specElement in specialPurposes.EnumerateArray())
+                {
+                    CmpSpecialPurposeModel specPurp = JsonSerializer.Deserialize<CmpSpecialPurposeModel>(specElement.GetRawText());
+                    //TODO: add somewhere
+                }
+            }
+            if (root.TryGetProperty("features", out JsonElement features))
+            {
+                foreach (JsonElement feature in features.EnumerateArray())
+                {
+                    CmpFeatureModel feat = JsonSerializer.Deserialize<CmpFeatureModel>(feature.GetRawText());
+                    //TODO: add somewhere
+                }
+            }
+            if (root.TryGetProperty("specialFeatures", out JsonElement specialFeatures))
+            {
+                foreach (JsonElement specialFeature in specialFeatures.EnumerateArray())
+                {
+                    CmpSpecialFeatureModel specFeat = JsonSerializer.Deserialize<CmpSpecialFeatureModel>(specialFeature.GetRawText());
+                    //TODO: add somewhere
+                }
+            }
+            if (root.TryGetProperty("vendors", out JsonElement vendors))
+            {
+                foreach (JsonElement vendor in vendors.EnumerateArray())
+                {
+                    CmpVendorModel vendr = JsonSerializer.Deserialize<CmpVendorModel>(vendor.GetRawText());
+                    //TODO: add somewhere
+                }
+            }
+        }
+    }
 
     public static Dictionary<string, List<CmpUiElementModel>> DeserializeNativePm(string json)
     {
