@@ -38,4 +38,9 @@ public class CmpLongButtonUiController : CmpLocalizationUiElement
     {
         mainText.text = text;
     }
+
+    public void EnableCustomTextLabel(bool enable)
+    {
+        customText.gameObject.SetActive(enable);
+    }
 }

@@ -70,7 +70,7 @@ public class CmpPopupController : MonoBehaviour
 
     private void FillPostponedData()
     {
-        if(!viewId.Equals("HomeView"))
+        if (this.postponedElements != null && this.postponedElements.Count>0)
         {
             scrollController.SetPostponedElements(this.postponedElements);
             scrollController.FillView();

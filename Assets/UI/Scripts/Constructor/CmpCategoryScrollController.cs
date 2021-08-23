@@ -11,7 +11,7 @@ public class CmpCategoryScrollController : CmpScrollController
         FillCategoryView();
     }
 
-    public void FillCategoryView()
+    private void FillCategoryView()
     {
         foreach (Transform child in scrollContent.transform)
         {
@@ -30,13 +30,13 @@ public class CmpCategoryScrollController : CmpScrollController
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab
-                List<CmpCategoryModel> legIntCategories = new List<CmpCategoryModel>();
+                List<CmpCategoryModel> legIntVendors = new List<CmpCategoryModel>();
                 foreach (CmpCategoryModel model in CmpLocalizationMapper.categories)
                 {
                     if (model.legIntVendors.Count > 0)
-                        legIntCategories.Add(model);
+                        legIntVendors.Add(model);
                 }
-                AddCategories(legIntCategories);
+                AddCategories(legIntVendors);
                 break;
         }
     }
@@ -71,7 +71,7 @@ public class CmpCategoryScrollController : CmpScrollController
     private void AddCategories(List<CmpCategoryModel> categories)
     {
         AddDescriptionCell("PurposesHeader", "PurposesDefinition");
-        foreach (var cat in categories)
+        foreach (CmpCategoryModel cat in categories)
         {
             AddCell(cat.name, cat.friendlyDescription);
         }
@@ -87,6 +87,7 @@ public class CmpCategoryScrollController : CmpScrollController
         categoryRelatedController.SetChangingTextRef(changingText);
         longController.SetMainText(mainText);
         categoryRelatedController.SetChangingTextString(description);
+        longController.EnableCustomTextLabel(false); //??
     }
 
     private void AddDescriptionCell(string headerId, string definitionId)

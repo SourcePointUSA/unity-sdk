@@ -12,4 +12,15 @@ public class CmpPartnersCounter : MonoBehaviour
     {
         counterText.text = $"PARTNERS ({contentRectTrans.childCount})"; 
     }
+
+    public void OnScrollElementAmountChange()
+    {
+        StartCoroutine(WaitAndChangePartnersAmount());
+    }
+
+    private IEnumerator WaitAndChangePartnersAmount()
+    {
+        yield return new WaitForSeconds(0.100f);
+        counterText.text = $"PARTNERS ({contentRectTrans.childCount})";
+    }
 }
