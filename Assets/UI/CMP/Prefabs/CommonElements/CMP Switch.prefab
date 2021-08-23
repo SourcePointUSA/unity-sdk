@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7097217296806902169}
   - component: {fileID: 1167063347977666671}
   - component: {fileID: 4271404668235801299}
-  - component: {fileID: 8135926543036810095}
   m_Layer: 5
   m_Name: Right Button
   m_TagString: Untagged
@@ -123,7 +122,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8135926543036810095}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ClickStubCmpButton, Assembly-CSharp
         m_MethodName: LogStubOnClick
         m_Mode: 1
@@ -150,18 +149,6 @@ MonoBehaviour:
   graphic: {fileID: 5924043589505956653}
   defaultTextColor: {r: 0, g: 0, b: 0, a: 1}
   activeTextColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &8135926543036810095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18622429296991638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e711e614afc6244aa02ef9689f0b2d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &613631175704200767
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,6 +281,7 @@ MonoBehaviour:
   rightRectTrans: {fileID: 4461790959047103438}
   leftColorController: {fileID: 2163333178248132629}
   rightColorController: {fileID: 4271404668235801299}
+  currentBtn: 0
 --- !u!114 &7965488488333087675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,7 +550,6 @@ GameObject:
   - component: {fileID: 1192892293569907170}
   - component: {fileID: 5554869950878229164}
   - component: {fileID: 2163333178248132629}
-  - component: {fileID: 1630414905570157449}
   m_Layer: 5
   m_Name: Left Button
   m_TagString: Untagged
@@ -672,7 +659,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1630414905570157449}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ClickStubCmpButton, Assembly-CSharp
         m_MethodName: LogStubOnClick
         m_Mode: 1
@@ -699,15 +686,3 @@ MonoBehaviour:
   graphic: {fileID: 4363825562169595349}
   defaultTextColor: {r: 0, g: 0, b: 0, a: 1}
   activeTextColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &1630414905570157449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8549063736099806913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e711e614afc6244aa02ef9689f0b2d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

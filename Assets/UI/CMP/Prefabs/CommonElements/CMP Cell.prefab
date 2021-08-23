@@ -783,9 +783,9 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0.6956829, y: 0.5}
   m_AnchoredPosition: {x: 30, y: 0}
-  m_SizeDelta: {x: 184, y: 37}
+  m_SizeDelta: {x: -30.00351, y: 37}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &251648550528710948
 CanvasRenderer:
@@ -819,16 +819,16 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 28
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 1
+    m_RichText: 0
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Hello I am a dummy text...
+  m_Text: Hello I am a dummy text...Hello I am a dummy text...
 --- !u!114 &1268704953001513063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -857,6 +857,7 @@ GameObject:
   - component: {fileID: 6184788905113746353}
   - component: {fileID: 1539411098048634053}
   - component: {fileID: 5880017310734947060}
+  - component: {fileID: 2453203638031041838}
   m_Layer: 5
   m_Name: CMP Cell
   m_TagString: Untagged
@@ -952,3 +953,21 @@ MonoBehaviour:
   privacyPolicy: {fileID: 3713974525001826894, guid: 1e52dcff1549baa4092f8f61fede58a3, type: 3}
   managePreferences: {fileID: 3713974525001826894, guid: 5b51087279228994981f87705d5be1bb, type: 3}
   partnersDetails: {fileID: 3713974525001826894, guid: 034f51d74c906ac4d9da961ee2a5c2e9, type: 3}
+--- !u!114 &2453203638031041838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8233897545912572491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58095d92aec45ffa196c5d1dafdfd52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 
+  onText: {fileID: 4397955849330470461}
+  offText: {fileID: 4781375849177431886}
+  customText: {fileID: 1008063198009675870}
+  button: {fileID: 2448110565987680972}
+  mainText: {fileID: 8538992257174692480}

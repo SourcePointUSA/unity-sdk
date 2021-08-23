@@ -14,13 +14,17 @@ public class CmpSwitch : MonoBehaviour
     [SerializeField] private TextColorAnimationController leftColorController;
     [SerializeField] private TextColorAnimationController rightColorController;
 
-    private enum BUTTON_SELECTED { LEFT, RIGHT }
-    private BUTTON_SELECTED currentBtn = BUTTON_SELECTED.LEFT;
+    public enum BUTTON_SELECTED { LEFT, RIGHT }
+    public BUTTON_SELECTED currentBtn = BUTTON_SELECTED.LEFT;
 
-    private void Awake()
+    public void OnLeftButtonClick()
     {
-        leftButton.onClick.AddListener(delegate { OnButtonClick(BUTTON_SELECTED.LEFT); } );
-        rightButton.onClick.AddListener(delegate { OnButtonClick(BUTTON_SELECTED.RIGHT); } );
+        OnButtonClick(BUTTON_SELECTED.LEFT);
+    }
+
+    public void OnRightButtonClick()
+    {
+        OnButtonClick(BUTTON_SELECTED.RIGHT);
     }
 
     private void OnButtonClick(BUTTON_SELECTED selected)

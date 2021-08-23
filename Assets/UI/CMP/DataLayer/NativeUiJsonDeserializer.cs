@@ -10,16 +10,22 @@ public static class NativeUiJsonDeserializer
 {
     public static Dictionary<string, string> popupBgColors;
 
-    //static NativeUiJsonDeserializer()
-    //{
-    //    DeserializeExtraCall(JSONSTUB.extraCall);
-    //}
-
-    public static void DeserializeExtraCall(string json)
+    public static void DeserializeExtraCall(string json, 
+                                            out List<CmpCategoryModel> categoryModels, 
+                                            out List<CmpSpecialPurposeModel> specialPurposeModels,
+                                            out List<CmpFeatureModel> featureModels,
+                                            out List<CmpSpecialFeatureModel> specialFeatureModels,
+                                            out List<CmpVendorModel> vendorModels)
     {
         using (JsonDocument document = JsonDocument.Parse(json))
         {
             JsonElement root = document.RootElement;
+            categoryModels = new List<CmpCategoryModel>();
+            specialPurposeModels = new List<CmpSpecialPurposeModel>();
+            featureModels = new List<CmpFeatureModel>();
+            specialFeatureModels = new List<CmpSpecialFeatureModel>();
+            vendorModels = new List<CmpVendorModel>();
+
             if (root.TryGetProperty("stacks", out JsonElement stacks))
             {
                 foreach (JsonElement stack in stacks.EnumerateArray())
@@ -32,7 +38,7 @@ public static class NativeUiJsonDeserializer
                 foreach (JsonElement category in categories.EnumerateArray())
                 {
                     CmpCategoryModel cat = JsonSerializer.Deserialize<CmpCategoryModel>(category.GetRawText());
-                    //TODO: add somewhere
+                    categoryModels.Add(cat);
                 }
             }
             if (root.TryGetProperty("specialPurposes", out JsonElement specialPurposes))
@@ -40,7 +46,7 @@ public static class NativeUiJsonDeserializer
                 foreach (JsonElement specElement in specialPurposes.EnumerateArray())
                 {
                     CmpSpecialPurposeModel specPurp = JsonSerializer.Deserialize<CmpSpecialPurposeModel>(specElement.GetRawText());
-                    //TODO: add somewhere
+                    specialPurposeModels.Add(specPurp);
                 }
             }
             if (root.TryGetProperty("features", out JsonElement features))
@@ -48,7 +54,7 @@ public static class NativeUiJsonDeserializer
                 foreach (JsonElement feature in features.EnumerateArray())
                 {
                     CmpFeatureModel feat = JsonSerializer.Deserialize<CmpFeatureModel>(feature.GetRawText());
-                    //TODO: add somewhere
+                    featureModels.Add(feat);
                 }
             }
             if (root.TryGetProperty("specialFeatures", out JsonElement specialFeatures))
@@ -56,7 +62,7 @@ public static class NativeUiJsonDeserializer
                 foreach (JsonElement specialFeature in specialFeatures.EnumerateArray())
                 {
                     CmpSpecialFeatureModel specFeat = JsonSerializer.Deserialize<CmpSpecialFeatureModel>(specialFeature.GetRawText());
-                    //TODO: add somewhere
+                    specialFeatureModels.Add(specFeat);
                 }
             }
             if (root.TryGetProperty("vendors", out JsonElement vendors))
@@ -64,7 +70,7 @@ public static class NativeUiJsonDeserializer
                 foreach (JsonElement vendor in vendors.EnumerateArray())
                 {
                     CmpVendorModel vendr = JsonSerializer.Deserialize<CmpVendorModel>(vendor.GetRawText());
-                    //TODO: add somewhere
+                    vendorModels.Add(vendr);
                 }
             }
         }

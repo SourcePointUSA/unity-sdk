@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1471267512779347883}
   - component: {fileID: 7891880436565330288}
+  - component: {fileID: 4583341702476240641}
   m_Layer: 5
   m_Name: CMP Description Cell
   m_TagString: Untagged
@@ -49,6 +50,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e711e614afc6244aa02ef9689f0b2d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4583341702476240641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764538246439571454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60adf0c3811e7af4e9a105ea5213541f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  header: {fileID: 1434845622496145119}
+  description: {fileID: 4993618675635717766}
 --- !u!1 &2609960001571908776
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,6 +75,7 @@ GameObject:
   - component: {fileID: 532320046585093552}
   - component: {fileID: 8909958758297119889}
   - component: {fileID: 1033604126352226101}
+  - component: {fileID: 4993618675635717766}
   m_Layer: 5
   m_Name: Description Label
   m_TagString: Untagged
@@ -128,6 +144,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: This is some description about the next section
+--- !u!114 &4993618675635717766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2609960001571908776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 
+  localizedText: {fileID: 1033604126352226101}
 --- !u!1 &3644944533982655922
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +244,7 @@ GameObject:
   - component: {fileID: 5902020469604561488}
   - component: {fileID: 7912532989238109272}
   - component: {fileID: 6956245280915333898}
+  - component: {fileID: 1434845622496145119}
   m_Layer: 5
   m_Name: Header Label
   m_TagString: Untagged
@@ -282,6 +313,20 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: PURPOSES
+--- !u!114 &1434845622496145119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668108732344878114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ad29d3b4c54eb8addf94af7956a580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 
+  localizedText: {fileID: 6956245280915333898}
 --- !u!1 &9001402984318013709
 GameObject:
   m_ObjectHideFlags: 0

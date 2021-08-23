@@ -6,10 +6,27 @@ public static class CmpLocalizationMapper
     private static bool isInitialized = false;
     public static bool IsInitialized => isInitialized;
 
+    public static List<CmpCategoryModel> categories;
+    public static List<CmpSpecialPurposeModel> specialPurposes;
+    public static List<CmpFeatureModel> features;
+    public static List<CmpSpecialFeatureModel> specialFeatures;
+    public static List<CmpVendorModel> vendors;
+
     static CmpLocalizationMapper()
     {
         //TODO: Network call -> json
         elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM);
+        NativeUiJsonDeserializer.DeserializeExtraCall(JSONSTUB.extraCall, 
+                                                    out List<CmpCategoryModel> categories,
+                                                    out List<CmpSpecialPurposeModel> specialPurposes,
+                                                    out List<CmpFeatureModel> features,
+                                                    out List<CmpSpecialFeatureModel> specialFeatures,
+                                                    out List<CmpVendorModel> vendors);
+        CmpLocalizationMapper.categories = categories;
+        CmpLocalizationMapper.specialPurposes = specialPurposes;
+        CmpLocalizationMapper.features = features;
+        CmpLocalizationMapper.specialFeatures = specialFeatures;
+        CmpLocalizationMapper.vendors = vendors;
         isInitialized = true;
     }
 
