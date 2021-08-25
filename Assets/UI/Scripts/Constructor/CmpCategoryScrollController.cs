@@ -5,6 +5,7 @@ public class CmpCategoryScrollController : CmpScrollController
 {
     [SerializeField] private CmpSwitch cmpSwitch;
     [SerializeField] private GameObject cmpDescritionCellPrefab;
+    [SerializeField] private GameObject categoryDetailsPrefab;
 
     public override void FillView()
     {
@@ -13,10 +14,7 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void FillCategoryView()
     {
-        foreach (Transform child in scrollContent.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        ClearScrollContent();
         switch (cmpSwitch.currentBtn)
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
@@ -46,7 +44,8 @@ public class CmpCategoryScrollController : CmpScrollController
         AddDescriptionCell("SpecialFeaturesHeader", "SpecialFeaturesDefinition");
         foreach (var specialFeature in specialFeatures)
         {
-            AddCell(specialFeature.name, specialFeature.description);
+            var longController = AddCell(specialFeature.name, specialFeature.description);
+            SetCellOnClickAction(longController, specialFeature);
         }
     }
 
@@ -55,7 +54,8 @@ public class CmpCategoryScrollController : CmpScrollController
         AddDescriptionCell("FeaturesHeader", "FeaturesDefinition");
         foreach (var feature in features)
         {
-            AddCell(feature.name, feature.description);
+            var longController = AddCell(feature.name, feature.description);
+            SetCellOnClickAction(longController, feature);
         }
     }
 
@@ -64,7 +64,9 @@ public class CmpCategoryScrollController : CmpScrollController
         AddDescriptionCell("SpecialPurposesHeader", "SpecialPurposesDefinition");
         foreach (var spec in specialPurposes)
         {
-            AddCell(spec.name, spec.description);
+            var longController = AddCell(spec.name, spec.description);
+            longController.DisableOnOffGroup();
+            //SetCellOnClickAction(longController, spec);
         }
     }
 
@@ -73,21 +75,25 @@ public class CmpCategoryScrollController : CmpScrollController
         AddDescriptionCell("PurposesHeader", "PurposesDefinition");
         foreach (CmpCategoryModel cat in categories)
         {
-            AddCell(cat.name, cat.friendlyDescription);
+            var longController = AddCell(cat.name, cat.friendlyDescription);
+            SetCellOnClickAction(longController, cat);
         }
     }
 
-    private void AddCell(string mainText, string description)
+    private CmpLongButtonUiController AddCell(string mainText, string description)
     {
         var cell = Instantiate(cmpCellPrefab, scrollContent.transform);
-        var longController = cell.GetComponent<CmpLongButtonUiController>();
         var longElement = postponedElements["CategoryButton"];
+        var longController = cell.GetComponent<CmpLongButtonUiController>();
         longController.SetLocalization(longElement);
+        longController.SetMainText(mainText);
+        longController.EnableCustomTextLabel(false); //??
+
         var categoryRelatedController = cell.AddComponent<CmpCategoryLongButtonUiController>();
         categoryRelatedController.SetChangingTextRef(changingText);
-        longController.SetMainText(mainText);
         categoryRelatedController.SetChangingTextString(description);
-        longController.EnableCustomTextLabel(false); //??
+        categoryRelatedController.SetButtonRef(longController.GetButton());
+        return longController;
     }
 
     private void AddDescriptionCell(string headerId, string definitionId)
@@ -97,5 +103,19 @@ public class CmpCategoryScrollController : CmpScrollController
         var desc = Instantiate(cmpDescritionCellPrefab, scrollContent.transform);
         var descriptionController = desc.GetComponent<CmpDescriptionCellUiController>();
         descriptionController.SetLocalization(header, def);
+    }
+
+    private void SetCellOnClickAction(CmpLongButtonUiController longController, CmpCategoryBaseModel model)
+    {
+        CmpCategoryLongButtonUiController catController = longController.gameObject.GetComponent<CmpCategoryLongButtonUiController>();
+        catController.SetOnClickAction(delegate { InstantiateCategoriesDetailsPrefab(model); });
+    }
+
+    private void InstantiateCategoriesDetailsPrefab(CmpCategoryBaseModel model)
+    {
+        var canvas = GameObject.Find("Canvas").transform;
+        GameObject go = Instantiate(categoryDetailsPrefab, canvas);
+        CmpCategoryDetailsScrollController detailsController = go.GetComponent<CmpCategoryDetailsScrollController>();
+        detailsController.SetInfo(model);
     }
 }

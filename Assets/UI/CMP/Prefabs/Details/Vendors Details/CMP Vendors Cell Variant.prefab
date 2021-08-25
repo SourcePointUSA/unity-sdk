@@ -1,22 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &2279806187547799194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6306291420252552800}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc783afb7aad74fe8935a44de1fa78a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vendorsDetails: {fileID: 3713974525001826894, guid: acce305f417f64765a0119807429f0b6, type: 3}
-  managePartners: {fileID: 3713974525001826894, guid: 77710648889f96147999f891d28a1f2e, type: 3}
-  privacyPolicy: {fileID: 3713974525001826894, guid: 1e52dcff1549baa4092f8f61fede58a3, type: 3}
-  managePreferences: {fileID: 3713974525001826894, guid: 5b51087279228994981f87705d5be1bb, type: 3}
-  partnersDetails: {fileID: 3713974525001826894, guid: 034f51d74c906ac4d9da961ee2a5c2e9, type: 3}
 --- !u!1001 &4363684578097731122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 4086839660916338901, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2279806187547799194}
+      objectReference: {fileID: 0}
     - target: {fileID: 4086839660916338901, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: InstantiateVendorsDetails
@@ -134,8 +117,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
---- !u!1 &6306291420252552800 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7713151736745207890, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
-  m_PrefabInstance: {fileID: 4363684578097731122}
-  m_PrefabAsset: {fileID: 0}

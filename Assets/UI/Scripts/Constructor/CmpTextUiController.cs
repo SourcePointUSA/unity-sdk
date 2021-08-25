@@ -9,7 +9,7 @@ public class CmpTextUiController : CmpLocalizationUiElement
     public override void SetLocalization(CmpUiElementModel elementModel)
     {
         var text = elementModel as CmpTextModel;
-        if(text.Font != null)
+        if(text.Font != null && text.Font.color!=null)
             localizedText.color = GraphicExtension.HexToColor(text.Font.color);
         localizedText.text = text.Text;
         model = text;

@@ -82,19 +82,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 870081685470670556}
-        m_TargetAssemblyTypeName: ClickStubCmpButton, Assembly-CSharp
-        m_MethodName: LogStubOnClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &4448833021531134554
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,7 +101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6543874735097281710
 RectTransform:
   m_ObjectHideFlags: 0
@@ -367,9 +355,9 @@ GameObject:
   - component: {fileID: 8501758013878611975}
   - component: {fileID: 1662095402682644583}
   - component: {fileID: 5519997177102993832}
-  - component: {fileID: 870081685470670556}
+  - component: {fileID: 4203266366796927215}
   m_Layer: 5
-  m_Name: CMP Partners Details Cell 1
+  m_Name: CMP Partners Details Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -430,7 +418,7 @@ MonoBehaviour:
   graphicsList:
   - {fileID: 636530357140316798}
   - {fileID: 7990403036612689097}
---- !u!114 &870081685470670556
+--- !u!114 &4203266366796927215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -439,6 +427,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7713151736745207890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e711e614afc6244aa02ef9689f0b2d0, type: 3}
+  m_Script: {fileID: 11500000, guid: d58095d92aec45ffa196c5d1dafdfd52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
+  onText: {fileID: 0}
+  offText: {fileID: 0}
+  customText: {fileID: 0}
+  button: {fileID: 4086839660916338901}
+  mainText: {fileID: 8056562212027994265}
+  onGroup: {fileID: 0}
+  offGroup: {fileID: 0}

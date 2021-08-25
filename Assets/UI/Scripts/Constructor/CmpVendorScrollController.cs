@@ -12,10 +12,7 @@ public class CmpVendorScrollController : CmpScrollController
 
     private void FillVendorView()
     {
-        foreach (Transform child in scrollContent.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        ClearScrollContent();
         RectTransform scrollRect = ((RectTransform)scrollContent.transform);
         switch (cmpSwitch.currentBtn)
         {

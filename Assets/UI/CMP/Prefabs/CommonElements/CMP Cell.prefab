@@ -178,19 +178,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5880017310734947060}
-        m_TargetAssemblyTypeName: InstantiatePrefabController, Assembly-CSharp
-        m_MethodName: InstantiateVendorsDetails
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &727546333447037186
 GameObject:
   m_ObjectHideFlags: 0
@@ -855,8 +843,6 @@ GameObject:
   - component: {fileID: 7832462668994069022}
   - component: {fileID: 1035478701137169022}
   - component: {fileID: 6184788905113746353}
-  - component: {fileID: 1539411098048634053}
-  - component: {fileID: 5880017310734947060}
   - component: {fileID: 2453203638031041838}
   m_Layer: 5
   m_Name: CMP Cell
@@ -924,35 +910,6 @@ MonoBehaviour:
   - {fileID: 8623739798616968912}
   - {fileID: 4704412823444738591}
   - {fileID: 5228849281717464365}
---- !u!114 &1539411098048634053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8233897545912572491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e711e614afc6244aa02ef9689f0b2d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5880017310734947060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8233897545912572491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc783afb7aad74fe8935a44de1fa78a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vendorsDetails: {fileID: 3713974525001826894, guid: acce305f417f64765a0119807429f0b6, type: 3}
-  managePartners: {fileID: 3713974525001826894, guid: 77710648889f96147999f891d28a1f2e, type: 3}
-  privacyPolicy: {fileID: 3713974525001826894, guid: 1e52dcff1549baa4092f8f61fede58a3, type: 3}
-  managePreferences: {fileID: 3713974525001826894, guid: 5b51087279228994981f87705d5be1bb, type: 3}
-  partnersDetails: {fileID: 3713974525001826894, guid: 034f51d74c906ac4d9da961ee2a5c2e9, type: 3}
 --- !u!114 &2453203638031041838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -971,3 +928,5 @@ MonoBehaviour:
   customText: {fileID: 1008063198009675870}
   button: {fileID: 2448110565987680972}
   mainText: {fileID: 8538992257174692480}
+  onGroup: {fileID: 5218371296094548765}
+  offGroup: {fileID: 6081449061719331759}

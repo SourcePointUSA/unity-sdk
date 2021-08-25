@@ -405,6 +405,7 @@ MonoBehaviour:
   changingText: {fileID: 4170704507728017887}
   cmpSwitch: {fileID: 6805690040803772708}
   cmpDescritionCellPrefab: {fileID: 764538246439571454, guid: 9ea1adcd239a24a8cbcb82b630198970, type: 3}
+  categoryDetailsPrefab: {fileID: 3713974525001826894, guid: 034f51d74c906ac4d9da961ee2a5c2e9, type: 3}
 --- !u!1 &3744320866026225683
 GameObject:
   m_ObjectHideFlags: 0

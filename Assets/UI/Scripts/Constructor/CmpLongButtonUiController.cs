@@ -1,4 +1,5 @@
 using Assets.UI.Scripts.Util;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,15 +9,19 @@ public class CmpLongButtonUiController : CmpLocalizationUiElement
     [SerializeField] private Text offText;
     [SerializeField] private Text customText;
     [SerializeField] private Button button;
-
     [SerializeField] private Text mainText;
+    [SerializeField] private GameObject onGroup;
+    [SerializeField] private GameObject offGroup;
 
     public override void SetLocalization(CmpUiElementModel elementModel)
     {
         var longButton = elementModel as CmpLongButtonModel;
-        onText.text = longButton.OnText;
-        offText.text = longButton.OffText;
-        customText.text = longButton.CustomText;
+        if(onText!=null)
+            onText.text = longButton.OnText;
+        if(offText!=null)
+            offText.text = longButton.OffText;
+        if(customText != null)
+            customText.text = longButton.CustomText;
 
         if (longButton.Font != null && longButton.Font.color != null)
         {
@@ -42,5 +47,22 @@ public class CmpLongButtonUiController : CmpLocalizationUiElement
     public void EnableCustomTextLabel(bool enable)
     {
         customText.gameObject.SetActive(enable);
+    }
+
+    public void DisableOnOffGroup()
+    {
+        onGroup.SetActive(false);
+        offGroup.SetActive(false);
+    }
+
+    public Button GetButton()
+    {
+        return button;
+    }
+
+    public void SetGroupState(bool isOn)
+    {
+        onGroup.SetActive(isOn);
+        offGroup.SetActive(!isOn);
     }
 }
