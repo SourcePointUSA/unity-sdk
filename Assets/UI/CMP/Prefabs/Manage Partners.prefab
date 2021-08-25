@@ -397,6 +397,7 @@ MonoBehaviour:
   scrollContent: {fileID: 5914090385657712393}
   changingText: {fileID: 4170704507728017887}
   cmpSwitch: {fileID: 6805690040803772708}
+  vendorDetailsPrefab: {fileID: 3713974525001826894, guid: acce305f417f64765a0119807429f0b6, type: 3}
 --- !u!1 &3744320866026225683
 GameObject:
   m_ObjectHideFlags: 0

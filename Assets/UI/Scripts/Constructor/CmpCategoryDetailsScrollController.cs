@@ -32,6 +32,8 @@ public class CmpCategoryDetailsScrollController : CmpScrollController
                 longButtonController.SetMainText(categoryConsentVendor.name);
             }
         }
+        RectTransform scrollRect = ((RectTransform)scrollContent.transform);
+        scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, -400f, scrollRect.position.z), scrollRect.rotation);
         //TODO: 
         //CmpSpecialPurposeModel    //  ?
         //CmpSpecialFeatureModel    //  ?

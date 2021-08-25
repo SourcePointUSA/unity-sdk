@@ -8,6 +8,7 @@ public class CmpDescriptionCellUiController : MonoBehaviour
     public void SetLocalization(CmpUiElementModel headerElement, CmpUiElementModel descElement)
     {
         header.SetLocalization(headerElement);
-        description.SetLocalization(descElement);
+        if(description.isActiveAndEnabled)
+            description.SetLocalization(descElement);
     }
 }

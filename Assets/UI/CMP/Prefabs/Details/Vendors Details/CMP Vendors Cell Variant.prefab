@@ -23,13 +23,39 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7419011455151749660, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 691.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419011455151749660, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 62.8817
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419011455151749660, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.8627
+      objectReference: {fileID: 0}
     - target: {fileID: 7713151736745207890, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
       propertyPath: m_Name
       value: CMP Vendors Cell Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8056562212027994265, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
       propertyPath: m_Text
-      value: Hello I am the Vendors Details dummy text...
+      value: Hello I am the Vendors Details dummy text...Hello I am the Vendors Details
+        dummy text...Hello I am the Vendors Details dummy text...Hello I am the Vendors
+        Details dummy text...
+      objectReference: {fileID: 0}
+    - target: {fileID: 8056562212027994265, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
+      propertyPath: m_FontData.m_BestFit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8056562212027994265, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
+      propertyPath: m_FontData.m_VerticalOverflow
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8056562212027994265, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
+      propertyPath: m_FontData.m_HorizontalOverflow
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8501758013878611975, guid: 615e1afe21aac412bb2d63d93a17a646, type: 3}
       propertyPath: m_Pivot.x

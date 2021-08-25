@@ -4,7 +4,7 @@ using UnityEngine;
 public class CmpCategoryScrollController : CmpScrollController
 {
     [SerializeField] private CmpSwitch cmpSwitch;
-    [SerializeField] private GameObject cmpDescritionCellPrefab;
+    [SerializeField] private GameObject cmpDescriptionCellPrefab;
     [SerializeField] private GameObject categoryDetailsPrefab;
 
     public override void FillView()
@@ -41,7 +41,7 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddSpecialFeatures(List<CmpSpecialFeatureModel> specialFeatures)
     {
-        AddDescriptionCell("SpecialFeaturesHeader", "SpecialFeaturesDefinition");
+        AddDescriptionCell(cmpDescriptionCellPrefab, "SpecialFeaturesHeader", "SpecialFeaturesDefinition");
         foreach (var specialFeature in specialFeatures)
         {
             var longController = AddCell(specialFeature.name, specialFeature.description);
@@ -51,7 +51,7 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddFeatures(List<CmpFeatureModel> features)
     {
-        AddDescriptionCell("FeaturesHeader", "FeaturesDefinition");
+        AddDescriptionCell(cmpDescriptionCellPrefab, "FeaturesHeader", "FeaturesDefinition");
         foreach (var feature in features)
         {
             var longController = AddCell(feature.name, feature.description);
@@ -61,7 +61,7 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddSpecialPurposes(List<CmpSpecialPurposeModel> specialPurposes)
     {
-        AddDescriptionCell("SpecialPurposesHeader", "SpecialPurposesDefinition");
+        AddDescriptionCell(cmpDescriptionCellPrefab, "SpecialPurposesHeader", "SpecialPurposesDefinition");
         foreach (var spec in specialPurposes)
         {
             var longController = AddCell(spec.name, spec.description);
@@ -72,7 +72,7 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddCategories(List<CmpCategoryModel> categories)
     {
-        AddDescriptionCell("PurposesHeader", "PurposesDefinition");
+        AddDescriptionCell(cmpDescriptionCellPrefab, "PurposesHeader", "PurposesDefinition");
         foreach (CmpCategoryModel cat in categories)
         {
             var longController = AddCell(cat.name, cat.friendlyDescription);
@@ -89,29 +89,20 @@ public class CmpCategoryScrollController : CmpScrollController
         longController.SetMainText(mainText);
         longController.EnableCustomTextLabel(false); //??
 
-        var categoryRelatedController = cell.AddComponent<CmpCategoryLongButtonUiController>();
+        var categoryRelatedController = cell.AddComponent<CmpLongButtonTextChangeController>();
         categoryRelatedController.SetChangingTextRef(changingText);
         categoryRelatedController.SetChangingTextString(description);
         categoryRelatedController.SetButtonRef(longController.GetButton());
         return longController;
     }
 
-    private void AddDescriptionCell(string headerId, string definitionId)
-    {
-        var header = postponedElements[headerId];
-        var def = postponedElements[definitionId];
-        var desc = Instantiate(cmpDescritionCellPrefab, scrollContent.transform);
-        var descriptionController = desc.GetComponent<CmpDescriptionCellUiController>();
-        descriptionController.SetLocalization(header, def);
-    }
-
     private void SetCellOnClickAction(CmpLongButtonUiController longController, CmpCategoryBaseModel model)
     {
-        CmpCategoryLongButtonUiController catController = longController.gameObject.GetComponent<CmpCategoryLongButtonUiController>();
-        catController.SetOnClickAction(delegate { InstantiateCategoriesDetailsPrefab(model); });
+        CmpLongButtonTextChangeController catController = longController.gameObject.GetComponent<CmpLongButtonTextChangeController>();
+        catController.SetOnClickAction(delegate { InstantiateVendorDetailsPrefab(model); });
     }
 
-    private void InstantiateCategoriesDetailsPrefab(CmpCategoryBaseModel model)
+    private void InstantiateVendorDetailsPrefab(CmpCategoryBaseModel model)
     {
         var canvas = GameObject.Find("Canvas").transform;
         GameObject go = Instantiate(categoryDetailsPrefab, canvas);

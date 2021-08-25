@@ -22,6 +22,23 @@ public class CmpScrollController : MonoBehaviour
                 Destroy(child.gameObject);
     }
 
+    protected void AddHeaderCell(GameObject cmpHeaderCellPrefab, string headerId)
+    {
+        var header = postponedElements[headerId];
+        var desc = Instantiate(cmpHeaderCellPrefab, scrollContent.transform);
+        var descriptionController = desc.GetComponent<CmpDescriptionCellUiController>();
+        descriptionController.SetLocalization(header, null);
+    }
+
+    protected void AddDescriptionCell(GameObject cmpDescriptionCellPrefab, string headerId, string definitionId)
+    {
+        var header = postponedElements[headerId];
+        var def = postponedElements[definitionId];
+        var desc = Instantiate(cmpDescriptionCellPrefab, scrollContent.transform);
+        var descriptionController = desc.GetComponent<CmpDescriptionCellUiController>();
+        descriptionController.SetLocalization(header, def);
+    }
+
     public virtual void FillView()
     {
 

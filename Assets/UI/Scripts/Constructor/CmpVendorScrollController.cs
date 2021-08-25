@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CmpVendorScrollController : CmpScrollController
 {
     [SerializeField] private CmpSwitch cmpSwitch;
+    [SerializeField] private GameObject vendorDetailsPrefab;
 
     public override void FillView()
     {
@@ -42,11 +44,14 @@ public class CmpVendorScrollController : CmpScrollController
             bool enableCustomTextLabel = false;
             if (vendor.vendorType.Equals("CUSTOM")) //TODO: CHECK
                 enableCustomTextLabel = true;
-             AddCell(vendor.name, enableCustomTextLabel);
+            CmpLongButtonUiController longController = AddCell(vendor.name, enableCustomTextLabel);
+            CmpLongButtonController btn = longController.gameObject.AddComponent<CmpLongButtonController>();
+            btn.SetButtonRef(longController.GetButton());
+            btn.SetOnClickAction(delegate { InstantiateVendorDetailsPrefab(vendor); } );
         }
     }
 
-    private void AddCell(string mainText, bool enableCustomTextLabel)
+    private CmpLongButtonUiController AddCell(string mainText, bool enableCustomTextLabel)
     {
         var cell = Instantiate(cmpCellPrefab, scrollContent.transform);
         var longController = cell.GetComponent<CmpLongButtonUiController>();
@@ -54,5 +59,14 @@ public class CmpVendorScrollController : CmpScrollController
         longController.SetLocalization(longElement);
         longController.SetMainText(mainText);
         longController.EnableCustomTextLabel(enableCustomTextLabel);
+        return longController;
+    }
+
+    private void InstantiateVendorDetailsPrefab(CmpVendorModel model)
+    {
+        var canvas = GameObject.Find("Canvas").transform;
+        GameObject go = Instantiate(vendorDetailsPrefab, canvas);
+        CmpVendorDetailsScrollController detailsController = go.GetComponent<CmpVendorDetailsScrollController>();
+        detailsController.SetInfo(model);
     }
 }
