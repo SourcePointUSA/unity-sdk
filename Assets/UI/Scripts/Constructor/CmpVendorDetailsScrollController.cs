@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Assets.UI.Scripts.Util;
 using UnityEngine;
 using UnityEngine.UI;
+using QRCoder;
+using QRCoder.Unity;
 
 public class CmpVendorDetailsScrollController : CmpScrollController
 {
@@ -16,14 +20,27 @@ public class CmpVendorDetailsScrollController : CmpScrollController
         description.text = model.cookieHeader;
         this.model = model;
         FillView();
-        GenerateQR(model.policyUrl);
     }
 
+    private IEnumerator SmoothQrChange(Sprite qrSprite)
+    {
+        yield return qrImage.ChangeColor(new Color(qrImage.color.r, qrImage.color.g, qrImage.color.b, 0f));
+        qrImage.sprite = qrSprite;
+        yield return qrImage.ChangeColor(new Color(qrImage.color.r, qrImage.color.g, qrImage.color.b, 1f));
+
+    }
+    
     private void GenerateQR(string policyUrl)
     {
         if (!string.IsNullOrEmpty(policyUrl))
         {
-            //TODO
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(policyUrl, QRCodeGenerator.ECCLevel.Q);
+            UnityQRCode qrCode = new UnityQRCode(qrCodeData);
+            Texture2D qrCodeAsTexture2D = qrCode.GetGraphic(20);
+            Sprite qrSprite = Sprite.Create(qrCodeAsTexture2D, new Rect(0, 0, qrCodeAsTexture2D.width, qrCodeAsTexture2D.height), 
+                                            new Vector2(qrCodeAsTexture2D.width / 2, qrCodeAsTexture2D.height / 2));
+            StartCoroutine(SmoothQrChange(qrSprite));
         }
     }
 
@@ -32,6 +49,7 @@ public class CmpVendorDetailsScrollController : CmpScrollController
         ClearScrollContent();
         if (model != null)
         {
+            GenerateQR(model.policyUrl);
             AddConsentCategories(model.consentCategories); // == Pusposes
             //TODO: legIntCategories //??
             AddSpecialPurposes(model.iabSpecialPurposes);
