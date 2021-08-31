@@ -11,11 +11,13 @@ public static class CmpLocalizationMapper
     public static List<CmpFeatureModel> features;
     public static List<CmpSpecialFeatureModel> specialFeatures;
     public static List<CmpVendorModel> vendors;
-
+    public static List<CmpShortCategoryModel> shortCategories;
+    
     static CmpLocalizationMapper()
     {
         //TODO: Network call -> json
         elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM);
+        NativeUiJsonDeserializer.DeserializeShortCategories(JSONSTUB.shortCategories, ref shortCategories);
         NativeUiJsonDeserializer.DeserializeExtraCall(JSONSTUB.extraCall, 
                                                     out List<CmpCategoryModel> categories,
                                                     out List<CmpSpecialPurposeModel> specialPurposes,

@@ -55,8 +55,7 @@ public class CmpVendorDetailsScrollController : CmpScrollController
             AddSpecialPurposes(model.iabSpecialPurposes);
             AddFeatures(model.iabFeatures);
             AddSpecialFeatures(model.iabSpecialFeatures);
-            RectTransform scrollRect = ((RectTransform)scrollContent.transform);
-            scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, -400f, scrollRect.position.z), scrollRect.rotation);
+            ScrollAppear();
         }
     }
 

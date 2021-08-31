@@ -23,8 +23,7 @@ public class CmpCategoryScrollController : CmpScrollController
                 AddSpecialPurposes(CmpLocalizationMapper.specialPurposes);
                 AddFeatures(CmpLocalizationMapper.features);
                 AddSpecialFeatures(CmpLocalizationMapper.specialFeatures);
-                RectTransform scrollRect = ((RectTransform)scrollContent.transform);
-                scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, -400f, scrollRect.position.z), scrollRect.rotation);
+                ScrollAppear();
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab

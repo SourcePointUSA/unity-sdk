@@ -15,13 +15,12 @@ public class CmpVendorScrollController : CmpScrollController
     private void FillVendorView()
     {
         ClearScrollContent();
-        RectTransform scrollRect = ((RectTransform)scrollContent.transform);
         switch (cmpSwitch.currentBtn)
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
                 //Consent Tab
                 AddVendors(CmpLocalizationMapper.vendors);
-                scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, -400f, scrollRect.position.z), scrollRect.rotation);
+                ScrollAppear();
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab
@@ -32,7 +31,7 @@ public class CmpVendorScrollController : CmpScrollController
                         legIntCategories.Add(model);
                 }
                 AddVendors(legIntCategories);
-                scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, -400f, scrollRect.position.z), scrollRect.rotation);
+                ScrollAppear();
                 break;
         }
     }

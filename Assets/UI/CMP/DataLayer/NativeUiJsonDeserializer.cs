@@ -2,14 +2,28 @@
 using System.Text.Json;
 using UnityEngine;
 
-// CMP_id
-// BackButton
-// id LogoImage -> src
-
 public static class NativeUiJsonDeserializer
 {
     public static Dictionary<string, string> popupBgColors;
 
+    public static void DeserializeShortCategories(string json, ref List<CmpShortCategoryModel> shortCategories)
+    {
+        using (JsonDocument document = JsonDocument.Parse(json))
+        {
+            JsonElement root = document.RootElement;
+            if(shortCategories == null)
+                shortCategories = new List<CmpShortCategoryModel>();
+            if (root.TryGetProperty("categories", out JsonElement categories))
+            {
+                foreach (JsonElement cat in categories.EnumerateArray())
+                {
+                    CmpShortCategoryModel category = JsonSerializer.Deserialize<CmpShortCategoryModel>(cat.GetRawText());
+                    shortCategories.Add(category);
+                }
+            }
+        }
+    }
+    
     public static void DeserializeExtraCall(string json, 
                                             out List<CmpCategoryModel> categoryModels, 
                                             out List<CmpSpecialPurposeModel> specialPurposeModels,
