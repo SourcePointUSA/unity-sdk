@@ -1,11 +1,13 @@
+using System.Text.Json.Serialization;
+
 public class CmpNativeImageModel : CmpUiElementModel
 {
-    private string src;
+    [JsonInclude] public CmpNativeImageSettingsModel settings;
 
-    public string LogoImageLink => src;
+    public string LogoImageLink => settings?.src;
+}
 
-    public CmpNativeImageModel(string id, string type, string name, string src) : base(id, type, name)
-    {
-        this.src = src;
-    }
+public class CmpNativeImageSettingsModel
+{
+    [JsonInclude] public string src;
 }

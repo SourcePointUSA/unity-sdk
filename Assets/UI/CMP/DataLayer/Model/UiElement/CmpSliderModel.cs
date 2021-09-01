@@ -1,26 +1,28 @@
+using System.Text.Json.Serialization;
+
 public class CmpSliderModel : CmpUiElementModel
 {
-    string leftText;
-    string rightText;
-    string backgroundColor;
-    string activeBackgroundColor;
-    ColoredFontModel defaultFont;
-    ColoredFontModel activeFont;
+    [JsonInclude] public CmpSliderSettingsModel settings;
 
-    public string LeftText => leftText;
-    public string RightText => rightText;
-    public string BackgroundColor => backgroundColor;
-    public string ActiveBackgroundColor => activeBackgroundColor;
-    public ColoredFontModel DefaultFont => defaultFont;
-    public ColoredFontModel ActiveFont => activeFont;
-    
-    public CmpSliderModel(string id, string type, string name, string leftText, string rightText, string backgroundColor, string activeBackgroundColor, ColoredFontModel defaultFont, ColoredFontModel activeFont) : base(id, type, name)
-    {
-        this.leftText = leftText;
-        this.rightText = rightText;
-        this.backgroundColor = backgroundColor;
-        this.activeBackgroundColor = activeBackgroundColor;
-        this.defaultFont = defaultFont;
-        this.activeFont = activeFont;
-    }
+    public string LeftText => settings?.leftText;
+    public string RightText => settings?.rightText;
+    public string BackgroundColor => settings?.style?.backgroundColor;
+    public string ActiveBackgroundColor => settings?.style?.activeBackgroundColor;
+    public ColoredFontModel DefaultFont => settings?.style?.font;
+    public ColoredFontModel ActiveFont => settings?.style?.activeFont;
+}
+
+public class CmpSliderSettingsModel
+{
+    [JsonInclude] public string leftText;
+    [JsonInclude] public string rightText;
+    [JsonInclude] public CmpSliderStyleModel style;
+}
+
+public class CmpSliderStyleModel
+{
+    [JsonInclude] public string backgroundColor;
+    [JsonInclude] public string activeBackgroundColor;
+    [JsonInclude] public ColoredFontModel font;
+    [JsonInclude] public ColoredFontModel activeFont;
 }

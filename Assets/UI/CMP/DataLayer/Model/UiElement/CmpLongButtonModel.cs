@@ -1,30 +1,30 @@
+using System.Text.Json.Serialization;
+
 public class CmpLongButtonModel : CmpUiElementModel
 {
-    private string onText;
-    private string offText;
-    private string customText;
-    private string onFocusColorCode;
-    private string onUnfocusColorCode;
-    private ColoredFontModel font;
-    //private bool startFocus;
+    [JsonInclude] public CmpLongButtonSettingsModel settings;
 
-    public string OnText => onText;
-    public string OffText => offText;
-    public string CustomText => customText;
-    public string OnFocusColorCode => onFocusColorCode;
-    public string OnUnfocusColorCode => onUnfocusColorCode;
-    public ColoredFontModel Font => font;
-    //public bool StartFocus => startFocus;   
+    public string OnText => settings?.onText;
+    public string OffText => settings?.offText;
+    public string CustomText => settings?.customText;
+    public string OnFocusColorCode => settings?.style?.onFocusBackgroundColor;
+    public string OnUnfocusColorCode => settings?.style?.onUnfocusBackgroundColor;
+    public ColoredFontModel Font => settings?.style?.font;
+    //public bool StartFocus => settings?.startFocus;   
+}
 
+public class CmpLongButtonSettingsModel
+{
+    [JsonInclude] public string onText;
+    [JsonInclude] public string offText;
+    [JsonInclude] public string customText;
+    [JsonInclude] public CmpLongButtonStyleModel style;
+    //[JsonInclude] public bool startFocus;
+}
 
-    public CmpLongButtonModel(string id, string type, string name, ColoredFontModel font, string onText, string offText, string customText, /* bool startFocus, */ string onFocusBackgroundColor, string onUnfocusBackgroundColor) : base(id, type, name)
-    {
-        this.onText = onText;
-        this.offText = offText;
-        this.customText = customText;
-        this.onFocusColorCode = onFocusBackgroundColor;
-        this.onUnfocusColorCode = onUnfocusBackgroundColor;
-        this.font = font;
-        //this.startFocus = startFocus;
-    }
+public class CmpLongButtonStyleModel
+{
+    [JsonInclude] public string onFocusBackgroundColor;
+    [JsonInclude] public string onUnfocusBackgroundColor;
+    [JsonInclude] public ColoredFontModel font;
 }

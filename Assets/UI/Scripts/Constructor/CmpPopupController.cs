@@ -33,7 +33,7 @@ public class CmpPopupController : MonoBehaviour
 
     private void SetBgColor()
     {
-        bg.color = GraphicExtension.HexToColor(NativeUiJsonDeserializer.popupBgColors[viewId]);
+        bg.color = GraphicExtension.HexToColor(CmpLocalizationMapper.popupBgColors[viewId]);
     }
 
     private void MapPostponedLocalization()

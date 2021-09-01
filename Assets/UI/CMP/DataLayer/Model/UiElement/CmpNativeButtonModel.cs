@@ -1,30 +1,30 @@
-﻿public class CmpNativeButtonModel : CmpUiElementModel
+﻿using System.Text.Json.Serialization;
+
+public class CmpNativeButtonModel : CmpUiElementModel
 {
-    private string text;
-    private bool startFocus;
-    private string onFocusBackgroundColor;
-    private string onUnfocusBackgroundColor;
-    private string onFocusTextColor;
-    private string onUnfocusTextColor;
-    private FontModel font;
+    [JsonInclude] public CmpNativeButtonSettings settings;
+    
+    public string Text => settings?.text;
+    public bool? StartFocus => settings?.startFocus;
+    public string OnFocusBackgroundColor => settings?.style?.onFocusBackgroundColor;
+    public string OnUnfocusBackgroundColor => settings?.style?.onUnfocusBackgroundColor;
+    public string OnFocusTextColor => settings?.style?.onFocusTextColor;
+    public string OnUnfocusTextColor => settings?.style?.onUnfocusTextColor;
+    public FontModel Font => settings?.style?.font;
+}
 
-    public string Text => text;
-    public bool StartFocus => startFocus;
-    public string OnFocusBackgroundColor => onFocusBackgroundColor;
-    public string OnUnfocusBackgroundColor => onUnfocusBackgroundColor;
-    public string OnFocusTextColor => onFocusTextColor;
-    public string OnUnfocusTextColor => onUnfocusTextColor;
-    public FontModel Font => font;
+public class CmpNativeButtonSettings
+{
+    [JsonInclude] public CmpNativeButtonStyle style;
+    [JsonInclude] public string text;
+    [JsonInclude] public bool startFocus;
+}
 
-    public CmpNativeButtonModel(string id, string type, string name, FontModel font, bool startFocus, string text, string onFocusBackgroundColor,
-        string onUnfocusBackgroundColor, string onFocusTextColor, string onUnfocusTextColor) : base(id, type, name)
-    {
-        this.startFocus = startFocus;
-        this.text = text;
-        this.onFocusBackgroundColor = onFocusBackgroundColor;
-        this.onUnfocusBackgroundColor = onUnfocusBackgroundColor;
-        this.onFocusTextColor = onFocusTextColor;
-        this.onUnfocusTextColor = onUnfocusTextColor;
-        this.font = font;
-    }
+public class CmpNativeButtonStyle
+{
+    [JsonInclude] public string onFocusBackgroundColor;
+    [JsonInclude] public string onUnfocusBackgroundColor;
+    [JsonInclude] public string onFocusTextColor;
+    [JsonInclude] public string onUnfocusTextColor;
+    [JsonInclude] public FontModel font;
 }

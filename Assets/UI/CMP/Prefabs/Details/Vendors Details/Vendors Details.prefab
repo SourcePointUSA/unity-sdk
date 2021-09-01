@@ -223,7 +223,6 @@ MonoBehaviour:
   - SpecialFeaturesText
   - LegitInterestsText
   - CookieInfoText
-  - CookieTable
   - CategoryLongButton
   scrollController: {fileID: 6017929415409796140}
 --- !u!114 &6017929415409796140

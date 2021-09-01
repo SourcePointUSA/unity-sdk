@@ -17,7 +17,7 @@ public class CmpBackButtonUiController : CmpLocalizationUiElement
         clrs.normalColor = GraphicExtension.HexToColor(btn.BackgroundColor);
         button.colors = clrs;
 
-        if(btn.StartFocus)
+        if(btn.StartFocus.HasValue && btn.StartFocus.Value)
         {
             //TODO
         }

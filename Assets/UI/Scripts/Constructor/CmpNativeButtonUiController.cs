@@ -20,7 +20,7 @@ public class CmpNativeButtonUiController : CmpLocalizationUiElement
         btnAnim.activeTextColor = GraphicExtension.HexToColor(nativeButton.OnFocusTextColor);
         btnAnim.defaultTextColor = GraphicExtension.HexToColor(nativeButton.OnUnfocusTextColor);
 
-        if (nativeButton.StartFocus)
+        if (nativeButton.StartFocus.HasValue && nativeButton.StartFocus.Value)
         {
             btnAnim.SetActiveState();
             //TODO

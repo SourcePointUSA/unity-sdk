@@ -1,20 +1,24 @@
-﻿public class CmpBackButtonModel : CmpUiElementModel
+﻿using System.Text.Json.Serialization;
+
+public class CmpBackButtonModel : CmpUiElementModel
 {
-    private string text;
-    private bool startFocus;
-    private string backgroundColor;
-    private ColoredFontModel font;
+    [JsonInclude] public CmpBackButtonSettingsModel settings;
+    
+    public string Text => settings?.text;
+    public bool? StartFocus => settings?.startFocus;
+    public string BackgroundColor => settings?.style?.backgroundColor;
+    public ColoredFontModel Font => settings?.style?.font;
+}
 
-    public string Text => text;
-    public bool StartFocus => startFocus;
-    public string BackgroundColor => backgroundColor;
-    public ColoredFontModel Font => font;
+public class CmpBackButtonSettingsModel
+{
+    [JsonInclude] public CmpBackButtonStyleModel style;
+    [JsonInclude] public string text;
+    [JsonInclude] public bool startFocus;
+}
 
-    public CmpBackButtonModel(string id, string type, string name, ColoredFontModel font, bool startFocus, string text, string backgroundColor) : base(id, type, name)
-    {
-        this.startFocus = startFocus;
-        this.text = text;
-        this.backgroundColor = backgroundColor;
-        this.font = font;
-    }
+public class CmpBackButtonStyleModel
+{
+    [JsonInclude] public string backgroundColor;
+    [JsonInclude] public ColoredFontModel font;
 }

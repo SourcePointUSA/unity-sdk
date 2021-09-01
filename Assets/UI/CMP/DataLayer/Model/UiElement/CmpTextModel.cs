@@ -1,13 +1,19 @@
+using System.Text.Json.Serialization;
+
 public class CmpTextModel : CmpUiElementModel
 {
-    private string text;
-    public string Text => text;
-    private ColoredFontModel font;
-    public ColoredFontModel Font => font;
+    [JsonInclude] public CmpTextSettingsModel settings;
+    public string Text => settings?.text;
+    public ColoredFontModel Font => settings?.style?.font;
+}
 
-    public CmpTextModel(string id, string type, string name, ColoredFontModel font, string text) : base(id, type, name)
-    {
-        this.text = text;
-        this.font = font;
-    }
+public class CmpTextSettingsModel
+{
+    [JsonInclude] public string text;
+    [JsonInclude] public CmpTextStyleModel style;
+}
+
+public class CmpTextStyleModel
+{
+    [JsonInclude] public ColoredFontModel font;
 }
