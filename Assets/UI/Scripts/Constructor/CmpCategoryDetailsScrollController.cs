@@ -24,17 +24,19 @@ public class CmpCategoryDetailsScrollController : CmpScrollController
         {
             CmpCategoryModel mod = model as CmpCategoryModel;
             foreach(CmpCategoryConsentVendorModel categoryConsentVendor in mod.requiringConsentVendors)
-            {
-                var cell = Instantiate(cmpCellPrefab, scrollContent.transform);
-                CmpLongButtonUiController longButtonController = cell.GetComponent<CmpLongButtonUiController>();
-                var longElement = postponedElements["VendorLongButton"];
-                longButtonController.SetLocalization(longElement);
-                longButtonController.SetMainText(categoryConsentVendor.name);
-            }
+                AddCell(categoryConsentVendor.name);
+            foreach (CmpCategoryConsentVendorModel vendor in mod.legIntVendors)
+                AddCell(vendor.name);
         }
         ScrollAppear();
-        //TODO: 
-        //CmpSpecialPurposeModel    //  ?
-        //CmpSpecialFeatureModel    //  ?
+    }
+
+    private void AddCell(string name)
+    {
+        var cell = Instantiate(cmpCellPrefab, scrollContent.transform);
+        CmpLongButtonUiController longButtonController = cell.GetComponent<CmpLongButtonUiController>();
+        var longElement = postponedElements["VendorLongButton"];
+        longButtonController.SetLocalization(longElement);
+        longButtonController.SetMainText(name);
     }
 }

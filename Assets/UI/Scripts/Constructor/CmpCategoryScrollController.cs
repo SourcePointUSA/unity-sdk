@@ -19,7 +19,7 @@ public class CmpCategoryScrollController : CmpScrollController
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
                 //Consent Tab
-                AddCategories(CmpLocalizationMapper.categories); // == Pusposes
+                AddCategories(CmpLocalizationMapper.categories); // == Purposes
                 AddSpecialPurposes(CmpLocalizationMapper.specialPurposes);
                 AddFeatures(CmpLocalizationMapper.features);
                 AddSpecialFeatures(CmpLocalizationMapper.specialFeatures);

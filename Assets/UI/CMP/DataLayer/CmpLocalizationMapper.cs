@@ -15,7 +15,7 @@ public static class CmpLocalizationMapper
     
     static CmpLocalizationMapper()
     {
-        //TODO: Network call -> json
+        //TODO: NetworkClient call -> json
         elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM);
         NativeUiJsonDeserializer.DeserializeShortCategories(JSONSTUB.shortCategories, ref shortCategories);
         NativeUiJsonDeserializer.DeserializeExtraCall(JSONSTUB.extraCall, 

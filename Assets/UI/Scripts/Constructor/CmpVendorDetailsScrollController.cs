@@ -51,11 +51,21 @@ public class CmpVendorDetailsScrollController : CmpScrollController
         {
             GenerateQR(model.policyUrl);
             AddConsentCategories(model.consentCategories); // == Pusposes
-            //TODO: legIntCategories //??
+            AddLegIntCategories(model.legIntCategories);
             AddSpecialPurposes(model.iabSpecialPurposes);
             AddFeatures(model.iabFeatures);
             AddSpecialFeatures(model.iabSpecialFeatures);
             ScrollAppear();
+        }
+    }
+
+    private void AddLegIntCategories(List<CmpVendorCategoryModel> legIntCategories)
+    {
+        if (legIntCategories.Count > 0)
+        {
+            AddHeaderCell(cmpDescriptionCellPrefab, "LegitInterestsText");
+            foreach (var model in legIntCategories)
+                AddCell(model.name);
         }
     }
 

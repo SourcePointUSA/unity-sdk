@@ -40,9 +40,7 @@ public class CmpVendorScrollController : CmpScrollController
     {
         foreach (CmpVendorModel vendor in vendors)
         {
-            bool enableCustomTextLabel = false;
-            if (vendor.vendorType.Equals("CUSTOM")) //TODO: CHECK
-                enableCustomTextLabel = true;
+            bool enableCustomTextLabel = vendor.vendorType.Equals("CUSTOM");
             CmpLongButtonUiController longController = AddCell(vendor.name, enableCustomTextLabel);
             CmpLongButtonController btn = longController.gameObject.AddComponent<CmpLongButtonController>();
             btn.SetButtonRef(longController.GetButton());
