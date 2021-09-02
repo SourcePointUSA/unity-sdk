@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using UnityEngine;
+
+[assembly: InternalsVisibleTo("Tests")] //"Friend assembly" gives access to internals from this assembly
 
 public static class NativeUiJsonDeserializer
 {
@@ -120,7 +123,7 @@ public static class NativeUiJsonDeserializer
         return result;
     }
     
-    private static List<T> DeserializeCollection<T>(JsonElement root, string propertyName)
+    internal static List<T> DeserializeCollection<T>(JsonElement root, string propertyName)
     {
         List<T> result = new List<T>();
         if (root.TryGetProperty(propertyName, out JsonElement collection))
