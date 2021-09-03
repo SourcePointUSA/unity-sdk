@@ -9,6 +9,9 @@ public static class NativeUiJsonDeserializer
 {
     public static void DeserializeShortCategories(string json, ref List<CmpShortCategoryModel> shortCategories)
     {
+        // TODO:
+        // InvalidOperationException
+        // System.Text.Json.JsonReaderException (JsonException)
         shortCategories ??= new List<CmpShortCategoryModel>();
         using (JsonDocument document = JsonDocument.Parse(json))
         {
@@ -21,8 +24,10 @@ public static class NativeUiJsonDeserializer
                                             ref List<CmpSpecialPurposeModel> specialPurposeModels,
                                             ref List<CmpFeatureModel> featureModels,
                                             ref List<CmpSpecialFeatureModel> specialFeatureModels,
-                                            ref List<CmpVendorModel> vendorModels)  //TODO: throws
+                                            ref List<CmpVendorModel> vendorModels)
     {
+        // TODO:
+        // System.Text.Json.JsonReaderException (JsonException)
         categoryModels ??= new List<CmpCategoryModel>();
         specialPurposeModels ??= new List<CmpSpecialPurposeModel>();
         featureModels ??= new List<CmpFeatureModel>();
