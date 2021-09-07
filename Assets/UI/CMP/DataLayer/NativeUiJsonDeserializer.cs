@@ -26,8 +26,7 @@ public static class NativeUiJsonDeserializer
                                             ref List<CmpSpecialFeatureModel> specialFeatureModels,
                                             ref List<CmpVendorModel> vendorModels)
     {
-        // TODO:
-        // System.Text.Json.JsonReaderException (JsonException)
+        // TODO: System.Text.Json.JsonReaderException (JsonException)
         categoryModels ??= new List<CmpCategoryModel>();
         specialPurposeModels ??= new List<CmpSpecialPurposeModel>();
         featureModels ??= new List<CmpFeatureModel>();
@@ -47,15 +46,18 @@ public static class NativeUiJsonDeserializer
     
     public static Dictionary<string, List<CmpUiElementModel>> DeserializeNativePm(string json, ref Dictionary<string, string> popupBgColors)
     {
+        // TODO: System.Text.Json.JsonReaderException (JsonException)
         Dictionary<string, List<CmpUiElementModel>> result = new Dictionary<string, List<CmpUiElementModel>>();
         popupBgColors = new Dictionary<string, string>();
         using (JsonDocument document = JsonDocument.Parse(json))
         {
             JsonElement root = document.RootElement;
             // Console.WriteLine(root.GetProperty("settings").GetProperty("defaultLanguage").GetString());
-            JsonElement children = root.GetProperty("children");
+            JsonElement children = root.GetProperty("children");    // TODO: System.Collections.Generic.KeyNotFoundException : The given key was not present in the dictionary.
             foreach (JsonElement view in children.EnumerateArray())
             {
+                if(view.ValueKind == JsonValueKind.Null) continue;
+                
                 string viewIdStr = null;
                 if (view.TryGetProperty("id", out JsonElement viewId))
                 {
@@ -74,16 +76,20 @@ public static class NativeUiJsonDeserializer
 
                 if(view.TryGetProperty("settings", out JsonElement viewSettings)
                    && viewSettings.TryGetProperty("style", out JsonElement viewStyle)
-                   && viewStyle.TryGetProperty("backgroundColor", out JsonElement viewBackgroundColor))
+                   && viewStyle.TryGetProperty("backgroundColor", out JsonElement viewBackgroundColor)
+                   && viewBackgroundColor.ValueKind != JsonValueKind.Null)
                 {
                     popupBgColors[viewIdStr] = viewBackgroundColor.GetString();
                 }
 
-                JsonElement viewChildren = view.GetProperty("children");
+                JsonElement viewChildren = view.GetProperty("children"); // TODO: System.Collections.Generic.KeyNotFoundException : The given key was not present in the dictionary.
                 foreach (JsonElement viewElement in viewChildren.EnumerateArray())
                 {
+                    if (viewElement.ValueKind == JsonValueKind.Null)
+                        continue;
                     viewElement.TryGetProperty("id", out JsonElement id);
                     viewElement.TryGetProperty("type", out JsonElement type);
+                    if (id.ValueKind == JsonValueKind.Null || type.ValueKind == JsonValueKind.Null) continue;
                     if (type.GetString() != null && id.GetString() != null && viewIdStr != null)
                         switch (type.GetString())
                         {
@@ -135,6 +141,7 @@ public static class NativeUiJsonDeserializer
         {
             foreach (JsonElement collectionElement in collection.EnumerateArray())
             {
+                if (collectionElement.ValueKind == JsonValueKind.Null || collectionElement.ValueKind != JsonValueKind.Object)  continue;
                 T deserialized = JsonSerializer.Deserialize<T>(collectionElement.GetRawText());
                 result.Add(deserialized);
             }

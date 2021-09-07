@@ -270,70 +270,48 @@ public class DeserializeCollectionTestSuite
     }
 
     [Test]
-    public void DeserializeCollectionCmpVendorModelPasses()
+    public void DeserializeCollectionWithNullElementPasses()
     {
-        List<CmpVendorModel> vendors = NativeUiJsonDeserializer.DeserializeCollection<CmpVendorModel>(root, "vendors");
-        Assert.NotNull(vendors);
-        Assert.NotZero(vendors.Count);
-        foreach (var vendor in vendors)
-        {
-            Assert.NotNull(vendor.vendorType);
-            Assert.NotNull(vendor.name);
-            // Assert.NotNull(vendor.iabId);            //may be null
-            // Assert.NotNull(vendor.cookieHeader);     //may be null
-            Assert.NotNull(vendor.iabFeatures);
-            Assert.NotNull(vendor.iabSpecialPurposes);
-            Assert.NotNull(vendor.iabSpecialFeatures);
-            Assert.NotNull(vendor.legIntCategories);
-            Assert.NotNull(vendor.consentCategories);
-            Assert.NotNull(vendor.disclosureOnlyCategories);
-            
-            if(vendor.iabFeatures.Count>0)
-                foreach (var feature in vendor.iabFeatures)
-                {
-                    Assert.NotNull(feature);
-                }
-            if(vendor.iabSpecialPurposes.Count>0)
-                foreach (var specPurp in vendor.iabSpecialPurposes)
-                {
-                    Assert.NotNull(specPurp);
-                }
-            if(vendor.iabSpecialFeatures.Count>0)
-                foreach (var feature in vendor.iabSpecialFeatures)
-                {
-                    Assert.NotNull(feature);
-                }
-            
-            if (vendor.legIntCategories.Count > 0)
+       string json = @"
+{
+""categories"":
+         [
+            null,
             {
-                foreach (var cat in vendor.legIntCategories)
-                {
-                    Assert.NotNull(cat.name);
-                    Assert.NotNull(cat.type);
-                    // Assert.NotNull(cat.iabId);   //can be null
-                }
+               ""_id"":""aaaaaa1312"",
+               ""type"":""IAB_PURPOSE"",
+               ""name"":""Store and/or access information on a device"",
+               ""description"":""Cookies, device identifiers, or other information can be stored or accessed on your device for the purposes presented to you.""
             }
-            
-            if (vendor.consentCategories.Count > 0)
-            {
-                foreach (var cat in vendor.consentCategories)
-                {
-                    Assert.NotNull(cat.name);
-                    Assert.NotNull(cat.type);
-                    // Assert.NotNull(cat.iabId);   //can be null
-                }
-            }
-            
-            if (vendor.disclosureOnlyCategories.Count > 0)
-            {
-                foreach (var cat in vendor.disclosureOnlyCategories)
-                {
-                    Assert.NotNull(cat.name);
-                    Assert.NotNull(cat.type);
-                    // Assert.NotNull(cat.iabId);   //can be null
-                }
-            }
-        }
+         ]
+}
+       ";
+       JsonDocument document = JsonDocument.Parse(json);
+       JsonElement root = document.RootElement;
+
+       List<CmpCategoryModel> cats =NativeUiJsonDeserializer.DeserializeCollection<CmpCategoryModel>(root, "categories");
+       Assert.NotNull(cats);
+       Assert.NotZero(cats.Count);
+       Assert.AreEqual(cats.Count, 1);
+    }
+    
+    [Test]
+    public void DeserializeCollectionWithWrongTypePasses()
+    {
+       string json = @"
+{
+""categories"":
+         [
+               ""_id""
+         ]
+}
+       ";
+       JsonDocument document = JsonDocument.Parse(json);
+       JsonElement root = document.RootElement;
+
+       List<CmpCategoryModel> cats = NativeUiJsonDeserializer.DeserializeCollection<CmpCategoryModel>(root, "categories");
+       Assert.NotNull(cats);
+       Assert.Zero(cats.Count);
     }
 }
 
@@ -546,4 +524,682 @@ public class DeserializeExtraCallTestSuite
     }
 }
 
-//TODO: public class DeserializeNativePmTestSuite 
+public class DeserializeNativePmTestSuite
+{
+    [Test]
+    public void DeserializeNativePmNoChildrenPropertyFails()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"{
+           ""id"": ""Root"",
+           ""type"": ""NativeOtt"",
+           ""name"": ""Native OTT""
+        }";
+        Assert.Catch<KeyNotFoundException>(delegate
+        {
+            Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        });
+    }
+
+    [Test]
+    public void DeserializeNativePmWithNullChildrenFails()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"{
+           ""id"": ""Root"",
+           ""type"": ""NativeOtt"",
+           ""name"": ""Native OTT"",
+           ""children"": null
+        }";
+        Assert.Catch<InvalidOperationException>(delegate
+        {
+            Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        });
+    }
+    
+    [Test]
+    public void DeserializeNativePmWithNoViewIdPasses()
+    {
+       Dictionary<string, string> popupBgColors = null;
+       string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": null,
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""Header"",
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+       LogAssert.Expect(LogType.Error, ">>>DAFUQ >:C");
+       Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+       Assert.IsEmpty(elements);
+       Assert.IsEmpty(popupBgColors);
+    }    
+    
+    [Test]
+    public void DeserializeNativePmWithNullViewPasses()
+    {
+       Dictionary<string, string> popupBgColors = null;
+       string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      null,
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""Header"",
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+       Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+       Assert.IsNotEmpty(elements);
+       Assert.IsNotEmpty(elements["HomeView"]);
+       Assert.AreEqual(elements.Count, 1);
+    }    
+
+    [Test]
+    public void DeserializeNativePmWithUiElementIdNullPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": null,
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.IsEmpty(elements["HomeView"]);
+    }    
+
+    [Test]
+    public void DeserializeNativePmWithNullBgColorPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": null
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""Header"",
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.IsNotEmpty(popupBgColors);
+        Assert.AreEqual(popupBgColors.Count, 1);
+        Assert.IsNull(popupBgColors["HomeView"]);
+    }    
+    
+    [Test]
+    public void DeserializeNativePmWithBgColorPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""Header"",
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.IsNotEmpty(popupBgColors);
+        Assert.AreEqual(popupBgColors.Count, 1);
+        Assert.AreEqual(popupBgColors["HomeView"], "#e5e8ef");
+    }
+    
+    [Test]
+    public void DeserializeNativePmWithNullUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            null,
+            {
+               ""id"": ""Header"",
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        Assert.IsNotNull(elements["HomeView"][0]);
+    }    
+    
+    [Test]
+    public void DeserializeNativePmWithNativeTextUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""Header"",
+               ""type"": ""NativeText"",
+               ""name"": ""Header"",
+               ""settings"": {
+                  ""text"": ""Privacy"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 28,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        var el = elements["HomeView"][0] as CmpTextModel;
+        Assert.IsNotNull(el);
+        Assert.AreEqual(el.id, "Header");
+        Assert.AreEqual(el.type, "NativeText");
+        Assert.AreEqual(el.name, "Header");
+        Assert.AreEqual(el.Text, "Privacy");
+        Assert.AreEqual(el.Font.color, "#000000");
+        Assert.AreEqual(el.Font.fontWeight, "400");
+        Assert.AreEqual(el.Font.fontFamily, "arial, helvetica, sans-serif");
+        Assert.AreEqual(el.Font.fontSize, 28);
+    }      
+    
+    [Test]
+    public void DeserializeNativePmWithBackButtonUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""BackButton"",
+               ""type"": ""NativeButton"",
+               ""name"": ""Back button"",
+               ""settings"": {
+                  ""text"": ""Back"",
+                  ""startFocus"": false,
+                  ""style"": {
+                     ""backgroundColor"": ""#ffffff"",
+                     ""font"": {
+                        ""fontSize"": 16,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }               
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        var el = elements["HomeView"][0] as CmpBackButtonModel;
+        Assert.IsNotNull(el);
+        Assert.AreEqual(el.id, "BackButton");
+        Assert.AreEqual(el.type, "NativeButton");
+        Assert.AreEqual(el.name, "Back button");
+        Assert.AreEqual(el.Text, "Back");
+        Assert.AreEqual(el.StartFocus!, false);
+        Assert.AreEqual(el.BackgroundColor, "#ffffff");
+        Assert.AreEqual(el.Font.Color, "#000000");
+        Assert.AreEqual(el.Font.fontWeight, "400");
+        Assert.AreEqual(el.Font.fontFamily, "arial, helvetica, sans-serif");
+        Assert.AreEqual(el.Font.fontSize, 16);
+    }        
+    
+    [Test]
+    public void DeserializeNativePmWithNativeButtonUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""OnButton"",
+               ""type"": ""NativeButton"",
+               ""name"": ""On Button"",
+               ""settings"": {
+                  ""text"": ""On"",
+                  ""startFocus"": false,
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 14,
+                        ""fontWeight"": ""400"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     },
+                     ""onFocusBackgroundColor"": ""#ffffff"",
+                     ""onUnfocusBackgroundColor"": ""#575757"",
+                     ""onFocusTextColor"": ""#000000"",
+                     ""onUnfocusTextColor"": ""#ffffff""
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        var el = elements["HomeView"][0] as CmpNativeButtonModel;
+        Assert.IsNotNull(el);
+        Assert.AreEqual(el.id, "OnButton");
+        Assert.AreEqual(el.type, "NativeButton");
+        Assert.AreEqual(el.name, "On Button");
+        Assert.AreEqual(el.Text, "On");
+        Assert.AreEqual(el.StartFocus!, false);
+        Assert.AreEqual(el.Font.fontWeight, "400");
+        Assert.AreEqual(el.Font.fontFamily, "arial, helvetica, sans-serif");
+        Assert.AreEqual(el.Font.fontSize, 14);
+        Assert.AreEqual(el.OnFocusBackgroundColor, "#ffffff");
+        Assert.AreEqual(el.OnUnfocusBackgroundColor, "#575757");
+        Assert.AreEqual(el.OnFocusTextColor, "#000000");
+        Assert.AreEqual(el.OnUnfocusTextColor, "#ffffff");
+    }   
+    
+    [Test]
+    public void DeserializeNativePmWithSliderUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""CategoriesSlider"",
+               ""type"": ""Slider"",
+               ""name"": ""Categories Slider"",
+               ""settings"": {
+                  ""leftText"": ""CONSENT"",
+                  ""rightText"": ""LEGITIMATE INTEREST"",
+                  ""style"": {
+                     ""backgroundColor"": ""#d8d9dd"",
+                     ""activeBackgroundColor"": ""#777a7e"",
+                     ""font"": {
+                        ""fontSize"": 14,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#000000"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     },
+                     ""activeFont"": {
+                        ""fontSize"": 14,
+                        ""fontWeight"": ""400"",
+                        ""color"": ""#ffffff"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif""
+                     }
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        var el = elements["HomeView"][0] as CmpSliderModel;
+        Assert.IsNotNull(el);
+        Assert.AreEqual(el.id, "CategoriesSlider");
+        Assert.AreEqual(el.type, "Slider");
+        Assert.AreEqual(el.name, "Categories Slider");
+        Assert.AreEqual(el.LeftText, "CONSENT");
+        Assert.AreEqual(el.RightText, "LEGITIMATE INTEREST");
+        Assert.AreEqual(el.BackgroundColor, "#d8d9dd");
+        Assert.AreEqual(el.ActiveBackgroundColor, "#777a7e");
+        Assert.AreEqual(el.DefaultFont.Color, "#000000");
+        Assert.AreEqual(el.DefaultFont.fontWeight, "400");
+        Assert.AreEqual(el.DefaultFont.fontFamily, "arial, helvetica, sans-serif");
+        Assert.AreEqual(el.DefaultFont.fontSize, 14);
+        Assert.AreEqual(el.ActiveFont.Color, "#ffffff");
+        Assert.AreEqual(el.ActiveFont.fontWeight, "400");
+        Assert.AreEqual(el.ActiveFont.fontFamily, "arial, helvetica, sans-serif");
+        Assert.AreEqual(el.ActiveFont.fontSize, 14);
+    }   
+       
+    
+    [Test]
+    public void DeserializeNativePmWithLongButtonUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""VendorButton"",
+               ""type"": ""LongButton"",
+               ""name"": ""Vendors Buttons"",
+               ""settings"": {
+                  ""onText"": ""On"",
+                  ""offText"": ""Off"",
+                  ""customText"": ""Custom"",
+                  ""style"": {
+                     ""font"": {
+                        ""fontSize"": 14,
+                        ""fontWeight"": ""400"",
+                        ""fontFamily"": ""arial, helvetica, sans-serif"",
+                        ""color"": ""#060606""
+                     },
+                     ""onFocusBackgroundColor"": ""#ffffff"",
+                     ""onUnfocusBackgroundColor"": ""#f1f2f6""
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        var el = elements["HomeView"][0] as CmpLongButtonModel;
+        Assert.IsNotNull(el);
+        Assert.AreEqual(el.id, "VendorButton");
+        Assert.AreEqual(el.type, "LongButton");
+        Assert.AreEqual(el.name, "Vendors Buttons");
+        Assert.AreEqual(el.OnText, "On");
+        Assert.AreEqual(el.OffText, "Off");
+        Assert.AreEqual(el.CustomText, "Custom");
+        Assert.AreEqual(el.OnFocusColorCode, "#ffffff");
+        Assert.AreEqual(el.OnUnfocusColorCode, "#f1f2f6");
+        Assert.AreEqual(el.Font.Color, "#060606");
+        Assert.AreEqual(el.Font.fontWeight, "400");
+        Assert.AreEqual(el.Font.fontFamily, "arial, helvetica, sans-serif");
+        Assert.AreEqual(el.Font.fontSize, 14);
+    }   
+    
+    [Test]
+    public void DeserializeNativePmWithNativeImageUiElementPasses()
+    {
+        Dictionary<string, string> popupBgColors = null;
+        string json = @"
+{
+   ""id"": ""Root"",
+   ""type"": ""NativeOtt"",
+   ""name"": ""Native OTT"",
+   ""children"": [
+      {
+         ""id"": ""HomeView"",
+         ""type"": ""NativeView"",
+         ""name"": ""Home View"",
+         ""settings"": {
+            ""style"": {
+               ""backgroundColor"": ""#e5e8ef""
+            }
+         },
+         ""children"": [
+            {
+               ""id"": ""LogoImage"",
+               ""type"": ""NativeImage"",
+               ""name"": ""Logo"",
+               ""settings"": {
+                  ""src"": ""https://i.pinimg.com/originals/5a/ae/50/5aae503e4f037a5a4375944d8861fb6a.png"",
+                  ""style"": {
+                     ""width"": 170
+                  }
+               }
+            }
+        ]
+      }
+    ]
+}";
+        Dictionary<string, List<CmpUiElementModel>> elements = NativeUiJsonDeserializer.DeserializeNativePm(json, ref popupBgColors);
+        Assert.IsNotEmpty(elements);
+        Assert.AreEqual(elements.Count, 1);
+        Assert.AreEqual(elements["HomeView"].Count, 1);
+        var el = elements["HomeView"][0] as CmpNativeImageModel;
+        Assert.IsNotNull(el);
+        Assert.AreEqual(el.id, "LogoImage");
+        Assert.AreEqual(el.type, "NativeImage");
+        Assert.AreEqual(el.name, "Logo");
+        Assert.AreEqual(el.LogoImageLink, "https://i.pinimg.com/originals/5a/ae/50/5aae503e4f037a5a4375944d8861fb6a.png");
+    }
+}
