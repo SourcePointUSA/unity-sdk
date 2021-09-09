@@ -1090,7 +1090,6 @@ public class DeserializeNativePmTestSuite
         Assert.AreEqual(el.ActiveFont.fontFamily, "arial, helvetica, sans-serif");
         Assert.AreEqual(el.ActiveFont.fontSize, 14);
     }   
-       
     
     [Test]
     public void DeserializeNativePmWithLongButtonUiElementPasses()
