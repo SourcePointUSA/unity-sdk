@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using UnityEngine;
@@ -7,6 +8,53 @@ using UnityEngine;
 
 public static class NativeUiJsonDeserializer
 {
+    public static GetMessageResponse DeserializeGetMessages(string json)
+    {
+        // TODO:
+        // InvalidOperationException
+        // System.Text.Json.JsonReaderException (JsonException)
+        GetMessageResponse result = null;
+        using (JsonDocument document = JsonDocument.Parse(json))
+        {
+            var root = document.RootElement;
+            // if (root.ValueKind == JsonValueKind.Null || root.ValueKind != JsonValueKind.Object)  
+            result = JsonSerializer.Deserialize<GetMessageResponse>(root.GetRawText());
+            if (result.campaigns.Count > 0)
+            {
+                List<BaseGetMessagesCampaign> campaigns = new List<BaseGetMessagesCampaign>();
+                root.TryGetProperty("campaigns", out JsonElement collection);
+                var coll = collection.EnumerateArray().ToArray();
+                for(int i=0; i<coll.Length;i++)
+                {
+                    switch (result.campaigns[i].type)
+                    {
+                        case "GDPR":
+                            campaigns.Add(DeserializeGetMessagesCampaign<GdprGetMessagesCampaign>(coll[i]));
+                            break;
+                        case "CCPA":
+                            campaigns.Add(DeserializeGetMessagesCampaign<CcpaGetMessagesCampaign>(coll[i]));
+                            break;
+                        case "ios14":
+                            campaigns.Add(DeserializeGetMessagesCampaign<Ios14GetMessagesCampaign>(coll[i]));
+                            break;
+                        default:
+                            //wtf
+                            break;
+                    }
+                }
+                result.campaigns = campaigns;
+            }
+        }
+        return result;
+    }
+    
+    private static T DeserializeGetMessagesCampaign<T>(JsonElement element) where T:BaseGetMessagesCampaign
+    {
+        T result = null;   
+        result = JsonSerializer.Deserialize<T>(element.GetRawText());
+        return result;
+    }
+    
     public static void DeserializeShortCategories(string json, ref List<CmpShortCategoryModel> shortCategories)
     {
         // TODO:

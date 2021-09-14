@@ -9,22 +9,17 @@ using System.Web;
 public class NetworkClient
 {
     // HttpClient is intended to be instantiated once per application, rather than per-use
-    static readonly HttpClient client = new HttpClient();
+    readonly HttpClient client = new HttpClient();
     
-    static NetworkClient()
+    #region Public
+    public void GetMessages(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
-        // GetGdprMessage(OnSucc, null).Wait(3000);
-        // GetGdprPrivacyManagerView(OnSucc, null).Wait(3000);
-        // PostGetMessages(OnSucc, null).Wait(3000);
-        // PostConsentGdpr(OnSucc, null).Wait(3000);
-    }
-
-    static void OnSucc(string ss)
-    {
-        UnityEngine.Debug.Log(ss);
-        // UnityEngine.Debug.Log(ss);
+        PostGetMessages(onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
     
+    #endregion
+    
+    #region Query Parameters
     private static string GetGdprMessageUriWithQueryParams()
     {
         // https://cdn.sp-stage.net/wrapper/v2/message/gdpr?env=stage&consentLanguage=en&propertyId=4933&messageId=16434
@@ -85,8 +80,10 @@ public class NetworkClient
         builder.Query = query.ToString();
         return builder.ToString();
     }
-    
-    static async Task GetGdprMessage(Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    #endregion
+
+    #region Network Requests
+    async Task GetGdprMessage(Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
@@ -103,7 +100,7 @@ public class NetworkClient
         }
     }
 
-    static async Task GetGdprPrivacyManagerView(Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task GetGdprPrivacyManagerView(Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
@@ -120,7 +117,7 @@ public class NetworkClient
         }
     }
 
-    static async Task PostGetMessages(Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostGetMessages(Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
@@ -167,7 +164,7 @@ public class NetworkClient
         }
     }
 
-    static async Task PostConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
@@ -228,4 +225,5 @@ public class NetworkClient
             onErrorAction?.Invoke(ex);
         }
     }
+    #endregion
 }

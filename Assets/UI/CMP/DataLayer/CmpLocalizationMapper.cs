@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 
 public static class CmpLocalizationMapper
 {
+    private static NetworkClient netClient;
+
     private static Dictionary<string, List<CmpUiElementModel>> elements;
     private static bool isInitialized = false;
     public static bool IsInitialized => isInitialized;
@@ -17,7 +20,8 @@ public static class CmpLocalizationMapper
     static CmpLocalizationMapper()
     {
         //TODO: NetworkClient call -> json
-        NetworkClient n = new NetworkClient();
+        netClient = new NetworkClient();
+        netClient.GetMessages(OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
         
         elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM, ref popupBgColors);
         NativeUiJsonDeserializer.DeserializeShortCategories(JSONSTUB.shortCategories, ref shortCategories);
@@ -30,6 +34,20 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
+    #region Success
+    private static void OnGetMessagesSuccessCallback(string json)
+    {
+        SaveContext.SaveString("GetMessages", json);
+        GetMessageResponse messages = NativeUiJsonDeserializer.DeserializeGetMessages(json);
+        //...
+    }
+    #endregion
+
+    private static void OnExceptionCallback(Exception ex)
+    {
+        UnityEngine.Debug.LogError(ex.Message);
+    }
+    
     public static CmpUiElementModel GetCmpUiElement(string viewId, string uiElementId)
     {
         CmpUiElementModel result = null;
