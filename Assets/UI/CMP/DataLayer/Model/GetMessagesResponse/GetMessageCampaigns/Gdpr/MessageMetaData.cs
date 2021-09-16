@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-public class GdprMessageMetaData
+public class MessageMetaData
 {
     [JsonInclude] public int messageId;
     [JsonInclude] public string prtnUUID;

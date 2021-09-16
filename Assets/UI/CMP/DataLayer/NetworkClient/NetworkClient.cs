@@ -125,7 +125,7 @@ public class NetworkClient
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             string json = @"{
                                 ""accountId"": 22,
-                                ""propertyHref"": ""https://unified.meta.com"",
+                                ""propertyHref"": ""https://mobile.multicampaign.demo"",
                                 ""idfaStatus"": ""unknown"",
                                 ""campaigns"": {
                                     ""gdpr"": {

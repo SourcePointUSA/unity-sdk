@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 public static class CmpLocalizationMapper
 {
@@ -37,8 +38,12 @@ public static class CmpLocalizationMapper
     #region Success
     private static void OnGetMessagesSuccessCallback(string json)
     {
-        SaveContext.SaveString("GetMessages", json);
         GetMessageResponse messages = NativeUiJsonDeserializer.DeserializeGetMessages(json);
+        string localState = JsonSerializer.Serialize(messages.localState);
+        string campaigns = JsonSerializer.Serialize(messages.campaigns);
+        SaveContext.SaveString("campaigns", campaigns);
+        SaveContext.SaveString("localState", localState);
+        SaveContext.SaveString("propertyId", messages.propertyId.ToString());
         //...
     }
     #endregion

@@ -19,6 +19,7 @@ public static class NativeUiJsonDeserializer
             var root = document.RootElement;
             // if (root.ValueKind == JsonValueKind.Null || root.ValueKind != JsonValueKind.Object)  
             result = JsonSerializer.Deserialize<GetMessageResponse>(root.GetRawText());
+            //proper deserialization of campaigns depending of the type
             if (result.campaigns.Count > 0)
             {
                 List<BaseGetMessagesCampaign> campaigns = new List<BaseGetMessagesCampaign>();

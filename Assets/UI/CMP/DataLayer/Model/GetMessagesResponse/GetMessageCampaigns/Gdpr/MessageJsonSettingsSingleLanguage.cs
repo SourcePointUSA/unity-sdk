@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-public class GdprMessageJsonSettingsSingleLanguage
+public class MessageJsonSettingsSingleLanguage
 {
     [JsonInclude] public string iframeTitle;
 }

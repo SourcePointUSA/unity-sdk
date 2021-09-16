@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-public class GdprMessageJsonSettings
+public class MessageJsonSettings
 {
-    [JsonInclude] public GdprMessageJsonSettingsLanguages languages;
+    [JsonInclude] public Dictionary<string, MessageJsonSettingsSingleLanguage> languages;
     [JsonInclude] public string iframeTitle;
     [JsonInclude] public SelectedPrivacyManager selected_privacy_manager;
 }
