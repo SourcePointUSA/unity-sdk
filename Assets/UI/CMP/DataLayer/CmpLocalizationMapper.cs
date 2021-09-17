@@ -24,15 +24,16 @@ public static class CmpLocalizationMapper
         netClient = new NetworkClient();
         netClient.GetMessages(OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
         
-        elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM, ref popupBgColors);
-        NativeUiJsonDeserializer.DeserializeShortCategories(JSONSTUB.shortCategories, ref shortCategories);
+        // elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM, ref popupBgColors);
+        // NativeUiJsonDeserializer.DeserializeShortCategories(JSONSTUB.shortCategories, ref shortCategories);
+        /*
         NativeUiJsonDeserializer.DeserializeExtraCall(JSONSTUB.extraCall, 
                                                         ref categories,
                                                         ref specialPurposes,
                                                         ref features,
                                                         ref specialFeatures,
                                                         ref vendors);
-        isInitialized = true;
+        */
     }
 
     #region Success
@@ -44,7 +45,11 @@ public static class CmpLocalizationMapper
         SaveContext.SaveString("campaigns", campaigns);
         SaveContext.SaveString("localState", localState);
         SaveContext.SaveString("propertyId", messages.propertyId.ToString());
+        GdprMessage gdpr = messages.GetGdprCampaign()?.message;
+        shortCategories = gdpr?.categories;
+        
         //...
+        isInitialized = true;
     }
     #endregion
 
@@ -56,14 +61,15 @@ public static class CmpLocalizationMapper
     public static CmpUiElementModel GetCmpUiElement(string viewId, string uiElementId)
     {
         CmpUiElementModel result = null;
-        foreach (var uiElement in elements[viewId])
-        {
-            if (uiElement.id.Equals(uiElementId))
+        if(elements!=null && elements.ContainsKey(viewId))
+            foreach (var uiElement in elements[viewId])
             {
-                result = uiElement;
-                break;
+                if (uiElement.id.Equals(uiElementId))
+                {
+                    result = uiElement;
+                    break;
+                }
             }
-        }
         return result;
     }
 }

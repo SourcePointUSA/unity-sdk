@@ -210,7 +210,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 30, y: 0}
-  m_SizeDelta: {x: 184, y: 37}
+  m_SizeDelta: {x: 699.5393, y: 37}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1887071568546728765
 CanvasRenderer:
@@ -250,7 +250,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Hello I am the Partners Details dummy text...

@@ -33,7 +33,8 @@ public class CmpPopupController : MonoBehaviour
 
     private void SetBgColor()
     {
-        bg.color = GraphicExtension.HexToColor(CmpLocalizationMapper.popupBgColors[viewId]);
+        if(CmpLocalizationMapper.popupBgColors!=null && CmpLocalizationMapper.popupBgColors.ContainsKey(viewId))
+            bg.color = GraphicExtension.HexToColor(CmpLocalizationMapper.popupBgColors[viewId]);
     }
 
     private void MapPostponedLocalization()
@@ -74,6 +75,13 @@ public class CmpPopupController : MonoBehaviour
         {
             scrollController.SetPostponedElements(this.postponedElements);
             scrollController.FillView();
+        }else if (scrollController is CmpHomeScrollController home 
+                  && CmpLocalizationMapper.shortCategories != null 
+                  && CmpLocalizationMapper.shortCategories.Count>0)
+        {
+            //if there is no postponedElements but short categories
+            //then fill scroll with default cell 
+            home.FillShortCategories(CmpLocalizationMapper.shortCategories);
         }
         //else nothing to do here
     }

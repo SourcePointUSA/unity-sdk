@@ -39,10 +39,10 @@ public class CmpScrollController : MonoBehaviour
         descriptionController.SetLocalization(header, def);
     }
 
-    protected void ScrollAppear()
+    protected void ScrollAppear(float posY = -400f)
     {
         RectTransform scrollRect = ((RectTransform)scrollContent.transform);
-        scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, -400f, scrollRect.position.z), scrollRect.rotation);
+        scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, posY, scrollRect.position.z), scrollRect.rotation);
     }
     
     public virtual void FillView()

@@ -7,6 +7,6 @@ public class MessageJson
     [JsonInclude] public string name;
     [JsonInclude] public MessageJsonSettings settings;
     [JsonInclude] public bool compliance_status;
-    // compliance_list
+    // [JsonInclude] public KeyValuePair<string,bool>[] compliance_list;    //TODO?
     [JsonInclude] public List<MessageJsonUi> children;
 }
