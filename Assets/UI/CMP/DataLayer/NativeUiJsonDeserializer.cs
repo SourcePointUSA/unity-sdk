@@ -30,10 +30,28 @@ public static class NativeUiJsonDeserializer
                     switch (result.campaigns[i].type)
                     {
                         case "GDPR":
-                            campaigns.Add(DeserializeGetMessagesCampaign<GdprGetMessagesCampaign>(coll[i]));
+                            GdprGetMessagesCampaign gdprCamp = DeserializeGetMessagesCampaign<GdprGetMessagesCampaign>(coll[i]);
+                            if (coll[i].TryGetProperty("message", out JsonElement gdprMsg)
+                                && gdprMsg.TryGetProperty("message_json", out JsonElement gdprUi))
+                            {
+                                Dictionary<string, string> popupBgColors = new Dictionary<string, string>();
+                                Dictionary<string, List<CmpUiElementModel>> ui = DeserializeNativePm(gdprUi.GetRawText(), ref popupBgColors);
+                                gdprCamp.ui = ui;
+                                gdprCamp.popupBgColors = popupBgColors;
+                            }
+                            campaigns.Add(gdprCamp);
                             break;
                         case "CCPA":
-                            campaigns.Add(DeserializeGetMessagesCampaign<CcpaGetMessagesCampaign>(coll[i]));
+                            CcpaGetMessagesCampaign ccpaCamp = DeserializeGetMessagesCampaign<CcpaGetMessagesCampaign>(coll[i]);
+                            if (coll[i].TryGetProperty("message", out JsonElement ccpaMsg)
+                                && ccpaMsg.TryGetProperty("message_json", out JsonElement ccpaUi))
+                            {
+                                Dictionary<string, string> popupBgColors = new Dictionary<string, string>();
+                                Dictionary<string, List<CmpUiElementModel>> ui = DeserializeNativePm(ccpaUi.GetRawText(), ref popupBgColors);
+                                ccpaCamp.ui = ui;
+                                ccpaCamp.popupBgColors = popupBgColors;
+                            }
+                            campaigns.Add(ccpaCamp);
                             break;
                         case "ios14":
                             campaigns.Add(DeserializeGetMessagesCampaign<Ios14GetMessagesCampaign>(coll[i]));
@@ -97,7 +115,8 @@ public static class NativeUiJsonDeserializer
     {
         // TODO: System.Text.Json.JsonReaderException (JsonException)
         Dictionary<string, List<CmpUiElementModel>> result = new Dictionary<string, List<CmpUiElementModel>>();
-        popupBgColors = new Dictionary<string, string>();
+        if(popupBgColors == null)
+            popupBgColors = new Dictionary<string, string>();
         using (JsonDocument document = JsonDocument.Parse(json))
         {
             JsonElement root = document.RootElement;

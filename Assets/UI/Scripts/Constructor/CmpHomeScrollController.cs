@@ -13,7 +13,7 @@ public class CmpHomeScrollController : CmpScrollController
             longButtonController.SetLocalization(longElement);
             longButtonController.SetMainText(cat.name);
         }
-        ScrollAppear();
+        ScrollAppear(-800f);
     }
 
     public void FillShortCategories(List<CmpShortCategoryModel> shortCategories)

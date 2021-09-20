@@ -60,6 +60,15 @@ public class CmpPopupController : MonoBehaviour
             CmpUiElementModel initializer = CmpLocalizationMapper.GetCmpUiElement(viewId, ui.ID);
             if (initializer != null)
             {
+                if (initializer is CmpTextModel txt)
+                {
+                    string str = txt.Text;
+                    if (str.Contains("<p>"))
+                        str = str.Replace("<p>", "");
+                    if (str.Contains("</p>"))
+                        str = str.Replace("</p>", "");
+                    txt.SetText(str);
+                }
                 ui.SetLocalization(initializer);
             }
             else
@@ -75,14 +84,15 @@ public class CmpPopupController : MonoBehaviour
         {
             scrollController.SetPostponedElements(this.postponedElements);
             scrollController.FillView();
-        }else if (scrollController is CmpHomeScrollController home 
-                  && CmpLocalizationMapper.shortCategories != null 
-                  && CmpLocalizationMapper.shortCategories.Count>0)
-        {
-            //if there is no postponedElements but short categories
-            //then fill scroll with default cell 
-            home.FillShortCategories(CmpLocalizationMapper.shortCategories);
         }
+        // else if (scrollController is CmpHomeScrollController home 
+        //           && CmpLocalizationMapper.shortCategories != null 
+        //           && CmpLocalizationMapper.shortCategories.Count>0)
+        // {
+        //     //if there is no postponedElements but short categories
+        //     //then fill scroll with default cell 
+        //     home.FillShortCategories(CmpLocalizationMapper.shortCategories);
+        // }
         //else nothing to do here
     }
 }

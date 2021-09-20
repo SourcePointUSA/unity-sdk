@@ -11,21 +11,18 @@ public static class CmpLocalizationMapper
     public static bool IsInitialized => isInitialized;
 
     public static Dictionary<string, string> popupBgColors;
+    public static List<CmpShortCategoryModel> shortCategories;
+
     public static List<CmpCategoryModel> categories;
     public static List<CmpSpecialPurposeModel> specialPurposes;
     public static List<CmpFeatureModel> features;
     public static List<CmpSpecialFeatureModel> specialFeatures;
     public static List<CmpVendorModel> vendors;
-    public static List<CmpShortCategoryModel> shortCategories;
     
     static CmpLocalizationMapper()
     {
-        //TODO: NetworkClient call -> json
         netClient = new NetworkClient();
         netClient.GetMessages(OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
-        
-        // elements =  NativeUiJsonDeserializer.DeserializeNativePm(JSONSTUB.nativePM, ref popupBgColors);
-        // NativeUiJsonDeserializer.DeserializeShortCategories(JSONSTUB.shortCategories, ref shortCategories);
         /*
         NativeUiJsonDeserializer.DeserializeExtraCall(JSONSTUB.extraCall, 
                                                         ref categories,
@@ -45,16 +42,18 @@ public static class CmpLocalizationMapper
         SaveContext.SaveString("campaigns", campaigns);
         SaveContext.SaveString("localState", localState);
         SaveContext.SaveString("propertyId", messages.propertyId.ToString());
-        GdprMessage gdpr = messages.GetGdprCampaign()?.message;
+        var gdprCamp = messages.GetGdprCampaign();
+        GdprMessage gdpr = gdprCamp?.message;
         shortCategories = gdpr?.categories;
-        
-        //...
+        popupBgColors = gdprCamp?.popupBgColors;
+        elements = gdprCamp?.ui;
         isInitialized = true;
     }
     #endregion
 
     private static void OnExceptionCallback(Exception ex)
     {
+        //TODO: throw into SpClient.OnException
         UnityEngine.Debug.LogError(ex.Message);
     }
     

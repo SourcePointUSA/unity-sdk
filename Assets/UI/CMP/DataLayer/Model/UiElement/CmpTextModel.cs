@@ -5,6 +5,12 @@ public class CmpTextModel : CmpUiElementModel
     [JsonInclude] public CmpTextSettingsModel settings;
     public string Text => settings?.text;
     public ColoredFontModel Font => settings?.style?.font;
+
+    public void SetText(string str)
+    {
+        if(settings!=null)
+            this.settings.text = str;
+    }
 }
 
 public class CmpTextSettingsModel

@@ -48,12 +48,12 @@ public class NetworkClient
 
     private static string GetGetMessagesUriWithQueryParams()
     {
-        // https://cdn.privacy-mgmt.com/wrapper/v2/get_messages/?env=prod
-        return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
+        // https://cdn.sp-stage.net/wrapper/v2/get_messages/?env=stage
+        return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/",
             path: "wrapper/v2/get_messages/",
             qParams: new Dictionary<string, string>()
             {
-                { "env", "prod"},
+                { "env", "stage"},
             });
     }
     
@@ -124,34 +124,31 @@ public class NetworkClient
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             string json = @"{
-                                ""accountId"": 22,
-                                ""propertyHref"": ""https://mobile.multicampaign.demo"",
-                                ""idfaStatus"": ""unknown"",
-                                ""campaigns"": {
-                                    ""gdpr"": {
-                                        ""targetingParams"": {}
-                                    },
-                                    ""ccpa"": {
-                                        ""targetingParams"": {}
-                                    },
-                                    ""ios14"": {
-                                        ""targetingParams"": {}
-                                    }
+                            ""accountId"": 22,
+                            ""propertyHref"": ""https://appletv.mobile.demo"",
+                            ""idfaStatus"": ""unknown"",
+                            ""campaigns"": {
+                                ""gdpr"": {
+                                    ""targetingParams"": {}
                                 },
-                                ""localState"": {},
-                                ""requestUUID"": ""test"",
-                                ""includeData"": {
-                                    ""localState"": {
-                                        ""type"": ""RecordString""
-                                    },
-                                    ""TCData"": {
-                                        ""type"": ""RecordString""
-                                    },
-                                    ""messageMetaData"": {
-                                        ""type"": ""RecordString""
-                                    }
+                                ""ccpa"": {
+                                    ""targetingParams"": {}
                                 }
-                            }";
+                            },
+                            ""localState"": {},
+                            ""requestUUID"": ""test"",
+                            ""includeData"": {
+                                ""localState"": {
+                                    ""type"": ""RecordString""
+                                },
+                                ""TCData"": {
+                                    ""type"": ""RecordString""
+                                },
+                                ""messageMetaData"": {
+                                    ""type"": ""RecordString""
+                                }
+                            }
+                        }";
             var data = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(GetGetMessagesUriWithQueryParams(), data);
             response.EnsureSuccessStatusCode();

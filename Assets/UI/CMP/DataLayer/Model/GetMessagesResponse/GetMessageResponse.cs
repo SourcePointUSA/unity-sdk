@@ -10,12 +10,22 @@ public class GetMessageResponse
 
     public GdprGetMessagesCampaign GetGdprCampaign()
     {
-        GdprGetMessagesCampaign result = null;
+        return GetCampaign<GdprGetMessagesCampaign>();
+    }
+    
+    public CcpaGetMessagesCampaign GetCcpaCampaign()
+    {
+        return GetCampaign<CcpaGetMessagesCampaign>();
+    }
+
+    private T GetCampaign<T>() where T : BaseGetMessagesCampaign
+    {
+        T result = null;
         if (campaigns != null && campaigns.Count > 0)
         {
             foreach (var camp in campaigns)
             {
-                if (camp is GdprGetMessagesCampaign campaign)
+                if (camp is T campaign)
                     result = campaign;
             }
         }
