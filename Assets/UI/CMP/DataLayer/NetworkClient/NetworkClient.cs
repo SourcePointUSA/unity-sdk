@@ -21,6 +21,11 @@ public class NetworkClient
     {
         GetGdprPrivacyManagerView(onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
+
+    public void MessageGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    {
+        GetGdprMessage(onSuccessAction, onErrorAction).Wait(millisTimeout);
+    }
     #endregion
     
     #region Query Parameters

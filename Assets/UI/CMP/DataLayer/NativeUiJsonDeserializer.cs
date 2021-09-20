@@ -8,6 +8,28 @@ using UnityEngine;
 
 public static class NativeUiJsonDeserializer
 {
+    public static MessageGdprGetResponse DeserializeMessageGdprGetResponse(string json)
+    {
+        // TODO:
+        // InvalidOperationException
+        // System.Text.Json.JsonReaderException (JsonException)
+        MessageGdprGetResponse result = null;
+        using (JsonDocument document = JsonDocument.Parse(json))
+        {
+            var root = document.RootElement;
+            result = JsonSerializer.Deserialize<MessageGdprGetResponse>(root.GetRawText());
+            if (root.TryGetProperty("message", out JsonElement gdprMsg)
+                && gdprMsg.TryGetProperty("message_json", out JsonElement gdprUi))
+            {
+                Dictionary<string, string> popupBgColors = new Dictionary<string, string>();
+                Dictionary<string, List<CmpUiElementModel>> ui = DeserializeNativePm(gdprUi.GetRawText(), ref popupBgColors);
+                result.ui = ui;
+                result.popupBgColors = popupBgColors;
+            }
+        }
+        return result;
+    }
+    
     public static GetMessageResponse DeserializeGetMessages(string json)
     {
         // TODO:

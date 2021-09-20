@@ -32,7 +32,13 @@ public static class CmpLocalizationMapper
     public static void PrivacyManagerView()
     {
         isExtraCallInitialized = false;
-        netClient.PrivacyManagerViews(OnPrivacyManagerViews, OnExceptionCallback, 3000);
+        netClient.PrivacyManagerViews(OnPrivacyManagerViewsSuccessCallback, OnExceptionCallback, 3000);
+    }
+
+    public static void MessageGdpr()
+    {
+        isInitialized = false;
+        netClient.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback, 3000);
     }
     
     #region Success
@@ -52,7 +58,7 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
-    private static void OnPrivacyManagerViews(string json)
+    private static void OnPrivacyManagerViewsSuccessCallback(string json)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,
@@ -61,6 +67,18 @@ public static class CmpLocalizationMapper
                                                       specialFeatureModels: ref specialFeatures,
                                                       vendorModels: ref vendors);
         isExtraCallInitialized = true;
+    }
+
+    private static void OnMessageGdprSuccessCallback(string json)
+    {
+        elements?.Clear();
+        shortCategories?.Clear();
+        popupBgColors?.Clear();
+        var messageGdpr = NativeUiJsonDeserializer.DeserializeMessageGdprGetResponse(json);
+        elements = messageGdpr.ui;
+        shortCategories = messageGdpr.message?.categories;
+        popupBgColors = messageGdpr.popupBgColors;
+        isInitialized = true;
     }
     #endregion
 
