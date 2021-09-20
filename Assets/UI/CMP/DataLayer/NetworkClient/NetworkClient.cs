@@ -16,7 +16,11 @@ public class NetworkClient
     {
         PostGetMessages(onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
-    
+
+    public void PrivacyManagerViews(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    {
+        GetGdprPrivacyManagerView(onSuccessAction, onErrorAction).Wait(millisTimeout);
+    }
     #endregion
     
     #region Query Parameters

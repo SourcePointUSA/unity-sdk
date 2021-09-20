@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,6 +42,12 @@ public class CmpScrollController : MonoBehaviour
 
     protected void ScrollAppear(float posY = -400f)
     {
+        StartCoroutine(WaitAndAppear(posY));
+    }
+
+    private IEnumerator WaitAndAppear(float posY)
+    {
+        yield return new WaitForEndOfFrame();
         RectTransform scrollRect = ((RectTransform)scrollContent.transform);
         scrollRect.SetPositionAndRotation(new Vector3(scrollRect.position.x, posY, scrollRect.position.z), scrollRect.rotation);
     }

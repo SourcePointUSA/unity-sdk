@@ -23,7 +23,7 @@ public class CmpCategoryScrollController : CmpScrollController
                 AddSpecialPurposes(CmpLocalizationMapper.specialPurposes);
                 AddFeatures(CmpLocalizationMapper.features);
                 AddSpecialFeatures(CmpLocalizationMapper.specialFeatures);
-                ScrollAppear();
+                ScrollAppear(-1200f);
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 public static class CmpLocalizationMapper
@@ -7,11 +8,14 @@ public static class CmpLocalizationMapper
     private static NetworkClient netClient;
 
     private static Dictionary<string, List<CmpUiElementModel>> elements;
+    public static List<CmpShortCategoryModel> shortCategories;
+    public static Dictionary<string, string> popupBgColors;
+    
     private static bool isInitialized = false;
     public static bool IsInitialized => isInitialized;
-
-    public static Dictionary<string, string> popupBgColors;
-    public static List<CmpShortCategoryModel> shortCategories;
+    
+    private static bool isExtraCallInitialized = false;
+    public static bool IsExtraCallInitialized => isExtraCallInitialized;
 
     public static List<CmpCategoryModel> categories;
     public static List<CmpSpecialPurposeModel> specialPurposes;
@@ -23,16 +27,14 @@ public static class CmpLocalizationMapper
     {
         netClient = new NetworkClient();
         netClient.GetMessages(OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
-        /*
-        NativeUiJsonDeserializer.DeserializeExtraCall(JSONSTUB.extraCall, 
-                                                        ref categories,
-                                                        ref specialPurposes,
-                                                        ref features,
-                                                        ref specialFeatures,
-                                                        ref vendors);
-        */
     }
 
+    public static void PrivacyManagerView()
+    {
+        isExtraCallInitialized = false;
+        netClient.PrivacyManagerViews(OnPrivacyManagerViews, OnExceptionCallback, 3000);
+    }
+    
     #region Success
     private static void OnGetMessagesSuccessCallback(string json)
     {
@@ -48,6 +50,17 @@ public static class CmpLocalizationMapper
         popupBgColors = gdprCamp?.popupBgColors;
         elements = gdprCamp?.ui;
         isInitialized = true;
+    }
+
+    private static void OnPrivacyManagerViews(string json)
+    {
+        NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
+                                                      categoryModels: ref categories,
+                                                      specialPurposeModels: ref specialPurposes,
+                                                      featureModels: ref features,
+                                                      specialFeatureModels: ref specialFeatures,
+                                                      vendorModels: ref vendors);
+        isExtraCallInitialized = true;
     }
     #endregion
 

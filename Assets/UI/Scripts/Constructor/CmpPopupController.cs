@@ -21,6 +21,14 @@ public class CmpPopupController : MonoBehaviour
 
     private IEnumerator WaitNetworkCoroutine()
     {
+        if (!viewId.Equals("HomeView") && !viewId.Equals("PrivacyPolicyView") && !CmpLocalizationMapper.IsExtraCallInitialized)
+        {
+            CmpLocalizationMapper.PrivacyManagerView();
+            while (!CmpLocalizationMapper.IsExtraCallInitialized)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+        }
         while (!CmpLocalizationMapper.IsInitialized)
         {
             yield return new WaitForEndOfFrame();
