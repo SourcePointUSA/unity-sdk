@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -12,9 +13,10 @@ public class NetworkClient
     readonly HttpClient client = new HttpClient();
     
     #region Public
-    public void GetMessages(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void GetMessages(int accountId, string propertyHref, string idfaStatus, string requestUUID, CampaignsPostGetMessagesRequest campaigns, LocalState localState, IncludeDataPostGetMessagesRequest includeData, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
-        PostGetMessages(onSuccessAction, onErrorAction).Wait(millisTimeout);
+        var requestBody = new PostGetMessagesRequest(accountId, propertyHref, idfaStatus, requestUUID, campaigns, localState, includeData);
+        PostGetMessages(requestBody, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
 
     public void PrivacyManagerViews(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
@@ -25,6 +27,11 @@ public class NetworkClient
     public void MessageGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
         GetGdprMessage(onSuccessAction, onErrorAction).Wait(millisTimeout);
+    }
+
+    public void ConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    {
+        PostConsentGdpr(onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
     #endregion
     
@@ -126,38 +133,14 @@ public class NetworkClient
         }
     }
 
-    async Task PostGetMessages(Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostGetMessages(PostGetMessagesRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            string json = @"{
-                            ""accountId"": 22,
-                            ""propertyHref"": ""https://appletv.mobile.demo"",
-                            ""idfaStatus"": ""unknown"",
-                            ""campaigns"": {
-                                ""gdpr"": {
-                                    ""targetingParams"": {}
-                                },
-                                ""ccpa"": {
-                                    ""targetingParams"": {}
-                                }
-                            },
-                            ""localState"": {},
-                            ""requestUUID"": ""test"",
-                            ""includeData"": {
-                                ""localState"": {
-                                    ""type"": ""RecordString""
-                                },
-                                ""TCData"": {
-                                    ""type"": ""RecordString""
-                                },
-                                ""messageMetaData"": {
-                                    ""type"": ""RecordString""
-                                }
-                            }
-                        }";
+            var options = new JsonSerializerOptions { IgnoreNullValues = true };
+            string json = JsonSerializer.Serialize(body, options);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(GetGetMessagesUriWithQueryParams(), data);
             response.EnsureSuccessStatusCode();

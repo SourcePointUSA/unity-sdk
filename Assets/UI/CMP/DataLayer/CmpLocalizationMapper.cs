@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
+using UnityEngine;
 
 public static class CmpLocalizationMapper
 {
@@ -26,7 +26,26 @@ public static class CmpLocalizationMapper
     static CmpLocalizationMapper()
     {
         netClient = new NetworkClient();
-        netClient.GetMessages(OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
+
+        Debug.Log(Guid.NewGuid());
+        
+        var dict = new Dictionary<string, string>();
+        dict.Add("type", "RecordString");
+        netClient.GetMessages(22, 
+            "https://appletv.mobile.demo", 
+            "unknown", 
+            "test", //TODO
+            new CampaignsPostGetMessagesRequest(
+                new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>()),
+                new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())),
+            new LocalState(),
+            new IncludeDataPostGetMessagesRequest()
+            {
+                localState = dict,
+                messageMetaData = dict,
+                TCData = dict
+            },
+            OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
     }
 
     public static void PrivacyManagerView()
