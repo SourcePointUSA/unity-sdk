@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -39,7 +40,15 @@ public class NetworkClient
 
     public void ConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
-        PostConsentGdpr(onSuccessAction, onErrorAction).Wait(millisTimeout);
+        PostConsentGdprRequest body = new PostConsentGdprRequest();
+        var dict = new Dictionary<string, string> {{"type", "RecordString"}};
+        var includeData = new IncludeDataPostGetMessagesRequest()
+        {
+            localState = dict,
+            TCData = dict
+            // messageMetaData = dict,
+        };
+        PostConsentGdpr(body, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
     #endregion
     
@@ -161,56 +170,14 @@ public class NetworkClient
         }
     }
 
-    async Task PostConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostConsentGdpr(PostConsentGdprRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            string json = @"{
-    ""pubData"": {},
-    ""includeData"": {
-        ""localState"": {
-            ""type"": ""RecordString""
-        },
-        ""TCData"": {
-            ""type"": ""RecordString""
-        }
-    },
-    ""requestUUID"": ""76886C9A-232E-40F7-A7EB-A6640A6071DD"",
-    ""pmSaveAndExitVariables"": {},
-    ""idfaStatus"": ""accepted"",
-    ""localState"": {
-        ""ios14"": {
-            ""mmsCookies"": [
-                ""_sp_v1_uid=1:668:c848c5c3-24e9-4a74-9d8b-60cfa832f706"",
-                ""_sp_v1_data=2:340139:1620986612:0:1:0:1:0:0:_:-1"",
-                ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
-                ""_sp_v1_opt=1:"",
-                ""_sp_v1_stage="",
-                ""_sp_v1_csv=null"",
-                ""_sp_v1_lt=1:""
-            ],
-            ""propertyId"": 16893
-        },
-        ""gdpr"": {
-            ""messageId"": 488398,
-            ""mmsCookies"": [
-                ""_sp_v1_uid=1:291:583c104a-4817-4de5-b155-492a59e018bc"",
-                ""_sp_v1_data=2:338205:1620986612:0:1:0:1:0:0:_:-1"",
-                ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
-                ""_sp_v1_opt=1:"",
-                ""_sp_v1_consent=1!-1:-1:-1:-1:-1:-1"",
-                ""_sp_v1_stage="",
-                ""_sp_v1_csv=null"",
-                ""_sp_v1_lt=1:""
-            ],
-            ""propertyId"": 16893,
-            ""uuid"": ""8f967da5-064f-48f6-9ef9-0518e1587142""
-        }
-    }
-}
-";
+            var options = new JsonSerializerOptions { IgnoreNullValues = true };
+            string json = JsonSerializer.Serialize(body, options);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(GetConsentGdpr(11), data);
             response.EnsureSuccessStatusCode();
@@ -223,4 +190,61 @@ public class NetworkClient
         }
     }
     #endregion
+}
+
+internal class PostConsentGdprRequest
+{
+    // [JsonInclude] public List<> pubData;                //TODO
+    // [JsonInclude] public List<> pmSaveAndExitVariables; //TODO
+    
+    [JsonInclude] public IncludeDataPostGetMessagesRequest includeData;
+    [JsonInclude] public string requestUUID;
+    [JsonInclude] public string idfaStatus;
+    [JsonInclude] public LocalState localState;
+
+    /*
+     {
+                            ""pubData"": {},
+                            ""includeData"": {
+                                ""localState"": {
+                                    ""type"": ""RecordString""
+                                },
+                                ""TCData"": {
+                                    ""type"": ""RecordString""
+                                }
+                            },
+                            ""requestUUID"": ""76886C9A-232E-40F7-A7EB-A6640A6071DD"",
+                            ""pmSaveAndExitVariables"": {},
+                            ""idfaStatus"": ""accepted"",
+                            ""localState"": {
+                                ""ios14"": {
+                                    ""mmsCookies"": [
+                                        ""_sp_v1_uid=1:668:c848c5c3-24e9-4a74-9d8b-60cfa832f706"",
+                                        ""_sp_v1_data=2:340139:1620986612:0:1:0:1:0:0:_:-1"",
+                                        ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
+                                        ""_sp_v1_opt=1:"",
+                                        ""_sp_v1_stage="",
+                                        ""_sp_v1_csv=null"",
+                                        ""_sp_v1_lt=1:""
+                                    ],
+                                    ""propertyId"": 16893
+                                },
+                                ""gdpr"": {
+                                    ""messageId"": 488398,
+                                    ""mmsCookies"": [
+                                        ""_sp_v1_uid=1:291:583c104a-4817-4de5-b155-492a59e018bc"",
+                                        ""_sp_v1_data=2:338205:1620986612:0:1:0:1:0:0:_:-1"",
+                                        ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
+                                        ""_sp_v1_opt=1:"",
+                                        ""_sp_v1_consent=1!-1:-1:-1:-1:-1:-1"",
+                                        ""_sp_v1_stage="",
+                                        ""_sp_v1_csv=null"",
+                                        ""_sp_v1_lt=1:""
+                                    ],
+                                    ""propertyId"": 16893,
+                                    ""uuid"": ""8f967da5-064f-48f6-9ef9-0518e1587142""
+                                }
+                            }
+                        }
+     */
 }
