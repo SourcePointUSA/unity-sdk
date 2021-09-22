@@ -27,14 +27,12 @@ public static class CmpLocalizationMapper
     {
         netClient = new NetworkClient();
 
-        Debug.Log(Guid.NewGuid());
-        
         var dict = new Dictionary<string, string>();
         dict.Add("type", "RecordString");
-        netClient.GetMessages(22, 
-            "https://appletv.mobile.demo", 
-            "unknown", 
-            "test", //TODO
+        netClient.GetMessages(22,
+            "https://appletv.mobile.demo",
+            "unknown",
+            GUID.Value,
             new CampaignsPostGetMessagesRequest(
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>()),
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())),
