@@ -26,23 +26,13 @@ public static class CmpLocalizationMapper
     static CmpLocalizationMapper()
     {
         netClient = new NetworkClient();
-
-        var dict = new Dictionary<string, string>();
-        dict.Add("type", "RecordString");
         netClient.GetMessages(22,
             "https://appletv.mobile.demo",
-            "unknown",
             GUID.Value,
             new CampaignsPostGetMessagesRequest(
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>()),
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())),
-            new LocalState(),
-            new IncludeDataPostGetMessagesRequest()
-            {
-                localState = dict,
-                messageMetaData = dict,
-                TCData = dict
-            },
+            SaveContext.GetLocalState(),
             OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
     }
 
@@ -62,11 +52,9 @@ public static class CmpLocalizationMapper
     private static void OnGetMessagesSuccessCallback(string json)
     {
         GetMessageResponse messages = NativeUiJsonDeserializer.DeserializeGetMessages(json);
-        string localState = JsonSerializer.Serialize(messages.localState);
-        string campaigns = JsonSerializer.Serialize(messages.campaigns);
-        SaveContext.SaveString("campaigns", campaigns);
-        SaveContext.SaveString("localState", localState);
-        SaveContext.SaveString("propertyId", messages.propertyId.ToString());
+        SaveContext.SaveCampaigns(messages.campaigns);
+        SaveContext.SaveLocalState(messages.localState);
+        SaveContext.SavePropertyId(messages.propertyId);
         var gdprCamp = messages.GetGdprCampaign();
         GdprMessage gdpr = gdprCamp?.message;
         shortCategories = gdpr?.categories;

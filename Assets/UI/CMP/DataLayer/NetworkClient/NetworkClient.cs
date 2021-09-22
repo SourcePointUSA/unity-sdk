@@ -13,8 +13,16 @@ public class NetworkClient
     readonly HttpClient client = new HttpClient();
     
     #region Public
-    public void GetMessages(int accountId, string propertyHref, string idfaStatus, string requestUUID, CampaignsPostGetMessagesRequest campaigns, LocalState localState, IncludeDataPostGetMessagesRequest includeData, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void GetMessages(int accountId, string propertyHref, string requestUUID, CampaignsPostGetMessagesRequest campaigns, LocalState localState, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
+        string idfaStatus = "unknown";
+        var dict = new Dictionary<string, string> {{"type", "RecordString"}};
+        var includeData = new IncludeDataPostGetMessagesRequest()
+        {
+            localState = dict,
+            messageMetaData = dict,
+            TCData = dict
+        };
         var requestBody = new PostGetMessagesRequest(accountId, propertyHref, idfaStatus, requestUUID, campaigns, localState, includeData);
         PostGetMessages(requestBody, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
