@@ -1,5 +1,4 @@
 using System;
-using String = System.String;
 
 public static class GUID
 {

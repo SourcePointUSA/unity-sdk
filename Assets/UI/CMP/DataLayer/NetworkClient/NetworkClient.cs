@@ -12,9 +12,20 @@ public class NetworkClient
 {
     // HttpClient is intended to be instantiated once per application, rather than per-use
     readonly HttpClient client = new HttpClient();
+
+    private static NetworkClient instance;
+    public static NetworkClient Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new NetworkClient();
+            return instance;
+        }
+    }
     
     #region Public
-    public void GetMessages(int accountId, string propertyHref, string requestUUID, CampaignsPostGetMessagesRequest campaigns, LocalState localState, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void GetMessages(int accountId, string propertyHref, CampaignsPostGetMessagesRequest campaigns, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
         string idfaStatus = "unknown";
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
@@ -24,7 +35,10 @@ public class NetworkClient
             messageMetaData = dict,
             TCData = dict
         };
-        var requestBody = new PostGetMessagesRequest(accountId, propertyHref, idfaStatus, requestUUID, campaigns, localState, includeData);
+        var requestBody = new PostGetMessagesRequest(accountId, propertyHref, idfaStatus, GUID.Value, campaigns, 
+            // SaveContext.GetLocalState(), 
+            new LocalState(), // TODO: remove & uncomment line above
+            includeData);
         PostGetMessages(requestBody, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
 
@@ -40,7 +54,6 @@ public class NetworkClient
 
     public void ConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
-        PostConsentGdprRequest body = new PostConsentGdprRequest();
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
         var includeData = new IncludeDataPostGetMessagesRequest()
         {
@@ -48,6 +61,10 @@ public class NetworkClient
             TCData = dict
             // messageMetaData = dict,
         };
+        PostConsentGdprRequest body = new PostConsentGdprRequest(requestUUID: GUID.Value, 
+                                                                 idfaStatus: "accepted", 
+                                                                 localState: SaveContext.GetLocalState(),
+                                                                 includeData: includeData);
         PostConsentGdpr(body, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
     #endregion
@@ -90,14 +107,14 @@ public class NetworkClient
             });
     }
     
-    private static string GetConsentGdpr(int action)
+    private static string GetConsentGdprQueryParams(int action)
     {
         // https://cdn.privacy-mgmt.com/wrapper/v2/messages/choice/gdpr/11?env=prod
         return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
             path: "wrapper/v2/messages/choice/gdpr/" + action.ToString(),
             qParams: new Dictionary<string, string>()
             {
-                { "env", "prod"},
+                { "env", "stage"},
             });
     }
     
@@ -109,7 +126,7 @@ public class NetworkClient
         foreach (KeyValuePair<string, string> kv in qParams)
         {
             query[kv.Key] = kv.Value;
-        }                              // https://cdn.privacy-mgmt.com/wrapper/v2/get_messages/?env=prod
+        }                             
         builder.Query = query.ToString();
         return builder.ToString();
     }
@@ -179,7 +196,7 @@ public class NetworkClient
             var options = new JsonSerializerOptions { IgnoreNullValues = true };
             string json = JsonSerializer.Serialize(body, options);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(GetConsentGdpr(11), data);
+            HttpResponseMessage response = await client.PostAsync(GetConsentGdprQueryParams(11), data);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             onSuccessAction?.Invoke(responseBody);
@@ -192,59 +209,70 @@ public class NetworkClient
     #endregion
 }
 
+
+
 internal class PostConsentGdprRequest
 {
-    // [JsonInclude] public List<> pubData;                //TODO
-    // [JsonInclude] public List<> pmSaveAndExitVariables; //TODO
+    // [JsonInclude] public List<string> pubData = new List<string>();                //TODO
+    // [JsonInclude] public List<string> pmSaveAndExitVariables = new List<string>(); //TODO
     
     [JsonInclude] public IncludeDataPostGetMessagesRequest includeData;
     [JsonInclude] public string requestUUID;
     [JsonInclude] public string idfaStatus;
     [JsonInclude] public LocalState localState;
 
-    /*
-     {
-                            ""pubData"": {},
-                            ""includeData"": {
-                                ""localState"": {
-                                    ""type"": ""RecordString""
-                                },
-                                ""TCData"": {
-                                    ""type"": ""RecordString""
-                                }
-                            },
-                            ""requestUUID"": ""76886C9A-232E-40F7-A7EB-A6640A6071DD"",
-                            ""pmSaveAndExitVariables"": {},
-                            ""idfaStatus"": ""accepted"",
-                            ""localState"": {
-                                ""ios14"": {
-                                    ""mmsCookies"": [
-                                        ""_sp_v1_uid=1:668:c848c5c3-24e9-4a74-9d8b-60cfa832f706"",
-                                        ""_sp_v1_data=2:340139:1620986612:0:1:0:1:0:0:_:-1"",
-                                        ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
-                                        ""_sp_v1_opt=1:"",
-                                        ""_sp_v1_stage="",
-                                        ""_sp_v1_csv=null"",
-                                        ""_sp_v1_lt=1:""
-                                    ],
-                                    ""propertyId"": 16893
-                                },
-                                ""gdpr"": {
-                                    ""messageId"": 488398,
-                                    ""mmsCookies"": [
-                                        ""_sp_v1_uid=1:291:583c104a-4817-4de5-b155-492a59e018bc"",
-                                        ""_sp_v1_data=2:338205:1620986612:0:1:0:1:0:0:_:-1"",
-                                        ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
-                                        ""_sp_v1_opt=1:"",
-                                        ""_sp_v1_consent=1!-1:-1:-1:-1:-1:-1"",
-                                        ""_sp_v1_stage="",
-                                        ""_sp_v1_csv=null"",
-                                        ""_sp_v1_lt=1:""
-                                    ],
-                                    ""propertyId"": 16893,
-                                    ""uuid"": ""8f967da5-064f-48f6-9ef9-0518e1587142""
-                                }
-                            }
-                        }
-     */
+    public PostConsentGdprRequest(string requestUUID, string idfaStatus, LocalState localState, IncludeDataPostGetMessagesRequest includeData)
+    {
+        this.requestUUID = requestUUID;
+        this.idfaStatus = idfaStatus;
+        this.localState = localState;
+        this.includeData = includeData;
+    }
 }
+
+/*
+string json = @"{
+                ""pubData"": {},
+                ""includeData"": {
+                    ""localState"": {
+                        ""type"": ""RecordString""
+                    },
+                    ""TCData"": {
+                        ""type"": ""RecordString""
+                    }
+                },
+                ""requestUUID"": ""76886C9A-232E-40F7-A7EB-A6640A6071DD"",
+                ""pmSaveAndExitVariables"": {},
+                ""idfaStatus"": ""accepted"",
+                ""localState"": 
+                {
+                    ""ios14"": {
+                        ""mmsCookies"": [
+                            ""_sp_v1_uid=1:668:c848c5c3-24e9-4a74-9d8b-60cfa832f706"",
+                            ""_sp_v1_data=2:340139:1620986612:0:1:0:1:0:0:_:-1"",
+                            ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
+                            ""_sp_v1_opt=1:"",
+                            ""_sp_v1_stage="",
+                            ""_sp_v1_csv=null"",
+                            ""_sp_v1_lt=1:""
+                        ],
+                        ""propertyId"": 16893
+                    },
+                    ""gdpr"": {
+                        ""messageId"": 488398,
+                        ""mmsCookies"": [
+                            ""_sp_v1_uid=1:291:583c104a-4817-4de5-b155-492a59e018bc"",
+                            ""_sp_v1_data=2:338205:1620986612:0:1:0:1:0:0:_:-1"",
+                            ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
+                            ""_sp_v1_opt=1:"",
+                            ""_sp_v1_consent=1!-1:-1:-1:-1:-1:-1"",
+                            ""_sp_v1_stage="",
+                            ""_sp_v1_csv=null"",
+                            ""_sp_v1_lt=1:""
+                        ],
+                        ""propertyId"": 16893,
+                        ""uuid"": ""8f967da5-064f-48f6-9ef9-0518e1587142""
+                    }
+                }
+            }";
+*/

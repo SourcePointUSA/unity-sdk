@@ -5,8 +5,6 @@ using UnityEngine;
 
 public static class CmpLocalizationMapper
 {
-    private static NetworkClient netClient;
-
     private static Dictionary<string, List<CmpUiElementModel>> elements;
     public static List<CmpShortCategoryModel> shortCategories;
     public static Dictionary<string, string> popupBgColors;
@@ -25,32 +23,31 @@ public static class CmpLocalizationMapper
     
     static CmpLocalizationMapper()
     {
-        netClient = new NetworkClient();
-        netClient.GetMessages(22,
+        NetworkClient.Instance.GetMessages(22,
             "https://appletv.mobile.demo",
-            GUID.Value,
             new CampaignsPostGetMessagesRequest(
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>()),
-                new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())),
-            SaveContext.GetLocalState(),
+                new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())
+                ),
             OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
     }
 
     public static void PrivacyManagerView()
     {
         isExtraCallInitialized = false;
-        netClient.PrivacyManagerViews(OnPrivacyManagerViewsSuccessCallback, OnExceptionCallback, 3000);
+        NetworkClient.Instance.PrivacyManagerViews(OnPrivacyManagerViewsSuccessCallback, OnExceptionCallback, 3000);
     }
 
     public static void MessageGdpr()
     {
         isInitialized = false;
-        netClient.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback, 3000);
+        NetworkClient.Instance.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback, 3000);
     }
     
     #region Success
     private static void OnGetMessagesSuccessCallback(string json)
     {
+        //TODO: check if json contains UserConsent object
         GetMessageResponse messages = NativeUiJsonDeserializer.DeserializeGetMessages(json);
         SaveContext.SaveCampaigns(messages.campaigns);
         SaveContext.SaveLocalState(messages.localState);
@@ -85,9 +82,14 @@ public static class CmpLocalizationMapper
         popupBgColors = messageGdpr.popupBgColors;
         isInitialized = true;
     }
+
+    public static void OnConsentGdprSuccessCallback(string json)
+    {
+        //TODO
+    }
     #endregion
 
-    private static void OnExceptionCallback(Exception ex)
+    public static void OnExceptionCallback(Exception ex)
     {
         //TODO: throw into SpClient.OnException
         UnityEngine.Debug.LogError(ex.Message);
