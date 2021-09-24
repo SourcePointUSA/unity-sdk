@@ -51,7 +51,6 @@ public static class CmpLocalizationMapper
 
     private static void OnGetMessagesSuccessCallback(string json)
     {
-        //TODO: check if json contains UserConsent object
         GetMessageResponse messages = NativeUiJsonDeserializer.DeserializeGetMessages(json);
         SaveContext.SaveCampaigns(messages.campaigns);
         SaveContext.SaveLocalState(messages.localState);
