@@ -85,7 +85,8 @@ public static class CmpLocalizationMapper
 
     public static void OnConsentGdprSuccessCallback(string json)
     {
-        //TODO
+        var consent = JsonSerializer.Deserialize<PostConsentResponse>(json);
+        //TODO: pass to SpUserConsent handler
     }
     #endregion
 

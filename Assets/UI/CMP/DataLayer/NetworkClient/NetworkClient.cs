@@ -209,9 +209,7 @@ public class NetworkClient
     #endregion
 }
 
-
-
-internal class PostConsentGdprRequest
+public class PostConsentGdprRequest
 {
     // [JsonInclude] public List<string> pubData = new List<string>();                //TODO
     // [JsonInclude] public List<string> pmSaveAndExitVariables = new List<string>(); //TODO
@@ -229,50 +227,3 @@ internal class PostConsentGdprRequest
         this.includeData = includeData;
     }
 }
-
-/*
-string json = @"{
-                ""pubData"": {},
-                ""includeData"": {
-                    ""localState"": {
-                        ""type"": ""RecordString""
-                    },
-                    ""TCData"": {
-                        ""type"": ""RecordString""
-                    }
-                },
-                ""requestUUID"": ""76886C9A-232E-40F7-A7EB-A6640A6071DD"",
-                ""pmSaveAndExitVariables"": {},
-                ""idfaStatus"": ""accepted"",
-                ""localState"": 
-                {
-                    ""ios14"": {
-                        ""mmsCookies"": [
-                            ""_sp_v1_uid=1:668:c848c5c3-24e9-4a74-9d8b-60cfa832f706"",
-                            ""_sp_v1_data=2:340139:1620986612:0:1:0:1:0:0:_:-1"",
-                            ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
-                            ""_sp_v1_opt=1:"",
-                            ""_sp_v1_stage="",
-                            ""_sp_v1_csv=null"",
-                            ""_sp_v1_lt=1:""
-                        ],
-                        ""propertyId"": 16893
-                    },
-                    ""gdpr"": {
-                        ""messageId"": 488398,
-                        ""mmsCookies"": [
-                            ""_sp_v1_uid=1:291:583c104a-4817-4de5-b155-492a59e018bc"",
-                            ""_sp_v1_data=2:338205:1620986612:0:1:0:1:0:0:_:-1"",
-                            ""_sp_v1_ss=1:H4sIAAAAAAAAAItWqo5RKimOUbKKBjLyQAyD2lidGKVUEDOvNCcHyC4BK6iurVWKBQAW54XRMAAAAA%3D%3D"",
-                            ""_sp_v1_opt=1:"",
-                            ""_sp_v1_consent=1!-1:-1:-1:-1:-1:-1"",
-                            ""_sp_v1_stage="",
-                            ""_sp_v1_csv=null"",
-                            ""_sp_v1_lt=1:""
-                        ],
-                        ""propertyId"": 16893,
-                        ""uuid"": ""8f967da5-064f-48f6-9ef9-0518e1587142""
-                    }
-                }
-            }";
-*/

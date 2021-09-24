@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 public class GdprGetMessagesConsent // : GdprConsent
 {
 #nullable enable
-    [JsonInclude] public bool? consentedToAl;
+    [JsonInclude] public bool? consentedToAll;
     [JsonInclude] public bool? rejectedAny;
     [JsonInclude] public object? childPmId;
 #nullable disable
