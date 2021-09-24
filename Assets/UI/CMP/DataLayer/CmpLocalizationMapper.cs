@@ -8,19 +8,22 @@ public static class CmpLocalizationMapper
     private static Dictionary<string, List<CmpUiElementModel>> elements;
     public static List<CmpShortCategoryModel> shortCategories;
     public static Dictionary<string, string> popupBgColors;
-    
+
     private static bool isInitialized = false;
     public static bool IsInitialized => isInitialized;
-    
+
     private static bool isExtraCallInitialized = false;
     public static bool IsExtraCallInitialized => isExtraCallInitialized;
 
+    private static bool isConsented = false;
+    public static bool IsConsented => isConsented;
+    
     public static List<CmpCategoryModel> categories;
     public static List<CmpSpecialPurposeModel> specialPurposes;
     public static List<CmpFeatureModel> features;
     public static List<CmpSpecialFeatureModel> specialFeatures;
     public static List<CmpVendorModel> vendors;
-    
+
     static CmpLocalizationMapper()
     {
         NetworkClient.Instance.GetMessages(22,
@@ -28,7 +31,7 @@ public static class CmpLocalizationMapper
             new CampaignsPostGetMessagesRequest(
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>()),
                 new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())
-                ),
+            ),
             OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
     }
 
@@ -43,8 +46,9 @@ public static class CmpLocalizationMapper
         isInitialized = false;
         NetworkClient.Instance.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback, 3000);
     }
-    
+
     #region Success
+
     private static void OnGetMessagesSuccessCallback(string json)
     {
         //TODO: check if json contains UserConsent object
@@ -53,14 +57,21 @@ public static class CmpLocalizationMapper
         SaveContext.SaveLocalState(messages.localState);
         SaveContext.SavePropertyId(messages.propertyId);
         var gdprCamp = messages.GetGdprCampaign();
-        GdprMessage gdpr = gdprCamp?.message;
-        shortCategories = gdpr?.categories;
-        popupBgColors = gdprCamp?.popupBgColors;
-        elements = gdprCamp?.ui;
+        if (gdprCamp?.message == null || gdprCamp.ui == null || gdprCamp.ui.Count == 0)
+        {
+            isConsented = true;
+        }
+        else
+        {
+            GdprMessage gdpr = gdprCamp?.message;
+            shortCategories = gdpr?.categories;
+            popupBgColors = gdprCamp?.popupBgColors;
+            elements = gdprCamp?.ui;
+        }
         isInitialized = true;
     }
 
-    private static void OnPrivacyManagerViewsSuccessCallback(string json)
+private static void OnPrivacyManagerViewsSuccessCallback(string json)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,

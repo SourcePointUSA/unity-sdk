@@ -33,10 +33,18 @@ public class CmpPopupController : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
-        SetBgColor();
-        MapLocazliation();
-        MapPostponedLocalization();
-        FillPostponedData();
+
+        if (!CmpLocalizationMapper.IsConsented)
+        {
+            SetBgColor();
+            MapLocazliation();
+            MapPostponedLocalization();
+            FillPostponedData();
+        }
+        else
+        {
+            //TODO: exit, OnConsented
+        }
     }
 
     private void SetBgColor()
