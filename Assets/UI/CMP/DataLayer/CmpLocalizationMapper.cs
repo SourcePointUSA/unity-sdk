@@ -70,7 +70,7 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
-private static void OnPrivacyManagerViewsSuccessCallback(string json)
+    private static void OnPrivacyManagerViewsSuccessCallback(string json)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,
@@ -96,6 +96,8 @@ private static void OnPrivacyManagerViewsSuccessCallback(string json)
     public static void OnConsentGdprSuccessCallback(string json)
     {
         var consent = JsonSerializer.Deserialize<PostConsentResponse>(json);
+        SaveContext.SaveLocalState(consent.localState);
+        SaveContext.SaveUserConsent(consent.userConsent);
         //TODO: pass to SpUserConsent handler
     }
     #endregion
