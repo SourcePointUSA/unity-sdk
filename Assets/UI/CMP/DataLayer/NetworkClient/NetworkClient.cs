@@ -64,7 +64,9 @@ public class NetworkClient
         PostConsentGdprRequest body = new PostConsentGdprRequest(requestUUID: GUID.Value, 
                                                                  idfaStatus: "accepted", 
                                                                  localState: SaveContext.GetLocalState(),
-                                                                 includeData: includeData);
+                                                                 includeData: includeData,
+                                                                 pmSaveAndExitVariables: new ConsentGdprSaveAndExitVariables() //TODO
+                                                                 );
         PostConsentGdpr(body, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
     #endregion
@@ -212,18 +214,19 @@ public class NetworkClient
 public class PostConsentGdprRequest
 {
     // [JsonInclude] public List<string> pubData = new List<string>();                //TODO
-    // [JsonInclude] public List<string> pmSaveAndExitVariables = new List<string>(); //TODO
+    [JsonInclude] public ConsentGdprSaveAndExitVariables pmSaveAndExitVariables; 
     
     [JsonInclude] public IncludeDataPostGetMessagesRequest includeData;
     [JsonInclude] public string requestUUID;
     [JsonInclude] public string idfaStatus;
     [JsonInclude] public LocalState localState;
 
-    public PostConsentGdprRequest(string requestUUID, string idfaStatus, LocalState localState, IncludeDataPostGetMessagesRequest includeData)
+    public PostConsentGdprRequest(string requestUUID, string idfaStatus, LocalState localState, IncludeDataPostGetMessagesRequest includeData, ConsentGdprSaveAndExitVariables pmSaveAndExitVariables)
     {
         this.requestUUID = requestUUID;
         this.idfaStatus = idfaStatus;
         this.localState = localState;
         this.includeData = includeData;
+        this.pmSaveAndExitVariables = pmSaveAndExitVariables;
     }
 }
