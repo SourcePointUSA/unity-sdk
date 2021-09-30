@@ -34,7 +34,15 @@ public class PlayerPrefsSaver
         PlayerPrefs.SetString(key, value);
         Save();
     }
-
+    
+    public int GetInt(string key)
+    {
+        if(PlayerPrefs.HasKey(key))
+            return PlayerPrefs.GetInt(key);
+        else
+            return -1;
+    }
+    
     private void Save()
     {
         PlayerPrefs.Save();

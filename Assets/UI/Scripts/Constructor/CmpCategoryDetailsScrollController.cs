@@ -17,6 +17,11 @@ public class CmpCategoryDetailsScrollController : CmpScrollController
         partnersCount.OnScrollElementAmountChange();
     }
 
+    public CmpCategoryModel GetModel()
+    {
+        return model as CmpCategoryModel;
+    }
+
     public override void FillView()
     {
         ClearScrollContent();

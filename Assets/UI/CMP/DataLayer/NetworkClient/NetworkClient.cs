@@ -52,7 +52,7 @@ public class NetworkClient
         GetGdprMessage(onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
 
-    public void ConsentGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void ConsentGdpr(/*CONSENT_ACTION_TYPE*/ int actionType, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout, ConsentGdprSaveAndExitVariables pmSaveAndExitVariables = null)
     {
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
         var includeData = new IncludeDataPostGetMessagesRequest()
@@ -61,13 +61,18 @@ public class NetworkClient
             TCData = dict
             // messageMetaData = dict,
         };
+        if (pmSaveAndExitVariables == null)
+            pmSaveAndExitVariables = new ConsentGdprSaveAndExitVariables("EN",  //TODO: get default lan 
+                privacyManagerId: "16879",
+                categories: new ConsentGdprSaveAndExitVariablesCategory[]{}, 
+                vendors: new ConsentGdprSaveAndExitVariablesVendor[]{}); 
         PostConsentGdprRequest body = new PostConsentGdprRequest(requestUUID: GUID.Value, 
                                                                  idfaStatus: "accepted", 
                                                                  localState: SaveContext.GetLocalState(),
                                                                  includeData: includeData,
-                                                                 pmSaveAndExitVariables: new ConsentGdprSaveAndExitVariables() //TODO
+                                                                 pmSaveAndExitVariables: pmSaveAndExitVariables 
                                                                  );
-        PostConsentGdpr(body, onSuccessAction, onErrorAction).Wait(millisTimeout);
+        PostConsentGdpr(actionType, body, onSuccessAction, onErrorAction).Wait(millisTimeout);
     }
     #endregion
     
@@ -82,18 +87,21 @@ public class NetworkClient
                                     {"env", "stage"},
                                     {"consentLanguage", "en"},
                                     {"propertyId", "4933"},
-                                    {"messageId", "16434"},
+                                    // {"messageId", "16434"},
+                                    {"messageId", "16879"},
                                 });
     }
 
     private static string GetGdprPrivacyManagerViewUriWithQueryParams()
     {
         // https://cdn.privacy-mgmt.com/consent/tcfv2/privacy-manager/privacy-manager-view?siteId=17935&consentLanguage=EN
-        return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
+        // return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
+        return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/",
                                 path: "consent/tcfv2/privacy-manager/privacy-manager-view",
                                 qParams: new Dictionary<string, string>()
                                 {
-                                    { "siteId", "17935"},
+                                    // { "siteId", "17935"},
+                                    { "siteId", "4933"},
                                     { "consentLanguage", "EN"},
                                 });
     }
@@ -112,7 +120,8 @@ public class NetworkClient
     private static string GetConsentGdprQueryParams(int action)
     {
         // https://cdn.privacy-mgmt.com/wrapper/v2/messages/choice/gdpr/11?env=prod
-        return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
+        // return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
+        return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/",
             path: "wrapper/v2/messages/choice/gdpr/" + action.ToString(),
             qParams: new Dictionary<string, string>()
             {
@@ -189,7 +198,7 @@ public class NetworkClient
         }
     }
 
-    async Task PostConsentGdpr(PostConsentGdprRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostConsentGdpr(int actionType, PostConsentGdprRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
@@ -198,7 +207,7 @@ public class NetworkClient
             var options = new JsonSerializerOptions { IgnoreNullValues = true };
             string json = JsonSerializer.Serialize(body, options);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(GetConsentGdprQueryParams(11), data);
+            HttpResponseMessage response = await client.PostAsync(GetConsentGdprQueryParams(actionType), data);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             onSuccessAction?.Invoke(responseBody);
@@ -215,7 +224,6 @@ public class PostConsentGdprRequest
 {
     // [JsonInclude] public List<string> pubData = new List<string>();                //TODO
     [JsonInclude] public ConsentGdprSaveAndExitVariables pmSaveAndExitVariables; 
-    
     [JsonInclude] public IncludeDataPostGetMessagesRequest includeData;
     [JsonInclude] public string requestUUID;
     [JsonInclude] public string idfaStatus;

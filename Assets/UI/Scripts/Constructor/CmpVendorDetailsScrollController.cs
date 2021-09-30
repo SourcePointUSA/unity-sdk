@@ -44,6 +44,11 @@ public class CmpVendorDetailsScrollController : CmpScrollController
         }
     }
 
+    public CmpVendorModel GetModel()
+    {
+        return model;
+    }
+
     public override void FillView()
     {
         ClearScrollContent();

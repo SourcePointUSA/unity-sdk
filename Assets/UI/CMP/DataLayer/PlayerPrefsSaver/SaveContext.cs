@@ -43,4 +43,9 @@ public static class SaveContext
     {
         return saver.GetLocalState(localStateKey);
     }
+
+    public static int GetPropertyId()
+    {
+        return saver.GetInt(propertyIdKey);
+    }
 }
