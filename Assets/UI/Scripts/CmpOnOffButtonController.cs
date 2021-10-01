@@ -9,7 +9,8 @@ public class CmpOnOffButtonController : MonoBehaviour
         if (scrollController is CmpCategoryDetailsScrollController catDetailsScroll)
         {
             var model = catDetailsScroll.GetModel();
-            CmpPmSaveAndExitVariablesContext.AcceptCategory(model.iabId, model._id, model.type);
+            model.accepted = true;
+            CmpPmSaveAndExitVariablesContext.AcceptCategory(model);
             foreach (var vendor in model.requiringConsentVendors)
             {
                 int? iabId = null;
@@ -24,6 +25,7 @@ public class CmpOnOffButtonController : MonoBehaviour
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
         {
             var model = vendDetailsScroll.GetModel();
+            model.accepted = true;
             CmpPmSaveAndExitVariablesContext.AcceptVendor(model.iabId, model.vendorId, model.vendorType);
         }
         Destroy(scrollController.gameObject);
@@ -34,6 +36,7 @@ public class CmpOnOffButtonController : MonoBehaviour
         if (scrollController is CmpCategoryDetailsScrollController catDetailsScroll)
         {
             var model = catDetailsScroll.GetModel();
+            model.accepted = false;
             CmpPmSaveAndExitVariablesContext.ExcludeCategory(model._id);
             foreach (var vendor in model.requiringConsentVendors)
             {
@@ -42,6 +45,7 @@ public class CmpOnOffButtonController : MonoBehaviour
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
         {
             var model = vendDetailsScroll.GetModel();
+            model.accepted = false;
             CmpPmSaveAndExitVariablesContext.ExcludeVendor(model.vendorId);
         }
         Destroy(scrollController.gameObject);

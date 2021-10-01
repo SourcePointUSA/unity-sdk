@@ -7,6 +7,15 @@ public class CmpCategoryScrollController : CmpScrollController
     [SerializeField] private GameObject cmpDescriptionCellPrefab;
     [SerializeField] private GameObject categoryDetailsPrefab;
 
+    private void Update()
+    {
+        if (CmpPmSaveAndExitVariablesContext.IsAcceptedCategoriesChanged)
+        {
+            FillCategoryView();
+            CmpPmSaveAndExitVariablesContext.SetAcceptedCategoriesChangedFalse();
+        }
+    }
+    
     public override void FillView()
     {
         FillCategoryView();
@@ -40,7 +49,8 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddSpecialFeatures(List<CmpSpecialFeatureModel> specialFeatures)
     {
-        AddDescriptionCell(cmpDescriptionCellPrefab, "SpecialFeaturesHeader", "SpecialFeaturesDefinition");
+        if(specialFeatures.Count>0)
+            AddDescriptionCell(cmpDescriptionCellPrefab, "SpecialFeaturesHeader", "SpecialFeaturesDefinition");
         foreach (var specialFeature in specialFeatures)
         {
             var longController = AddCell(specialFeature.name, specialFeature.description);
@@ -50,7 +60,8 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddFeatures(List<CmpFeatureModel> features)
     {
-        AddDescriptionCell(cmpDescriptionCellPrefab, "FeaturesHeader", "FeaturesDefinition");
+        if(features.Count>0)
+            AddDescriptionCell(cmpDescriptionCellPrefab, "FeaturesHeader", "FeaturesDefinition");
         foreach (var feature in features)
         {
             var longController = AddCell(feature.name, feature.description);
@@ -60,7 +71,8 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddSpecialPurposes(List<CmpSpecialPurposeModel> specialPurposes)
     {
-        AddDescriptionCell(cmpDescriptionCellPrefab, "SpecialPurposesHeader", "SpecialPurposesDefinition");
+        if(specialPurposes.Count>0)
+            AddDescriptionCell(cmpDescriptionCellPrefab, "SpecialPurposesHeader", "SpecialPurposesDefinition");
         foreach (var spec in specialPurposes)
         {
             var longController = AddCell(spec.name, spec.description);
@@ -71,10 +83,12 @@ public class CmpCategoryScrollController : CmpScrollController
 
     private void AddCategories(List<CmpCategoryModel> categories)
     {
-        AddDescriptionCell(cmpDescriptionCellPrefab, "PurposesHeader", "PurposesDefinition");
+        if(categories.Count>0)
+            AddDescriptionCell(cmpDescriptionCellPrefab, "PurposesHeader", "PurposesDefinition");
         foreach (CmpCategoryModel cat in categories)
         {
             var longController = AddCell(cat.name, cat.friendlyDescription);
+            longController.SetGroupState(cat.accepted);
             SetCellOnClickAction(longController, cat);
         }
     }

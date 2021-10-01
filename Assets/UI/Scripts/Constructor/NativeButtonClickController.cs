@@ -19,4 +19,10 @@ public class NativeButtonClickController : MonoBehaviour
         NetworkClient.Instance.ConsentGdpr(1 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, 3000, saveAndExitVariables);
         //TODO: destroy popup
     }
+
+    public void OnRejectAllClick()
+    {
+        NetworkClient.Instance.ConsentGdpr(13 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, 3000);
+        //TODO: destroy popup
+    }
 }

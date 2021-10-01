@@ -8,7 +8,7 @@ public class CmpCategoryModel : CmpCategoryBaseModel
     [JsonInclude] public bool disclosureOnly;
     [JsonInclude] public List<CmpCategoryConsentVendorModel> requiringConsentVendors;
     [JsonInclude] public List<CmpCategoryConsentVendorModel> legIntVendors;
-
     [JsonInclude] public List<CmpCategoryConsentVendorModel> disclosureOnlyVendors;
+    public bool accepted = false;
     //[JsonInclude] public List<CmpConsentVendorModel> doNotAllowVendors;       //TODO
 }

@@ -7,6 +7,15 @@ public class CmpVendorScrollController : CmpScrollController
     [SerializeField] private CmpSwitch cmpSwitch;
     [SerializeField] private GameObject vendorDetailsPrefab;
 
+    private void Update()
+    {
+        if (CmpPmSaveAndExitVariablesContext.IsAcceptedVendorsChanged)
+        {
+            FillVendorView();
+            CmpPmSaveAndExitVariablesContext.SetAcceptedVendorsChangedFalse();
+        }
+    }
+
     public override void FillView()
     {
         FillVendorView();
@@ -42,6 +51,7 @@ public class CmpVendorScrollController : CmpScrollController
         {
             bool enableCustomTextLabel = vendor.vendorType.Equals("CUSTOM");
             CmpLongButtonUiController longController = AddCell(vendor.name, enableCustomTextLabel);
+            longController.SetGroupState(vendor.accepted);
             CmpLongButtonController btn = longController.gameObject.AddComponent<CmpLongButtonController>();
             btn.SetButtonRef(longController.GetButton());
             btn.SetOnClickAction(delegate { InstantiateVendorDetailsPrefab(vendor); } );
