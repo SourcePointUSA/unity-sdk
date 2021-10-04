@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NativeButtonClickController : MonoBehaviour
 {
+    //test commit
     public void OnAcceptAllClick()
     {
         NetworkClient.Instance.ConsentGdpr(11 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, 3000);
