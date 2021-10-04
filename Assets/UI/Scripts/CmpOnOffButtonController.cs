@@ -19,7 +19,6 @@ public class CmpOnOffButtonController : MonoBehaviour
                     if (v.vendorId.Equals(vendor.vendorId) && v.iabId.HasValue)
                         iabId = v.iabId.Value;
                 }
-                Debug.LogWarning(iabId.ToString());
                 CmpPmSaveAndExitVariablesContext.AcceptVendor(iabId, vendor.vendorId, vendor.vendorType);
             }
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
