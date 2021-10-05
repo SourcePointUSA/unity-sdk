@@ -11,87 +11,120 @@ namespace ConsentManagementProviderLib
     public static class CMP
     {
         private static GameObject mainThreadBroadcastEventsExecutor;
-
-        public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
+        private static CmpMessageStyle selectedMessageStyle;
+        
+        public static void Initialize(List<SpCampaign> spCampaigns, 
+                                      int accountId, 
+                                      string propertyName, 
+                                      MESSAGE_LANGUAGE language, 
+                                      CAMPAIGN_ENV campaignsEnvironment, 
+                                      long messageTimeoutInSeconds = 3,
+                                      CmpMessageStyle messageStyle = CmpMessageStyle.MobileOnly)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
                 return;
             }
+            selectedMessageStyle = messageStyle;
+            switch (messageStyle)
+            {
+                case CmpMessageStyle.MobileOnly:
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                CreateBroadcastExecutorGO();
-                //excluding ios14 campaign if any
-                RemoveIos14SpCampaign(ref spCampaigns);
-                if (!IsSpCampaignsValid(spCampaigns))
-                {
-                    return;
-                }
-                ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
-                                                            accountId: accountId,
-                                                            propertyName: propertyName,
-                                                            language: language,
-                                                            campaignsEnvironment: campaignsEnvironment,
-                                                            messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
-            }
+                    if (Application.platform == RuntimePlatform.Android)
+                    {
+                        CreateBroadcastExecutorGO();
+                        //excluding ios14 campaign if any
+                        RemoveIos14SpCampaign(ref spCampaigns);
+                        if (!IsSpCampaignsValid(spCampaigns))
+                        {
+                            return;
+                        }
+                        ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
+                                                                    accountId: accountId,
+                                                                    propertyName: propertyName,
+                                                                    language: language,
+                                                                    campaignsEnvironment: campaignsEnvironment,
+                                                                    messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
+                    }
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                CreateBroadcastExecutorGO();
-                ConsentWrapperIOS.Instance.InitializeLib(spCampaigns: spCampaigns,
-                                                        accountId: accountId,
-                                                        propertyName: propertyName,
-                                                        language: language,
-                                                        campaignsEnvironment: campaignsEnvironment,
-                                                        messageTimeoutInSeconds: messageTimeoutInSeconds);
-            }
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        CreateBroadcastExecutorGO();
+                        ConsentWrapperIOS.Instance.InitializeLib(spCampaigns: spCampaigns,
+                                                                accountId: accountId,
+                                                                propertyName: propertyName,
+                                                                language: language,
+                                                                campaignsEnvironment: campaignsEnvironment,
+                                                                messageTimeoutInSeconds: messageTimeoutInSeconds);
+                    }
 #endif
+                    break;
+                case CmpMessageStyle.UnityNative:
+                    //TODO:
+                    break;
+            }
         }
         
         public static void LoadMessage(string authId = null)
         {
+            switch (selectedMessageStyle)
+            {
+                case CmpMessageStyle.MobileOnly:
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ConsentWrapperAndroid.Instance.LoadMessage(authId: authId);
-            }
+                    if (Application.platform == RuntimePlatform.Android)
+                    {
+                        ConsentWrapperAndroid.Instance.LoadMessage(authId: authId);
+                    }
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
-            }
+                    if (Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
+                    }
 #endif
+                    break;
+                case CmpMessageStyle.UnityNative:
+                    //TODO:
+                    break;
+            }
         }
 
         public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            switch (selectedMessageStyle)
             {
-                ConsentWrapperAndroid.Instance.LoadPrivacyManager(campaignType: campaignType,
-                                                                 pmId: pmId,
-                                                                 tab: tab);
-            }
+                case CmpMessageStyle.MobileOnly:
+#if UNITY_ANDROID
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    ConsentWrapperAndroid.Instance.LoadPrivacyManager(campaignType: campaignType,
+                                                                     pmId: pmId,
+                                                                     tab: tab);
+                }
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            { 
-                if(campaignType == CAMPAIGN_TYPE.GDPR)
-                {
-                    ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(pmId: pmId, 
-                                                                      tab: tab);
+                if (Application.platform == RuntimePlatform.IPhonePlayer)
+                { 
+                    if(campaignType == CAMPAIGN_TYPE.GDPR)
+                    {
+                        ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(pmId: pmId, 
+                                                                          tab: tab);
+                    }
+                    else if(campaignType == CAMPAIGN_TYPE.CCPA)
+                    {
+                        ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(pmId: pmId,
+                                                                          tab: tab);
+                    }
                 }
-                else if(campaignType == CAMPAIGN_TYPE.CCPA)
-                {
-                    ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(pmId: pmId,
-                                                                      tab: tab);
-                }
-            }
 #endif
+                    break;
+                case CmpMessageStyle.UnityNative:
+                    //TODO:
+                    break;
+            }
         }
 
         public static void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
+            //TODO: check if CustomConsentGdpr feature is available for CmpMessageStyle.UnityNative
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {

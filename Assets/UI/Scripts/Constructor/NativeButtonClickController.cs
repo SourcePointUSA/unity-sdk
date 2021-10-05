@@ -11,7 +11,8 @@ public class NativeButtonClickController : MonoBehaviour
 
     public void OnSaveAndExitClick()
     {
-        var saveAndExitVariables = new ConsentGdprSaveAndExitVariables("EN",
+        var saveAndExitVariables = new ConsentGdprSaveAndExitVariables(
+            language: "EN",
             privacyManagerId: "16879", 
             categories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
             vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors()); 
