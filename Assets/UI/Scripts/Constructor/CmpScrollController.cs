@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,11 @@ public class CmpScrollController : MonoBehaviour
     [SerializeField] protected Text changingText;
 
     protected Dictionary<string, CmpUiElementModel> postponedElements;
+
+    private void Start()
+    {
+        CmpPopupDestroyer.RegisterPopup(this.gameObject);
+    }
 
     public void SetPostponedElements(Dictionary<string, CmpUiElementModel> postponedElements)
     {

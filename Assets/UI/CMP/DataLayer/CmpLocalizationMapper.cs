@@ -46,9 +46,8 @@ public static class CmpLocalizationMapper
         isInitialized = false;
         NetworkClient.Instance.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback, 3000);
     }
-
+    
     #region Success
-
     private static void OnGetMessagesSuccessCallback(string json)
     {
         GetMessageResponse messages = NativeUiJsonDeserializer.DeserializeGetMessages(json);
@@ -99,6 +98,7 @@ public static class CmpLocalizationMapper
         SaveContext.SaveLocalState(consent.localState);
         SaveContext.SaveUserConsent(consent.userConsent);
         //TODO: pass to SpUserConsent handler
+        CmpPopupDestroyer.DestroyAllPopups();
     }
     #endregion
 
@@ -106,6 +106,8 @@ public static class CmpLocalizationMapper
     {
         //TODO: throw into SpClient.OnException
         UnityEngine.Debug.LogError(ex.Message);
+        UnityEngine.Debug.LogError("All popups will be destroyed!!!");
+        CmpPopupDestroyer.DestroyAllPopups();
     }
     
     public static CmpUiElementModel GetCmpUiElement(string viewId, string uiElementId)
