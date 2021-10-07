@@ -4,22 +4,32 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
+using UnityEngine;
 
 public class NetworkClient
 {
     // HttpClient is intended to be instantiated once per application, rather than per-use
     readonly HttpClient client = new HttpClient();
-
+    private static GameObject dispatcherGO;
+    private static NetworkCallbackEventDispatcher dispatcher;
+    
     private static NetworkClient instance;
     public static NetworkClient Instance
     {
         get
         {
             if (instance == null)
+            {
                 instance = new NetworkClient();
+                instance.client.Timeout = TimeSpan.FromMilliseconds(3000);
+                if (dispatcherGO == null)
+                {
+                    dispatcherGO = new GameObject();
+                    dispatcher = dispatcherGO.AddComponent<NetworkCallbackEventDispatcher>();
+                }
+            }
             return instance;
         }
     }
@@ -39,20 +49,22 @@ public class NetworkClient
             SaveContext.GetLocalState(), 
             // new LocalState(), // TODO: remove & uncomment line above
             includeData);
-        PostGetMessages(requestBody, onSuccessAction, onErrorAction).Wait(millisTimeout);
+        Task.Factory.StartNew(async delegate { await PostGetMessages(requestBody, onSuccessAction, onErrorAction); });
     }
 
     public void PrivacyManagerViews(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
-        GetGdprPrivacyManagerView(onSuccessAction, onErrorAction).Wait(millisTimeout);
+        Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(onSuccessAction, onErrorAction); });
     }
 
     public void MessageGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
     {
-        GetGdprMessage(onSuccessAction, onErrorAction).Wait(millisTimeout);
+        Task.Factory.StartNew(async delegate { await GetGdprMessage(onSuccessAction, onErrorAction); });
     }
 
-    public void ConsentGdpr(/*CONSENT_ACTION_TYPE*/ int actionType, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout, ConsentGdprSaveAndExitVariables pmSaveAndExitVariables = null)
+    public void ConsentGdpr( /*CONSENT_ACTION_TYPE*/ int actionType, Action<string> onSuccessAction,
+        Action<Exception> onErrorAction, int millisTimeout,
+        ConsentGdprSaveAndExitVariables pmSaveAndExitVariables = null)
     {
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
         var includeData = new IncludeDataPostGetMessagesRequest()
@@ -62,18 +74,19 @@ public class NetworkClient
             // messageMetaData = dict,
         };
         if (pmSaveAndExitVariables == null)
-            pmSaveAndExitVariables = new ConsentGdprSaveAndExitVariables("EN",  //TODO: get default lan 
+            pmSaveAndExitVariables = new ConsentGdprSaveAndExitVariables(
+                language: "EN", //TODO: get default lan 
                 privacyManagerId: "16879",
-                categories: new ConsentGdprSaveAndExitVariablesCategory[]{}, 
-                vendors: new ConsentGdprSaveAndExitVariablesVendor[]{}); 
-        PostConsentGdprRequest body = new PostConsentGdprRequest(requestUUID: GUID.Value, 
-                                                                 idfaStatus: "accepted", 
-                                                                 localState: SaveContext.GetLocalState(),
-                                                                 includeData: includeData,
-                                                                 pmSaveAndExitVariables: pmSaveAndExitVariables 
-                                                                 );
-        PostConsentGdpr(actionType, body, onSuccessAction, onErrorAction).Wait(millisTimeout);
-    }
+                categories: new ConsentGdprSaveAndExitVariablesCategory[] { },
+                vendors: new ConsentGdprSaveAndExitVariablesVendor[] { });
+        PostConsentGdprRequest body = new PostConsentGdprRequest(requestUUID: GUID.Value,
+            idfaStatus: "accepted",
+            localState: SaveContext.GetLocalState(),
+            includeData: includeData,
+            pmSaveAndExitVariables: pmSaveAndExitVariables
+        );
+        Task.Factory.StartNew(async delegate { await PostConsentGdpr(actionType, body, onSuccessAction, onErrorAction); });
+}
     #endregion
     
     #region Query Parameters
@@ -153,11 +166,11 @@ public class NetworkClient
             HttpResponseMessage response = await client.GetAsync(GetGdprMessageUriWithQueryParams());
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
-            onSuccessAction?.Invoke(responseBody);
+            dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
         }
         catch(HttpRequestException ex)
         {
-            onErrorAction?.Invoke(ex);
+            dispatcher.Enqueue(delegate { onErrorAction?.Invoke(ex); });
         }
     }
 
@@ -170,11 +183,11 @@ public class NetworkClient
             HttpResponseMessage response = await client.GetAsync(GetGdprPrivacyManagerViewUriWithQueryParams());
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
-            onSuccessAction?.Invoke(responseBody);
+            dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
         }
         catch (Exception ex)
         {            
-            onErrorAction?.Invoke(ex);
+            dispatcher.Enqueue(delegate { onErrorAction?.Invoke(ex); });
         }
     }
 
@@ -190,11 +203,11 @@ public class NetworkClient
             HttpResponseMessage response = await client.PostAsync(GetGetMessagesUriWithQueryParams(), data);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
-            onSuccessAction?.Invoke(responseBody);
+            dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
         }
         catch (Exception ex)
         {            
-            onErrorAction?.Invoke(ex);
+            dispatcher.Enqueue(delegate { onErrorAction?.Invoke(ex); });
         }
     }
 
@@ -210,31 +223,12 @@ public class NetworkClient
             HttpResponseMessage response = await client.PostAsync(GetConsentGdprQueryParams(actionType), data);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
-            onSuccessAction?.Invoke(responseBody);
+            dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
         }
         catch (Exception ex)
-        {            
-            onErrorAction?.Invoke(ex);
+        {          
+            dispatcher.Enqueue(delegate { onErrorAction?.Invoke(ex); });
         }
     }
     #endregion
-}
-
-public class PostConsentGdprRequest
-{
-    // [JsonInclude] public List<string> pubData = new List<string>();                //TODO
-    [JsonInclude] public ConsentGdprSaveAndExitVariables pmSaveAndExitVariables; 
-    [JsonInclude] public IncludeDataPostGetMessagesRequest includeData;
-    [JsonInclude] public string requestUUID;
-    [JsonInclude] public string idfaStatus;
-    [JsonInclude] public LocalState localState;
-
-    public PostConsentGdprRequest(string requestUUID, string idfaStatus, LocalState localState, IncludeDataPostGetMessagesRequest includeData, ConsentGdprSaveAndExitVariables pmSaveAndExitVariables)
-    {
-        this.requestUUID = requestUUID;
-        this.idfaStatus = idfaStatus;
-        this.localState = localState;
-        this.includeData = includeData;
-        this.pmSaveAndExitVariables = pmSaveAndExitVariables;
-    }
 }
