@@ -35,8 +35,9 @@ public class NetworkClient
     }
     
     #region Public
-    public void GetMessages(int accountId, string propertyHref, CampaignsPostGetMessagesRequest campaigns, Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void GetMessages(int accountId, string propertyHref, CampaignsPostGetMessagesRequest campaigns, Action<string> onSuccessAction, Action<Exception> onErrorAction, int environment, int millisTimeout)
     {
+        instance.client.Timeout = TimeSpan.FromMilliseconds(millisTimeout);
         string idfaStatus = "unknown";
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
         var includeData = new IncludeDataPostGetMessagesRequest()
@@ -46,25 +47,26 @@ public class NetworkClient
             TCData = dict
         };
         var requestBody = new PostGetMessagesRequest(accountId, propertyHref, idfaStatus, GUID.Value, campaigns, 
-            SaveContext.GetLocalState(), 
-            // new LocalState(), // TODO: remove & uncomment line above
+            // SaveContext.GetLocalState(), 
+            new LocalState(), // TODO: remove & uncomment line above
             includeData);
-        Task.Factory.StartNew(async delegate { await PostGetMessages(requestBody, onSuccessAction, onErrorAction); });
+        Task.Factory.StartNew(async delegate { await PostGetMessages(requestBody, environment, onSuccessAction, onErrorAction); });
     }
 
-    public void PrivacyManagerViews(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void PrivacyManagerViews(Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(onSuccessAction, onErrorAction); });
     }
 
-    public void MessageGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction, int millisTimeout)
+    public void MessageGdpr(Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         Task.Factory.StartNew(async delegate { await GetGdprMessage(onSuccessAction, onErrorAction); });
     }
 
-    public void ConsentGdpr( /*CONSENT_ACTION_TYPE*/ int actionType, Action<string> onSuccessAction,
-        Action<Exception> onErrorAction, int millisTimeout,
-        ConsentGdprSaveAndExitVariables pmSaveAndExitVariables = null)
+    public void ConsentGdpr( /*CONSENT_ACTION_TYPE*/ int actionType, 
+                            Action<string> onSuccessAction,
+                            Action<Exception> onErrorAction,
+                            ConsentGdprSaveAndExitVariables pmSaveAndExitVariables = null)
     {
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
         var includeData = new IncludeDataPostGetMessagesRequest()
@@ -119,14 +121,15 @@ public class NetworkClient
                                 });
     }
 
-    private static string GetGetMessagesUriWithQueryParams()
+    private static string GetGetMessagesUriWithQueryParams(int environment)
     {
         // https://cdn.sp-stage.net/wrapper/v2/get_messages/?env=stage
+        string env = environment == 0 ? "stage" : "prod";
         return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/",
             path: "wrapper/v2/get_messages/",
             qParams: new Dictionary<string, string>()
             {
-                { "env", "stage"},
+                { "env", env},
             });
     }
     
@@ -191,7 +194,7 @@ public class NetworkClient
         }
     }
 
-    async Task PostGetMessages(PostGetMessagesRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostGetMessages(PostGetMessagesRequest body, int environment, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
@@ -200,7 +203,7 @@ public class NetworkClient
             var options = new JsonSerializerOptions { IgnoreNullValues = true };
             string json = JsonSerializer.Serialize(body, options);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(GetGetMessagesUriWithQueryParams(), data);
+            HttpResponseMessage response = await client.PostAsync(GetGetMessagesUriWithQueryParams(environment), data);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
@@ -219,6 +222,7 @@ public class NetworkClient
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var options = new JsonSerializerOptions { IgnoreNullValues = true };
             string json = JsonSerializer.Serialize(body, options);
+            UnityEngine.Debug.Log(json);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(GetConsentGdprQueryParams(actionType), data);
             response.EnsureSuccessStatusCode();

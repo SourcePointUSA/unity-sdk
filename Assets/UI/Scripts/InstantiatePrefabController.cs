@@ -10,31 +10,32 @@ public class InstantiatePrefabController : MonoBehaviour
 
     public void InstantiateManagePreferences()
     {
-        var canvas = GameObject.Find("Canvas").transform;
-        Instantiate(managePreferences, canvas);
+        CmpLocalizationMapper.PrivacyManagerView(delegate(string json)
+        {
+            CmpLocalizationMapper.OnPrivacyManagerViewsSuccessCallback(json, managePreferences);
+        });
     }
     
     public void InstantiateManagePartners()
     {
-        var canvas = GameObject.Find("Canvas").transform;
-        Instantiate(managePartners, canvas);
+        CmpLocalizationMapper.PrivacyManagerView(delegate(string json)
+        {
+            CmpLocalizationMapper.OnPrivacyManagerViewsSuccessCallback(json, managePartners);
+        });
     }   
     
     public void InstantiatePrivacyPolicy()
     {
-        var canvas = GameObject.Find("Canvas").transform;
-        Instantiate(privacyPolicy, canvas);
+        CmpLocalizationMapper.InstantiateOnCanvas(privacyPolicy);
     }   
     
     public void InstantiateVendorsDetails()
     {
-        var canvas = GameObject.Find("Canvas").transform;
-        Instantiate(vendorsDetails, canvas);
+        CmpLocalizationMapper.InstantiateOnCanvas(vendorsDetails);
     }
     
     public void InstantiatePartnersDetails()
     {
-        var canvas = GameObject.Find("Canvas").transform;
-        Instantiate(partnersDetails, canvas);
+        CmpLocalizationMapper.InstantiateOnCanvas(partnersDetails);
     }
 }

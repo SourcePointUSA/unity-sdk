@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
 using UnityEngine;
@@ -8,6 +9,7 @@ public static class CmpLocalizationMapper
     private static Dictionary<string, List<CmpUiElementModel>> elements;
     public static List<CmpShortCategoryModel> shortCategories;
     public static Dictionary<string, string> popupBgColors;
+    private static Canvas canvas;
 
     private static bool isInitialized = false;
     public static bool IsInitialized => isInitialized;
@@ -24,27 +26,36 @@ public static class CmpLocalizationMapper
     public static List<CmpSpecialFeatureModel> specialFeatures;
     public static List<CmpVendorModel> vendors;
 
-    static CmpLocalizationMapper()
+    public static void SetCanvas(Canvas canvas)
     {
-        NetworkClient.Instance.GetMessages(22,
-            "https://appletv.mobile.demo",
-            new CampaignsPostGetMessagesRequest(
-                new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>()),
-                new SingleCampaignPostGetMessagesRequest(new Dictionary<string, string>())
-            ),
-            OnGetMessagesSuccessCallback, OnExceptionCallback, 3000);
+        CmpLocalizationMapper.canvas = canvas;
+    }
+    
+    public static void GetMessages(int accountId,
+                                   string propertyHref,
+                                   SingleCampaignPostGetMessagesRequest gdpr,
+                                   SingleCampaignPostGetMessagesRequest ccpa,
+                                   int environment,
+                                   int millisTimeout)
+    {
+        NetworkClient.Instance.GetMessages(accountId,
+                                            propertyHref,
+                                            new CampaignsPostGetMessagesRequest(gdpr, ccpa),
+                                            OnGetMessagesSuccessCallback, OnExceptionCallback, 
+                                            environment,
+                                            millisTimeout);
     }
 
-    public static void PrivacyManagerView()
+    public static void PrivacyManagerView(Action<string> OnSuccessCalback)
     {
         isExtraCallInitialized = false;
-        NetworkClient.Instance.PrivacyManagerViews(OnPrivacyManagerViewsSuccessCallback, OnExceptionCallback, 3000);
+        NetworkClient.Instance.PrivacyManagerViews(OnSuccessCalback, OnExceptionCallback);
     }
 
     public static void MessageGdpr()
     {
         isInitialized = false;
-        NetworkClient.Instance.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback, 3000);
+        NetworkClient.Instance.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback);
     }
     
     #region Success
@@ -69,7 +80,7 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
-    private static void OnPrivacyManagerViewsSuccessCallback(string json)
+    public static void OnPrivacyManagerViewsSuccessCallback(string json, GameObject prefab)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,
@@ -78,8 +89,15 @@ public static class CmpLocalizationMapper
                                                       specialFeatureModels: ref specialFeatures,
                                                       vendorModels: ref vendors);
         isExtraCallInitialized = true;
+        InstantiateOnCanvas(prefab);
     }
 
+    public static void InstantiateOnCanvas(GameObject prefab)
+    {
+        if(prefab!=null && canvas != null)
+            GameObject.Instantiate(prefab, canvas.transform);
+    }
+    
     private static void OnMessageGdprSuccessCallback(string json)
     {
         elements?.Clear();

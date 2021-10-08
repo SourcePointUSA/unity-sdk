@@ -6,6 +6,10 @@ public class ConsentMessageProvider : MonoBehaviour
 {
     [SerializeField]
     List<CAMPAIGN_TYPE> allCampaignTypesToLoad;
+    [SerializeField] 
+    private GameObject CmpHomePrefab;
+    [SerializeField] 
+    private Canvas canvas;
     [SerializeField]
     MESSAGE_LANGUAGE language = MESSAGE_LANGUAGE.ENGLISH;
     [SerializeField]
@@ -51,7 +55,9 @@ public class ConsentMessageProvider : MonoBehaviour
 
     private void Start()
     {
-        CMP.LoadMessage(authId: authID);
+        CMP.LoadMessage(authId: authID,
+                        cmpHomePrefab:CmpHomePrefab,
+                        canvas: canvas);
     }
 
     private void OnDestroy()

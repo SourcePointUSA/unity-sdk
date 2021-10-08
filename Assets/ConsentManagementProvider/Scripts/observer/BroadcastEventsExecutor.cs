@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace ConsentManagementProviderLib.Observer
 {
@@ -16,6 +17,21 @@ namespace ConsentManagementProviderLib.Observer
             {
                 BroadcastEventDispatcher.actions.Dequeue()?.Invoke();
             }
+        }
+        
+        public void InstantiateHomeView(GameObject CmpHomePrefab, Canvas canvas)
+        {
+            StartCoroutine(WaitPrivacyManagerInitialized(CmpHomePrefab, canvas));
+        }
+
+        private IEnumerator WaitPrivacyManagerInitialized(GameObject CmpHomePrefab, Canvas canvas)
+        {
+            while (!CmpLocalizationMapper.IsInitialized)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            if (!CmpLocalizationMapper.IsConsented)
+                Instantiate(CmpHomePrefab, canvas.transform);
         }
     }
 }

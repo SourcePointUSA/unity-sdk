@@ -6,7 +6,7 @@ public class NativeButtonClickController : MonoBehaviour
 {
     public void OnAcceptAllClick()
     {
-        NetworkClient.Instance.ConsentGdpr(11 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, 3000);
+        NetworkClient.Instance.ConsentGdpr(11 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback);
     }
 
     public void OnSaveAndExitClick()
@@ -16,11 +16,11 @@ public class NativeButtonClickController : MonoBehaviour
             privacyManagerId: "16879", 
             categories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
             vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors()); 
-        NetworkClient.Instance.ConsentGdpr(1 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, 3000, saveAndExitVariables);
+        NetworkClient.Instance.ConsentGdpr(1 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, saveAndExitVariables);
     }
 
     public void OnRejectAllClick()
     {
-        NetworkClient.Instance.ConsentGdpr(13 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback, 3000);
+        NetworkClient.Instance.ConsentGdpr(13 ,CmpLocalizationMapper.OnConsentGdprSuccessCallback , CmpLocalizationMapper.OnExceptionCallback);
     }
 }

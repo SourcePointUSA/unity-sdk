@@ -23,7 +23,7 @@ public class CmpPopupController : MonoBehaviour
     {
         if (!viewId.Equals("HomeView") && !viewId.Equals("PrivacyPolicyView") && !CmpLocalizationMapper.IsExtraCallInitialized)
         {
-            CmpLocalizationMapper.PrivacyManagerView();
+            // CmpLocalizationMapper.PrivacyManagerView();
             while (!CmpLocalizationMapper.IsExtraCallInitialized)
             {
                 yield return new WaitForEndOfFrame();
@@ -37,13 +37,14 @@ public class CmpPopupController : MonoBehaviour
         if (!CmpLocalizationMapper.IsConsented)
         {
             SetBgColor();
-            MapLocazliation();
+            MapLocalization();
             MapPostponedLocalization();
             FillPostponedData();
         }
         else
         {
-            //TODO: exit, OnConsented
+            CmpPopupDestroyer.DestroyAllPopups();
+            //TODO: OnConsented
         }
     }
 
@@ -69,7 +70,7 @@ public class CmpPopupController : MonoBehaviour
         }
     }
 
-    private void MapLocazliation()
+    private void MapLocalization()
     {
         foreach (var ui in uiElements)
         {
