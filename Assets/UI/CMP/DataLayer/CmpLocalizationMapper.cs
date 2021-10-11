@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using UnityEngine;
 
@@ -9,7 +10,6 @@ public static class CmpLocalizationMapper
     private static Dictionary<string, List<CmpUiElementModel>> elements;
     public static List<CmpShortCategoryModel> shortCategories;
     public static Dictionary<string, string> popupBgColors;
-    private static Canvas canvas;
 
     private static bool isInitialized = false;
     public static bool IsInitialized => isInitialized;
@@ -26,6 +26,12 @@ public static class CmpLocalizationMapper
     public static List<CmpSpecialFeatureModel> specialFeatures;
     public static List<CmpVendorModel> vendors;
 
+    private static Canvas canvas;
+    private static int environment;
+    public static string language { get; set; }
+    public static string propertyId { get; set; }
+    public static string privacyManagerId { get; set; }
+    
     public static void SetCanvas(Canvas canvas)
     {
         CmpLocalizationMapper.canvas = canvas;
@@ -38,24 +44,61 @@ public static class CmpLocalizationMapper
                                    int environment,
                                    int millisTimeout)
     {
+        CmpLocalizationMapper.environment = environment;
         NetworkClient.Instance.GetMessages(accountId,
-                                            propertyHref,
-                                            new CampaignsPostGetMessagesRequest(gdpr, ccpa),
-                                            OnGetMessagesSuccessCallback, OnExceptionCallback, 
-                                            environment,
-                                            millisTimeout);
+                                           propertyHref,
+                                           new CampaignsPostGetMessagesRequest(gdpr, ccpa),
+                                           OnGetMessagesSuccessCallback, 
+                                           OnExceptionCallback, 
+                                           environment,
+                                           millisTimeout);
     }
 
     public static void PrivacyManagerView(Action<string> OnSuccessCalback)
     {
         isExtraCallInitialized = false;
-        NetworkClient.Instance.PrivacyManagerViews(OnSuccessCalback, OnExceptionCallback);
+        NetworkClient.Instance.PrivacyManagerViews(propertyId, language, OnSuccessCalback, OnExceptionCallback);
     }
 
     public static void MessageGdpr()
     {
         isInitialized = false;
-        NetworkClient.Instance.MessageGdpr(OnMessageGdprSuccessCallback, OnExceptionCallback);
+        NetworkClient.Instance.MessageGdpr(environment,
+                                           language,
+                                           propertyId,
+                                  privacyManagerId,
+                                           OnMessageGdprSuccessCallback, 
+                                           OnExceptionCallback);
+    }
+
+    public static void ConsentGdpr(int actionCode)
+    {
+        switch (actionCode)
+        {
+
+            case 1:
+                var saveAndExitVariables = new ConsentGdprSaveAndExitVariables(
+                                            language: language,
+                                            privacyManagerId: privacyManagerId, 
+                                            categories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
+                                            vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors()); 
+                NetworkClient.Instance.ConsentGdpr(actionType: actionCode, 
+                                                   environment: environment,
+                                                   language: language,
+                                                   privacyManagerId: privacyManagerId, 
+                                                   onSuccessAction: OnConsentGdprSuccessCallback, 
+                                                   onErrorAction: OnExceptionCallback,
+                                                   pmSaveAndExitVariables: saveAndExitVariables);
+                break;
+            default:
+                NetworkClient.Instance.ConsentGdpr(actionType: actionCode, 
+                                                   environment: environment,
+                                                   language: language,
+                                                   privacyManagerId: privacyManagerId, 
+                                                   onSuccessAction: OnConsentGdprSuccessCallback, 
+                                                   onErrorAction: OnExceptionCallback);
+                break;
+        }
     }
     
     #region Success

@@ -55,9 +55,14 @@ public class ConsentMessageProvider : MonoBehaviour
 
     private void Start()
     {
-        CMP.LoadMessage(authId: authID,
-                        cmpHomePrefab:CmpHomePrefab,
-                        canvas: canvas);
+#if !UNITY_ANDROID || !UNITY_IOS || UNITY_EDITOR
+        CMP.LoadMessage(cmpHomePrefab: CmpHomePrefab,
+                        canvas: canvas,
+                        privacyManagerId: "16879",
+                        propertyId: "4933");
+#else
+        CMP.LoadMessage(authId: authID);
+#endif
     }
 
     private void OnDestroy()

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using ConsentManagementProviderLib.Android;
+using ConsentManagementProviderLib.Enum;
 using ConsentManagementProviderLib.iOS;
 using ConsentManagementProviderLib.Observer;
+using ConsentMessagePlugin.Android;
 using UnityEngine;
 
 namespace ConsentManagementProviderLib
@@ -28,7 +30,6 @@ namespace ConsentManagementProviderLib
                 return;
             }
             CreateBroadcastExecutorGO();
-            CMP.language = language;
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
@@ -56,6 +57,7 @@ namespace ConsentManagementProviderLib
                                                         messageTimeoutInSeconds: messageTimeoutInSeconds);
             }
 #else
+            CmpLocalizationMapper.language = CSharp2JavaStringEnumMapper.GetMessageLanguageKey(language);
             SingleCampaignPostGetMessagesRequest gdprTargetingParams = null;
             SpCampaign gdpr = spCampaigns.Find(x => x.CampaignType == CAMPAIGN_TYPE.GDPR);
             if (gdpr != null)
@@ -87,7 +89,10 @@ namespace ConsentManagementProviderLib
 #endif
         }
         
-        public static void LoadMessage(string authId = null, GameObject cmpHomePrefab = null, Canvas canvas = null)
+        /// <summary>
+        /// Invokes <c>LoadMessage</c> with Mobile Native Privacy Manager; for MOBILE platforms only  
+        /// </summary>
+        public static void LoadMessage(string authId = null)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
@@ -99,35 +104,32 @@ namespace ConsentManagementProviderLib
             {
                 ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
             }
-#else
+#endif
+        }
+
+        /// <summary>
+        /// Invokes <c>LoadMessage</c> with Unity Native Privacy Manager UI 
+        /// </summary>
+        public static void LoadMessage(GameObject cmpHomePrefab, 
+                                       Canvas canvas,
+                                       string privacyManagerId,
+                                       string propertyId)
+        {
+            //TODO: authId?
+#if !UNITY_ANDROID || (!UNITY_IOS && UNITY_EDITOR_OSX)
+            CmpLocalizationMapper.propertyId = propertyId;
+            CmpLocalizationMapper.privacyManagerId = privacyManagerId;
             InstantiateHomePrefab(cmpHomePrefab, canvas);
 #endif
         }
 
-        public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab, GameObject cmpHomePrefab = null, Canvas canvas = null)
+        public static void LoadPrivacyManager(GameObject cmpHomePrefab, 
+                                              Canvas canvas,
+                                              CAMPAIGN_TYPE campaignType, 
+                                              int privacyManagerId, 
+                                              int propertyId)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ConsentWrapperAndroid.Instance.LoadPrivacyManager(campaignType: campaignType,
-                                                                 pmId: pmId,
-                                                                 tab: tab);
-            }
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            { 
-                if(campaignType == CAMPAIGN_TYPE.GDPR)
-                {
-                    ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(pmId: pmId, 
-                                                                      tab: tab);
-                }
-                else if(campaignType == CAMPAIGN_TYPE.CCPA)
-                {
-                    ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(pmId: pmId,
-                                                                      tab: tab);
-                }
-            }
-#else
+#if !UNITY_ANDROID || (!UNITY_IOS && UNITY_EDITOR_OSX)
             if (campaignType == CAMPAIGN_TYPE.GDPR)
             {
                 CmpLocalizationMapper.MessageGdpr();
@@ -136,6 +138,32 @@ namespace ConsentManagementProviderLib
             else
             {
                 //TODO: CCPA
+            }
+#endif
+        }
+
+        public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string privacyManagerId, PRIVACY_MANAGER_TAB tab)
+        {
+#if UNITY_ANDROID
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                ConsentWrapperAndroid.Instance.LoadPrivacyManager(campaignType: campaignType,
+                                                                 pmId: privacyManagerId,
+                                                                 tab: tab);
+            }
+#elif UNITY_IOS && !UNITY_EDITOR_OSX
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            { 
+                if(campaignType == CAMPAIGN_TYPE.GDPR)
+                {
+                    ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(pmId: privacyManagerId, 
+                                                                      tab: tab);
+                }
+                else if(campaignType == CAMPAIGN_TYPE.CCPA)
+                {
+                    ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(pmId: privacyManagerId,
+                                                                      tab: tab);
+                }
             }
 #endif
         }
@@ -219,13 +247,11 @@ namespace ConsentManagementProviderLib
             if (cmpHomePrefab == null || canvas == null)
             {
                 Debug.LogError("To use CMP UI on non-mobile platforms you have to provide CmpHomePrefab and Canvas!");
-                return;
             }
             else
             {
                 CmpLocalizationMapper.SetCanvas(canvas);
                 mainThreadBroadcastEventsExecutor.InstantiateHomeView(cmpHomePrefab, canvas);
-                //TODO: authId? 
             }
         }
         
