@@ -160,6 +160,7 @@ public static class CmpLocalizationMapper
         SaveContext.SaveUserConsent(consent.userConsent);
         //TODO: pass to SpUserConsent handler
         CmpPopupDestroyer.DestroyAllPopups();
+        CmpPopupDestroyer.DestroyAllHelperGO();
     }
     #endregion
 

@@ -237,7 +237,8 @@ namespace ConsentManagementProviderLib
                 ConsentWrapperIOS.Instance.Dispose();
             }
 #else
-            CmpPopupDestroyer.DestroyAllPopups();            
+            CmpPopupDestroyer.DestroyAllPopups();
+            CmpPopupDestroyer.DestroyAllHelperGO();
 #endif
         }
         

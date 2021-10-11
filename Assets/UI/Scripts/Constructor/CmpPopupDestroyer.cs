@@ -26,4 +26,14 @@ public static class CmpPopupDestroyer
             DestroyTopmostPopup();
         }
     }
+
+    public static void DestroyAllHelperGO()
+    {
+        var dispatcher = GameObject.Find("CMP_NetworkCallbackEventDispatcher");
+        if(dispatcher!=null)
+            UnityEngine.Object.Destroy(dispatcher);
+        var executor = GameObject.Find("CMP_BroadcastEventsExecutor");
+        if(executor!=null)
+            UnityEngine.Object.Destroy(executor);
+    }
 }
