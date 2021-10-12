@@ -12,7 +12,7 @@ public class CmpScrollController : MonoBehaviour
 
     protected Dictionary<string, CmpUiElementModel> postponedElements;
 
-    private void Start()
+    protected void Start()
     {
         CmpPopupDestroyer.RegisterPopup(this.gameObject);
     }

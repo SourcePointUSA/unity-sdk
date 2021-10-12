@@ -31,7 +31,7 @@ namespace ConsentManagementProviderLib
                     BroadcastEventDispatcher.Execute<IOnConsentAction>(null, (i, d) => i.OnConsentAction(actionType));
                     break;
                 case nameof(IOnConsentError):
-                    Exception exception= (Exception)list[0];
+                    Exception exception = (Exception)list[0];
                     BroadcastEventDispatcher.Execute<IOnConsentError>(null, (i, d) => i.OnConsentError(exception));
                     break;
                 case nameof(IOnConsentUIReady):

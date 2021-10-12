@@ -17,6 +17,11 @@ namespace ConsentManagementProviderLib.Observer
             {
                 BroadcastEventDispatcher.actions.Dequeue()?.Invoke();
             }
+            BroadcastContext.BroadcastOnConsentUIReadyIfNeeded();
+            BroadcastContext.BroadcastIOnConsentUIFinishedIfNeeded();
+            BroadcastContext.BroadcastIOnConsentErrorIfNeeded();
+            BroadcastContext.BroadcastIOnConsentActionIfNeeded();
+            BroadcastContext.BroadcastIOnConsentReadyIfNeeded();
         }
         
         public void InstantiateHomeView(GameObject CmpHomePrefab, Canvas canvas)

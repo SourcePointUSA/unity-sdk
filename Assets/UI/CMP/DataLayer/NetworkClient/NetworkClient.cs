@@ -49,8 +49,8 @@ public class NetworkClient
             TCData = dict
         };
         var requestBody = new PostGetMessagesRequest(accountId, propertyHref, idfaStatus, GUID.Value, campaigns, 
-            // SaveContext.GetLocalState(), 
-            new LocalState(), // TODO: remove & uncomment line above
+            SaveContext.GetLocalState(), 
+            // new LocalState(), // TODO: remove & uncomment line above
             includeData);
         Task.Factory.StartNew(async delegate { await PostGetMessages(requestBody, environment, onSuccessAction, onErrorAction); });
     }

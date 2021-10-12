@@ -31,6 +31,9 @@ public static class CmpLocalizationMapper
     public static string language { get; set; }
     public static string propertyId { get; set; }
     public static string privacyManagerId { get; set; }
+    public static Exception cmpException;
+    public static int? lastActionCode;
+    public static PostConsentUserConsent userConsent;
     
     public static void SetCanvas(Canvas canvas)
     {
@@ -73,6 +76,7 @@ public static class CmpLocalizationMapper
 
     public static void ConsentGdpr(int actionCode)
     {
+        lastActionCode = actionCode;
         switch (actionCode)
         {
 
@@ -109,8 +113,24 @@ public static class CmpLocalizationMapper
         SaveContext.SaveLocalState(messages.localState);
         SaveContext.SavePropertyId(messages.propertyId);
         var gdprCamp = messages.GetGdprCampaign();
+        //!!! TODO: CHECK NOT NULL
         if (gdprCamp?.message == null || gdprCamp.ui == null || gdprCamp.ui.Count == 0)
         {
+            userConsent = new PostConsentUserConsent()
+            {
+                TCData = gdprCamp.userConsent.TCData,
+                grants = gdprCamp.userConsent.grants,
+                // specialFeatures = gdprCamp.userConsent.,
+                // legIntCategories = gdprCamp.userConsent.,
+                // acceptedVendors = gdprCamp.userConsent.,
+                // acceptedCategories = gdprCamp.userConsent.,
+                euconsent = gdprCamp.userConsent.euconsent,
+                addtlConsent = gdprCamp.userConsent.addtlConsent,
+                dateCreated = gdprCamp.userConsent.dateCreated,
+                consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false) 
+            };
+            // SaveContext.SaveUserConsent(userConsent); //TODO: CHECK
+            // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
             isConsented = true;
         }
         else
@@ -158,18 +178,19 @@ public static class CmpLocalizationMapper
         var consent = JsonSerializer.Deserialize<PostConsentResponse>(json);
         SaveContext.SaveLocalState(consent.localState);
         SaveContext.SaveUserConsent(consent.userConsent);
-        //TODO: pass to SpUserConsent handler
+        userConsent = consent.userConsent;
         CmpPopupDestroyer.DestroyAllPopups();
-        CmpPopupDestroyer.DestroyAllHelperGO();
+        // CmpPopupDestroyer.DestroyAllHelperGO(); //TODO
+        isConsented = true;
     }
     #endregion
 
     public static void OnExceptionCallback(Exception ex)
     {
-        //TODO: throw into SpClient.OnException
-        UnityEngine.Debug.LogError(ex.Message);
+        // UnityEngine.Debug.LogError(ex.Message);
         UnityEngine.Debug.LogError("All popups will be destroyed!!!");
         CmpPopupDestroyer.DestroyAllPopups();
+        cmpException = ex;
     }
     
     public static CmpUiElementModel GetCmpUiElement(string viewId, string uiElementId)
