@@ -4,6 +4,7 @@ public static class CmpPmSaveAndExitVariablesContext
 {
     private static List<ConsentGdprSaveAndExitVariablesCategory> acceptedCategories = new List<ConsentGdprSaveAndExitVariablesCategory>();
     private static List<ConsentGdprSaveAndExitVariablesVendor> acceptedVendors = new List<ConsentGdprSaveAndExitVariablesVendor>();
+    private static Dictionary<string, List<ConsentGdprSaveAndExitVariablesVendor>> acceptedCategoryVendors = new Dictionary<string, List<ConsentGdprSaveAndExitVariablesVendor>>();
 
     private static bool isAcceptedCategoriesChanged = false;
     private static bool isAcceptedVendorsChanged = false;
@@ -13,13 +14,20 @@ public static class CmpPmSaveAndExitVariablesContext
     #region Category
     public static void AcceptCategory(CmpCategoryModel model)
     {
-        var cat = new ConsentGdprSaveAndExitVariablesCategory();
-        cat.consent = true;
-        cat._id = model._id;
-        cat.iabId = model.iabId;
-        cat.type = model.type;
-        // cat.legInt = false;  //TODO
+        var cat = new ConsentGdprSaveAndExitVariablesCategory(model._id, model.iabId, model.type, true, false);
         acceptedCategories.Add(cat);
+        foreach (var vendor in model.requiringConsentVendors)
+        {
+            int? iabId = null;
+            foreach (var v in CmpLocalizationMapper.vendors)
+            {
+                if (v.vendorId.Equals(vendor.vendorId) && v.iabId.HasValue)
+                    iabId = v.iabId.Value;
+                acceptedCategoryVendors[model._id] ??= new List<ConsentGdprSaveAndExitVariablesVendor>();
+                acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false));
+                isAcceptedVendorsChanged = true;
+            }
+        }
         isAcceptedCategoriesChanged = true;
     }
 
@@ -31,8 +39,15 @@ public static class CmpPmSaveAndExitVariablesContext
             if (cat._id.Equals(id))
                 excluded = cat;
         }
-        if(excluded!=null)
+        if (excluded != null)
+        {
             acceptedCategories.Remove(excluded);
+            if (acceptedCategoryVendors[excluded._id] != null)
+            {
+                acceptedCategoryVendors.Remove(excluded._id);
+                isAcceptedVendorsChanged = true;
+            }
+        }
         isAcceptedCategoriesChanged = true;
     }
 
@@ -50,12 +65,7 @@ public static class CmpPmSaveAndExitVariablesContext
     #region Vendor
     public static void AcceptVendor (int? iabId, string id, string type)
     {
-        var vend = new ConsentGdprSaveAndExitVariablesVendor();
-        vend.consent = true;
-        vend._id = id;
-        vend.iabId = iabId;
-        vend.vendorType = type;
-        // vend.legInt = false; //TODO
+        var vend = new ConsentGdprSaveAndExitVariablesVendor(id, iabId, type, true, false);
         acceptedVendors.Add(vend);
         isAcceptedVendorsChanged = true;
     }
@@ -70,12 +80,32 @@ public static class CmpPmSaveAndExitVariablesContext
         }
         if(excluded!=null)
             acceptedVendors.Remove(excluded);
+        foreach (var kv in acceptedCategoryVendors)
+        {
+            foreach (var vendor in kv.Value)
+            {
+                if (vendor._id.Equals(id))
+                {
+                    excluded = vendor;
+                }
+                kv.Value.Remove(excluded);
+            }
+        }
         isAcceptedVendorsChanged = true;
     }
     
     public static ConsentGdprSaveAndExitVariablesVendor[] GetAcceptedVendors()
     {
-        return acceptedVendors.ToArray();
+        List<ConsentGdprSaveAndExitVariablesVendor> resultList = acceptedVendors;
+        foreach (var kv in acceptedCategoryVendors)
+        {
+            foreach (var vendor in kv.Value)
+            {
+                if(!resultList.Exists(x => x._id.Equals(vendor._id)))
+                    resultList.Add(vendor);
+            }
+        }
+        return resultList.ToArray();
     }
 
     public static void SetAcceptedVendorsChangedFalse()

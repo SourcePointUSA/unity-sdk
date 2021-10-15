@@ -11,16 +11,6 @@ public class CmpOnOffButtonController : MonoBehaviour
             var model = catDetailsScroll.GetModel();
             model.accepted = true;
             CmpPmSaveAndExitVariablesContext.AcceptCategory(model);
-            foreach (var vendor in model.requiringConsentVendors)
-            {
-                int? iabId = null;
-                foreach (var v in CmpLocalizationMapper.vendors)
-                {
-                    if (v.vendorId.Equals(vendor.vendorId) && v.iabId.HasValue)
-                        iabId = v.iabId.Value;
-                }
-                CmpPmSaveAndExitVariablesContext.AcceptVendor(iabId, vendor.vendorId, vendor.vendorType);
-            }
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
         {
             var model = vendDetailsScroll.GetModel();
@@ -37,10 +27,6 @@ public class CmpOnOffButtonController : MonoBehaviour
             var model = catDetailsScroll.GetModel();
             model.accepted = false;
             CmpPmSaveAndExitVariablesContext.ExcludeCategory(model._id);
-            foreach (var vendor in model.requiringConsentVendors)
-            {
-                CmpPmSaveAndExitVariablesContext.ExcludeVendor(vendor.vendorId);
-            }
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
         {
             var model = vendDetailsScroll.GetModel();
