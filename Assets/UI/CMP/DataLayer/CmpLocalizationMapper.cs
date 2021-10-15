@@ -187,7 +187,6 @@ public static class CmpLocalizationMapper
 
     public static void OnExceptionCallback(Exception ex)
     {
-        // UnityEngine.Debug.LogError(ex.Message);
         UnityEngine.Debug.LogError("All popups will be destroyed!!!");
         CmpPopupDestroyer.DestroyAllPopups();
         cmpException = ex;

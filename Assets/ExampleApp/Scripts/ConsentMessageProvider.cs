@@ -7,7 +7,7 @@ public class ConsentMessageProvider : MonoBehaviour
     [SerializeField]
     List<CAMPAIGN_TYPE> allCampaignTypesToLoad;
     [SerializeField] 
-    private GameObject CmpHomePrefab;
+    private GameObject CmpPrefab;
     [SerializeField] 
     private Canvas canvas;
     [SerializeField]
@@ -55,8 +55,8 @@ public class ConsentMessageProvider : MonoBehaviour
 
     private void Start()
     {
-#if !UNITY_ANDROID || !UNITY_IOS || UNITY_EDITOR
-        CMP.LoadMessage(cmpHomePrefab: CmpHomePrefab,
+#if !UNITY_ANDROID || !UNITY_IOS || UNITY_EDITOR || UNITY_EDITOR_OSX
+        CMP.LoadMessage(cmpHomePrefab: CmpPrefab,
                         canvas: canvas,
                         privacyManagerId: "16879",
                         propertyId: "4933");

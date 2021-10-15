@@ -10,8 +10,6 @@ using UnityEngine;
 
 public class NetworkClient
 {
-    // privacyManagerId == messageId == 16879
-    // siteId == propertyId == 4933
     // HttpClient is intended to be instantiated once per application, rather than per-use
     readonly HttpClient client = new HttpClient();
     private static GameObject dispatcherGO;

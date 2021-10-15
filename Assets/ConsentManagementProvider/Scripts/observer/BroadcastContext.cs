@@ -39,7 +39,6 @@ public static class BroadcastContext
             CmpLocalizationMapper.lastActionCode = null;
         }
     }
-    
         
     public static void BroadcastIOnConsentReadyIfNeeded()
     {
@@ -62,5 +61,4 @@ public static class BroadcastContext
             CmpLocalizationMapper.userConsent = null;
         }
     }
-
 }

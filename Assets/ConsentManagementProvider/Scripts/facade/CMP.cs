@@ -30,7 +30,7 @@ namespace ConsentManagementProviderLib
                 return;
             }
             CreateBroadcastExecutorGO();
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 //excluding ios14 campaign if any
@@ -94,7 +94,7 @@ namespace ConsentManagementProviderLib
         /// </summary>
         public static void LoadMessage(string authId = null)
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 ConsentWrapperAndroid.Instance.LoadMessage(authId: authId);
@@ -144,7 +144,7 @@ namespace ConsentManagementProviderLib
 
         public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string privacyManagerId, PRIVACY_MANAGER_TAB tab)
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 ConsentWrapperAndroid.Instance.LoadPrivacyManager(campaignType: campaignType,
@@ -170,8 +170,8 @@ namespace ConsentManagementProviderLib
 
         public static void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
-            //TODO: check if CustomConsentGdpr feature is available for Unity Native message style
-#if UNITY_ANDROID
+            //TODO: check if CustomConsentGdpr feature is available for Unity Native message style: YES
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 ConsentWrapperAndroid.Instance.CustomConsentGDPR(vendors: vendors,
@@ -193,7 +193,7 @@ namespace ConsentManagementProviderLib
         public static SpConsents GetSpConsents()
         {
             SpConsents result = null;
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 result = ConsentWrapperAndroid.Instance.GetSpConsents();
@@ -210,7 +210,7 @@ namespace ConsentManagementProviderLib
         public static GdprConsent GetCustomConsent()
         {
             GdprConsent result = null;
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 result = ConsentWrapperAndroid.Instance.GetCustomGdprConsent();
@@ -226,7 +226,7 @@ namespace ConsentManagementProviderLib
 
         public static void Dispose()
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             if (Application.platform == RuntimePlatform.Android)
             {
                 ConsentWrapperAndroid.Instance.Dispose();
