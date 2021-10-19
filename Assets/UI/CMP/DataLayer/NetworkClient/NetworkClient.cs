@@ -83,7 +83,8 @@ public class NetworkClient
                 language: language, 
                 privacyManagerId: privacyManagerId,
                 categories: new ConsentGdprSaveAndExitVariablesCategory[] { },
-                vendors: new ConsentGdprSaveAndExitVariablesVendor[] { });
+                vendors: new ConsentGdprSaveAndExitVariablesVendor[] { },
+                specialFeatures: new ConsentGdprSaveAndExitVariablesSpecialFeature[] { });
         PostConsentGdprRequest body = new PostConsentGdprRequest(
             requestUUID: GUID.Value,
             idfaStatus: "accepted",

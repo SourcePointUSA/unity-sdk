@@ -91,7 +91,8 @@ public static class CmpLocalizationMapper
                                             language: language,
                                             privacyManagerId: privacyManagerId, 
                                             categories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
-                                            vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors()); 
+                                            vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors(),
+                                            specialFeatures: CmpPmSaveAndExitVariablesContext.GetSpecialFeatures()); 
                 NetworkClient.Instance.ConsentGdpr(actionType: actionCode, 
                                                    environment: environment,
                                                    language: language,

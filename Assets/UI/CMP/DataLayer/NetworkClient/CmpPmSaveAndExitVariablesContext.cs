@@ -5,7 +5,8 @@ public static class CmpPmSaveAndExitVariablesContext
     private static List<ConsentGdprSaveAndExitVariablesCategory> acceptedCategories = new List<ConsentGdprSaveAndExitVariablesCategory>();
     private static List<ConsentGdprSaveAndExitVariablesVendor> acceptedVendors = new List<ConsentGdprSaveAndExitVariablesVendor>();
     private static Dictionary<string, List<ConsentGdprSaveAndExitVariablesVendor>> acceptedCategoryVendors = new Dictionary<string, List<ConsentGdprSaveAndExitVariablesVendor>>();
-
+    private static Dictionary<string, List<ConsentGdprSaveAndExitVariablesSpecialFeature>> acceptedSpecFeatures = new Dictionary<string, List<ConsentGdprSaveAndExitVariablesSpecialFeature>>();
+    
     private static bool isAcceptedCategoriesChanged = false;
     private static bool isAcceptedVendorsChanged = false;
     public static bool IsAcceptedCategoriesChanged => isAcceptedCategoriesChanged;
@@ -83,6 +84,26 @@ public static class CmpPmSaveAndExitVariablesContext
     {
         var vend = new ConsentGdprSaveAndExitVariablesVendor(model.vendorId, model.iabId, model.vendorType, true, false);
         acceptedVendors.Add(vend);
+        foreach (var specFeat in model.iabSpecialFeatures)
+        {
+            //List init
+            if (!acceptedSpecFeatures.ContainsKey(model.vendorId))
+                acceptedSpecFeatures[model.vendorId] = new List<ConsentGdprSaveAndExitVariablesSpecialFeature>();
+            //Duplicate check
+            if (!acceptedSpecFeatures[model.vendorId].Exists(x => x.Equals(specFeat)))
+            {
+                int? iabId = null;
+                foreach (var v in CmpLocalizationMapper.vendors)
+                {
+                    if (v.vendorId.Equals(model.vendorId))
+                    {
+                        if (v.iabId.HasValue)
+                            iabId = v.iabId.Value;
+                    }
+                }
+                acceptedSpecFeatures[model.vendorId].Add(new ConsentGdprSaveAndExitVariablesSpecialFeature(specFeat, iabId));
+            }
+        }
         isAcceptedVendorsChanged = true;
     }
 
@@ -94,8 +115,15 @@ public static class CmpPmSaveAndExitVariablesContext
             if (vendor._id.Equals(id))
                 excluded = vendor;
         }
-        if(excluded!=null)
+
+        if (excluded != null)
+        {
             acceptedVendors.Remove(excluded);
+            if (acceptedSpecFeatures.ContainsKey(excluded._id))
+            {
+                acceptedSpecFeatures.Remove(excluded._id);
+            }
+        }
         foreach (var kv in acceptedCategoryVendors)
         {
             foreach (var vendor in kv.Value)
@@ -147,6 +175,20 @@ public static class CmpPmSaveAndExitVariablesContext
                 return true;
         }
         return false;
+    }
+    #endregion
+
+    #region Special Features
+    public static ConsentGdprSaveAndExitVariablesSpecialFeature[] GetSpecialFeatures()
+    {
+        List<ConsentGdprSaveAndExitVariablesSpecialFeature> result = new List<ConsentGdprSaveAndExitVariablesSpecialFeature>();
+        foreach (var kv in acceptedSpecFeatures)
+            foreach (var specFeat in kv.Value)
+            {
+                if (!result.Exists(x => x._id.Equals(specFeat._id)))
+                    result.Add(specFeat);
+            }
+        return result.ToArray();
     }
     #endregion
 }
