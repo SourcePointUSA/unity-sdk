@@ -16,16 +16,32 @@ public static class CmpPmSaveAndExitVariablesContext
     {
         var cat = new ConsentGdprSaveAndExitVariablesCategory(model._id, model.iabId, model.type, true, false);
         acceptedCategories.Add(cat);
+        List<CmpCategoryConsentVendorModel> vendors = new List<CmpCategoryConsentVendorModel>();
         foreach (var vendor in model.requiringConsentVendors)
+        {
+           vendors.Add(vendor);
+        }
+        vendors.AddRange(model.legIntVendors);
+        foreach (var vendor in vendors)
         {
             int? iabId = null;
             foreach (var v in CmpLocalizationMapper.vendors)
             {
-                if (v.vendorId.Equals(vendor.vendorId) && v.iabId.HasValue)
-                    iabId = v.iabId.Value;
-                acceptedCategoryVendors[model._id] ??= new List<ConsentGdprSaveAndExitVariablesVendor>();
-                acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false));
-                isAcceptedVendorsChanged = true;
+                if (v.vendorId.Equals(vendor.vendorId))
+                {
+                    if(v.iabId.HasValue)
+                        iabId = v.iabId.Value;
+                    v.accepted = true;
+                }
+                //List init
+                if(!acceptedCategoryVendors.ContainsKey(model._id))
+                    acceptedCategoryVendors[model._id] = new List<ConsentGdprSaveAndExitVariablesVendor>();
+                //Duplicate check
+                if (!acceptedCategoryVendors[model._id].Exists(x => x._id.Equals(vendor.vendorId)))
+                {
+                    acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false));
+                    isAcceptedVendorsChanged = true;
+                }
             }
         }
         isAcceptedCategoriesChanged = true;
@@ -63,9 +79,9 @@ public static class CmpPmSaveAndExitVariablesContext
     #endregion
     
     #region Vendor
-    public static void AcceptVendor (int? iabId, string id, string type)
+    public static void AcceptVendor(CmpVendorModel model)
     {
-        var vend = new ConsentGdprSaveAndExitVariablesVendor(id, iabId, type, true, false);
+        var vend = new ConsentGdprSaveAndExitVariablesVendor(model.vendorId, model.iabId, model.vendorType, true, false);
         acceptedVendors.Add(vend);
         isAcceptedVendorsChanged = true;
     }
@@ -88,15 +104,19 @@ public static class CmpPmSaveAndExitVariablesContext
                 {
                     excluded = vendor;
                 }
-                kv.Value.Remove(excluded);
             }
+            kv.Value.Remove(excluded);
         }
         isAcceptedVendorsChanged = true;
     }
     
     public static ConsentGdprSaveAndExitVariablesVendor[] GetAcceptedVendors()
     {
-        List<ConsentGdprSaveAndExitVariablesVendor> resultList = acceptedVendors;
+        List<ConsentGdprSaveAndExitVariablesVendor> resultList = new List<ConsentGdprSaveAndExitVariablesVendor>();
+        foreach (var vend in acceptedVendors)
+        {
+            resultList.Add(vend);
+        }
         foreach (var kv in acceptedCategoryVendors)
         {
             foreach (var vendor in kv.Value)
@@ -111,6 +131,22 @@ public static class CmpPmSaveAndExitVariablesContext
     public static void SetAcceptedVendorsChangedFalse()
     {
         isAcceptedVendorsChanged = false;
+    }
+
+    public static bool IsVendorAcceptedAnywhere(string vendorId)
+    {
+        foreach (var vendor in acceptedVendors)
+        {
+            if (vendorId.Equals(vendor._id))
+                return true;
+        }
+        foreach (var kv in acceptedCategoryVendors)
+        foreach (var vendor in kv.Value)
+        {
+            if (vendorId.Equals(vendor._id))
+                return true;
+        }
+        return false;
     }
     #endregion
 }

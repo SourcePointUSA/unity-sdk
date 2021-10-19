@@ -49,9 +49,10 @@ public class CmpVendorScrollController : CmpScrollController
     {
         foreach (CmpVendorModel vendor in vendors)
         {
+            bool isAccepted = CmpPmSaveAndExitVariablesContext.IsVendorAcceptedAnywhere(vendor.vendorId);
             bool enableCustomTextLabel = vendor.vendorType.Equals("CUSTOM");
             CmpLongButtonUiController longController = AddCell(vendor.name, enableCustomTextLabel);
-            longController.SetGroupState(vendor.accepted);
+            longController.SetGroupState(isAccepted);
             CmpLongButtonController btn = longController.gameObject.AddComponent<CmpLongButtonController>();
             btn.SetButtonRef(longController.GetButton());
             btn.SetOnClickAction(delegate { InstantiateVendorDetailsPrefab(vendor); } );

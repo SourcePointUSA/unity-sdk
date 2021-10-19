@@ -7,7 +7,7 @@ public class CmpHomeScrollController : CmpScrollController
     public static bool isShown = false;
     public static bool isDestroyed = false;
     
-    private void Start()
+    private new void Start()
     {
         base.Start();
         isShown = true;

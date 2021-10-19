@@ -15,7 +15,7 @@ public class CmpOnOffButtonController : MonoBehaviour
         {
             var model = vendDetailsScroll.GetModel();
             model.accepted = true;
-            CmpPmSaveAndExitVariablesContext.AcceptVendor(model.iabId, model.vendorId, model.vendorType);
+            CmpPmSaveAndExitVariablesContext.AcceptVendor(model);
         }
         Destroy(scrollController.gameObject);
     }

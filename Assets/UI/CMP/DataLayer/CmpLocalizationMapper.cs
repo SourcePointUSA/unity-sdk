@@ -57,10 +57,16 @@ public static class CmpLocalizationMapper
                                            millisTimeout);
     }
 
-    public static void PrivacyManagerView(Action<string> OnSuccessCalback)
+    public static void PrivacyManagerView(Action<string> OnSuccessDeserializeCallback, Action OnSuccessInstantiateGOCallback)
     {
-        isExtraCallInitialized = false;
-        NetworkClient.Instance.PrivacyManagerViews(propertyId, language, OnSuccessCalback, OnExceptionCallback);
+        if (!isExtraCallInitialized)
+        {
+            NetworkClient.Instance.PrivacyManagerViews(propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+        }
+        else
+        {
+            OnSuccessInstantiateGOCallback.Invoke();
+        }
     }
 
     public static void MessageGdpr()
@@ -143,7 +149,7 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
-    public static void OnPrivacyManagerViewsSuccessCallback(string json, GameObject prefab)
+    public static void OnPrivacyManagerViewsSuccessCallback(string json)//, GameObject prefab)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,
@@ -152,7 +158,6 @@ public static class CmpLocalizationMapper
                                                       specialFeatureModels: ref specialFeatures,
                                                       vendorModels: ref vendors);
         isExtraCallInitialized = true;
-        InstantiateOnCanvas(prefab);
     }
 
     public static void InstantiateOnCanvas(GameObject prefab)

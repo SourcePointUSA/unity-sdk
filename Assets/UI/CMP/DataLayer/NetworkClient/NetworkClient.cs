@@ -53,9 +53,9 @@ public class NetworkClient
         Task.Factory.StartNew(async delegate { await PostGetMessages(requestBody, environment, onSuccessAction, onErrorAction); });
     }
 
-    public void PrivacyManagerViews(string siteId, string consentLanguage, Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    public void PrivacyManagerViews(string siteId, string consentLanguage, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
     {
-        Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(siteId, consentLanguage, onSuccessAction, onErrorAction); });
+        Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(siteId, consentLanguage, onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
     }
 
     public void MessageGdpr(int environment, string consentLanguage, string propertyId, string messageId, Action<string> onSuccessAction, Action<Exception> onErrorAction)
@@ -181,7 +181,7 @@ public class NetworkClient
         }
     }
 
-    async Task GetGdprPrivacyManagerView(string siteId, string consentLanguage, Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task GetGdprPrivacyManagerView(string siteId, string consentLanguage, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
     {
         try
         {
@@ -191,6 +191,7 @@ public class NetworkClient
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
+            dispatcher.Enqueue(delegate { onSuccessInstantiateGOCallback?.Invoke(); });
         }
         catch (Exception ex)
         {            
