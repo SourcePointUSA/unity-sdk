@@ -13,5 +13,5 @@ public class CmpVendorModel : CmpSpecialFeatureVendorModel
     [JsonInclude] public List<string> iabSpecialFeatures;
     [JsonInclude] public List<CmpVendorCategoryModel> disclosureOnlyCategories;
     public bool accepted = false;
-    //[JsonInclude] public List<> cookies;       //TODO
+    //[JsonInclude] public List<> cookies;
 }

@@ -24,6 +24,7 @@ public class CmpCategoryScrollController : CmpScrollController
     private void FillCategoryView()
     {
         ClearScrollContent();
+        SaveContext.UpdateUserConsentUIState();
         switch (cmpSwitch.currentBtn)
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:

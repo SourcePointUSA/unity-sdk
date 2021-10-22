@@ -35,8 +35,10 @@ namespace ConsentManagementProviderLib.Observer
             {
                 yield return new WaitForEndOfFrame();
             }
-            if (!CmpLocalizationMapper.IsConsented)
+            if (!CmpLocalizationMapper.IsConsented || CmpLocalizationMapper.IsPmReadyForResurface)
+            {
                 Instantiate(CmpHomePrefab, canvas.transform);
+            }
         }
     }
 }

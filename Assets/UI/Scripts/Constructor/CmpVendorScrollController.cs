@@ -49,7 +49,7 @@ public class CmpVendorScrollController : CmpScrollController
     {
         foreach (CmpVendorModel vendor in vendors)
         {
-            bool isAccepted = CmpPmSaveAndExitVariablesContext.IsVendorAcceptedAnywhere(vendor.vendorId);
+            bool isAccepted = CmpPmSaveAndExitVariablesContext.IsVendorAcceptedAnywhere(vendor.vendorId) || vendor.accepted;
             bool enableCustomTextLabel = vendor.vendorType.Equals("CUSTOM");
             CmpLongButtonUiController longController = AddCell(vendor.name, enableCustomTextLabel);
             longController.SetGroupState(isAccepted);

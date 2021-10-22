@@ -34,12 +34,18 @@ public class CmpPopupController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        if (!CmpLocalizationMapper.IsConsented)
+        if (!CmpLocalizationMapper.IsConsented || CmpLocalizationMapper.IsPmReadyForResurface)
         {
             SetBgColor();
             MapLocalization();
             MapPostponedLocalization();
             FillPostponedData();
+            if (scrollController is CmpHomeScrollController home
+                && CmpLocalizationMapper.shortCategories != null
+                && CmpLocalizationMapper.shortCategories.Count > 0)
+            {
+                home.FillShortCategories(CmpLocalizationMapper.shortCategories);
+            }
         }
         else
         {

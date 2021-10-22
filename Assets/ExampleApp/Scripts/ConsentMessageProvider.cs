@@ -69,4 +69,9 @@ public class ConsentMessageProvider : MonoBehaviour
     {
         CMP.Dispose();
     }
+
+    public void LoadPM()
+    {
+        CMP.LoadPrivacyManager(CmpPrefab, canvas, CAMPAIGN_TYPE.GDPR, 16879, 4933);
+    }
 }

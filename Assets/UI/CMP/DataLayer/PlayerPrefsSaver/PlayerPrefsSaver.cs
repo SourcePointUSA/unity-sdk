@@ -14,6 +14,18 @@ public class PlayerPrefsSaver
         }
         return result;
     }
+
+    public PostConsentUserConsent GetUserConsent(string key)
+    {
+        PostConsentUserConsent result = null;
+        if (PlayerPrefs.HasKey(key))
+        {
+            var json = PlayerPrefs.GetString(key);
+            var userConsent = JsonSerializer.Deserialize<PostConsentUserConsent>(json);
+            result = userConsent;
+        }
+        return result;
+    }
     
     public string GetString(string key)
     {

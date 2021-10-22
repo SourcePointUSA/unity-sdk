@@ -20,6 +20,8 @@ public static class CmpLocalizationMapper
     private static bool isConsented = false;
     public static bool IsConsented => isConsented;
     
+    public static bool IsPmReadyForResurface = false;
+    
     public static List<CmpCategoryModel> categories;
     public static List<CmpSpecialPurposeModel> specialPurposes;
     public static List<CmpFeatureModel> features;
@@ -75,7 +77,7 @@ public static class CmpLocalizationMapper
         NetworkClient.Instance.MessageGdpr(environment,
                                            language,
                                            propertyId,
-                                  privacyManagerId,
+                                   privacyManagerId,
                                            OnMessageGdprSuccessCallback, 
                                            OnExceptionCallback);
     }
@@ -139,6 +141,7 @@ public static class CmpLocalizationMapper
             // SaveContext.SaveUserConsent(userConsent); //TODO: CHECK
             // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
             isConsented = true;
+            SaveContext.SaveUserConsent(userConsent);
         }
         else
         {
@@ -169,14 +172,25 @@ public static class CmpLocalizationMapper
     
     private static void OnMessageGdprSuccessCallback(string json)
     {
-        elements?.Clear();
-        shortCategories?.Clear();
-        popupBgColors?.Clear();
         var messageGdpr = NativeUiJsonDeserializer.DeserializeMessageGdprGetResponse(json);
-        elements = messageGdpr.ui;
-        shortCategories = messageGdpr.message?.categories;
-        popupBgColors = messageGdpr.popupBgColors;
+        if (messageGdpr.message?.categories != null && messageGdpr.message?.categories.Count > 0)
+        {
+            shortCategories?.Clear();
+            shortCategories = messageGdpr.message?.categories;
+        }
+        if (messageGdpr.ui != null && messageGdpr.ui.Count > 0)
+        {
+            elements?.Clear();
+            elements = messageGdpr.ui;
+        }
+        if (messageGdpr.popupBgColors != null && messageGdpr.popupBgColors.Count > 0)
+        {
+            popupBgColors?.Clear();
+            popupBgColors = messageGdpr.popupBgColors;
+        }
+        SaveContext.UpdateUserConsentUIState();
         isInitialized = true;
+        IsPmReadyForResurface = true;
     }
 
     public static void OnConsentGdprSuccessCallback(string json)

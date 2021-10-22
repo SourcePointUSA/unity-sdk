@@ -21,6 +21,7 @@ public static class CmpPopupDestroyer
 
     public static void DestroyAllPopups()
     {
+        CmpLocalizationMapper.IsPmReadyForResurface = false;
         while (shownPopups.Count>0)
         {
             DestroyTopmostPopup();

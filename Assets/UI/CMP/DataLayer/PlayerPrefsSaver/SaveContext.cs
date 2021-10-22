@@ -31,8 +31,46 @@ public static class SaveContext
     {
         string json = JsonSerializer.Serialize(consentUserConsent);
         SaveString(userConsentKey, json);
+        UpdateUserConsentUIState();
     }
-    
+
+    public static void UpdateUserConsentUIState()
+    {
+        var userConsent = saver.GetUserConsent(userConsentKey);
+        Dictionary<string, SpGetMessagesVendorGrant> grants = userConsent?.grants;
+        if (grants != null)
+            foreach (var kv in grants)
+            {
+                if (kv.Value.vendorGrant)
+                {
+                    var vendorId = kv.Key;
+                    if(CmpLocalizationMapper.vendors!=null)
+                        foreach (var vendor in CmpLocalizationMapper.vendors)
+                        {
+                            if (vendor.vendorId.Equals(vendorId))
+                            {
+                                vendor.accepted = true;
+                            }
+                        }
+                }
+                foreach (var kvPups in kv.Value.purposeGrants)
+                {
+                    if (kvPups.Value)
+                    {
+                        var categoryId = kvPups.Key;
+                        if(CmpLocalizationMapper.categories!=null)
+                            foreach (var cat in CmpLocalizationMapper.categories)
+                            {
+                                if (cat._id.Equals(categoryId))
+                                {
+                                    cat.accepted = true;
+                                }
+                            }
+                    }
+                }
+            }
+    }
+
     private static void SaveString(string key, string value)
     {
         saver.SaveString(key, value);

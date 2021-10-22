@@ -132,6 +132,8 @@ namespace ConsentManagementProviderLib
 #if !UNITY_ANDROID || (!UNITY_IOS && UNITY_EDITOR_OSX)
             if (campaignType == CAMPAIGN_TYPE.GDPR)
             {
+                CmpLocalizationMapper.propertyId = propertyId.ToString();
+                CmpLocalizationMapper.privacyManagerId = privacyManagerId.ToString();
                 CmpLocalizationMapper.MessageGdpr();
                 InstantiateHomePrefab(cmpHomePrefab, canvas);
             }
