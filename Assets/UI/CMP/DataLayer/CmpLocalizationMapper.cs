@@ -122,32 +122,48 @@ public static class CmpLocalizationMapper
         SaveContext.SaveLocalState(messages.localState);
         SaveContext.SavePropertyId(messages.propertyId);
         var gdprCamp = messages.GetGdprCampaign();
-        //!!! TODO: CHECK NOT NULL
-        if (gdprCamp?.message == null || gdprCamp.ui == null || gdprCamp.ui.Count == 0)
+        var ccpaCamp = messages.GetCcpaCampaign();
+        if (gdprCamp != null)
         {
-            userConsent = new PostConsentUserConsent()
+            if (gdprCamp?.message == null || gdprCamp.ui == null || gdprCamp.ui.Count == 0)
             {
-                TCData = gdprCamp.userConsent.TCData,
-                grants = gdprCamp.userConsent.grants,
-                // specialFeatures = gdprCamp.userConsent.,
-                // legIntCategories = gdprCamp.userConsent.,
-                // acceptedVendors = gdprCamp.userConsent.,
-                // acceptedCategories = gdprCamp.userConsent.,
-                euconsent = gdprCamp.userConsent.euconsent,
-                addtlConsent = gdprCamp.userConsent.addtlConsent,
-                dateCreated = gdprCamp.userConsent.dateCreated,
-                consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false) 
-            };
-            // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
-            SaveContext.SaveUserConsent(userConsent);
-            isConsented = true;
+                if (gdprCamp.userConsent == null)
+                    UnityEngine.Debug.LogError("UserConsent is NULL");
+                else
+                {
+                    userConsent = new PostConsentUserConsent()
+                    {
+                        TCData = gdprCamp.userConsent.TCData,
+                        grants = gdprCamp.userConsent.grants,
+                        // specialFeatures = gdprCamp.userConsent.,
+                        // legIntCategories = gdprCamp.userConsent.,
+                        // acceptedVendors = gdprCamp.userConsent.,
+                        // acceptedCategories = gdprCamp.userConsent.,
+                        euconsent = gdprCamp.userConsent.euconsent,
+                        addtlConsent = gdprCamp.userConsent.addtlConsent,
+                        dateCreated = gdprCamp.userConsent.dateCreated,
+                        consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false)
+                    };
+                    // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
+                    SaveContext.SaveUserConsent(userConsent);
+                }
+                isConsented = true;
+            }
+            else
+            {
+                GdprMessage gdpr = gdprCamp?.message;
+                shortCategories = gdpr?.categories;
+                popupBgColors = gdprCamp?.popupBgColors;
+                elements = gdprCamp?.ui;
+            }
         }
-        else
+        if (ccpaCamp != null)
         {
-            GdprMessage gdpr = gdprCamp?.message;
-            shortCategories = gdpr?.categories;
-            popupBgColors = gdprCamp?.popupBgColors;
-            elements = gdprCamp?.ui;
+            //TODO: already consented else
+            BaseMessage ccpa = ccpaCamp?.message;
+            popupBgColors = ccpaCamp.popupBgColors;
+            elements = ccpaCamp.ui;
+            // shortCategories ??
         }
         isInitialized = true;
     }
