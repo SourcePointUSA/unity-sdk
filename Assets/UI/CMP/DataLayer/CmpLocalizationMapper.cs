@@ -138,10 +138,9 @@ public static class CmpLocalizationMapper
                 dateCreated = gdprCamp.userConsent.dateCreated,
                 consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false) 
             };
-            // SaveContext.SaveUserConsent(userConsent); //TODO: CHECK
             // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
-            isConsented = true;
             SaveContext.SaveUserConsent(userConsent);
+            isConsented = true;
         }
         else
         {
@@ -161,6 +160,7 @@ public static class CmpLocalizationMapper
                                                       featureModels: ref features,
                                                       specialFeatureModels: ref specialFeatures,
                                                       vendorModels: ref vendors);
+        SaveContext.UpdateUserConsentUIState();
         isExtraCallInitialized = true;
     }
 

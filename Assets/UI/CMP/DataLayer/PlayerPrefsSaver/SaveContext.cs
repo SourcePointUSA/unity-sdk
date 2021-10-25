@@ -46,12 +46,8 @@ public static class SaveContext
                     var vendorId = kv.Key;
                     if(CmpLocalizationMapper.vendors!=null)
                         foreach (var vendor in CmpLocalizationMapper.vendors)
-                        {
                             if (vendor.vendorId.Equals(vendorId))
-                            {
                                 vendor.accepted = true;
-                            }
-                        }
                 }
                 foreach (var kvPups in kv.Value.purposeGrants)
                 {
@@ -60,12 +56,8 @@ public static class SaveContext
                         var categoryId = kvPups.Key;
                         if(CmpLocalizationMapper.categories!=null)
                             foreach (var cat in CmpLocalizationMapper.categories)
-                            {
                                 if (cat._id.Equals(categoryId))
-                                {
                                     cat.accepted = true;
-                                }
-                            }
                     }
                 }
             }
