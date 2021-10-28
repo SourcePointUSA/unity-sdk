@@ -611,7 +611,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Resurface GDPR PM
 --- !u!222 &975684852
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -690,7 +690,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Resurface CCPA PM
 --- !u!222 &1023972783
 CanvasRenderer:
   m_ObjectHideFlags: 0

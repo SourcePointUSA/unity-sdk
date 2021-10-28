@@ -128,17 +128,20 @@ namespace ConsentManagementProviderLib
                                               int propertyId)
         {
 #if !UNITY_ANDROID || (!UNITY_IOS && UNITY_EDITOR_OSX)
+            CmpLocalizationMapper.propertyId = propertyId.ToString();
+            CmpLocalizationMapper.privacyManagerId = privacyManagerId.ToString();
             if (campaignType == CAMPAIGN_TYPE.GDPR)
             {
-                CmpLocalizationMapper.propertyId = propertyId.ToString();
-                CmpLocalizationMapper.privacyManagerId = privacyManagerId.ToString();
+                CmpCampaignPopupQuery.EnqueueCampaignId(0);
                 CmpLocalizationMapper.MessageGdpr();
-                InstantiateHomePrefab(cmpHomePrefab, canvas);
             }
             else
             {
                 //TODO: CCPA
+                //CmpCampaignPopupQuery.EnqueueCampaignId(2);
+                // CmpLocalizationMapper.MessageCcpa();
             }
+            InstantiateHomePrefab(cmpHomePrefab, canvas);
 #endif
         }
 

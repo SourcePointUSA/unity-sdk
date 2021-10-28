@@ -245,6 +245,9 @@ public static class CmpLocalizationMapper
         UnityEngine.Debug.LogError("All popups will be destroyed!!!");
         CmpPopupDestroyer.DestroyAllPopups();
         cmpException = ex;
+        CmpCampaignPopupQuery.DequeueCampaignId();
+        if (CmpCampaignPopupQuery.IsCampaignAvailable)
+            InstantiateOnCanvas(homePrefab);
     }
     
     public static CmpUiElementModel GetCmpUiElement(string viewId, string uiElementId)
