@@ -62,22 +62,20 @@ namespace ConsentManagementProviderLib
             SpCampaign gdpr = spCampaigns.Find(x => x.CampaignType == CAMPAIGN_TYPE.GDPR);
             if (gdpr != null)
             {
+                CmpCampaignPopupQuery.EnqueueCampaignId(0);
                 Dictionary<string, string> tarParams = new Dictionary<string, string>();
                 foreach (var param in gdpr.TargetingParams)
-                {
                     tarParams[param.Key] = param.Value;
-                }
                 gdprTargetingParams = new SingleCampaignPostGetMessagesRequest(tarParams);
             }
             SingleCampaignPostGetMessagesRequest ccpaTargetingParams = null;
             SpCampaign ccpa = spCampaigns.Find(x => x.CampaignType == CAMPAIGN_TYPE.CCPA);
             if (ccpa != null)
             {
+                CmpCampaignPopupQuery.EnqueueCampaignId(2);
                 Dictionary<string, string> tarParams = new Dictionary<string, string>();
                 foreach (var param in ccpa.TargetingParams)
-                {
                     tarParams[param.Key] = param.Value;
-                }
                 ccpaTargetingParams = new SingleCampaignPostGetMessagesRequest(tarParams);
             }
             CmpLocalizationMapper.GetMessages(accountId: accountId,
@@ -253,7 +251,7 @@ namespace ConsentManagementProviderLib
             }
             else
             {
-                CmpLocalizationMapper.SetCanvas(canvas);
+                CmpLocalizationMapper.SetCanvas(cmpHomePrefab, canvas);
                 mainThreadBroadcastEventsExecutor.InstantiateHomeView(cmpHomePrefab, canvas);
             }
         }

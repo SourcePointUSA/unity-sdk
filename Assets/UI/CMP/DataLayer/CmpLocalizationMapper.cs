@@ -7,7 +7,8 @@ using UnityEngine;
 
 public static class CmpLocalizationMapper
 {
-    private static Dictionary<string, List<CmpUiElementModel>> elements;
+    private static Dictionary<string, List<CmpUiElementModel>> gdprElements;
+    private static Dictionary<string, List<CmpUiElementModel>> ccpaElements;
     public static List<CmpShortCategoryModel> shortCategories;
     public static Dictionary<string, string> popupBgColors;
 
@@ -17,8 +18,9 @@ public static class CmpLocalizationMapper
     private static bool isExtraCallInitialized = false;
     public static bool IsExtraCallInitialized => isExtraCallInitialized;
 
-    private static bool isConsented = false;
-    public static bool IsConsented => isConsented;
+    private static bool isGdprConsented = false;
+    private static bool isCcpaConsented = false;
+    public static bool IsConsented => isGdprConsented && isCcpaConsented;
     
     public static bool IsPmReadyForResurface = false;
     
@@ -29,6 +31,7 @@ public static class CmpLocalizationMapper
     public static List<CmpVendorModel> vendors;
 
     private static Canvas canvas;
+    private static GameObject homePrefab;
     private static int environment;
     public static string language { get; set; }
     public static string propertyId { get; set; }
@@ -37,9 +40,10 @@ public static class CmpLocalizationMapper
     public static int? lastActionCode;
     public static PostConsentUserConsent userConsent;
     
-    public static void SetCanvas(Canvas canvas)
+    public static void SetCanvas(GameObject homePrefab, Canvas canvas)
     {
         CmpLocalizationMapper.canvas = canvas;
+        CmpLocalizationMapper.homePrefab = homePrefab;
     }
     
     public static void GetMessages(int accountId,
@@ -146,24 +150,36 @@ public static class CmpLocalizationMapper
                     };
                     // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
                     SaveContext.SaveUserConsent(userConsent);
+                    isGdprConsented = true;
                 }
-                isConsented = true;
             }
             else
             {
                 GdprMessage gdpr = gdprCamp?.message;
                 shortCategories = gdpr?.categories;
                 popupBgColors = gdprCamp?.popupBgColors;
-                elements = gdprCamp?.ui;
+                gdprElements = gdprCamp?.ui;
             }
         }
         if (ccpaCamp != null)
         {
-            //TODO: already consented else
-            BaseMessage ccpa = ccpaCamp?.message;
-            popupBgColors = ccpaCamp.popupBgColors;
-            elements = ccpaCamp.ui;
-            // shortCategories ??
+            if (ccpaCamp?.message == null || ccpaCamp.ui == null || ccpaCamp.ui.Count == 0)
+            {
+                if (ccpaCamp.userConsent == null)
+                    UnityEngine.Debug.LogError("UserConsent is NULL");
+                else
+                {
+                    //TODO: user consented  
+                    isCcpaConsented = true;
+                }
+            }
+            else
+            {
+                BaseMessage ccpa = ccpaCamp?.message;
+                popupBgColors = ccpaCamp.popupBgColors;
+                ccpaElements = ccpaCamp.ui;
+                // shortCategories ??
+            }
         }
         isInitialized = true;
     }
@@ -196,8 +212,8 @@ public static class CmpLocalizationMapper
         }
         if (messageGdpr.ui != null && messageGdpr.ui.Count > 0)
         {
-            elements?.Clear();
-            elements = messageGdpr.ui;
+            gdprElements?.Clear();
+            gdprElements = messageGdpr.ui;
         }
         if (messageGdpr.popupBgColors != null && messageGdpr.popupBgColors.Count > 0)
         {
@@ -217,7 +233,10 @@ public static class CmpLocalizationMapper
         userConsent = consent.userConsent;
         CmpPopupDestroyer.DestroyAllPopups();
         // CmpPopupDestroyer.DestroyAllHelperGO(); //TODO
-        isConsented = true;
+        isGdprConsented = true;
+        CmpCampaignPopupQuery.DequeueCampaignId();
+        if (CmpCampaignPopupQuery.IsCampaignAvailable)
+            InstantiateOnCanvas(homePrefab);
     }
     #endregion
 
@@ -231,15 +250,28 @@ public static class CmpLocalizationMapper
     public static CmpUiElementModel GetCmpUiElement(string viewId, string uiElementId)
     {
         CmpUiElementModel result = null;
-        if(elements!=null && elements.ContainsKey(viewId))
-            foreach (var uiElement in elements[viewId])
-            {
-                if (uiElement.id.Equals(uiElementId))
-                {
-                    result = uiElement;
-                    break;
-                }
-            }
+        // campaignType == GDPR = 0, CCPA = 2
+         switch (CmpCampaignPopupQuery.CurrentCampaignToShow())
+        {
+            case 0:
+                if(gdprElements!=null && gdprElements.ContainsKey(viewId))
+                    foreach (var uiElement in gdprElements[viewId])
+                        if (uiElement.id.Equals(uiElementId))
+                        {
+                            result = uiElement;
+                            break;
+                        }
+                break;
+            case 2:
+                if(ccpaElements!=null && ccpaElements.ContainsKey(viewId))
+                    foreach (var uiElement in ccpaElements[viewId])
+                        if (uiElement.id.Equals(uiElementId))
+                        {
+                            result = uiElement;
+                            break;
+                        }
+                break;
+        }
         return result;
     }
 }

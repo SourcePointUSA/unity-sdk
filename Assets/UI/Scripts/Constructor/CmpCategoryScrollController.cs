@@ -24,7 +24,6 @@ public class CmpCategoryScrollController : CmpScrollController
     private void FillCategoryView()
     {
         ClearScrollContent();
-        SaveContext.UpdateUserConsentUIState();
         switch (cmpSwitch.currentBtn)
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
@@ -89,7 +88,8 @@ public class CmpCategoryScrollController : CmpScrollController
         foreach (CmpCategoryModel cat in categories)
         {
             var longController = AddCell(cat.name, cat.friendlyDescription);
-            longController.SetGroupState(cat.accepted);
+            bool accepted = cat.accepted || CmpPmSaveAndExitVariablesContext.IsCategoryAcceptedAnywhere(cat._id);
+            longController.SetGroupState(accepted);
             SetCellOnClickAction(longController, cat);
         }
     }

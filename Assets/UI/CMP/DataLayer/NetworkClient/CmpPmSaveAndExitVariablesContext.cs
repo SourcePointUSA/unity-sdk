@@ -3,6 +3,7 @@ using System.Collections.Generic;
 public static class CmpPmSaveAndExitVariablesContext
 {
     private static List<ConsentGdprSaveAndExitVariablesCategory> acceptedCategories = new List<ConsentGdprSaveAndExitVariablesCategory>();
+    private static List<ConsentGdprSaveAndExitVariablesCategory> previouslyAcceptedCategories = new List<ConsentGdprSaveAndExitVariablesCategory>();
     private static List<ConsentGdprSaveAndExitVariablesVendor> acceptedVendors = new List<ConsentGdprSaveAndExitVariablesVendor>();
     private static Dictionary<string, List<ConsentGdprSaveAndExitVariablesVendor>> acceptedCategoryVendors = new Dictionary<string, List<ConsentGdprSaveAndExitVariablesVendor>>();
     private static Dictionary<string, List<ConsentGdprSaveAndExitVariablesSpecialFeature>> acceptedSpecFeatures = new Dictionary<string, List<ConsentGdprSaveAndExitVariablesSpecialFeature>>();
@@ -45,6 +46,9 @@ public static class CmpPmSaveAndExitVariablesContext
                 }
             }
         }
+        foreach (var category in CmpLocalizationMapper.categories)
+            if (category._id.Equals(model._id))
+                category.accepted = true;
         isAcceptedCategoriesChanged = true;
     }
 
@@ -65,17 +69,49 @@ public static class CmpPmSaveAndExitVariablesContext
                 isAcceptedVendorsChanged = true;
             }
         }
+        foreach (var category in CmpLocalizationMapper.categories)
+            if (category._id.Equals(id))
+                category.accepted = false;
         isAcceptedCategoriesChanged = true;
     }
 
     public static ConsentGdprSaveAndExitVariablesCategory[] GetAcceptedCategories()
     {
-        return acceptedCategories.ToArray();
+        List<ConsentGdprSaveAndExitVariablesCategory> result = new List<ConsentGdprSaveAndExitVariablesCategory>();
+        foreach (var accepted in acceptedCategories)
+            result.Add(accepted);
+        foreach (var accepted in previouslyAcceptedCategories)
+            if(!result.Exists(x => x._id.Equals(accepted._id)))
+                result.Add(accepted);
+        return result.ToArray();
     }
 
     public static void SetAcceptedCategoriesChangedFalse()
     {
         isAcceptedCategoriesChanged = false;
+    }
+
+    public static bool IsCategoryAcceptedAnywhere(string categoryId)
+    {
+        bool result = false;
+        foreach (var cat in acceptedCategories)
+        {
+            if (cat._id.Equals(categoryId) && cat.consent)
+                result = true;
+        }
+        return result;
+    }
+
+    public static void AcceptCategoryFromPreviousSession(string categoryId)
+    {
+        if (!previouslyAcceptedCategories.Exists(x => x._id.Equals(categoryId)))
+        {
+            foreach (var cat in CmpLocalizationMapper.categories)
+            {
+                if(cat._id.Equals(categoryId))
+                    previouslyAcceptedCategories.Add(new ConsentGdprSaveAndExitVariablesCategory(categoryId, cat.iabId, cat.type, true,false));
+            }
+        }
     }
     #endregion
     
@@ -90,13 +126,14 @@ public static class CmpPmSaveAndExitVariablesContext
             if (!acceptedSpecFeatures.ContainsKey(model.vendorId))
                 acceptedSpecFeatures[model.vendorId] = new List<ConsentGdprSaveAndExitVariablesSpecialFeature>();
             //Duplicate check
-            if (!acceptedSpecFeatures[model.vendorId].Exists(x => x.Equals(specFeat)))
+            if (!acceptedSpecFeatures[model.vendorId].Exists(x => x._id.Equals(specFeat)))
             {
                 int? iabId = null;
                 foreach (var v in CmpLocalizationMapper.vendors)
                 {
                     if (v.vendorId.Equals(model.vendorId))
                     {
+                        // v.accepted = true;
                         if (v.iabId.HasValue)
                             iabId = v.iabId.Value;
                     }
@@ -135,6 +172,9 @@ public static class CmpPmSaveAndExitVariablesContext
             }
             kv.Value.Remove(excluded);
         }
+        // foreach (var v in CmpLocalizationMapper.vendors)
+        //     if (v.vendorId.Equals(id))
+        //         v.accepted = false;
         isAcceptedVendorsChanged = true;
     }
     

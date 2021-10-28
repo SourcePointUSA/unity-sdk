@@ -38,29 +38,35 @@ public static class SaveContext
     {
         var userConsent = saver.GetUserConsent(userConsentKey);
         Dictionary<string, SpGetMessagesVendorGrant> grants = userConsent?.grants;
-        if (grants != null)
-            foreach (var kv in grants)
+        if (grants == null) return;
+        foreach (var kv in grants)
+        {
+            if (kv.Value.vendorGrant)
             {
-                if (kv.Value.vendorGrant)
+                var vendorId = kv.Key;
+                if(CmpLocalizationMapper.vendors!=null)
+                    foreach (var vendor in CmpLocalizationMapper.vendors)
+                        if (vendor.vendorId.Equals(vendorId))
+                        {
+                            vendor.accepted = true;
+                            CmpPmSaveAndExitVariablesContext.AcceptVendor(vendor);
+                        }
+            }
+            foreach (var kvPups in kv.Value.purposeGrants)
+            {
+                if (kvPups.Value)
                 {
-                    var vendorId = kv.Key;
-                    if(CmpLocalizationMapper.vendors!=null)
-                        foreach (var vendor in CmpLocalizationMapper.vendors)
-                            if (vendor.vendorId.Equals(vendorId))
-                                vendor.accepted = true;
-                }
-                foreach (var kvPups in kv.Value.purposeGrants)
-                {
-                    if (kvPups.Value)
-                    {
-                        var categoryId = kvPups.Key;
-                        if(CmpLocalizationMapper.categories!=null)
-                            foreach (var cat in CmpLocalizationMapper.categories)
-                                if (cat._id.Equals(categoryId))
-                                    cat.accepted = true;
-                    }
+                    var categoryId = kvPups.Key;
+                    if(CmpLocalizationMapper.categories!=null)
+                        foreach (var cat in CmpLocalizationMapper.categories)
+                            if (cat._id.Equals(categoryId))
+                            {
+                                cat.accepted = true;
+                                CmpPmSaveAndExitVariablesContext.AcceptCategoryFromPreviousSession(cat._id);
+                            }
                 }
             }
+        }
     }
 
     private static void SaveString(string key, string value)
