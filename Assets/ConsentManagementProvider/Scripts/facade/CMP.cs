@@ -124,12 +124,12 @@ namespace ConsentManagementProviderLib
         public static void LoadPrivacyManager(GameObject cmpHomePrefab, 
                                               Canvas canvas,
                                               CAMPAIGN_TYPE campaignType, 
-                                              int privacyManagerId, 
-                                              int propertyId)
+                                              string privacyManagerId, 
+                                              string propertyId)
         {
 #if !UNITY_ANDROID || (!UNITY_IOS && UNITY_EDITOR_OSX)
-            CmpLocalizationMapper.propertyId = propertyId.ToString();
-            CmpLocalizationMapper.privacyManagerId = privacyManagerId.ToString();
+            CmpLocalizationMapper.propertyId = propertyId;
+            CmpLocalizationMapper.privacyManagerId = privacyManagerId;
             if (campaignType == CAMPAIGN_TYPE.GDPR)
             {
                 CmpCampaignPopupQuery.EnqueueCampaignId(0);
@@ -139,7 +139,7 @@ namespace ConsentManagementProviderLib
             {
                 //TODO: CCPA
                 //CmpCampaignPopupQuery.EnqueueCampaignId(2);
-                // CmpLocalizationMapper.MessageCcpa();
+                //CmpLocalizationMapper.MessageCcpa();
             }
             InstantiateHomePrefab(cmpHomePrefab, canvas);
 #endif

@@ -53,9 +53,17 @@ public class NetworkClient
         Task.Factory.StartNew(async delegate { await PostGetMessages(requestBody, environment, onSuccessAction, onErrorAction); });
     }
 
-    public void PrivacyManagerViews(string siteId, string consentLanguage, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
+    public void PrivacyManagerViews(int campaignId, string siteId, string consentLanguage, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
     {
-        Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(siteId, consentLanguage, onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
+        switch (campaignId)
+        {
+            case 0:
+                Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(GetGdprPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage), onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
+                break;
+            case 2:
+                Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(GetCcpaPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage), onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
+                break;
+        }
     }
 
     public void MessageGdpr(int environment, string consentLanguage, string propertyId, string messageId, Action<string> onSuccessAction, Action<Exception> onErrorAction)
@@ -124,6 +132,18 @@ public class NetworkClient
                                     { "consentLanguage", consentLanguage },
                                 });
     }
+    
+    private static string GetCcpaPrivacyManagerViewUriWithQueryParams(string siteId, string consentLanguage)
+    {
+        // https://cdn.privacy-mgmt.com/ccpa/privacy-manager/privacy-manager-view/?siteId=17935&consentLanguage=EN
+        return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
+            path: "ccpa/privacy-manager/privacy-manager-view",
+            qParams: new Dictionary<string, string>()
+            {
+                { "siteId", siteId },
+                { "consentLanguage", consentLanguage },
+            });
+    }
 
     private static string GetGetMessagesUriWithQueryParams(int environment)
     {
@@ -182,13 +202,13 @@ public class NetworkClient
         }
     }
 
-    async Task GetGdprPrivacyManagerView(string siteId, string consentLanguage, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
+    async Task GetGdprPrivacyManagerView(string requestUri, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
     {
         try
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = await client.GetAsync(GetGdprPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage));
+            HttpResponseMessage response = await client.GetAsync(requestUri);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });

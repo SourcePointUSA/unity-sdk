@@ -67,7 +67,7 @@ public static class CmpLocalizationMapper
     {
         if (!isExtraCallInitialized)
         {
-            NetworkClient.Instance.PrivacyManagerViews(propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+            NetworkClient.Instance.PrivacyManagerViews(CmpCampaignPopupQuery.CurrentCampaignToShow(), propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
         }
         else
         {

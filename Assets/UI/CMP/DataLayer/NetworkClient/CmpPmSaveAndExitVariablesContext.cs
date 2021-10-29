@@ -29,7 +29,7 @@ public static class CmpPmSaveAndExitVariablesContext
             int? iabId = null;
             foreach (var v in CmpLocalizationMapper.vendors)
             {
-                if (v.vendorId.Equals(vendor.vendorId))
+                if (v.vendorId!=null && v.vendorId.Equals(vendor.vendorId))
                 {
                     if(v.iabId.HasValue)
                         iabId = v.iabId.Value;
@@ -39,7 +39,7 @@ public static class CmpPmSaveAndExitVariablesContext
                 if(!acceptedCategoryVendors.ContainsKey(model._id))
                     acceptedCategoryVendors[model._id] = new List<ConsentGdprSaveAndExitVariablesVendor>();
                 //Duplicate check
-                if (!acceptedCategoryVendors[model._id].Exists(x => x._id.Equals(vendor.vendorId)))
+                if (!acceptedCategoryVendors[model._id].Exists(x => x._id != null && x._id.Equals(vendor.vendorId)))
                 {
                     acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false));
                     isAcceptedVendorsChanged = true;
