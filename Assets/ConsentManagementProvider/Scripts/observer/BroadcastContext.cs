@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using ConsentManagementProviderLib;
 
 public static class BroadcastContext
@@ -42,23 +41,41 @@ public static class BroadcastContext
         
     public static void BroadcastIOnConsentReadyIfNeeded()
     {
-        if (CmpLocalizationMapper.userConsent != null)
+        if (!CmpCampaignPopupQueue.IsCampaignAvailable 
+            && (CmpLocalizationMapper.IsGdprConsented || CmpLocalizationMapper.IsCcpaConsented)
+            && (CmpLocalizationMapper.ccpaUserConsent != null || CmpLocalizationMapper.gdprUserConsent != null))
         {
-            var gdprConsent = new GdprConsent();
-            gdprConsent.euconsent = CmpLocalizationMapper.userConsent.euconsent;
-            gdprConsent.TCData = CmpLocalizationMapper.userConsent.TCData;
-            // gdprConsent.uuid = CmpLocalizationMapper.userConsent.uuid; //TODO ??? 
-            gdprConsent.grants = new Dictionary<string, SpVendorGrant>();
-            foreach (var kv in CmpLocalizationMapper.userConsent.grants)
+            SpGdprConsent gdpr = null;
+            SpCcpaConsent ccpa = null;
+            if (CmpLocalizationMapper.IsGdprConsented &&
+                CmpLocalizationMapper.gdprUserConsent != null &&
+                CmpLocalizationMapper.gdprUserConsent.grants != null)
             {
-                gdprConsent.grants[kv.Key] = new SpVendorGrant(kv.Value.purposeGrants);
+                var gdprConsent = new GdprConsent();
+                gdprConsent.euconsent = CmpLocalizationMapper.gdprUserConsent.euconsent;
+                gdprConsent.TCData = CmpLocalizationMapper.gdprUserConsent.TCData;
+                gdprConsent.uuid = CmpLocalizationMapper.gdprUserConsent.uuid;
+                gdprConsent.grants = new Dictionary<string, SpVendorGrant>();
+                foreach (var kv in CmpLocalizationMapper.gdprUserConsent.grants)
+                {
+                    gdprConsent.grants[kv.Key] = new SpVendorGrant(kv.Value.purposeGrants);
+                }
+
+                gdpr = new SpGdprConsent(gdprConsent);
+                CmpLocalizationMapper.gdprUserConsent = null;
             }
-            SpConsents spConsents = new SpConsents(
-                new SpGdprConsent(gdprConsent), 
-                null //TODO
-                );
-            ConsentMessenger.Broadcast<IOnConsentReady>(spConsents);
-            CmpLocalizationMapper.userConsent = null;
+            if (CmpLocalizationMapper.IsCcpaConsented &&
+                CmpLocalizationMapper.ccpaUserConsent != null)
+            {
+                CcpaConsent ccpaConsent = new CcpaConsent(uuid: CmpLocalizationMapper.ccpaUserConsent.uuid,
+                    status: CmpLocalizationMapper.ccpaUserConsent.status,
+                    uspstring: CmpLocalizationMapper.ccpaUserConsent.uspstring,
+                    rejectedVendors: CmpLocalizationMapper.ccpaUserConsent.rejectedVendors,
+                    rejectedCategories: CmpLocalizationMapper.ccpaUserConsent.rejectedCategories);
+                ccpa = new SpCcpaConsent(ccpaConsent);
+                CmpLocalizationMapper.ccpaUserConsent = null;
+            }
+            ConsentMessenger.Broadcast<IOnConsentReady>(new SpConsents(gdpr, ccpa));
         }
     }
 }

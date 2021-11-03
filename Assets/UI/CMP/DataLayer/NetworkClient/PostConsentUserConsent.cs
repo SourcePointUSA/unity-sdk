@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 public class PostConsentUserConsent
 {
+    // GDPR
     [JsonInclude] public Dictionary<string, object> TCData;
     [JsonInclude] public Dictionary<string, SpGetMessagesVendorGrant> grants;
 
@@ -16,4 +17,14 @@ public class PostConsentUserConsent
     [JsonInclude] public string dateCreated;
 
     [JsonInclude] public bool consentedToAll;
+    
+    //CCPA 
+    [JsonInclude] public string uspstring;
+    [JsonInclude] public string status;
+    [JsonInclude] public string[] rejectedVendors;
+    [JsonInclude] public string[] rejectedCategories;
+    [JsonInclude] public bool signedLspa;
+    [JsonInclude] public bool rejectedAll;
+
+    public string uuid;
 }

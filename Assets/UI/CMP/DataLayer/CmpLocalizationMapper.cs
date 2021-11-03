@@ -19,7 +19,9 @@ public static class CmpLocalizationMapper
     public static bool IsExtraCallInitialized => isExtraCallInitialized;
 
     private static bool isGdprConsented = false;
+    public static bool IsGdprConsented => isGdprConsented;
     private static bool isCcpaConsented = false;
+    public static bool IsCcpaConsented => isCcpaConsented;
     public static bool IsConsented => isGdprConsented && isCcpaConsented;
     
     public static bool IsPmReadyForResurface = false;
@@ -38,7 +40,8 @@ public static class CmpLocalizationMapper
     public static string privacyManagerId { get; set; }
     public static Exception cmpException;
     public static int? lastActionCode;
-    public static PostConsentUserConsent userConsent;
+    public static PostConsentUserConsent gdprUserConsent;
+    public static PostConsentUserConsent ccpaUserConsent;
     
     public static void SetCanvas(GameObject homePrefab, Canvas canvas)
     {
@@ -67,7 +70,7 @@ public static class CmpLocalizationMapper
     {
         if (!isExtraCallInitialized)
         {
-            NetworkClient.Instance.PrivacyManagerViews(CmpCampaignPopupQuery.CurrentCampaignToShow(), propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+            NetworkClient.Instance.PrivacyManagerViews(CmpCampaignPopupQueue.CurrentCampaignToShow(), propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
         }
         else
         {
@@ -135,7 +138,7 @@ public static class CmpLocalizationMapper
                     UnityEngine.Debug.LogError("UserConsent is NULL");
                 else
                 {
-                    userConsent = new PostConsentUserConsent()
+                    gdprUserConsent = new PostConsentUserConsent()
                     {
                         TCData = gdprCamp.userConsent.TCData,
                         grants = gdprCamp.userConsent.grants,
@@ -149,7 +152,7 @@ public static class CmpLocalizationMapper
                         consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false)
                     };
                     // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
-                    SaveContext.SaveUserConsent(userConsent);
+                    SaveContext.SaveUserConsent(gdprUserConsent);
                     isGdprConsented = true;
                 }
             }
@@ -230,12 +233,24 @@ public static class CmpLocalizationMapper
         var consent = JsonSerializer.Deserialize<PostConsentResponse>(json);
         SaveContext.SaveLocalState(consent.localState);
         SaveContext.SaveUserConsent(consent.userConsent);
-        userConsent = consent.userConsent;
         CmpPopupDestroyer.DestroyAllPopups();
         // CmpPopupDestroyer.DestroyAllHelperGO(); //TODO
-        isGdprConsented = true;
-        CmpCampaignPopupQuery.DequeueCampaignId();
-        if (CmpCampaignPopupQuery.IsCampaignAvailable)
+        switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+        {
+            case 0:
+                gdprUserConsent = consent.userConsent;
+                gdprUserConsent.uuid = consent.uuid;
+                isGdprConsented = true;
+                CmpCampaignPopupQueue.DequeueCampaignId();
+                break;
+            case 2:
+                ccpaUserConsent = consent.userConsent;
+                ccpaUserConsent.uuid = consent.uuid;
+                isCcpaConsented = true;
+                CmpCampaignPopupQueue.DequeueCampaignId();
+                break;
+        }
+        if (CmpCampaignPopupQueue.IsCampaignAvailable)
             InstantiateOnCanvas(homePrefab);
     }
     #endregion
@@ -245,8 +260,8 @@ public static class CmpLocalizationMapper
         UnityEngine.Debug.LogError("All popups will be destroyed!!!");
         CmpPopupDestroyer.DestroyAllPopups();
         cmpException = ex;
-        CmpCampaignPopupQuery.DequeueCampaignId();
-        if (CmpCampaignPopupQuery.IsCampaignAvailable)
+        CmpCampaignPopupQueue.DequeueCampaignId();
+        if (CmpCampaignPopupQueue.IsCampaignAvailable)
             InstantiateOnCanvas(homePrefab);
     }
     
@@ -254,7 +269,7 @@ public static class CmpLocalizationMapper
     {
         CmpUiElementModel result = null;
         // campaignType == GDPR = 0, CCPA = 2
-         switch (CmpCampaignPopupQuery.CurrentCampaignToShow())
+         switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
         {
             case 0:
                 if(gdprElements!=null && gdprElements.ContainsKey(viewId))

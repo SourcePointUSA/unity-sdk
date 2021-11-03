@@ -58,10 +58,10 @@ public class NetworkClient
         switch (campaignId)
         {
             case 0:
-                Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(GetGdprPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage), onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
+                Task.Factory.StartNew(async delegate { await GetPrivacyManagerView(GetGdprPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage), onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
                 break;
             case 2:
-                Task.Factory.StartNew(async delegate { await GetGdprPrivacyManagerView(GetCcpaPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage), onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
+                Task.Factory.StartNew(async delegate { await GetPrivacyManagerView(GetCcpaPrivacyManagerViewUriWithQueryParams(siteId, consentLanguage), onSuccessAction, onSuccessInstantiateGOCallback, onErrorAction); });
                 break;
         }
     }
@@ -162,8 +162,9 @@ public class NetworkClient
         // https://cdn.privacy-mgmt.com/wrapper/v2/messages/choice/gdpr/11?env=prod
         // return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
         string env = environment == 0 ? "stage" : "prod";
+        string campaignName = CmpCampaignPopupQueue.CurrentCampaignToShow() == 0 ? "gdpr/" : "ccpa/";
         return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/",
-            path: "wrapper/v2/messages/choice/gdpr/" + action.ToString(),
+            path: "wrapper/v2/messages/choice/" + campaignName + action.ToString(),
             qParams: new Dictionary<string, string>()
             {
                 { "env", env },
@@ -202,7 +203,7 @@ public class NetworkClient
         }
     }
 
-    async Task GetGdprPrivacyManagerView(string requestUri, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
+    async Task GetPrivacyManagerView(string requestUri, Action<string> onSuccessAction, Action onSuccessInstantiateGOCallback, Action<Exception> onErrorAction)
     {
         try
         {

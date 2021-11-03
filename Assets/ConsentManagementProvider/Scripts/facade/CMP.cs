@@ -62,7 +62,7 @@ namespace ConsentManagementProviderLib
             SpCampaign gdpr = spCampaigns.Find(x => x.CampaignType == CAMPAIGN_TYPE.GDPR);
             if (gdpr != null)
             {
-                CmpCampaignPopupQuery.EnqueueCampaignId(0);
+                CmpCampaignPopupQueue.EnqueueCampaignId(0);
                 Dictionary<string, string> tarParams = new Dictionary<string, string>();
                 foreach (var param in gdpr.TargetingParams)
                     tarParams[param.Key] = param.Value;
@@ -72,7 +72,7 @@ namespace ConsentManagementProviderLib
             SpCampaign ccpa = spCampaigns.Find(x => x.CampaignType == CAMPAIGN_TYPE.CCPA);
             if (ccpa != null)
             {
-                CmpCampaignPopupQuery.EnqueueCampaignId(2);
+                CmpCampaignPopupQueue.EnqueueCampaignId(2);
                 Dictionary<string, string> tarParams = new Dictionary<string, string>();
                 foreach (var param in ccpa.TargetingParams)
                     tarParams[param.Key] = param.Value;
@@ -132,13 +132,12 @@ namespace ConsentManagementProviderLib
             CmpLocalizationMapper.privacyManagerId = privacyManagerId;
             if (campaignType == CAMPAIGN_TYPE.GDPR)
             {
-                CmpCampaignPopupQuery.EnqueueCampaignId(0);
+                CmpCampaignPopupQueue.EnqueueCampaignId(0);
                 CmpLocalizationMapper.MessageGdpr();
             }
             else
             {
-                //TODO: CCPA
-                //CmpCampaignPopupQuery.EnqueueCampaignId(2);
+                CmpCampaignPopupQueue.EnqueueCampaignId(2);
                 //CmpLocalizationMapper.MessageCcpa();
             }
             InstantiateHomePrefab(cmpHomePrefab, canvas);

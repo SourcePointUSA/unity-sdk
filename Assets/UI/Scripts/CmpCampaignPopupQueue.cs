@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public static class CmpCampaignPopupQuery
+public static class CmpCampaignPopupQueue
 {
     private static Queue<int> campaignsToShow = new Queue<int>();
     public static bool IsCampaignAvailable => campaignsToShow.Count>0;
