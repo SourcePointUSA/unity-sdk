@@ -10,26 +10,12 @@ public class InstantiatePrefabController : MonoBehaviour
 
     public void InstantiateManagePreferences()
     {
-        CmpLocalizationMapper.PrivacyManagerView(delegate(string json)
-        {
-            CmpLocalizationMapper.OnPrivacyManagerViewsSuccessCallback(json);
-        },
-        delegate
-        {
-            CmpLocalizationMapper.InstantiateOnCanvas(managePreferences);
-        });
+        CmpLocalizationMapper.PrivacyManagerView(managePreferences);
     }
     
     public void InstantiateManagePartners()
     {
-        CmpLocalizationMapper.PrivacyManagerView(delegate(string json)
-        {
-            CmpLocalizationMapper.OnPrivacyManagerViewsSuccessCallback(json);
-        },
-        delegate
-        {
-            CmpLocalizationMapper.InstantiateOnCanvas(managePartners);
-        });
+        CmpLocalizationMapper.PrivacyManagerView(managePartners);
     }   
     
     public void InstantiatePrivacyPolicy()

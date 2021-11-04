@@ -55,7 +55,7 @@ public static class SaveContext
                 var vendorId = kv.Key;
                 if(CmpLocalizationMapper.vendors!=null)
                     foreach (var vendor in CmpLocalizationMapper.vendors)
-                        if (vendor.vendorId.Equals(vendorId))
+                        if (vendor.vendorId!=null && vendor.vendorId.Equals(vendorId))
                         {
                             vendor.accepted = true;
                             CmpPmSaveAndExitVariablesContext.AcceptVendor(vendor);

@@ -36,7 +36,7 @@ public class CmpVendorScrollController : CmpScrollController
                 List<CmpVendorModel> legIntCategories = new List<CmpVendorModel>();
                 foreach (CmpVendorModel model in CmpLocalizationMapper.vendors)
                 {
-                    if (model.legIntCategories.Count > 0)
+                    if (model.legIntCategories!=null && model.legIntCategories.Count > 0)
                         legIntCategories.Add(model);
                 }
                 AddVendors(legIntCategories);
@@ -50,7 +50,7 @@ public class CmpVendorScrollController : CmpScrollController
         foreach (CmpVendorModel vendor in vendors)
         {
             bool isAccepted = CmpPmSaveAndExitVariablesContext.IsVendorAcceptedAnywhere(vendor.vendorId) || vendor.accepted;
-            bool enableCustomTextLabel = vendor.vendorType.Equals("CUSTOM");
+            bool enableCustomTextLabel = vendor.vendorType!= null && vendor.vendorType.Equals("CUSTOM");
             CmpLongButtonUiController longController = AddCell(vendor.name, enableCustomTextLabel);
             longController.SetGroupState(isAccepted);
             CmpLongButtonController btn = longController.gameObject.AddComponent<CmpLongButtonController>();

@@ -77,6 +77,6 @@ public class ConsentMessageProvider : MonoBehaviour
     
     public void LoadCcpaPM()
     {
-        CMP.LoadPrivacyManager(CmpPrefab, canvas, CAMPAIGN_TYPE.CCPA, "16435", "4933");
+        CMP.LoadPrivacyManager(CmpPrefab, canvas, CAMPAIGN_TYPE.CCPA, "16435", "17935");
     }
 }

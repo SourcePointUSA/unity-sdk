@@ -64,22 +64,22 @@ public static class CmpLocalizationMapper
                                            millisTimeout);
     }
 
-    public static void PrivacyManagerView(Action<string> OnSuccessDeserializeCallback, Action OnSuccessInstantiateGOCallback)
+    public static void PrivacyManagerView(GameObject prefab)
     {
         var campaignId = CmpCampaignPopupQueue.CurrentCampaignToShow();
         switch (campaignId)
         {
             case 0:
                 if (!isGdprPmInitialized)
-                    NetworkClient.Instance.PrivacyManagerViews(campaignId, propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+                    NetworkClient.Instance.PrivacyManagerViews(campaignId, propertyId, language, OnPrivacyManagerViewsSuccessCallback,delegate { InstantiateOnCanvas(prefab); }, OnExceptionCallback);
                 else
-                    OnSuccessInstantiateGOCallback.Invoke();
+                    InstantiateOnCanvas(prefab);
                 break;
             case 2:
                 if (!isCcpaPmInitialized)
-                    NetworkClient.Instance.PrivacyManagerViews(campaignId, propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+                    NetworkClient.Instance.PrivacyManagerViews(campaignId, propertyId, language, OnPrivacyManagerViewsSuccessCallback,delegate { InstantiateOnCanvas(prefab); }, OnExceptionCallback);
                 else
-                    OnSuccessInstantiateGOCallback.Invoke();
+                    InstantiateOnCanvas(prefab);
                 break;
         }
     }
@@ -201,7 +201,7 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
-    public static void OnPrivacyManagerViewsSuccessCallback(string json)
+    private static void OnPrivacyManagerViewsSuccessCallback(string json)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,
@@ -230,21 +230,30 @@ public static class CmpLocalizationMapper
     
     private static void OnMessageSuccessCallback(string json)
     {
-        var messageGdpr = NativeUiJsonDeserializer.DeserializeMessageGdprGetResponse(json);
-        if (messageGdpr.message?.categories != null && messageGdpr.message?.categories.Count > 0)
+        var message = NativeUiJsonDeserializer.DeserializeMessageGdprGetResponse(json);
+        if (message.message?.categories != null && message.message?.categories.Count > 0)
         {
             shortCategories?.Clear();
-            shortCategories = messageGdpr.message?.categories;
+            shortCategories = message.message?.categories;
         }
-        if (messageGdpr.ui != null && messageGdpr.ui.Count > 0)
+        if (message.ui != null && message.ui.Count > 0)
         {
-            gdprElements?.Clear();
-            gdprElements = messageGdpr.ui;
+            switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    gdprElements?.Clear();
+                    gdprElements = message.ui;
+                    break;
+                case 2:
+                    ccpaElements?.Clear();
+                    ccpaElements = message.ui;
+                    break;
+            }
         }
-        if (messageGdpr.popupBgColors != null && messageGdpr.popupBgColors.Count > 0)
+        if (message.popupBgColors != null && message.popupBgColors.Count > 0)
         {
             popupBgColors?.Clear();
-            popupBgColors = messageGdpr.popupBgColors;
+            popupBgColors = message.popupBgColors;
         }
         SaveContext.UpdateUserConsentUIState();
         isInitialized = true;

@@ -211,7 +211,7 @@ public static class CmpPmSaveAndExitVariablesContext
         foreach (var kv in acceptedCategoryVendors)
         foreach (var vendor in kv.Value)
         {
-            if (vendorId.Equals(vendor._id))
+            if (vendorId!=null && vendorId.Equals(vendor._id))
                 return true;
         }
         return false;
