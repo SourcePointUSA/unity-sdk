@@ -112,7 +112,7 @@ public static class CmpLocalizationMapper
                                                    environment: environment,
                                                    language: language,
                                                    privacyManagerId: privacyManagerId, 
-                                                   onSuccessAction: OnConsentGdprSuccessCallback, 
+                                                   onSuccessAction: OnConsentSuccessCallback, 
                                                    onErrorAction: OnExceptionCallback,
                                                    pmSaveAndExitVariables: saveAndExitVariables);
                 break;
@@ -121,7 +121,7 @@ public static class CmpLocalizationMapper
                                                    environment: environment,
                                                    language: language,
                                                    privacyManagerId: privacyManagerId, 
-                                                   onSuccessAction: OnConsentGdprSuccessCallback, 
+                                                   onSuccessAction: OnConsentSuccessCallback, 
                                                    onErrorAction: OnExceptionCallback);
                 break;
         }
@@ -158,7 +158,8 @@ public static class CmpLocalizationMapper
                         consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false)
                     };
                     // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
-                    SaveContext.SaveUserConsent(gdprUserConsent);
+                    SaveContext.SaveGdprUserConsent(gdprUserConsent);
+                    CmpCampaignPopupQueue.DequeueCampaignId();
                     isGdprConsented = true;
                 }
             }
@@ -172,23 +173,30 @@ public static class CmpLocalizationMapper
         }
         if (ccpaCamp != null)
         {
-            if (ccpaCamp?.message == null || ccpaCamp.ui == null || ccpaCamp.ui.Count == 0)
+            if (ccpaCamp.userConsent != null && (!ccpaCamp.userConsent.newUser || ccpaCamp.userConsent.rejectedAll || ccpaCamp.userConsent.status.Equals("consentedAll")))
             {
-                if (ccpaCamp.userConsent == null)
-                    UnityEngine.Debug.LogError("UserConsent is NULL");
-                else
+                ccpaUserConsent = new PostConsentUserConsent()
                 {
-                    //TODO: user consented  
-                    isCcpaConsented = true;
-                }
+                    uspstring = ccpaCamp.userConsent.uspstring,
+                    status = ccpaCamp.userConsent.status,
+                    rejectedVendors = ccpaCamp.userConsent.rejectedVendors.ToArray(),
+                    rejectedCategories = ccpaCamp.userConsent.rejectedCategories.ToArray(),
+                    signedLspa = ccpaCamp.userConsent.signedLspa,
+                    rejectedAll = ccpaCamp.userConsent.rejectedAll,
+                 };
+                SaveContext.SaveCcpaUserConsent(ccpaUserConsent);
+                CmpCampaignPopupQueue.DequeueCampaignId();
+                isCcpaConsented = true;
             }
-            else
+            else if(ccpaCamp?.message != null || ccpaCamp.ui != null || ccpaCamp.ui.Count != 0)
             {
                 BaseMessage ccpa = ccpaCamp?.message;
                 popupBgColors = ccpaCamp.popupBgColors;
                 ccpaElements = ccpaCamp.ui;
                 // shortCategories ??
             }
+            else if (ccpaCamp.userConsent == null)
+                UnityEngine.Debug.LogError("UserConsent is NULL");
         }
         isInitialized = true;
     }
@@ -243,23 +251,24 @@ public static class CmpLocalizationMapper
         IsPmReadyForResurface = true;
     }
 
-    public static void OnConsentGdprSuccessCallback(string json)
+    private static void OnConsentSuccessCallback(string json)
     {
         var consent = JsonSerializer.Deserialize<PostConsentResponse>(json);
         SaveContext.SaveLocalState(consent.localState);
-        SaveContext.SaveUserConsent(consent.userConsent);
         CmpPopupDestroyer.DestroyAllPopups();
         // CmpPopupDestroyer.DestroyAllHelperGO(); //TODO
         switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
         {
             case 0:
                 gdprUserConsent = consent.userConsent;
+                SaveContext.SaveGdprUserConsent(gdprUserConsent);
                 gdprUserConsent.uuid = consent.uuid;
                 isGdprConsented = true;
                 CmpCampaignPopupQueue.DequeueCampaignId();
                 break;
             case 2:
                 ccpaUserConsent = consent.userConsent;
+                SaveContext.SaveCcpaUserConsent(ccpaUserConsent);
                 ccpaUserConsent.uuid = consent.uuid;
                 isCcpaConsented = true;
                 CmpCampaignPopupQueue.DequeueCampaignId();
@@ -270,7 +279,7 @@ public static class CmpLocalizationMapper
     }
     #endregion
 
-    public static void OnExceptionCallback(Exception ex)
+    private static void OnExceptionCallback(Exception ex)
     {
         UnityEngine.Debug.LogError("All popups will be destroyed!!!");
         CmpPopupDestroyer.DestroyAllPopups();

@@ -8,6 +8,8 @@ public static class SaveContext
     private static readonly string campaignsKey = "campaigns";
     private static readonly string propertyIdKey = "propertyId";
     private static readonly string userConsentKey = "userConsent";
+    private static readonly string gdprKey = "GDPR";
+    private static readonly string ccpaKey = "CCPA";
 
     #region Save
     public static void SavePropertyId(int propertyId)
@@ -27,10 +29,17 @@ public static class SaveContext
         SaveString(campaignsKey, json);
     }
     
-    public static void SaveUserConsent(PostConsentUserConsent consentUserConsent)
+    public static void SaveGdprUserConsent(PostConsentUserConsent consentUserConsent)
     {
         string json = JsonSerializer.Serialize(consentUserConsent);
-        SaveString(userConsentKey, json);
+        SaveString(userConsentKey+gdprKey, json);
+        UpdateUserConsentUIState();
+    }
+    
+    public static void SaveCcpaUserConsent(PostConsentUserConsent consentUserConsent)
+    {
+        string json = JsonSerializer.Serialize(consentUserConsent);
+        SaveString(userConsentKey+ccpaKey, json);
         UpdateUserConsentUIState();
     }
 
