@@ -131,15 +131,10 @@ namespace ConsentManagementProviderLib
             CmpLocalizationMapper.propertyId = propertyId;
             CmpLocalizationMapper.privacyManagerId = privacyManagerId;
             if (campaignType == CAMPAIGN_TYPE.GDPR)
-            {
                 CmpCampaignPopupQueue.EnqueueCampaignId(0);
-                CmpLocalizationMapper.MessageGdpr();
-            }
             else
-            {
-                CmpCampaignPopupQueue.EnqueueCampaignId(2);
-                //CmpLocalizationMapper.MessageCcpa();
-            }
+                CmpCampaignPopupQueue.EnqueueCampaignId(2);                
+            CmpLocalizationMapper.Message();
             InstantiateHomePrefab(cmpHomePrefab, canvas);
 #endif
         }

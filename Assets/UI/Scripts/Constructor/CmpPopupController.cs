@@ -21,10 +21,9 @@ public class CmpPopupController : MonoBehaviour
 
     private IEnumerator WaitNetworkCoroutine()
     {
-        if (!viewId.Equals("HomeView") && !viewId.Equals("PrivacyPolicyView") && !CmpLocalizationMapper.IsExtraCallInitialized)
+        if (!viewId.Equals("HomeView") && !viewId.Equals("PrivacyPolicyView") && !CmpLocalizationMapper.IsCurrentCampaignPmInitialized())
         {
-            // CmpLocalizationMapper.PrivacyManagerView();
-            while (!CmpLocalizationMapper.IsExtraCallInitialized)
+            while (!CmpLocalizationMapper.IsCurrentCampaignPmInitialized())
             {
                 yield return new WaitForEndOfFrame();
             }
@@ -108,14 +107,5 @@ public class CmpPopupController : MonoBehaviour
             scrollController.SetPostponedElements(this.postponedElements);
             scrollController.FillView();
         }
-        // else if (scrollController is CmpHomeScrollController home 
-        //           && CmpLocalizationMapper.shortCategories != null 
-        //           && CmpLocalizationMapper.shortCategories.Count>0)
-        // {
-        //     //if there is no postponedElements but short categories
-        //     //then fill scroll with default cell 
-        //     home.FillShortCategories(CmpLocalizationMapper.shortCategories);
-        // }
-        //else nothing to do here
     }
 }

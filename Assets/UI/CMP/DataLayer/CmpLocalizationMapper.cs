@@ -13,15 +13,13 @@ public static class CmpLocalizationMapper
     public static Dictionary<string, string> popupBgColors;
 
     private static bool isInitialized = false;
-    public static bool IsInitialized => isInitialized;
-
-    private static bool isExtraCallInitialized = false;
-    public static bool IsExtraCallInitialized => isExtraCallInitialized;
-
+    public static bool IsInitialized => isInitialized;  //UI is ready to be loaded
+    private static bool isGdprPmInitialized = false;    //UI for GDPR PM is ready to be loaded
+    private static bool isCcpaPmInitialized = false;    //UI for CCPA PM is ready to be loaded
     private static bool isGdprConsented = false;
-    public static bool IsGdprConsented => isGdprConsented;
+    public static bool IsGdprConsented => isGdprConsented;  //gdpr campaign consented
     private static bool isCcpaConsented = false;
-    public static bool IsCcpaConsented => isCcpaConsented;
+    public static bool IsCcpaConsented => isCcpaConsented;  //ccpa campaign consented
     public static bool IsConsented => isGdprConsented && isCcpaConsented;
     
     public static bool IsPmReadyForResurface = false;
@@ -68,24 +66,32 @@ public static class CmpLocalizationMapper
 
     public static void PrivacyManagerView(Action<string> OnSuccessDeserializeCallback, Action OnSuccessInstantiateGOCallback)
     {
-        if (!isExtraCallInitialized)
+        var campaignId = CmpCampaignPopupQueue.CurrentCampaignToShow();
+        switch (campaignId)
         {
-            NetworkClient.Instance.PrivacyManagerViews(CmpCampaignPopupQueue.CurrentCampaignToShow(), propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
-        }
-        else
-        {
-            OnSuccessInstantiateGOCallback.Invoke();
+            case 0:
+                if (!isGdprPmInitialized)
+                    NetworkClient.Instance.PrivacyManagerViews(campaignId, propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+                else
+                    OnSuccessInstantiateGOCallback.Invoke();
+                break;
+            case 2:
+                if (!isCcpaPmInitialized)
+                    NetworkClient.Instance.PrivacyManagerViews(campaignId, propertyId, language, OnSuccessDeserializeCallback, OnSuccessInstantiateGOCallback, OnExceptionCallback);
+                else
+                    OnSuccessInstantiateGOCallback.Invoke();
+                break;
         }
     }
 
-    public static void MessageGdpr()
+    public static void Message()
     {
         isInitialized = false;
         NetworkClient.Instance.MessageGdpr(environment,
                                            language,
                                            propertyId,
                                    privacyManagerId,
-                                           OnMessageGdprSuccessCallback, 
+                                           OnMessageSuccessCallback, 
                                            OnExceptionCallback);
     }
 
@@ -187,7 +193,7 @@ public static class CmpLocalizationMapper
         isInitialized = true;
     }
 
-    public static void OnPrivacyManagerViewsSuccessCallback(string json)//, GameObject prefab)
+    public static void OnPrivacyManagerViewsSuccessCallback(string json)
     {
         NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
                                                       categoryModels: ref categories,
@@ -196,7 +202,16 @@ public static class CmpLocalizationMapper
                                                       specialFeatureModels: ref specialFeatures,
                                                       vendorModels: ref vendors);
         SaveContext.UpdateUserConsentUIState();
-        isExtraCallInitialized = true;
+        var campaignId = CmpCampaignPopupQueue.CurrentCampaignToShow();
+        switch (campaignId)
+        {
+            case 0:
+                isGdprPmInitialized = true;
+                break;
+            case 2:
+                isCcpaPmInitialized = true;
+                break;
+        }
     }
 
     public static void InstantiateOnCanvas(GameObject prefab)
@@ -205,7 +220,7 @@ public static class CmpLocalizationMapper
             GameObject.Instantiate(prefab, canvas.transform);
     }
     
-    private static void OnMessageGdprSuccessCallback(string json)
+    private static void OnMessageSuccessCallback(string json)
     {
         var messageGdpr = NativeUiJsonDeserializer.DeserializeMessageGdprGetResponse(json);
         if (messageGdpr.message?.categories != null && messageGdpr.message?.categories.Count > 0)
@@ -291,5 +306,19 @@ public static class CmpLocalizationMapper
                 break;
         }
         return result;
+    }
+
+    public static bool IsCurrentCampaignPmInitialized()
+    {
+        var campaignId = CmpCampaignPopupQueue.CurrentCampaignToShow();
+        switch (campaignId)
+        {
+            case 0:
+                return isGdprPmInitialized;
+            case 2:
+                return isCcpaPmInitialized;
+            default:
+                return false;
+        }
     }
 }

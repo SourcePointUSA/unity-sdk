@@ -68,7 +68,7 @@ public class NetworkClient
 
     public void MessageGdpr(int environment, string consentLanguage, string propertyId, string messageId, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
-        Task.Factory.StartNew(async delegate { await GetGdprMessage(environment, consentLanguage, propertyId, messageId, onSuccessAction, onErrorAction); });
+        Task.Factory.StartNew(async delegate { await GetMessage(environment, consentLanguage, propertyId, messageId, onSuccessAction, onErrorAction); });
     }
 
     public void ConsentGdpr(/*CONSENT_ACTION_TYPE*/ int actionType, 
@@ -105,12 +105,13 @@ public class NetworkClient
     #endregion
     
     #region Query Parameters
-    private static string GetGdprMessageUriWithQueryParams(int environment, string consentLanguage, string propertyId, string messageId)
+    private static string GetMessageUriWithQueryParams(int environment, string consentLanguage, string propertyId, string messageId)
     {
         // https://cdn.sp-stage.net/wrapper/v2/message/gdpr?env=stage&consentLanguage=en&propertyId=4933&messageId=16434
         string env = environment == 0 ? "stage" : "prod";
+        string campaignName = CmpCampaignPopupQueue.CurrentCampaignToShow() == 0 ? "gdpr" : "ccpa";
         return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/wrapper/v2/",
-                                path: "wrapper/v2/message/gdpr",
+                                path: "wrapper/v2/message/" + campaignName,
                                 qParams: new Dictionary<string, string>()
                                 {
                                     {"env", env},
@@ -125,7 +126,7 @@ public class NetworkClient
         // https://cdn.privacy-mgmt.com/consent/tcfv2/privacy-manager/privacy-manager-view?siteId=17935&consentLanguage=EN
         // return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
         return BuildUriWithQuery(baseAdr: "https://cdn.sp-stage.net/",
-                                path: "consent/tcfv2/privacy-manager/privacy-manager-view",
+                                path: "consent/tcfv2/privacy-manager/privacy-manager-view/",
                                 qParams: new Dictionary<string, string>()
                                 {
                                     { "siteId", siteId },
@@ -137,7 +138,7 @@ public class NetworkClient
     {
         // https://cdn.privacy-mgmt.com/ccpa/privacy-manager/privacy-manager-view/?siteId=17935&consentLanguage=EN
         return BuildUriWithQuery(baseAdr: "https://cdn.privacy-mgmt.com/",
-            path: "ccpa/privacy-manager/privacy-manager-view",
+            path: "ccpa/privacy-manager/privacy-manager-view/",
             qParams: new Dictionary<string, string>()
             {
                 { "siteId", siteId },
@@ -186,13 +187,13 @@ public class NetworkClient
     #endregion
 
     #region Network Requests
-    async Task GetGdprMessage(int environment, string consentLanguage, string propertyId, string messageId, Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task GetMessage(int environment, string consentLanguage, string propertyId, string messageId, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = await client.GetAsync(GetGdprMessageUriWithQueryParams(environment, consentLanguage, propertyId, messageId));
+            HttpResponseMessage response = await client.GetAsync(GetMessageUriWithQueryParams(environment, consentLanguage, propertyId, messageId));
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
