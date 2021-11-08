@@ -41,7 +41,7 @@ public static class CmpPmSaveAndExitVariablesContext
                 //Duplicate check
                 if (!acceptedCategoryVendors[model._id].Exists(x => x._id != null && x._id.Equals(vendor.vendorId)))
                 {
-                    acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false));
+                    acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false, vendor.name));
                     isAcceptedVendorsChanged = true;
                 }
             }
@@ -118,58 +118,54 @@ public static class CmpPmSaveAndExitVariablesContext
     #region Vendor
     public static void AcceptVendor(CmpVendorModel model)
     {
-        var vend = new ConsentGdprSaveAndExitVariablesVendor(model.vendorId, model.iabId, model.vendorType, true, false);
+        var vend = new ConsentGdprSaveAndExitVariablesVendor(model.vendorId, model.iabId, model.vendorType, true, false, model.name);
         acceptedVendors.Add(vend);
-        foreach (var specFeat in model.iabSpecialFeatures)
-        {
-            //List init
-            if (!acceptedSpecFeatures.ContainsKey(model.vendorId))
-                acceptedSpecFeatures[model.vendorId] = new List<ConsentGdprSaveAndExitVariablesSpecialFeature>();
-            //Duplicate check
-            if (!acceptedSpecFeatures[model.vendorId].Exists(x => x._id.Equals(specFeat)))
+        if(model.iabSpecialFeatures!=null)
+            foreach (var specFeat in model.iabSpecialFeatures)
             {
-                int? iabId = null;
-                foreach (var v in CmpLocalizationMapper.vendors)
+                //List init
+                if (!acceptedSpecFeatures.ContainsKey(model.vendorId))
+                    acceptedSpecFeatures[model.vendorId] = new List<ConsentGdprSaveAndExitVariablesSpecialFeature>();
+                //Duplicate check
+                if (!acceptedSpecFeatures[model.vendorId].Exists(x => x._id.Equals(specFeat)))
                 {
-                    if (v.vendorId.Equals(model.vendorId))
+                    int? iabId = null;
+                    foreach (var v in CmpLocalizationMapper.vendors)
                     {
-                        // v.accepted = true;
-                        if (v.iabId.HasValue)
-                            iabId = v.iabId.Value;
+                        if (v.vendorId.Equals(model.vendorId))
+                        {
+                            // v.accepted = true;
+                            if (v.iabId.HasValue)
+                                iabId = v.iabId.Value;
+                        }
                     }
+                    acceptedSpecFeatures[model.vendorId].Add(new ConsentGdprSaveAndExitVariablesSpecialFeature(specFeat, iabId));
                 }
-                acceptedSpecFeatures[model.vendorId].Add(new ConsentGdprSaveAndExitVariablesSpecialFeature(specFeat, iabId));
             }
-        }
         isAcceptedVendorsChanged = true;
     }
 
-    public static void ExcludeVendor(string id)
+    public static void ExcludeVendor(string id, string name)
     {
         ConsentGdprSaveAndExitVariablesVendor excluded = null;
         foreach (var vendor in acceptedVendors)
         {
-            if (vendor._id.Equals(id))
+            if (vendor._id!=null && vendor._id.Equals(id))
+                excluded = vendor;
+            else if(vendor.name!=null && vendor.name.Equals(name))
                 excluded = vendor;
         }
-
         if (excluded != null)
         {
             acceptedVendors.Remove(excluded);
-            if (acceptedSpecFeatures.ContainsKey(excluded._id))
-            {
+            if (excluded._id!=null && acceptedSpecFeatures.ContainsKey(excluded._id))
                 acceptedSpecFeatures.Remove(excluded._id);
-            }
         }
         foreach (var kv in acceptedCategoryVendors)
         {
             foreach (var vendor in kv.Value)
-            {
                 if (vendor._id.Equals(id))
-                {
                     excluded = vendor;
-                }
-            }
             kv.Value.Remove(excluded);
         }
         // foreach (var v in CmpLocalizationMapper.vendors)
@@ -205,7 +201,7 @@ public static class CmpPmSaveAndExitVariablesContext
     {
         foreach (var vendor in acceptedVendors)
         {
-            if (vendorId.Equals(vendor._id))
+            if (vendorId!=null && vendorId.Equals(vendor._id))
                 return true;
         }
         foreach (var kv in acceptedCategoryVendors)

@@ -55,11 +55,16 @@ public class CmpVendorDetailsScrollController : CmpScrollController
         if (model != null)
         {
             GenerateQR(model.policyUrl);
-            AddConsentCategories(model.consentCategories); // == Pusposes
-            AddLegIntCategories(model.legIntCategories);
-            AddSpecialPurposes(model.iabSpecialPurposes);
-            AddFeatures(model.iabFeatures);
-            AddSpecialFeatures(model.iabSpecialFeatures);
+            if(model.consentCategories!=null)
+                AddConsentCategories(model.consentCategories); // == Purposes
+            if(model.legIntCategories!=null)
+                AddLegIntCategories(model.legIntCategories);
+            if(model.iabSpecialPurposes!=null)
+                AddSpecialPurposes(model.iabSpecialPurposes);
+            if(model.iabFeatures!=null)
+                AddFeatures(model.iabFeatures);
+            if(model.iabSpecialFeatures!=null)
+                AddSpecialFeatures(model.iabSpecialFeatures);
             ScrollAppear();
         }
     }

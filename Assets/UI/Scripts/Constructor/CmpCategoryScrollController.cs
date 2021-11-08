@@ -28,20 +28,23 @@ public class CmpCategoryScrollController : CmpScrollController
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
                 //Consent Tab
-                AddCategories(CmpLocalizationMapper.categories); // == Purposes
-                AddSpecialPurposes(CmpLocalizationMapper.specialPurposes);
-                AddFeatures(CmpLocalizationMapper.features);
-                AddSpecialFeatures(CmpLocalizationMapper.specialFeatures);
+                if(CmpLocalizationMapper.categories!=null)
+                    AddCategories(CmpLocalizationMapper.categories); // == Purposes
+                if(CmpLocalizationMapper.specialPurposes!=null)
+                    AddSpecialPurposes(CmpLocalizationMapper.specialPurposes);
+                if(CmpLocalizationMapper.features!=null)
+                    AddFeatures(CmpLocalizationMapper.features);
+                if(CmpLocalizationMapper.specialFeatures!=null)
+                    AddSpecialFeatures(CmpLocalizationMapper.specialFeatures);
                 ScrollAppear(-1200f);
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab
                 List<CmpCategoryModel> legIntVendors = new List<CmpCategoryModel>();
-                foreach (CmpCategoryModel model in CmpLocalizationMapper.categories)
-                {
-                    if (model.legIntVendors.Count > 0)
-                        legIntVendors.Add(model);
-                }
+                if(CmpLocalizationMapper.categories!=null)
+                    foreach (CmpCategoryModel model in CmpLocalizationMapper.categories)
+                        if (model.legIntVendors!=null && model.legIntVendors.Count > 0)
+                            legIntVendors.Add(model);
                 AddCategories(legIntVendors);
                 break;
         }
