@@ -10,7 +10,7 @@ public static class CmpPopupDestroyer
         shownPopups.Push(go);
     }
 
-    public static void DestroyTopmostPopup()
+    private static void DestroyTopmostPopup()
     {
         if (shownPopups.Count > 0)
         {

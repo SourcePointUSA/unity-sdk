@@ -24,11 +24,11 @@ public class NetworkClient
             {
                 instance = new NetworkClient();
                 instance.client.Timeout = TimeSpan.FromMilliseconds(3000);
-                if (dispatcherGO == null)
-                {
-                    dispatcherGO = new GameObject();
-                    dispatcher = dispatcherGO.AddComponent<NetworkCallbackEventDispatcher>();
-                }
+            }
+            if (dispatcherGO == null)
+            {
+                dispatcherGO = new GameObject();
+                dispatcher = dispatcherGO.AddComponent<NetworkCallbackEventDispatcher>();
             }
             return instance;
         }

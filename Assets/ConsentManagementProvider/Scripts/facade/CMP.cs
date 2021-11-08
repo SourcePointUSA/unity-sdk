@@ -130,6 +130,7 @@ namespace ConsentManagementProviderLib
 #if !UNITY_ANDROID || (!UNITY_IOS && UNITY_EDITOR_OSX)
             CmpLocalizationMapper.propertyId = propertyId;
             CmpLocalizationMapper.privacyManagerId = privacyManagerId;
+            CreateBroadcastExecutorGO();
             if (campaignType == CAMPAIGN_TYPE.GDPR)
                 CmpCampaignPopupQueue.EnqueueCampaignId(0);
             else

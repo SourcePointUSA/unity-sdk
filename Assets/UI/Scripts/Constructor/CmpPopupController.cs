@@ -49,7 +49,6 @@ public class CmpPopupController : MonoBehaviour
         else
         {
             CmpPopupDestroyer.DestroyAllPopups();
-            //TODO: OnConsented
         }
     }
 
