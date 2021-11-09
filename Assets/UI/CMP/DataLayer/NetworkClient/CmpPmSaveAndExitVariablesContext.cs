@@ -17,7 +17,8 @@ public static class CmpPmSaveAndExitVariablesContext
     public static void AcceptCategory(CmpCategoryModel model)
     {
         var cat = new ConsentGdprSaveAndExitVariablesCategory(model._id, model.iabId, model.type, true, false);
-        acceptedCategories.Add(cat);
+        if(!acceptedCategories.Exists(x => (x._id!= null && cat._id!=null && cat._id.Equals(x._id))))
+            acceptedCategories.Add(cat);
         List<CmpCategoryConsentVendorModel> vendors = new List<CmpCategoryConsentVendorModel>();
         foreach (var vendor in model.requiringConsentVendors)
         {
@@ -39,7 +40,7 @@ public static class CmpPmSaveAndExitVariablesContext
                 if(!acceptedCategoryVendors.ContainsKey(model._id))
                     acceptedCategoryVendors[model._id] = new List<ConsentGdprSaveAndExitVariablesVendor>();
                 //Duplicate check
-                if (!acceptedCategoryVendors[model._id].Exists(x => x._id != null && x._id.Equals(vendor.vendorId)))
+                if (!acceptedCategoryVendors[model._id].Exists(x => (x._id != null && vendor.vendorId!=null && x._id.Equals(vendor.vendorId))||(x.name!=null && vendor.name!=null && vendor.name.Equals(x.name)) ) )
                 {
                     acceptedCategoryVendors[model._id].Add(new ConsentGdprSaveAndExitVariablesVendor(vendor.vendorId, iabId, vendor.vendorType, true, false, vendor.name));
                     isAcceptedVendorsChanged = true;
@@ -63,7 +64,7 @@ public static class CmpPmSaveAndExitVariablesContext
         if (excluded != null)
         {
             acceptedCategories.Remove(excluded);
-            if (acceptedCategoryVendors[excluded._id] != null)
+            if (acceptedCategoryVendors.ContainsKey(excluded._id) && acceptedCategoryVendors[excluded._id] != null)
             {
                 acceptedCategoryVendors.Remove(excluded._id);
                 isAcceptedVendorsChanged = true;
@@ -185,7 +186,7 @@ public static class CmpPmSaveAndExitVariablesContext
         {
             foreach (var vendor in kv.Value)
             {
-                if(!resultList.Exists(x => x._id.Equals(vendor._id)))
+                if(vendor._id!=null && !resultList.Exists(x => x._id.Equals(vendor._id)))
                     resultList.Add(vendor);
             }
         }
