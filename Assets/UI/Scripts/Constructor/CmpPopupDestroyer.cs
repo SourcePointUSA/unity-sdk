@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,13 +30,41 @@ public static class CmpPopupDestroyer
         }
     }
 
-    public static void DestroyAllHelperGO()
+    public static void DestroyAllHelperGO(bool onDestroyInvoked = false)
     {
-        var dispatcher = GameObject.Find("CMP_NetworkCallbackEventDispatcher");
-        if(dispatcher!=null)
-            UnityEngine.Object.Destroy(dispatcher);
-        var executor = GameObject.Find("CMP_BroadcastEventsExecutor");
-        if(executor!=null)
-            UnityEngine.Object.Destroy(executor);
+        if (onDestroyInvoked)
+        {
+            var dispatcher = GameObject.Find("CMP_NetworkCallbackEventDispatcher");
+            var executor = GameObject.Find("CMP_BroadcastEventsExecutor");
+            if (dispatcher != null)
+                UnityEngine.Object.Destroy(dispatcher);
+            if (executor != null)
+                UnityEngine.Object.Destroy(executor);
+        }
+        else
+        {
+            CmpDestroyHelper go = new GameObject().AddComponent<CmpDestroyHelper>();
+        }
+    }
+
+    private class CmpDestroyHelper : MonoBehaviour
+    {
+        private void Awake()
+        {
+            gameObject.name = "CmpDestroyHelper";
+            StartCoroutine(WaitAndDestroy());
+        }
+
+        private IEnumerator WaitAndDestroy()
+        {
+            var dispatcher = GameObject.Find("CMP_NetworkCallbackEventDispatcher");
+            var executor = GameObject.Find("CMP_BroadcastEventsExecutor");
+            yield return new WaitForSeconds(float.Parse((NetworkClient.msTimeout/1000).ToString())*2f);
+            if(dispatcher!=null)
+                UnityEngine.Object.Destroy(dispatcher);
+            if(executor!=null)
+                UnityEngine.Object.Destroy(executor);
+            Destroy(this.gameObject);
+        }
     }
 }

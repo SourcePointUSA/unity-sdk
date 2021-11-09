@@ -95,20 +95,34 @@ public static class CmpLocalizationMapper
                                            OnExceptionCallback);
     }
 
-    public static void ConsentGdpr(int actionCode)
+    public static void Consent(int actionCode)
     {
         lastActionCode = actionCode;
         switch (actionCode)
         {
 
             case 1:
-                var saveAndExitVariables = new ConsentGdprSaveAndExitVariables(
-                                            language: language,
-                                            privacyManagerId: privacyManagerId, 
-                                            categories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
-                                            vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors(),
-                                            specialFeatures: CmpPmSaveAndExitVariablesContext.GetSpecialFeatures()); 
-                NetworkClient.Instance.ConsentGdpr(actionType: actionCode, 
+                ConsentSaveAndExitVariables saveAndExitVariables = null;
+                switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+                {
+                    case 0:
+                        saveAndExitVariables = new ConsentGdprSaveAndExitVariables(
+                            language: language,
+                            privacyManagerId: privacyManagerId, 
+                            categories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
+                            vendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors(),
+                            specialFeatures: CmpPmSaveAndExitVariablesContext.GetSpecialFeatures()); 
+                        break;
+                    case 2:
+                        saveAndExitVariables = new ConsentCcpaSaveAndExitVariables(
+                            language: language,
+                            privacyManagerId: privacyManagerId, 
+                            rejectedCategories: CmpPmSaveAndExitVariablesContext.GetAcceptedCategories(), 
+                            rejectedVendors: CmpPmSaveAndExitVariablesContext.GetAcceptedVendors(),
+                            specialFeatures: CmpPmSaveAndExitVariablesContext.GetSpecialFeatures());
+                        break;
+                }
+                NetworkClient.Instance.Consent(actionType: actionCode, 
                                                    environment: environment,
                                                    language: language,
                                                    privacyManagerId: privacyManagerId, 
@@ -117,7 +131,7 @@ public static class CmpLocalizationMapper
                                                    pmSaveAndExitVariables: saveAndExitVariables);
                 break;
             default:
-                NetworkClient.Instance.ConsentGdpr(actionType: actionCode, 
+                NetworkClient.Instance.Consent(actionType: actionCode, 
                                                    environment: environment,
                                                    language: language,
                                                    privacyManagerId: privacyManagerId, 

@@ -236,7 +236,7 @@ namespace ConsentManagementProviderLib
             }
 #else
             CmpPopupDestroyer.DestroyAllPopups();
-            CmpPopupDestroyer.DestroyAllHelperGO();
+            CmpPopupDestroyer.DestroyAllHelperGO(true);
 #endif
         }
         

@@ -1,12 +1,9 @@
 using System.Text.Json.Serialization;
 
-public class ConsentGdprSaveAndExitVariables
+public class ConsentGdprSaveAndExitVariables : ConsentSaveAndExitVariables
 {
-    [JsonInclude] public string lan;
-    [JsonInclude] public string privacyManagerId;
     [JsonInclude] public ConsentGdprSaveAndExitVariablesCategory[] categories;
     [JsonInclude] public ConsentGdprSaveAndExitVariablesVendor[] vendors;
-    [JsonInclude] public ConsentGdprSaveAndExitVariablesSpecialFeature[] specialFeatures;     
 
     public ConsentGdprSaveAndExitVariables(string language, string privacyManagerId, ConsentGdprSaveAndExitVariablesCategory[] categories, ConsentGdprSaveAndExitVariablesVendor[] vendors, ConsentGdprSaveAndExitVariablesSpecialFeature[] specialFeatures)
     {

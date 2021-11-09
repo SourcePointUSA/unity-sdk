@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class NetworkClient
     readonly HttpClient client = new HttpClient();
     private static GameObject dispatcherGO;
     private static NetworkCallbackEventDispatcher dispatcher;
-    
+    public static int msTimeout;
     private static NetworkClient instance;
     public static NetworkClient Instance
     {
@@ -23,6 +24,7 @@ public class NetworkClient
             if (instance == null)
             {
                 instance = new NetworkClient();
+                msTimeout = 3000;
                 instance.client.Timeout = TimeSpan.FromMilliseconds(3000);
             }
             if (dispatcherGO == null)
@@ -37,6 +39,7 @@ public class NetworkClient
     #region Public
     public void GetMessages(int accountId, string propertyHref, CampaignsPostGetMessagesRequest campaigns, Action<string> onSuccessAction, Action<Exception> onErrorAction, int environment, int millisTimeout)
     {
+        msTimeout = millisTimeout;
         instance.client.Timeout = TimeSpan.FromMilliseconds(millisTimeout);
         string idfaStatus = "unknown";
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
@@ -71,13 +74,13 @@ public class NetworkClient
         Task.Factory.StartNew(async delegate { await GetMessage(environment, consentLanguage, propertyId, messageId, onSuccessAction, onErrorAction); });
     }
 
-    public void ConsentGdpr(/*CONSENT_ACTION_TYPE*/ int actionType, 
-                            int environment,
-                            string language, 
-                            string privacyManagerId,
-                            Action<string> onSuccessAction,
-                            Action<Exception> onErrorAction,
-                            ConsentGdprSaveAndExitVariables pmSaveAndExitVariables = null)
+    public void Consent(/*CONSENT_ACTION_TYPE == */ int actionType, 
+        int environment,
+        string language, 
+        string privacyManagerId,
+        Action<string> onSuccessAction,
+        Action<Exception> onErrorAction,
+        ConsentSaveAndExitVariables pmSaveAndExitVariables = null)
     {
         var dict = new Dictionary<string, string> {{"type", "RecordString"}};
         var includeData = new IncludeDataPostGetMessagesRequest()
@@ -86,22 +89,57 @@ public class NetworkClient
             TCData = dict
             // messageMetaData = dict,
         };
-        if (pmSaveAndExitVariables == null)
-            pmSaveAndExitVariables = new ConsentGdprSaveAndExitVariables(
-                language: language, 
-                privacyManagerId: privacyManagerId,
-                categories: new ConsentGdprSaveAndExitVariablesCategory[] { },
-                vendors: new ConsentGdprSaveAndExitVariablesVendor[] { },
-                specialFeatures: new ConsentGdprSaveAndExitVariablesSpecialFeature[] { });
-        PostConsentGdprRequest body = new PostConsentGdprRequest(
-            requestUUID: GUID.Value,
-            idfaStatus: "accepted",
-            localState: SaveContext.GetLocalState(),
-            includeData: includeData,
-            pmSaveAndExitVariables: pmSaveAndExitVariables
-        );
-        Task.Factory.StartNew(async delegate { await PostConsentGdpr(actionType, environment, body, onSuccessAction, onErrorAction); });
-}
+        ConsentSaveAndExitVariables concretePmSaveAndExitVariables;
+        PostConsentRequest body = null;
+        switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+        {
+            case 0:
+                if (pmSaveAndExitVariables != null)
+                    concretePmSaveAndExitVariables = pmSaveAndExitVariables as ConsentGdprSaveAndExitVariables;
+                else
+                    concretePmSaveAndExitVariables = new ConsentGdprSaveAndExitVariables(
+                        language: language, 
+                        privacyManagerId: privacyManagerId,
+                        categories: new ConsentGdprSaveAndExitVariablesCategory[] { },
+                        vendors: new ConsentGdprSaveAndExitVariablesVendor[] { },
+                        specialFeatures: new ConsentGdprSaveAndExitVariablesSpecialFeature[] { }
+                        );
+                body = new PostConsentGdprRequest(
+                    requestUUID: GUID.Value,
+                    idfaStatus: "accepted",
+                    localState: SaveContext.GetLocalState(),
+                    includeData: includeData,
+                    pmSaveAndExitVariables: (ConsentGdprSaveAndExitVariables) concretePmSaveAndExitVariables
+                    );
+                break;
+            case 2:
+                if (pmSaveAndExitVariables != null)
+                    concretePmSaveAndExitVariables = pmSaveAndExitVariables as ConsentCcpaSaveAndExitVariables;
+                else
+                    concretePmSaveAndExitVariables = new ConsentCcpaSaveAndExitVariables(
+                        language: language, 
+                        privacyManagerId: privacyManagerId,
+                        rejectedCategories: new ConsentGdprSaveAndExitVariablesCategory[] { },
+                        rejectedVendors: new ConsentGdprSaveAndExitVariablesVendor[] { },
+                        specialFeatures: new ConsentGdprSaveAndExitVariablesSpecialFeature[] { }
+                        );
+                body = new PostConsentCcpaRequest(
+                    requestUUID: GUID.Value,
+                    idfaStatus: "accepted",
+                    localState: SaveContext.GetLocalState(),
+                    includeData: includeData,
+                    pmSaveAndExitVariables: (ConsentCcpaSaveAndExitVariables) concretePmSaveAndExitVariables
+                    );
+                break;
+        }
+
+        if (body == null)
+        {
+            onErrorAction?.Invoke(new Exception("Message body is null!!!"));
+        }
+        else
+            Task.Factory.StartNew(async delegate { await PostConsent(actionType, environment, body, onSuccessAction, onErrorAction); });
+    }
     #endregion
     
     #region Query Parameters
@@ -242,16 +280,26 @@ public class NetworkClient
         }
     }
 
-    async Task PostConsentGdpr(int actionType, int environment, PostConsentGdprRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
+    async Task PostConsent(int actionType, int environment, PostConsentRequest body, Action<string> onSuccessAction, Action<Exception> onErrorAction)
     {
         try
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var options = new JsonSerializerOptions { IgnoreNullValues = true };
-            string json = JsonSerializer.Serialize(body, options);
+            string json = null;
+            switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    json = JsonSerializer.Serialize(body as PostConsentGdprRequest, options);
+                    break;
+                case 2:
+                    json = JsonSerializer.Serialize(body as PostConsentCcpaRequest, options);
+                    break;
+            }
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(GetConsentGdprQueryParams(actionType, environment), data);
+            string link = GetConsentGdprQueryParams(actionType, environment);
+            HttpResponseMessage response = await client.PostAsync(link, data);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             dispatcher.Enqueue(delegate { onSuccessAction?.Invoke(responseBody); });
