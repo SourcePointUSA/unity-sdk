@@ -28,21 +28,21 @@ public class CmpCategoryScrollController : CmpScrollController
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
                 //Consent Tab
-                if(CmpLocalizationMapper.categories!=null)
-                    AddCategories(CmpLocalizationMapper.categories); // == Purposes
-                if(CmpLocalizationMapper.specialPurposes!=null)
-                    AddSpecialPurposes(CmpLocalizationMapper.specialPurposes);
-                if(CmpLocalizationMapper.features!=null)
-                    AddFeatures(CmpLocalizationMapper.features);
-                if(CmpLocalizationMapper.specialFeatures!=null)
-                    AddSpecialFeatures(CmpLocalizationMapper.specialFeatures);
+                if(CmpLocalizationMapper.CurrentCategories!=null)
+                    AddCategories(CmpLocalizationMapper.CurrentCategories); // == Purposes
+                if(CmpLocalizationMapper.CurrentSpecialPurposes!=null)
+                    AddSpecialPurposes(CmpLocalizationMapper.CurrentSpecialPurposes);
+                if(CmpLocalizationMapper.CurrentFeatures!=null)
+                    AddFeatures(CmpLocalizationMapper.CurrentFeatures);
+                if(CmpLocalizationMapper.CurrentSpecialFeatures!=null)
+                    AddSpecialFeatures(CmpLocalizationMapper.CurrentSpecialFeatures);
                 ScrollAppear(-1200f);
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab
                 List<CmpCategoryModel> legIntVendors = new List<CmpCategoryModel>();
-                if(CmpLocalizationMapper.categories!=null)
-                    foreach (CmpCategoryModel model in CmpLocalizationMapper.categories)
+                if(CmpLocalizationMapper.CurrentCategories!=null)
+                    foreach (CmpCategoryModel model in CmpLocalizationMapper.CurrentCategories)
                         if (model.legIntVendors!=null && model.legIntVendors.Count > 0)
                             legIntVendors.Add(model);
                 AddCategories(legIntVendors);

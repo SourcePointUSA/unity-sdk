@@ -24,12 +24,99 @@ public static class CmpLocalizationMapper
     
     public static bool IsPmReadyForResurface = false;
     
-    public static List<CmpCategoryModel> categories;
-    public static List<CmpSpecialPurposeModel> specialPurposes;
-    public static List<CmpFeatureModel> features;
-    public static List<CmpSpecialFeatureModel> specialFeatures;
-    public static List<CmpVendorModel> vendors;
+    private static List<CmpCategoryModel> gdprCategories;
+    private static List<CmpSpecialPurposeModel> gdprSpecialPurposes;
+    private static List<CmpFeatureModel> gdprFeatures;
+    private static List<CmpSpecialFeatureModel> gdprSpecialFeatures;
+    private static List<CmpVendorModel> gdprVendors;
+    
+    private static List<CmpCategoryModel> ccpaCategories;
+    private static List<CmpSpecialPurposeModel> ccpaSpecialPurposes;
+    private static List<CmpFeatureModel> ccpaFeatures;
+    private static List<CmpSpecialFeatureModel> ccpaSpecialFeatures;
+    private static List<CmpVendorModel> ccpaVendors;
 
+    public static List<CmpCategoryModel> CurrentCategories
+    {
+        get
+        {
+            switch(CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    return gdprCategories;
+                case 2:
+                    return ccpaCategories;
+                default:
+                    //wtf
+                    return null;
+            }
+        }
+    }
+    public static List<CmpSpecialPurposeModel> CurrentSpecialPurposes
+    {
+        get
+        {
+            switch(CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    return gdprSpecialPurposes;
+                case 2:
+                    return ccpaSpecialPurposes;
+                default:
+                    //wtf
+                    return null;
+            }
+        }
+    }
+    public static List<CmpFeatureModel> CurrentFeatures
+    {
+        get
+        {
+            switch(CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    return gdprFeatures;
+                case 2:
+                    return ccpaFeatures;
+                default:
+                    //wtf
+                    return null;
+            }
+        }
+    }
+    public static List<CmpSpecialFeatureModel> CurrentSpecialFeatures
+    {
+        get
+        {
+            switch(CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    return gdprSpecialFeatures;
+                case 2:
+                    return ccpaSpecialFeatures;
+                default:
+                    //wtf
+                    return null;
+            }
+        }
+    }
+    public static List<CmpVendorModel> CurrentVendors
+    {
+        get
+        {
+            switch(CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    return gdprVendors;
+                case 2:
+                    return ccpaVendors;
+                default:
+                    //wtf
+                    return null;
+            }
+        }
+    }
+    
     private static Canvas canvas;
     private static GameObject homePrefab;
     private static int environment;
@@ -217,23 +304,28 @@ public static class CmpLocalizationMapper
 
     private static void OnPrivacyManagerViewsSuccessCallback(string json)
     {
-        NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
-                                                      categoryModels: ref categories,
-                                                      specialPurposeModels: ref specialPurposes,
-                                                      featureModels: ref features,
-                                                      specialFeatureModels: ref specialFeatures,
-                                                      vendorModels: ref vendors);
-        SaveContext.UpdateUserConsentUIState();
-        var campaignId = CmpCampaignPopupQueue.CurrentCampaignToShow();
-        switch (campaignId)
+        switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
         {
             case 0:
+                NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
+                                                             categoryModels: ref gdprCategories,
+                                                             specialPurposeModels: ref gdprSpecialPurposes,
+                                                             featureModels: ref gdprFeatures,
+                                                             specialFeatureModels: ref gdprSpecialFeatures,
+                                                             vendorModels: ref gdprVendors);
                 isGdprPmInitialized = true;
                 break;
             case 2:
+                NativeUiJsonDeserializer.DeserializeExtraCall(json: json,
+                                                             categoryModels: ref ccpaCategories,
+                                                             specialPurposeModels: ref ccpaSpecialPurposes,
+                                                             featureModels: ref ccpaFeatures,
+                                                             specialFeatureModels: ref ccpaSpecialFeatures,
+                                                             vendorModels: ref ccpaVendors);
                 isCcpaPmInitialized = true;
                 break;
         }
+        SaveContext.UpdateUserConsentUIState();
     }
 
     public static void InstantiateOnCanvas(GameObject prefab)

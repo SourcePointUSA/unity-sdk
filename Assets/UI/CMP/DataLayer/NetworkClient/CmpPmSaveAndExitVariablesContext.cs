@@ -28,7 +28,7 @@ public static class CmpPmSaveAndExitVariablesContext
         foreach (var vendor in vendors)
         {
             int? iabId = null;
-            foreach (var v in CmpLocalizationMapper.vendors)
+            foreach (var v in CmpLocalizationMapper.CurrentVendors)
             {
                 if (v.vendorId!=null && v.vendorId.Equals(vendor.vendorId))
                 {
@@ -47,7 +47,7 @@ public static class CmpPmSaveAndExitVariablesContext
                 }
             }
         }
-        foreach (var category in CmpLocalizationMapper.categories)
+        foreach (var category in CmpLocalizationMapper.CurrentCategories)
             if (category._id.Equals(model._id))
                 category.accepted = true;
         isAcceptedCategoriesChanged = true;
@@ -70,7 +70,7 @@ public static class CmpPmSaveAndExitVariablesContext
                 isAcceptedVendorsChanged = true;
             }
         }
-        foreach (var category in CmpLocalizationMapper.categories)
+        foreach (var category in CmpLocalizationMapper.CurrentCategories)
             if (category._id.Equals(id))
                 category.accepted = false;
         isAcceptedCategoriesChanged = true;
@@ -107,7 +107,7 @@ public static class CmpPmSaveAndExitVariablesContext
     {
         if (!previouslyAcceptedCategories.Exists(x => x._id.Equals(categoryId)))
         {
-            foreach (var cat in CmpLocalizationMapper.categories)
+            foreach (var cat in CmpLocalizationMapper.CurrentCategories)
             {
                 if(cat._id.Equals(categoryId))
                     previouslyAcceptedCategories.Add(new ConsentGdprSaveAndExitVariablesCategory(categoryId, cat.iabId, cat.type, true,false));
@@ -131,7 +131,7 @@ public static class CmpPmSaveAndExitVariablesContext
                 if (!acceptedSpecFeatures[model.vendorId].Exists(x => x._id.Equals(specFeat)))
                 {
                     int? iabId = null;
-                    foreach (var v in CmpLocalizationMapper.vendors)
+                    foreach (var v in CmpLocalizationMapper.CurrentVendors)
                     {
                         if (v.vendorId.Equals(model.vendorId))
                         {

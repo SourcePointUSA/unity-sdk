@@ -28,15 +28,15 @@ public class CmpVendorScrollController : CmpScrollController
         {
             case CmpSwitch.BUTTON_SELECTED.LEFT:
                 //Consent Tab
-                if(CmpLocalizationMapper.vendors!=null)
-                    AddVendors(CmpLocalizationMapper.vendors);
+                if(CmpLocalizationMapper.CurrentVendors!=null)
+                    AddVendors(CmpLocalizationMapper.CurrentVendors);
                 ScrollAppear();
                 break;
             case CmpSwitch.BUTTON_SELECTED.RIGHT:
                 //Legitimate Interest Tab
                 List<CmpVendorModel> legIntCategories = new List<CmpVendorModel>();
-                if(CmpLocalizationMapper.vendors!=null)
-                    foreach (CmpVendorModel model in CmpLocalizationMapper.vendors)
+                if(CmpLocalizationMapper.CurrentVendors!=null)
+                    foreach (CmpVendorModel model in CmpLocalizationMapper.CurrentVendors)
                         if (model.legIntCategories!=null && model.legIntCategories.Count > 0)
                             legIntCategories.Add(model);
                 AddVendors(legIntCategories);
