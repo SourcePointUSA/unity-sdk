@@ -114,7 +114,15 @@ public class NetworkClient
                 break;
             case 2:
                 if (pmSaveAndExitVariables != null)
+                {
+                    //remove if vendor._id == null
                     concretePmSaveAndExitVariables = pmSaveAndExitVariables as ConsentCcpaSaveAndExitVariables;
+                    List<ConsentGdprSaveAndExitVariablesVendor> rej = new List<ConsentGdprSaveAndExitVariablesVendor>();
+                    foreach (var rejected in (pmSaveAndExitVariables as ConsentCcpaSaveAndExitVariables).rejectedVendors)
+                        if (!string.IsNullOrEmpty(rejected._id))
+                            rej.Add(rejected);
+                    (concretePmSaveAndExitVariables as ConsentCcpaSaveAndExitVariables).rejectedVendors = rej.ToArray();
+                }
                 else
                     concretePmSaveAndExitVariables = new ConsentCcpaSaveAndExitVariables(
                         language: language, 

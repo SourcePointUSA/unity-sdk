@@ -10,12 +10,28 @@ public class CmpOnOffButtonController : MonoBehaviour
         {
             var model = catDetailsScroll.GetModel();
             model.accepted = true;
-            CmpPmSaveAndExitVariablesContext.AcceptCategory(model);
+            switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    CmpPmSaveAndExitVariablesContext.AcceptCategory(model);
+                    break;
+                case 2:
+                    CmpPmSaveAndExitVariablesContext.ExcludeCategory(model._id, true);
+                    break;
+            }
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
         {
             var model = vendDetailsScroll.GetModel();
             model.accepted = true;
-            CmpPmSaveAndExitVariablesContext.AcceptVendor(model);
+            switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    CmpPmSaveAndExitVariablesContext.AcceptVendor(model);
+                    break;
+                case 2:
+                    CmpPmSaveAndExitVariablesContext.ExcludeVendor(model.vendorId, model.name);
+                    break;
+            }
         }
         Destroy(scrollController.gameObject);
     }
@@ -26,12 +42,28 @@ public class CmpOnOffButtonController : MonoBehaviour
         {
             var model = catDetailsScroll.GetModel();
             model.accepted = false;
-            CmpPmSaveAndExitVariablesContext.ExcludeCategory(model._id);
+            switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    CmpPmSaveAndExitVariablesContext.ExcludeCategory(model._id);
+                    break;
+                case 2:
+                    CmpPmSaveAndExitVariablesContext.AcceptCategory(model, false);
+                    break;
+            }
         }else if (scrollController is CmpVendorDetailsScrollController vendDetailsScroll)
         {
             var model = vendDetailsScroll.GetModel();
             model.accepted = false;
-            CmpPmSaveAndExitVariablesContext.ExcludeVendor(model.vendorId, model.name);
+            switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
+            {
+                case 0:
+                    CmpPmSaveAndExitVariablesContext.ExcludeVendor(model.vendorId, model.name);
+                    break;
+                case 2:
+                    CmpPmSaveAndExitVariablesContext.AcceptVendor(model, false);
+                    break;
+            }
         }
         Destroy(scrollController.gameObject);
     }
