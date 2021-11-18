@@ -258,7 +258,6 @@ public static class CmpLocalizationMapper
                         dateCreated = gdprCamp.userConsent.dateCreated,
                         consentedToAll = gdprCamp.userConsent.consentedToAll.GetValueOrDefault(false)
                     };
-                    // CmpPopupDestroyer.DestroyAllHelperGO();  //TODO: CHECK
                     SaveContext.SaveGdprUserConsent(gdprUserConsent);
                     CmpCampaignPopupQueue.DequeueCampaignId();
                     isGdprConsented = true;
@@ -300,6 +299,8 @@ public static class CmpLocalizationMapper
                 UnityEngine.Debug.LogError("UserConsent is NULL");
         }
         isInitialized = true;
+        if (!CmpCampaignPopupQueue.IsCampaignAvailable)
+            CmpPopupDestroyer.DestroyAllHelperGO();
     }
 
     private static void OnPrivacyManagerViewsSuccessCallback(string json)
@@ -371,7 +372,6 @@ public static class CmpLocalizationMapper
         var consent = JsonSerializer.Deserialize<PostConsentResponse>(json);
         SaveContext.SaveLocalState(consent.localState);
         CmpPopupDestroyer.DestroyAllPopups();
-        // CmpPopupDestroyer.DestroyAllHelperGO(); //TODO
         switch (CmpCampaignPopupQueue.CurrentCampaignToShow())
         {
             case 0:
@@ -391,6 +391,8 @@ public static class CmpLocalizationMapper
         }
         if (CmpCampaignPopupQueue.IsCampaignAvailable)
             InstantiateOnCanvas(homePrefab);
+        else
+            CmpPopupDestroyer.DestroyAllHelperGO();
     }
     #endregion
 
