@@ -78,6 +78,12 @@ public class CmpPopupController : MonoBehaviour
     {
         foreach (var ui in uiElements)
         {
+            if (CmpCampaignPopupQueue.CurrentCampaignToShow() == 2)
+            {
+                var controller = ui.gameObject.GetComponent<CmpNativeButtonUiController>();
+                if (controller != null && controller.ID.Equals("RejectAllButton"))
+                    controller.SetId("DoNotSellButton");
+            }
             CmpUiElementModel initializer = CmpLocalizationMapper.GetCmpUiElement(viewId, ui.ID);
             if (initializer != null)
             {
