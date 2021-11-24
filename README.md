@@ -33,26 +33,37 @@ using ConsentManagementProviderLib;
                    accountId: 22,
                    propertyName: "sid-multi-campaign.com",
                    language: MESSAGE_LANGUAGE.ENGLISH,
+                   campaignsEnvironment: CAMPAIGN_ENV.STAGE,
                    messageTimeoutInSeconds: 3);
 ```
 
 <mark>**Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).</mark>
 
 3. Right after the  `LoadMessage` call, the SDK will construct the Web View for the end-user. <br/><br/> If there is a consent profile associated with authId "JohnDoe", the SDK will bring the consent data from the server, overwriting whatever was stored in the device.
+There is two possible ways to call `LoadMessage`, first works only for mobile platforms:
 ```c#
 private void Start()
 {
     CMP.LoadMessage(authId: "JohnDoe");
 }
 ```
+And second is for any other platform Unity supports. This way uses Unity Native UI to show Privacy Manager and reqiures `Canvas` to instantiate on and prefab which located at /Assets/UI/Prefabs/Home.prefab
+```c#
+CMP.LoadMessage(cmpHomePrefab: CmpPrefab,
+                canvas: canvas,
+                privacyManagerId: "16879",
+                propertyId: "4933");
+```
+We recommend you using first overload of method for mobile platforms and second for any other. Please note that property name and other credentials may differ.
+    
 3. In order to free memory, call `Dispose` as illustrated in the following example :
 ```c#
 private void OnDestroy()
 {
     CMP.Dispose();
 }
-```
-
+``` 
+    
 # Handle consent callbacks
 
 Consent callbacks allow you to track progress and receive updates of user interaction. We provide the following interfaces:
@@ -167,6 +178,7 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
 # Resurface Privacy Manager
 
 Once a player has completed the consent flow, you may be interested to resurface your privacy manager so the player can see/manage their consents. To do this we provide the `LoadPrivacyManager` method. The following code snippet will show a GDPR privacy manager with default tab open.
+Once again, there is two overloads of `LoadPrivacyManager` first is for mobile platforms:
 ```c#
     public void OnPrivacyManagerButtonClick()
     {
@@ -175,6 +187,19 @@ Once a player has completed the consent flow, you may be interested to resurface
                                tab: PRIVACY_MANAGER_TAB.DEFAULT);
     }
 ```
+And second is for any other OS:
+```c#
+        public void LoadGdprPM()
+    {
+        CMP.LoadPrivacyManager(CmpPrefab, canvas, CAMPAIGN_TYPE.GDPR, "16879", "4933");
+    }
+    
+    public void LoadCcpaPM()
+    {
+        CMP.LoadPrivacyManager(CmpPrefab, canvas, CAMPAIGN_TYPE.CCPA, "16435", "17935");
+    }    
+```
+
 Below is a list of available tabs in a GDPR privacy manager:
 ```c#
     public enum PRIVACY_MANAGER_TAB
@@ -188,7 +213,7 @@ Below is a list of available tabs in a GDPR privacy manager:
 
 # Custom GDPR Consent
 
-To provide you with the ability to request custom GDPR consent with specific vendors, categories, and legitimate interest categories we created the `CustomConsentGDPR` method. One additional step to handle the result of the call is the delegate which handles the `GdprConsent` object, represented as `SuccessDelegate` method in our code example below. It will be asynchronously triggered when the result of end-user interaction is handled.
+To provide you with the ability to request custom GDPR consent with specific vendors, categories, and legitimate interest categories we created the `CustomConsentGDPR` method. One additional step to handle the result of the call is the delegate which handles the `GdprConsent` object, represented as `SuccessDelegate` method in our code example below. It will be asynchronously triggered when the result of end-user interaction is handled. Works for mobile platforms only in the moment.
 ```c#
     public void OnCustomConsentButtonClick()
     {
