@@ -1,15 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+#if UNITY_IOS
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using System.Diagnostics;
-
 using System.IO;
-using System.Linq;
 using UnityEditor.iOS.Xcode.Extensions;
-using Debug = UnityEngine.Debug;
 
 public static class CMPPostProcessBuild
 {
@@ -23,36 +17,64 @@ public static class CMPPostProcessBuild
             PBXProject pbxProject = new PBXProject();
             string projPath = buildPath + "/Unity-Iphone.xcodeproj/project.pbxproj";
             pbxProject.ReadFromFile(projPath);
+            string unityProjectGuid = pbxProject.ProjectGuid();
             string unityMainTargetGuid = pbxProject.GetUnityMainTargetGuid();
-            
-            ConfigureFrameworks(pbxProject, unityMainTargetGuid);
+
+            pbxProject.AddBuildProperty(unityMainTargetGuid, "LIBRARY_SEARCH_PATHS", "\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\" \"/usr/lib/swift\"");
+            pbxProject.AddBuildProperty(unityProjectGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+
+            ConfigureFrameworks(pbxProject, unityProjectGuid);
             TieBridgingHeader(pbxProject, unityMainTargetGuid);
             EnableCppModules(pbxProject);
             EnableObjectiveCExceptions(pbxProject);
-            //LinkBinaryWithLibraries(pbxProject, unityMainGUID);
-            // EnableSwift(pbxProject, targetGuid);
+            EnableBitcode(pbxProject, unityProjectGuid, false);
+            // EnableBitcode(pbxProject, unityMainTargetGuid, false);
+
+            // LinkBinaryWithLibraries(pbxProject, unityMainGUID);
+            // LinkBinaryWithLibraries(pbxProject,unityMainTargetGuid, "libswiftWebKit.tbd");
+            // EnableSwift(pbxProject, unityProjectGuid);
 
             pbxProject.WriteToFile(projPath);
+            
+            string plistPath = buildPath + "/Info.plist";
+            AddParameterToInfoPlist(plistPath);
         }
     }
 
+    static void AddParameterToInfoPlist(string plistPath)
+    {
+        PlistDocument plist = new PlistDocument();
+        plist.ReadFromString(File.ReadAllText(plistPath));
+        PlistElementDict rootDict = plist.root;
+            
+        // var buildKey = "Privacy - Tracking Usage Description";
+        var buildKey = "NSUserTrackingUsageDescription";
+        rootDict.SetString(buildKey,"This identifier will be used to deliver personalized ads to you.");
+
+        File.WriteAllText(plistPath, plist.WriteToString());
+    }
+    
     static void ConfigureFrameworks(PBXProject pbxProject, string targetGuid)
     {
-        pbxProject.AddBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", "@executable_path/Frameworks $(PROJECT_DIR)/lib/$(CONFIGURATION) $(inherited)");
-        pbxProject.AddBuildProperty(targetGuid, "FRAMERWORK_SEARCH_PATHS",
+        pbxProject.AddBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
+        /*pbxProject.AddBuildProperty(targetGuid, "FRAMERWORK_SEARCH_PATHS",
             "$(inherited) $(PROJECT_DIR) $(PROJECT_DIR)/Frameworks");
         pbxProject.AddBuildProperty(targetGuid, "DYLIB_INSTALL_NAME_BASE", "@rpath");
         pbxProject.AddBuildProperty(targetGuid, "LD_DYLIB_INSTALL_NAME",
-            "@executable_path/../Frameworks/$(EXECUTABLE_PATH)");
+            "@executable_path/../Frameworks/$(EXECUTABLE_PATH)");*/
     }
     
     static void TieBridgingHeader(PBXProject pbxProject, string targetGuid)
     {
-        pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
         pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/Source/UnityPlugin-Bridging-Header.h");
         pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "UnityController.h");
     }
-    
+
+    private static void EnableBitcode(PBXProject pbxProject, string targetGuid, bool enabled)
+    {
+        pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", enabled ? "YES" : "NO");
+    }
+
     static void EnableCppModules(PBXProject pbxProject)
     {
         pbxProject.AddBuildProperty(pbxProject.GetUnityMainTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
@@ -79,3 +101,4 @@ public static class CMPPostProcessBuild
         pbxProject.AddBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
     }
 }
+#endif
