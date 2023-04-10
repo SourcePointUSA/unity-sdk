@@ -33,7 +33,8 @@ namespace ConsentManagementProviderLib.Android
 
         void onAction(AndroidJavaObject view, AndroidJavaObject actionType)
         {
-            CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE)actionType.Call<int>("getCode");
+            AndroidJavaObject wrapper = actionType.Call<AndroidJavaObject>("getActionType");
+            CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE)wrapper.Call<int>("getCode");
             CmpDebugUtil.Log("I've reached the C# onAction: " + unwrappedType);
             ConsentMessenger.Broadcast<IOnConsentAction>(unwrappedType);
         }
