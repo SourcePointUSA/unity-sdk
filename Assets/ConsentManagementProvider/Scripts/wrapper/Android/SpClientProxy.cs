@@ -31,11 +31,23 @@ namespace ConsentManagementProviderLib.Android
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
         }
 
-        void onAction(AndroidJavaObject view, AndroidJavaObject actionType)
+        AndroidJavaObject onAction(AndroidJavaObject view, AndroidJavaObject actionType)
         {
-            CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE)actionType.Call<int>("getCode");
-            CmpDebugUtil.Log("I've reached the C# onAction: " + unwrappedType);
+            CmpDebugUtil.Log("I've reached the C# onAction!");
+            
+            CmpDebugUtil.Log("Trying to unwrap ActionType... ");
+            AndroidJavaObject wrapper = actionType.Call<AndroidJavaObject>("getActionType");
+            CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE)wrapper.Call<int>("getCode");
+            CmpDebugUtil.Log("Unwrapped ActionType is: " + unwrappedType);
+            
+            CmpDebugUtil.Log("Trying to put \"pb_key\", \"pb_value\" in pubData");
+            AndroidJavaObject pubData = actionType.Call<AndroidJavaObject>("getPubData");
+            pubData.Call<AndroidJavaObject>("put", "pb_key", "pb_value");
+            CmpDebugUtil.Log("PUT IS SUCCESSFUL");
+
             ConsentMessenger.Broadcast<IOnConsentAction>(unwrappedType);
+            CmpDebugUtil.Log("Now I'll return actionType back to Java...");
+            return actionType;
         }
 
         void onConsentReady(string spConsents) 
