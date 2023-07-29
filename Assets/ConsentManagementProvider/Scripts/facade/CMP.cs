@@ -11,8 +11,17 @@ namespace ConsentManagementProviderLib
     public static class CMP
     {
         private static GameObject mainThreadBroadcastEventsExecutor;
-
-        public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
+        private static bool IsEditor => Application.platform == RuntimePlatform.LinuxEditor
+                                        || Application.platform == RuntimePlatform.WindowsEditor
+                                        || Application.platform == RuntimePlatform.OSXEditor;
+        
+        
+        public static void Initialize(
+            List<SpCampaign> spCampaigns, 
+            int accountId, string propertyName, 
+            MESSAGE_LANGUAGE language, 
+            CAMPAIGN_ENV campaignsEnvironment,
+            long messageTimeoutInSeconds = 3)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
@@ -51,6 +60,12 @@ namespace ConsentManagementProviderLib
         
         public static void LoadMessage(string authId = null)
         {
+            if (IsEditor)
+            {
+                Debug.LogWarning("Emulating LoadMessage call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                return;
+            }
+            
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
@@ -66,6 +81,13 @@ namespace ConsentManagementProviderLib
 
         public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
+            if (IsEditor)
+            {
+                Debug.LogWarning($"Emulating LoadPrivacyManager call for {campaignType}... " +
+                                 $"Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                return;
+            }
+            
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
@@ -189,6 +211,12 @@ namespace ConsentManagementProviderLib
                 Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
                 return false;
             }
+            if (IsEditor)
+            {
+                Debug.LogWarning("ATTENTION! Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                return false;
+            }
+            
             return true;
         }
         #endregion

@@ -11,11 +11,11 @@ public class ConsentMessageProvider : MonoBehaviour
     [SerializeField]
     int accountId = 22;
     [SerializeField]
-    string propertyName = "sid-multi-campaign.com";
+    string propertyName = "mobile.multicampaign.demo";
     [SerializeField] 
     private CAMPAIGN_ENV campaignEnvironment = CAMPAIGN_ENV.PUBLIC;
     [SerializeField]
-    long messageTimeoutInSeconds = 3;
+    long messageTimeoutInSeconds = 30;
     [SerializeField]
     string authID = null;
 

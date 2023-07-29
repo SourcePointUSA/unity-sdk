@@ -8,5 +8,10 @@
     "name": "Dmytro Fedko",
     "email": "fedko.dmytro@gmail.com",
     "url": "https://github.com/SourcePointUSA/unity-sdk"
-  }
+  },  
+  "files": [
+    "/Assets/ConsentManagementProvider/*",
+    "/Assets/ExampleApp/*",
+    "/Assets/ExternalDependencyManager/*"
+  ]
 }

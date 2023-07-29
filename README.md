@@ -1,7 +1,8 @@
 # Unity-SDK
 Your plug &amp; play CMP for Unity.
 
-<mark>**Note**: Sourcepoint's Unity SDK can be used for both Android OS and iOS. When you are ready to compile your project for iOS, you will need to perform additional steps. [Click here](https://github.com/SourcePointUSA/unity-sdk#usage--build-for-ios) for more information.
+<mark>**Note**: Sourcepoint's Unity SDK can be used for both Android OS and iOS. Sourcepoint's Unity SDK can be integrated with both Android and iOS. Since it embeds native SDKs, and those only work in their respective platforms, the Unity SDK can't be demoed using Unity's Editor.
+<mark>**Note**: Sourcepoint's Unity SDK uses ExternalDependencyManager by Google in order to fetch native SDKs and their dependencies. Make sure you resolve all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` before building your application.
 
 # Instantiate consent UI
 
@@ -31,8 +32,9 @@ using ConsentManagementProviderLib;
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-                   propertyName: "sid-multi-campaign.com",
+                   propertyName: "mobile.multicampaign.demo",
                    language: MESSAGE_LANGUAGE.ENGLISH,
+                   campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
                    messageTimeoutInSeconds: 3);
 ```
 
@@ -42,7 +44,7 @@ using ConsentManagementProviderLib;
 ```c#
 private void Start()
 {
-    CMP.LoadMessage(authId: "JohnDoe");
+     CMP.LoadMessage(authId: null); // or pass it a String if you wish to use authenticated consent
 }
 ```
 3. In order to free memory, call `Dispose` as illustrated in the following example :
@@ -150,7 +152,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
 
     public void OnConsentReady(SpConsents spConsents)
     {
-        Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; \n If it was the last from the series of consents, you can continue user's gaming experience!");
+       Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; " +
+          $"\n If it was the last from the series of consents, you can continue user's gaming experience!" +
+          $"\n {spConsents.ToString()}");
     }
 
     private void OnDestroy()
@@ -186,55 +190,6 @@ Below is a list of available tabs in a GDPR privacy manager:
     }
 ```
 
-# Custom GDPR Consent
-
-To provide you with the ability to request custom GDPR consent with specific vendors, categories, and legitimate interest categories we created the `CustomConsentGDPR` method. One additional step to handle the result of the call is the delegate which handles the `GdprConsent` object, represented as `SuccessDelegate` method in our code example below. It will be asynchronously triggered when the result of end-user interaction is handled.
-```c#
-    public void OnCustomConsentButtonClick()
-    {
-        CMP.CustomConsentGDPR(vendors: new string[] { "5fbe6f050d88c7d28d765d47" },
-                              categories: new string[] { "60657acc9c97c400122f21f3" },
-                              legIntCategories: new string[] { },
-                              onSuccessDelegate: SuccessDelegate);
-    }
-
-    private void SuccessDelegate(GdprConsent customConsent)
-    {
-        Debug.Log($"I am your success callback!");
-    }
-```
-
 # Build for iOS
 
-Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. You can follow the steps below to supplement our `CMPPostProcessBuild`[PostProcessBuild] script.
-
-## iOS – Adding the `ConsentViewController.xcframework`
-To use xcframework functionality you should tie it with your xcode project.
-1. Drag and drop `ConsentViewController.xcframework` to your Xcode project (into Project Navigator). Select the checkboxes for both **Unity-iPhone** and **UnityFrameworks** under the **Add to targets** field.
-2. Find in Project Navigator the `Unity-Iphone` icon. Usually it is topmost. Select it.
-3. Then select `Unity-iPhone` target
-4. Select `Build Phase`
-5. Add `ConsentViewController.xcframework` to `EmbedFramework` section
-6. **If building for device**: Tick the `Copy only when installing` checkbox. <mark>**Note**: Skip this step if you are building for a simulator.</mark>
-7. Select `UnityFramework` target
-8. Add `ConsentViewController.xcframework` to `Link Binary With Libraries` section
-
-<mark>**Note**: Unity may handle XCFramework in a wrong way if you store it in your Unity project and have any import settings applied. In such case, go to `UnityFramework` target > `Build Phases` > `Link Binary With Libraries` and delete all entries of `ConsentViewController.framework` (But make sure that **xcframework** is still there)
-<br/><br/>
-If you store xcframework under **Assets** folder in your unity project, to avoid this odd behaviour in the future, go to the  **ConsentViewController.xcframework** folder in Unity Editor, and perform the following for both **ios-arm64_armv7** and **ios-arm64_i386_x86_64-simulator** folders:
-<br/><br/>
-• Select **ConsentViewController.framework** <br/>
-• Untick every platform in **Select platforms for plugin**<br/> • Click **Apply** to import the new settings.
-</mark>
-
-## iOS – Enable `New Build System`
- Apple introduced .xcframework to replace the old .framework. The .xcframework requires a new build system. Unity older than 2020.3.10 enables `Legacy Build System (Deprecated)` by default so it is necessary to switch the `Build System` to the new one manually.
-1. In Xcode navigate to `Project` > `Project Settings`.
-2. Switch `Build System` to `New Build System (Default)`.
-
-## iOS – Add tracking disclaimer to `info.plist`
-This feature is also required by Apple due to privacy terms.
-1. Find in Project Navigator and open `info.plist` file.
-2. Click `+` icon which adds new row.
-3. Add following as a key: `Privacy - Tracking Usage Description`
-4. Add following as a value `This identifier will be used to deliver personalized ads to you.`
+Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Feel free supplement or modify it if needed.
