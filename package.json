@@ -10,6 +10,7 @@
     "url": "https://github.com/SourcePointUSA/unity-sdk"
   },  
   "files": [
+    "/Assets/Sourcepoint.asmdef",
     "/Assets/ConsentManagementProvider/*",
     "/Assets/ExampleApp/*",
     "/Assets/ExternalDependencyManager/*"
