@@ -11,8 +11,12 @@
   },  
   "files": [
     "/Assets/Sourcepoint.asmdef",
+    "/Assets/Sourcepoint.asmdef.meta",
     "/Assets/ConsentManagementProvider/*",
+    "/Assets/ConsentManagementProvider.meta",
     "/Assets/ExampleApp/*",
-    "/Assets/ExternalDependencyManager/*"
+    "/Assets/ExampleApp.meta",
+    "/Assets/ExternalDependencyManager/*",
+    "/Assets/ExternalDependencyManager.meta"
   ]
 }
