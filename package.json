@@ -17,6 +17,10 @@
     "/Assets/ExampleApp/*",
     "/Assets/ExampleApp.meta",
     "/Assets/ExternalDependencyManager/*",
-    "/Assets/ExternalDependencyManager.meta"
+    "/Assets/ExternalDependencyManager.meta",
+    "Assets.meta",
+    "LICENSE.meta",
+    "package.json.meta",
+    "README.md.meta"
   ]
 }
