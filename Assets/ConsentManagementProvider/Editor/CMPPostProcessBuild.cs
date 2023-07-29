@@ -10,8 +10,6 @@ public static class CMPPostProcessBuild
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
-        // const string defaultLocationInProj = "Plugins/iOS";
-        // const string coreFrameworkName = "ConsentViewController.xcframework";
         if (buildTarget == BuildTarget.iOS)
         {
             PBXProject pbxProject = new PBXProject();
@@ -28,11 +26,6 @@ public static class CMPPostProcessBuild
             EnableCppModules(pbxProject);
             EnableObjectiveCExceptions(pbxProject);
             EnableBitcode(pbxProject, unityProjectGuid, false);
-            // EnableBitcode(pbxProject, unityMainTargetGuid, false);
-
-            // LinkBinaryWithLibraries(pbxProject, unityMainGUID);
-            // LinkBinaryWithLibraries(pbxProject,unityMainTargetGuid, "libswiftWebKit.tbd");
-            // EnableSwift(pbxProject, unityProjectGuid);
 
             pbxProject.WriteToFile(projPath);
             
@@ -47,7 +40,6 @@ public static class CMPPostProcessBuild
         plist.ReadFromString(File.ReadAllText(plistPath));
         PlistElementDict rootDict = plist.root;
             
-        // var buildKey = "Privacy - Tracking Usage Description";
         var buildKey = "NSUserTrackingUsageDescription";
         rootDict.SetString(buildKey,"This identifier will be used to deliver personalized ads to you.");
 
@@ -57,11 +49,6 @@ public static class CMPPostProcessBuild
     static void ConfigureFrameworks(PBXProject pbxProject, string targetGuid)
     {
         pbxProject.AddBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
-        /*pbxProject.AddBuildProperty(targetGuid, "FRAMERWORK_SEARCH_PATHS",
-            "$(inherited) $(PROJECT_DIR) $(PROJECT_DIR)/Frameworks");
-        pbxProject.AddBuildProperty(targetGuid, "DYLIB_INSTALL_NAME_BASE", "@rpath");
-        pbxProject.AddBuildProperty(targetGuid, "LD_DYLIB_INSTALL_NAME",
-            "@executable_path/../Frameworks/$(EXECUTABLE_PATH)");*/
     }
     
     static void TieBridgingHeader(PBXProject pbxProject, string targetGuid)
