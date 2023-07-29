@@ -1,7 +1,7 @@
 # Unity-SDK
 Your plug &amp; play CMP for Unity.
 
-<mark>**Note**: Sourcepoint's Unity SDK can be used for both Android OS and iOS. It does nothing in Unity Editor due to architecture of SDK (it embeds native SDKs which can be accessed only when application is built for corresponding platform)
+<mark>**Note**: Sourcepoint's Unity SDK can be used for both Android OS and iOS. Sourcepoint's Unity SDK can be integrated with both Android and iOS. Since it embeds native SDKs, and those only work in their respective platforms, the Unity SDK can't be demoed using Unity's Editor.
 
 # Instantiate consent UI
 
@@ -43,7 +43,7 @@ using ConsentManagementProviderLib;
 ```c#
 private void Start()
 {
-    CMP.LoadMessage(authId: "JohnDoe"); // it may be null
+     CMP.LoadMessage(authId: null); // or pass it a String if you wish to use authenticated consent
 }
 ```
 3. In order to free memory, call `Dispose` as illustrated in the following example :
