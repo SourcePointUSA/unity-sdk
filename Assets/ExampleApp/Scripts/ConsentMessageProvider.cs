@@ -15,7 +15,7 @@ public class ConsentMessageProvider : MonoBehaviour
     [SerializeField] 
     private CAMPAIGN_ENV campaignEnvironment = CAMPAIGN_ENV.PUBLIC;
     [SerializeField]
-    long messageTimeoutInSeconds = 3;
+    long messageTimeoutInSeconds = 30;
     [SerializeField]
     string authID = null;
 
