@@ -2,7 +2,8 @@
 Your plug &amp; play CMP for Unity.
 
 <mark>**Note**: Sourcepoint's Unity SDK can be used for both Android OS and iOS. Sourcepoint's Unity SDK can be integrated with both Android and iOS. Since it embeds native SDKs, and those only work in their respective platforms, the Unity SDK can't be demoed using Unity's Editor.
-<mark>**Note**: Sourcepoint's Unity SDK uses ExternalDependencyManager by Google in order to fetch native SDKs and their dependencies. Make sure you resolve all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` before building your application.
+
+<mark>**Note**: Sourcepoint's Unity SDK uses ExternalDependencyManager by Google https://github.com/googlesamples/unity-jar-resolver in order to fetch native SDKs and their dependencies. Make sure you resolve all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` before building your application.
 
 # Instantiate consent UI
 
