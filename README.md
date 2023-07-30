@@ -33,7 +33,7 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     spCampaigns.Add(ios14);
 ```
 
-In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **3 seconds**.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
@@ -46,7 +46,7 @@ In order to instantiate & trigger `Consent Message Web View`, you must call the 
 
 > **Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).
 
-Right after the `LoadMessage` call, the SDK will construct the Web View for the end-user. <br/><br/> If there is a consent profile associated with `authId`, the SDK will bring the consent data from the server, overwriting whatever was stored in the device.
+When the SDK receives the `LoadMessage` call, it will instantiate a webview if the end-user needs to see a message. <br/><br/> If there is a consent profile associated with `authId`, the SDK will bring the consent data from the server, overwriting whatever was stored in the device.
 
 ```c#
 private void Start()
