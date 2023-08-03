@@ -2,7 +2,7 @@ using ConsentManagementProviderLib;
 using System;
 using UnityEngine;
 
-public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentAction, IOnConsentError, IOnConsentUIFinished, IOnConsentReady
+public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentAction, IOnConsentError, IOnConsentUIFinished, IOnConsentReady, IOnConsentSpFinished
 {
     void Awake()
     {
@@ -11,6 +11,7 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         ConsentMessenger.AddListener<IOnConsentError>(this.gameObject);
         ConsentMessenger.AddListener<IOnConsentUIFinished>(this.gameObject);
         ConsentMessenger.AddListener<IOnConsentReady>(this.gameObject);
+        ConsentMessenger.AddListener<IOnConsentSpFinished>(this.gameObject);
     }
 
     public void OnConsentUIReady()
@@ -33,6 +34,11 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         Debug.LogWarning("User has interacted with the web view consent message and it is disappeared!");
     }
 
+    public void OnConsentSpFinished(SpConsents spConsents)
+    {
+        Debug.LogWarning("OnSpFinished() called!");
+    }
+
     public void OnConsentReady(SpConsents spConsents)
     {
         Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; \n If it was the last from the series of consents, you can continue user's gaming experience!");
@@ -45,5 +51,6 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         ConsentMessenger.RemoveListener<IOnConsentError>(this.gameObject);
         ConsentMessenger.RemoveListener<IOnConsentUIFinished>(this.gameObject);
         ConsentMessenger.RemoveListener<IOnConsentReady>(this.gameObject);
+        ConsentMessenger.RemoveListener<IOnConsentSpFinished>(this.gameObject);
     }
 }

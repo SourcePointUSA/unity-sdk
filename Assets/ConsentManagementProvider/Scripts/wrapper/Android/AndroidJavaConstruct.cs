@@ -54,13 +54,14 @@ namespace ConsentManagementProviderLib.Android
         internal AndroidJavaObject ConstructCampaignType(CAMPAIGN_TYPE campaignType)
         {
             AndroidJavaObject type = null;
+            AndroidJavaClass enumClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.exception.CampaignType");
             switch (campaignType)
             {
                 case CAMPAIGN_TYPE.GDPR:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.GDPR, (int)CAMPAIGN_TYPE_ANDROID.GDPR); //GDPR has ordinal 0 in Java enum!
+                    type = enumClass.GetStatic<AndroidJavaObject>("GDPR");
                     break;
                 case CAMPAIGN_TYPE.CCPA:
-                    type = new AndroidJavaObject("com.sourcepoint.cmplibrary.exception.CampaignType", CAMPAIGN_TYPE_STRING_KEY.CCPA, (int)CAMPAIGN_TYPE_ANDROID.CCPA); //CCPA has ordinal 1 in Java enum!
+                    type = enumClass.GetStatic<AndroidJavaObject>("CCPA");
                     break;
                 default:
                     CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");
@@ -78,13 +79,15 @@ namespace ConsentManagementProviderLib.Android
             return msgLang;
         }
         
-        internal AndroidJavaObject ConstructSpConfig(int accountId, string propertyName, long messageTimeout, AndroidJavaObject language, CAMPAIGN_ENV campaignsEnvironment, AndroidJavaObject[] spCampaigns)
+        internal AndroidJavaObject ConstructSpConfig(int accountId, int propertyId, string propertyName, long messageTimeout, AndroidJavaObject language, CAMPAIGN_ENV campaignsEnvironment, AndroidJavaObject[] spCampaigns)
         {
             AndroidJavaObject spConfig;
             using (AndroidJavaObject SpConfigDataBuilderClass = new AndroidJavaObject("com.sourcepoint.cmplibrary.creation.SpConfigDataBuilder"))
             {
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addAccountId", accountId);
                 CmpDebugUtil.Log("addAccountId is OK");
+                SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPropertyId", propertyId);
+                CmpDebugUtil.Log("addPropertyId is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addPropertyName", propertyName);
                 CmpDebugUtil.Log("addPropertyName is OK");
                 SpConfigDataBuilderClass.Call<AndroidJavaObject>("addMessageLanguage", language);

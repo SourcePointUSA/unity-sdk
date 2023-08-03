@@ -12,7 +12,7 @@ namespace ConsentManagementProviderLib
     {
         private static GameObject mainThreadBroadcastEventsExecutor;
 
-        public static void Initialize(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
+        public static void Initialize(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
@@ -30,6 +30,7 @@ namespace ConsentManagementProviderLib
                 }
                 ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                             accountId: accountId,
+                                                            propertyId: propertyId,
                                                             propertyName: propertyName,
                                                             language: language,
                                                             campaignsEnvironment: campaignsEnvironment,
