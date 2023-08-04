@@ -30,7 +30,7 @@ namespace ConsentManagementProviderLib.Json
                                                     uspstring: wrappedCcpa.uspstring,
                                                     rejectedVendors: wrappedCcpa.rejectedVendors,
                                                     rejectedCategories: wrappedCcpa.rejectedCategories);
-            return new SpCcpaConsent(unwrapped);
+            return new SpCcpaConsent(false, unwrapped);
         }
 
         public static SpGdprConsent UnwrapSpGdprConsentAndroid(SpGdprConsentWrapperAndroid wrappedGdpr)
@@ -52,9 +52,9 @@ namespace ConsentManagementProviderLib.Json
                         purposeGrants.Add(purpGrant.Key, ((JsonElement)purpGrant.Value).GetBoolean());
                     }
                 }
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(/*isGranted,*/ purposeGrants);
+                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(false, purposeGrants);
             }
-            return new SpGdprConsent(unwrapped);
+            return new SpGdprConsent(false, unwrapped);
         }
         
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
@@ -90,9 +90,9 @@ namespace ConsentManagementProviderLib.Json
         
         private static SpGdprConsent UnwrapSpGdprConsent(SpGdprConsentWrapper wrappedGdpr)
         {
-            // bool applies = ((JsonElement) wrappedGdpr.applies).GetBoolean();
+            bool applies = ((JsonElement) wrappedGdpr.applies).GetBoolean();
             GdprConsent consent = UnwrapGdprConsent(wrappedGdpr.consents);
-            return new SpGdprConsent(consent);
+            return new SpGdprConsent(applies, consent);
         }
         
         private static GdprConsent UnwrapGdprConsent(GdprConsentWrapper wrapped)
@@ -115,16 +115,16 @@ namespace ConsentManagementProviderLib.Json
                         purposeGrants.Add(purpGrant.Key, ((JsonElement)purpGrant.Value).GetBoolean());
                     }
                 }
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(/*isGranted,*/ purposeGrants);
+                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
             }
             return unwrapped;
         }
 
         private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapper wrappedCcpa)
         {
-            //bool applies = ((JsonElement)wrappedCcpa.applies).GetBoolean();
+            bool applies = ((JsonElement)wrappedCcpa.applies).GetBoolean();
             CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
-            return new SpCcpaConsent(consent);
+            return new SpCcpaConsent(applies, consent);
         }
 
         private static CcpaConsent UnwrapCcpaConsent(CcpaConsentWrapper wrapped)
