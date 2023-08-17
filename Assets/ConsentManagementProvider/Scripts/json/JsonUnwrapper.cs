@@ -28,15 +28,17 @@ namespace ConsentManagementProviderLib.Json
             JsonElement granularStatusWrapped = getValueJsonElement((JsonElement)wrappedCcpa.consentStatus, "granularStatus");
             ConsentStatus _consentStatus = UnwrapConsentStatus(granularStatusWrapped, wrappedCcpa.consentStatus);
             
-            CcpaConsent unwrapped = new CcpaConsent(applies: wrappedCcpa.applies,
-                                                    uuid: wrappedCcpa.uuid,
-                                                    webConsentPayload: wrappedCcpa.webConsentPayload,
+            CcpaConsent unwrapped = new CcpaConsent(uuid: wrappedCcpa.uuid,
                                                     status: wrappedCcpa.status,
                                                     uspstring: wrappedCcpa.uspstring,
                                                     rejectedVendors: wrappedCcpa.rejectedVendors,
                                                     rejectedCategories: wrappedCcpa.rejectedCategories,
-                                                    consentStatus: _consentStatus);
-            return new SpCcpaConsent(false, unwrapped);
+                                                    childPmId: wrappedCcpa.childPmId,
+                                                    applies: wrappedCcpa.applies,
+                                                    signedLspa: wrappedCcpa.signedLspa,
+                                                    webConsentPayload: wrappedCcpa.webConsentPayload,
+													null);//_consentStatus);
+            return new SpCcpaConsent(unwrapped);
         }
 
         public static SpGdprConsent UnwrapSpGdprConsentAndroid(SpGdprConsentWrapperAndroid wrappedGdpr)
@@ -51,16 +53,23 @@ namespace ConsentManagementProviderLib.Json
             foreach (KeyValuePair<string, Dictionary<string, object>> vendorGrantWrapper in wrappedGdpr.grants)
             {
                 Dictionary<string, bool> purposeGrants = new Dictionary<string, bool>();
-                if (vendorGrantWrapper.Value != null)
+                bool isGranted = false;
+
+                if (vendorGrantWrapper.Value.ContainsKey("granted"))
+                    isGranted = ((JsonElement)vendorGrantWrapper.Value["granted"]).GetBoolean();
+                if (vendorGrantWrapper.Value.ContainsKey("purposeGrants"))
                 {
-                    foreach (KeyValuePair<string, object> purpGrant in vendorGrantWrapper.Value) 
+                    JsonElement purposeGrantsElement = (JsonElement)vendorGrantWrapper.Value["purposeGrants"];
+                    foreach (JsonProperty purpGrant in purposeGrantsElement.EnumerateObject())
                     {
-                        purposeGrants.Add(purpGrant.Key, ((JsonElement)purpGrant.Value).GetBoolean());
+                        purposeGrants.Add(purpGrant.Name, purpGrant.Value.GetBoolean());
                     }
                 }
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(false, purposeGrants);
+
+                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
             }
-            return new SpGdprConsent(false, unwrapped);
+            CmpDebugUtil.Log($"XXXXXXXXXXXXXXXXXXXXXXXX -> {unwrapped.ToFullString()}");
+            return new SpGdprConsent(unwrapped);
         }
         
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
@@ -221,13 +230,15 @@ namespace ConsentManagementProviderLib.Json
             JsonElement granularStatusWrapped = getValueJsonElement((JsonElement)wrapped.consentStatus, "granularStatus");
             ConsentStatus _consentStatus = UnwrapConsentStatus(granularStatusWrapped, wrapped.consentStatus);
             
-            return new CcpaConsent(applies: wrapped.applies,
-                                    uuid: wrapped.uuid, 
-                                    webConsentPayload: wrapped.webConsentPayload,
+            return new CcpaConsent(uuid: wrapped.uuid, 
                                     status: wrapped.status,
                                     uspstring: wrapped.uspstring, 
                                     rejectedVendors: wrapped.rejectedVendors, 
                                     rejectedCategories: wrapped.rejectedCategories,
+									childPmId:"",
+									applies: wrapped.applies,
+									signedLspa: null,
+                                    webConsentPayload: wrapped.webConsentPayload,
                                     consentStatus: _consentStatus);
         }
         #endregion

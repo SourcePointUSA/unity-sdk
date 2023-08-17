@@ -12,5 +12,9 @@ namespace ConsentManagementProviderLib
             this.applies = applies;
             this.consents = consents;
         }
+        public SpCcpaConsent(CcpaConsent consents)
+        {
+            this.consents = consents;
+        }
     }
 }

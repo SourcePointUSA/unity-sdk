@@ -12,5 +12,10 @@ namespace ConsentManagementProviderLib
             this.applies = applies;
             this.consents = consents;
         }
+
+		public SpGdprConsent(GdprConsent consents)
+        {
+            this.consents = consents;
+        }
     }
 }
