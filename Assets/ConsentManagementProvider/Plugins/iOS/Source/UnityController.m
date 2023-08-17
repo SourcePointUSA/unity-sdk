@@ -109,7 +109,7 @@
 //    NSLog(@"params => %@", params);
 }
 
--(void) consrtuctLib : (int) accountId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int) campaignsEnvironment _: (long) timeOutSeconds
+-(void) consrtuctLib : (int) accountId _:(int) propId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int) campaignsEnvironment _: (long) timeOutSeconds
 {
     SPError * err = [self checkIfPropNameNotNull: propName];
     if(err != nil)
@@ -129,6 +129,8 @@
             NSMutableDictionary<NSString *, NSString *> * gdprParams;
             NSMutableDictionary<NSString *, NSString *> * ccpaParams;
             NSMutableDictionary<NSString *, NSString *> * ios14Params;
+            
+            
 
             for (int index=0; index < arrSize; index++)
             {
@@ -149,7 +151,9 @@
 //                            initWithEnvironment:env
 //                            targetingParams:gdprParams];
                     gdpr = [[SPCampaign alloc]
-                            initWithTargetingParams:gdprParams];
+                            initWithTargetingParams:gdprParams
+                            groupPmId:nil
+                            gppConfig:nil];
 
                 }else if(type == SPCampaignTypeCcpa){
                     ccpaParams = campaignParams;
@@ -160,7 +164,10 @@
 //                            initWithEnvironment:env
 //                            targetingParams: ccpaParams];
                     ccpa = [[SPCampaign alloc]
-                            initWithTargetingParams: ccpaParams];
+                            initWithTargetingParams: ccpaParams
+                            groupPmId:nil
+                            gppConfig:nil];
+                    
                 }else if(type == SPCampaignTypeIos14){
                     ios14Params = campaignParams;
                     if([ios14Params count] == 0){
@@ -170,7 +177,10 @@
 //                             initWithEnvironment:env
 //                             targetingParams: ios14Params];
                     ios14 = [[SPCampaign alloc]
-                             initWithTargetingParams: ios14Params];
+                             initWithTargetingParams: ios14Params
+                             groupPmId:nil
+                             gppConfig:nil];
+                    
                 }else{
                     SPError *myErr = [SPError errorWithDomain:@"SPConsentManager"
                                               code:100
@@ -182,19 +192,22 @@
             }
 //            NSLog(@"%@ ||| %@ ||| %@", gdpr.description, ccpa.description, ios14.description);
 
+            SPCampaignEnv * env = campaignsEnvironment;
+            
             SPCampaigns * campaigns = [[SPCampaigns alloc]
                                        initWithGdpr: gdpr
                                        ccpa: ccpa
-                                       ios14: ios14];
+                                       ios14: ios14
+                                       environment:env];
 
-            SPCampaignEnv * env = campaignsEnvironment;
             NSLog(@" ENVIRONMENT: %ld", (long)env);
 
             consentManager = [[SPConsentManager alloc]
                     initWithAccountId:accountId
+                    propertyId:propId
                     propertyName: propertyName
-                    campaignsEnv: env
                     campaigns: campaigns
+                    language: nil
                     delegate: self];
             consentManager.messageTimeoutInSeconds = timeOutSeconds;
         } @catch (SPError *exception) {
@@ -209,10 +222,10 @@
     {
         NSString * nsAuthId = [self convertCharToNSString: authId];
         if ([nsAuthId isEqual: @""] || authId == nil) {
-            [consentManager loadMessageForAuthId: NULL];
+            [consentManager loadMessageForAuthId: NULL publisherData: NULL];
 //            NSLog(@"loadMessage");
         }else{
-            [consentManager loadMessageForAuthId: nsAuthId];
+            [consentManager loadMessageForAuthId: nsAuthId publisherData: NULL];
 //            NSLog(@"loadMessage with authId");
         }
     }
@@ -222,7 +235,7 @@
     if([self checkIfConsentManagerNotNull]){
         NSString * nsPmId = [self convertCharToNSString:pmId];
         SPPrivacyManagerTab tab = tabId;
-        [consentManager loadGDPRPrivacyManagerWithId:nsPmId tab:tab];
+        [consentManager loadGDPRPrivacyManagerWithId:nsPmId tab:tab useGroupPmIfAvailable:NULL];
     }
 }
 
@@ -231,7 +244,7 @@
         NSString * nsPmId = [self convertCharToNSString:pmId];
         SPPrivacyManagerTab tab = tabId;
 //        NSLog(@"pmId %s", pmId);
-        [consentManager loadCCPAPrivacyManagerWithId:nsPmId tab:tab];
+        [consentManager loadCCPAPrivacyManagerWithId:nsPmId tab:tab useGroupPmIfAvailable:NULL];
     }
 }
 

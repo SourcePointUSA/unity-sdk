@@ -42,6 +42,7 @@ namespace ConsentManagementProviderLib
                 CreateBroadcastExecutorGO();
                 ConsentWrapperIOS.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                         accountId: accountId,
+                                                        propertyId: propertyId,
                                                         propertyName: propertyName,
                                                         language: language,
                                                         campaignsEnvironment: campaignsEnvironment,

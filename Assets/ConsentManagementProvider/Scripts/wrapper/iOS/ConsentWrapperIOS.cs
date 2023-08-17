@@ -33,7 +33,7 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _addTargetingParamForCampaignType(int campaignType, string key, string value);
         [DllImport("__Internal")]
-        private static extern void _consrtuctLib(int accountId, string propName, int arrSize, int[] campaignTypes, int campaignsEnvironment, long timeOutSeconds);
+        private static extern void _consrtuctLib(int accountId, int propId, string propName, int arrSize, int[] campaignTypes, int campaignsEnvironment, long timeOutSeconds);
         [DllImport("__Internal")]
         private static extern void _setMessageLanguage(int langId);
         [DllImport("__Internal")]
@@ -67,7 +67,7 @@ namespace ConsentManagementProviderLib.iOS
             iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
+        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanDict();
@@ -85,6 +85,7 @@ namespace ConsentManagementProviderLib.iOS
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
             }
             _consrtuctLib(accountId: accountId,
+						  propId: propertyId,
                           propName: propertyName,
                           arrSize: campaignsAmount,
                           campaignTypes: campaignTypes,

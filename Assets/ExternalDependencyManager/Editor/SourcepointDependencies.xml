@@ -31,7 +31,7 @@
          * "subspecs" (optional)
            Subspecs to include for the pod.
      -->
-    <iosPod name="ConsentViewController" version="6.4.1" bitcodeEnabled="true"
+    <iosPod name="ConsentViewController" version="7.3.0" bitcodeEnabled="true"
             minTargetSdk="10.0" addToAllTargets="true">
 
     </iosPod>

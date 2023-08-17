@@ -25,12 +25,18 @@ namespace ConsentManagementProviderLib.Json
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)
         {
-            CcpaConsent unwrapped = new CcpaConsent(uuid: wrappedCcpa.uuid,
+            JsonElement granularStatusWrapped = getValueJsonElement((JsonElement)wrappedCcpa.consentStatus, "granularStatus");
+            ConsentStatus _consentStatus = UnwrapConsentStatus(granularStatusWrapped, wrappedCcpa.consentStatus);
+            
+            CcpaConsent unwrapped = new CcpaConsent(applies: wrappedCcpa.applies,
+                                                    uuid: wrappedCcpa.uuid,
+                                                    webConsentPayload: wrappedCcpa.webConsentPayload,
                                                     status: wrappedCcpa.status,
                                                     uspstring: wrappedCcpa.uspstring,
                                                     rejectedVendors: wrappedCcpa.rejectedVendors,
-                                                    rejectedCategories: wrappedCcpa.rejectedCategories);
-            return new SpCcpaConsent(unwrapped);
+                                                    rejectedCategories: wrappedCcpa.rejectedCategories,
+                                                    consentStatus: _consentStatus);
+            return new SpCcpaConsent(false, unwrapped);
         }
 
         public static SpGdprConsent UnwrapSpGdprConsentAndroid(SpGdprConsentWrapperAndroid wrappedGdpr)
@@ -52,9 +58,9 @@ namespace ConsentManagementProviderLib.Json
                         purposeGrants.Add(purpGrant.Key, ((JsonElement)purpGrant.Value).GetBoolean());
                     }
                 }
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(/*isGranted,*/ purposeGrants);
+                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(false, purposeGrants);
             }
-            return new SpGdprConsent(unwrapped);
+            return new SpGdprConsent(false, unwrapped);
         }
         
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
@@ -90,16 +96,18 @@ namespace ConsentManagementProviderLib.Json
         
         private static SpGdprConsent UnwrapSpGdprConsent(SpGdprConsentWrapper wrappedGdpr)
         {
-            // bool applies = ((JsonElement) wrappedGdpr.applies).GetBoolean();
+            bool applies = ((JsonElement) wrappedGdpr.applies).GetBoolean();
             GdprConsent consent = UnwrapGdprConsent(wrappedGdpr.consents);
-            return new SpGdprConsent(consent);
+            return new SpGdprConsent(applies, consent);
         }
         
         private static GdprConsent UnwrapGdprConsent(GdprConsentWrapper wrapped)
         {
             GdprConsent unwrapped = new GdprConsent
             {
+                applies = wrapped.applies,
                 uuid = wrapped.uuid,
+                webConsentPayload = wrapped.webConsentPayload,
                 euconsent = wrapped.euconsent,
                 TCData = wrapped.TCData,
                 grants = new Dictionary<string, SpVendorGrant>()
@@ -115,25 +123,112 @@ namespace ConsentManagementProviderLib.Json
                         purposeGrants.Add(purpGrant.Key, ((JsonElement)purpGrant.Value).GetBoolean());
                     }
                 }
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(/*isGranted,*/ purposeGrants);
+                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
             }
+
+            JsonElement granularStatusWrapped = getValueJsonElement((JsonElement)wrapped.consentStatus, "granularStatus");
+            unwrapped.consentStatus = UnwrapConsentStatus(granularStatusWrapped, wrapped.consentStatus);
+
             return unwrapped;
+        }
+
+        private static ConsentStatus UnwrapConsentStatus(JsonElement granularStatusWrapped, object wrappedconsentStatus)
+        {
+            GranularStatus granularStatusUnwrapped;
+            if (granularStatusWrapped.ValueKind != JsonValueKind.Undefined)
+            {
+                granularStatusUnwrapped = new GranularStatus(
+                    getStringJsonElement((JsonElement)granularStatusWrapped, "vendorConsent"),
+                    getStringJsonElement((JsonElement)granularStatusWrapped, "vendorLegInt"),
+                    getStringJsonElement((JsonElement)granularStatusWrapped, "purposeConsent"),
+                    getStringJsonElement((JsonElement)granularStatusWrapped, "purposeLegInt"),
+                    getBoolJsonElement((JsonElement)granularStatusWrapped, "previousOptInAll"),
+                    getBoolJsonElement((JsonElement)granularStatusWrapped, "defaultConsent")
+                );
+            }
+            else
+            {
+                granularStatusUnwrapped = null;
+            }
+
+            ConsentStatus consentStatus = new ConsentStatus(
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "rejectedAny"),
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "rejectedLI"),
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "consentedAll"),
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "consentedToAny"),
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "vendorListAdditions"),
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "legalBasisChanges"),
+                getBoolJsonElement((JsonElement)wrappedconsentStatus, "hasConsentData"),
+                granularStatusUnwrapped,
+                getObjectJsonElement((JsonElement)wrappedconsentStatus, "rejectedVendors"),
+                getObjectJsonElement((JsonElement)wrappedconsentStatus, "rejectedCategories")
+            );
+            return consentStatus;
+        }
+
+        private static JsonElement getValueJsonElement(JsonElement element, string name)
+        {
+            if (element.TryGetProperty(name, out JsonElement value))
+            {
+                return value;
+            }
+            return new JsonElement();
+        }
+        
+        private static bool? getBoolJsonElement(JsonElement element, string name)
+        {
+            JsonElement value = getValueJsonElement(element, name);
+            if (value.ValueKind == JsonValueKind.Undefined)
+            {
+                return null;
+            }
+            return value.GetBoolean();
+        }
+        
+        private static string? getStringJsonElement(JsonElement element, string name)
+        {
+            JsonElement value = getValueJsonElement(element, name);
+            if (value.ValueKind == JsonValueKind.Undefined)
+            {
+                Debug.Log(name + "  NOT unwrap!");
+                return null;
+            }
+            Debug.Log(name + "  unwrap!");
+            return value.ToString();
+        }
+        
+        private static object getObjectJsonElement(JsonElement element, string name)
+        {
+            JsonElement value = getValueJsonElement(element, name);
+            if (value.ValueKind == JsonValueKind.Undefined)
+            {
+                Debug.Log(name + "  NOT unwrap!");
+                return null;
+            }
+            Debug.Log(name + "  unwrap!");
+            return value;
         }
 
         private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapper wrappedCcpa)
         {
-            //bool applies = ((JsonElement)wrappedCcpa.applies).GetBoolean();
+            bool applies = ((JsonElement)wrappedCcpa.applies).GetBoolean();
             CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
-            return new SpCcpaConsent(consent);
+            return new SpCcpaConsent(applies, consent);
         }
 
         private static CcpaConsent UnwrapCcpaConsent(CcpaConsentWrapper wrapped)
         {
-            return new CcpaConsent(uuid: wrapped.uuid,
-                                   status: wrapped.status, 
-                                   uspstring: wrapped.uspstring, 
-                                   rejectedVendors: wrapped.rejectedVendors, 
-                                   rejectedCategories: wrapped.rejectedCategories);
+            JsonElement granularStatusWrapped = getValueJsonElement((JsonElement)wrapped.consentStatus, "granularStatus");
+            ConsentStatus _consentStatus = UnwrapConsentStatus(granularStatusWrapped, wrapped.consentStatus);
+            
+            return new CcpaConsent(applies: wrapped.applies,
+                                    uuid: wrapped.uuid, 
+                                    webConsentPayload: wrapped.webConsentPayload,
+                                    status: wrapped.status,
+                                    uspstring: wrapped.uspstring, 
+                                    rejectedVendors: wrapped.rejectedVendors, 
+                                    rejectedCategories: wrapped.rejectedCategories,
+                                    consentStatus: _consentStatus);
         }
         #endregion
     }
