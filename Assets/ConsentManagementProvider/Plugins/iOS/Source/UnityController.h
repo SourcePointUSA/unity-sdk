@@ -7,7 +7,7 @@
 
 -(void) setUnityCallback :(const char *)gameObjectName;
 
--(void) consrtuctLib : (int) accountId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int) campaignsEnvironment _: (long) timeOutSeconds;
+-(void) consrtuctLib : (int) accountId _:(int) propId _:(char*) propName _: (int) arrSize _: (int[]) campaignTypes _: (int) campaignsEnvironment _: (long) timeOutSeconds;
 
 -(void) loadMessage : (char*) authId;
 

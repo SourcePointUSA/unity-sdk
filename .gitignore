@@ -54,3 +54,5 @@ Thumbs.db.meta
 
 # VS Code
 *.vscode
+
+*.keystore

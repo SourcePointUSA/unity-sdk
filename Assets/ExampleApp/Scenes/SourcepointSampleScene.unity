@@ -782,6 +782,7 @@ MonoBehaviour:
   allCampaignTypesToLoad: 000000000100000002000000
   language: 1
   accountId: 22
+  propertyId: 16893
   propertyName: mobile.multicampaign.demo
   campaignEnvironment: 1
   messageTimeoutInSeconds: 30

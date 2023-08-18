@@ -15,10 +15,11 @@ namespace ConsentManagementProviderLib
                                         || Application.platform == RuntimePlatform.WindowsEditor
                                         || Application.platform == RuntimePlatform.OSXEditor;
         
-        
         public static void Initialize(
             List<SpCampaign> spCampaigns, 
-            int accountId, string propertyName, 
+            int accountId,
+            int propertyId,
+            string propertyName, 
             MESSAGE_LANGUAGE language, 
             CAMPAIGN_ENV campaignsEnvironment,
             long messageTimeoutInSeconds = 3)
@@ -39,6 +40,7 @@ namespace ConsentManagementProviderLib
                 }
                 ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                             accountId: accountId,
+                                                            propertyId: propertyId,
                                                             propertyName: propertyName,
                                                             language: language,
                                                             campaignsEnvironment: campaignsEnvironment,
@@ -50,6 +52,7 @@ namespace ConsentManagementProviderLib
                 CreateBroadcastExecutorGO();
                 ConsentWrapperIOS.Instance.InitializeLib(spCampaigns: spCampaigns,
                                                         accountId: accountId,
+                                                        propertyId: propertyId,
                                                         propertyName: propertyName,
                                                         language: language,
                                                         campaignsEnvironment: campaignsEnvironment,

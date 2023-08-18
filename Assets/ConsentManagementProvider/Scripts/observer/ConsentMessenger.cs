@@ -40,7 +40,11 @@ namespace ConsentManagementProviderLib
                 case nameof(IOnConsentUIFinished):
                     BroadcastEventDispatcher.Execute<IOnConsentUIFinished>(null, (i,d) => i.OnConsentUIFinished());
                     break;
-            }   
+                case nameof(IOnConsentSpFinished):
+                    SpConsents spConsents = (SpConsents)list[0];
+                    BroadcastEventDispatcher.Execute<IOnConsentSpFinished>(null, (i,d) => i.OnConsentSpFinished(spConsents));
+                    break;
+            }
         }
     }
 }

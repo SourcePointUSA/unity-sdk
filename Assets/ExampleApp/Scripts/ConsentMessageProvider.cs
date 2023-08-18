@@ -11,6 +11,8 @@ public class ConsentMessageProvider : MonoBehaviour
     [SerializeField]
     int accountId = 22;
     [SerializeField]
+    int propertyId = 16893;
+    [SerializeField]
     string propertyName = "mobile.multicampaign.demo";
     [SerializeField] 
     private CAMPAIGN_ENV campaignEnvironment = CAMPAIGN_ENV.PUBLIC;
@@ -41,8 +43,12 @@ public class ConsentMessageProvider : MonoBehaviour
             SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, ios14Params);
             spCampaigns.Add(ios14);
         }
+        CmpDebugUtil.Log("propertyId IN ConsentMessageProvider " + propertyId.ToString());
+        CmpDebugUtil.Log("accountId IN ConsentMessageProvider " + accountId.ToString());
+        CmpDebugUtil.Log("propertyName IN ConsentMessageProvider " + propertyName);
         CMP.Initialize(spCampaigns: spCampaigns,
                        accountId: this.accountId,
+                       propertyId: this.propertyId,
                        propertyName: this.propertyName,
                        language: this.language,
                        campaignsEnvironment: campaignEnvironment,
