@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text.Json;
-using UnityEngine;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -195,6 +194,7 @@ namespace ConsentManagementProviderLib.Json
             JsonElement value = getValueJsonElement(element, name);
             if (value.ValueKind == JsonValueKind.Undefined)
             {
+                CmpDebugUtil.LogWarning(name + " == JsonValueKind.Undefined! Unable to unwrap!");
                 return null;
             }
             return value.ToString();
@@ -205,6 +205,7 @@ namespace ConsentManagementProviderLib.Json
             JsonElement value = getValueJsonElement(element, name);
             if (value.ValueKind == JsonValueKind.Undefined)
             {
+                CmpDebugUtil.LogWarning(name + " == JsonValueKind.Undefined! Unable to unwrap!");
                 return null;
             }
             return value;

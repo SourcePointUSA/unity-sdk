@@ -65,7 +65,7 @@ namespace ConsentManagementProviderLib
         {
             if (IsEditor)
             {
-                CmpDebugUtil.LogWarning("Emulating LoadMessage call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                Debug.LogWarning("Emulating LoadMessage call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
                 return;
             }
             

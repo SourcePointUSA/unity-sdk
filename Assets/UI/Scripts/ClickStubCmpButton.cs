@@ -5,6 +5,6 @@ public class ClickStubCmpButton : MonoBehaviour
 {
     public void LogStubOnClick()
     {
-        CmpDebugUtil.Log($"{this.name} element has been CKICKED");
+        Debug.Log($"{this.name} element has been CLICKED");
     }
 }
