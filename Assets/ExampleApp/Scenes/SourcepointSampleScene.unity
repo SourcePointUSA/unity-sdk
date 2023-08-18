@@ -785,11 +785,7 @@ MonoBehaviour:
   propertyId: 16893
   propertyName: mobile.multicampaign.demo
   campaignEnvironment: 1
-<<<<<<< HEAD:Assets/ExampleApp/Scenes/SampleScene.unity
-  messageTimeoutInSeconds: 5
-=======
   messageTimeoutInSeconds: 30
->>>>>>> develop:Assets/ExampleApp/Scenes/SourcepointSampleScene.unity
   authID: 
 --- !u!114 &1221699451
 MonoBehaviour:
