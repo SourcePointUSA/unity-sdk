@@ -25,9 +25,6 @@ namespace ConsentManagementProviderLib.Json
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)
         {
-            JsonElement granularStatusWrapped = getValueJsonElement((JsonElement)wrappedCcpa.consentStatus, "granularStatus");
-            ConsentStatus _consentStatus = UnwrapConsentStatus(granularStatusWrapped, wrappedCcpa.consentStatus);
-            
             CcpaConsent unwrapped = new CcpaConsent(uuid: wrappedCcpa.uuid,
                                                     status: wrappedCcpa.status,
                                                     uspstring: wrappedCcpa.uspstring,
@@ -37,7 +34,7 @@ namespace ConsentManagementProviderLib.Json
                                                     applies: wrappedCcpa.applies,
                                                     signedLspa: wrappedCcpa.signedLspa,
                                                     webConsentPayload: wrappedCcpa.webConsentPayload,
-													null);//_consentStatus);
+													null);
             return new SpCcpaConsent(unwrapped);
         }
 
@@ -68,7 +65,6 @@ namespace ConsentManagementProviderLib.Json
 
                 unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
             }
-            CmpDebugUtil.Log($"XXXXXXXXXXXXXXXXXXXXXXXX -> {unwrapped.ToFullString()}");
             return new SpGdprConsent(unwrapped);
         }
         
