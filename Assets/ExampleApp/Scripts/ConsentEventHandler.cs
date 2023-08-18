@@ -16,32 +16,32 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
 
     public void OnConsentUIReady()
     {
-        Debug.LogWarning("User will be shown the web view with series of consent messages!");
+        CmpDebugUtil.LogWarning("User will be shown the web view with series of consent messages!");
     }
 
     public void OnConsentAction(CONSENT_ACTION_TYPE action)
     {
-        Debug.LogWarning($"User made {action} action with consent view!");
+        CmpDebugUtil.LogWarning($"User made {action} action with consent view!");
     }
 
     public void OnConsentError(Exception exception)
     {
-        Debug.LogError("Oh no, an error! " + exception.Message);
+        CmpDebugUtil.LogError("Oh no, an error! " + exception.Message);
     }
 
     public void OnConsentUIFinished()
     {
-        Debug.LogWarning("User has interacted with the web view consent message and it is disappeared!");
+        CmpDebugUtil.LogWarning("User has interacted with the web view consent message and it is disappeared!");
     }
 
     public void OnConsentSpFinished(SpConsents spConsents)
     {
-        Debug.LogWarning("OnSpFinished() called!");
+        CmpDebugUtil.LogWarning("OnSpFinished() called!");
     }
 
     public void OnConsentReady(SpConsents spConsents)
     {
-        Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; \n If it was the last from the series of consents, you can continue user's gaming experience!");
+        CmpDebugUtil.Log($"The user interaction on consent messages is done. You can use the spConsent info; \n If it was the last from the series of consents, you can continue user's gaming experience!");
     }
 
     private void OnDestroy()

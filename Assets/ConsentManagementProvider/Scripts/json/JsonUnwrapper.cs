@@ -195,10 +195,8 @@ namespace ConsentManagementProviderLib.Json
             JsonElement value = getValueJsonElement(element, name);
             if (value.ValueKind == JsonValueKind.Undefined)
             {
-                Debug.Log(name + "  NOT unwrap!");
                 return null;
             }
-            Debug.Log(name + "  unwrap!");
             return value.ToString();
         }
         
@@ -207,10 +205,8 @@ namespace ConsentManagementProviderLib.Json
             JsonElement value = getValueJsonElement(element, name);
             if (value.ValueKind == JsonValueKind.Undefined)
             {
-                Debug.Log(name + "  NOT unwrap!");
                 return null;
             }
-            Debug.Log(name + "  unwrap!");
             return value;
         }
 

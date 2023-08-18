@@ -20,6 +20,6 @@ public class CustomConsentButtonCaller : MonoBehaviour
 
     private void SuccessDelegate(GdprConsent customConsent)
     {
-        Debug.Log($"I am your success callback!");
+        CmpDebugUtil.Log($"I am your success callback!");
     }
 }

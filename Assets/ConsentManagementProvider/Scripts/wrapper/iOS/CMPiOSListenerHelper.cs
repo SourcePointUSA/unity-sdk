@@ -49,7 +49,7 @@ namespace ConsentManagementProviderLib.iOS
             }
             catch (Exception ex)
             {
-                 Debug.LogError(
+                CmpDebugUtil.LogError(
                     "Something went wrong while parsing the json data; null will be returned. \n Exception message: " +
                     ex.Message);
             }
@@ -96,7 +96,7 @@ namespace ConsentManagementProviderLib.iOS
             }
             catch (Exception ex)
             {
-                Debug.LogError(
+                CmpDebugUtil.LogError(
                     "Something went wrong while parsing the json data; null will be returned. \n Exception message: " +
                     ex.Message);
             }
