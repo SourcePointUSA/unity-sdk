@@ -45,7 +45,7 @@ namespace ConsentManagementProviderLib.Android
 #endif
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000)
+        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
@@ -68,6 +68,7 @@ namespace ConsentManagementProviderLib.Android
                         campaigns[spCampaigns.IndexOf(sp)] = campaign;
                     }
                     AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
+                                                                               propertyId: propertyId,
                                                                                propertyName: propertyName,
                                                                                messageTimeout: messageTimeoutMilliSeconds,
                                                                                language: msgLang,

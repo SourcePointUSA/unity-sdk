@@ -19,9 +19,9 @@ extern "C"
         [unityBridgePlugin addTargetingParamForCampaignType:campaignType :key :value];
     }
 
-    void _consrtuctLib(int accountId, char* propName, int arrSize, int campaignTypes[], int campaignsEnvironment, long timeOutSeconds)
+    void _consrtuctLib(int accountId, int propId, char* propName, int arrSize, int campaignTypes[], int campaignsEnvironment, long timeOutSeconds)
     {
-        [unityBridgePlugin consrtuctLib:accountId _:propName _:arrSize _:campaignTypes _: campaignsEnvironment _: timeOutSeconds];
+        [unityBridgePlugin consrtuctLib:accountId _:propId _:propName _:arrSize _:campaignTypes _: campaignsEnvironment _: timeOutSeconds];
     }
 
     void _loadMessage(char * authId)

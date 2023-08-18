@@ -58,6 +58,15 @@ namespace ConsentManagementProviderLib.Android
             ConsentMessenger.Broadcast<IOnConsentReady>(consents);
         }
 
+        void onSpFinished(string spConsents)
+        {
+            CmpDebugUtil.Log("I've reached the C# onSpFinished");
+            SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+            _spConsents = consents;
+            ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
+        }
+
+
         void onError(AndroidJavaObject rawThrowableObject)
         {
             CmpDebugUtil.Log("I've reached the C# onError : " + rawThrowableObject.ToString());
@@ -68,6 +77,10 @@ namespace ConsentManagementProviderLib.Android
 
         #region Not implemented or implemented partially
         void onConsentReady(AndroidJavaObject spConsents)
+        {
+        }
+
+        void onSpFinished(AndroidJavaObject spConsents)
         {
         }
 
