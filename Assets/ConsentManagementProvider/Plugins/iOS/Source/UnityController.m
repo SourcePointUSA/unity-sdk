@@ -287,6 +287,7 @@
 - (void)onSPUIReady:(SPMessageViewController * _Nonnull)controller {
 //    NSLog(@"onSPUIReady");
     UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
+    [controller setModalPresentationStyle:UIModalPresentationOverFullScreen];
     [top presentViewController: controller animated:YES completion: nil];
     UnitySendMessage([self getGOName], "OnConsentUIReady", "onSPUIReady from iOS!");
 }

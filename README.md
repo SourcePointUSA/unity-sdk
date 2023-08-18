@@ -1,16 +1,22 @@
 # Unity-SDK
-Your plug &amp; play CMP for Unity.
 
-<mark>**Note**: Sourcepoint's Unity SDK can be used for both Android OS and iOS. When you are ready to compile your project for iOS, you will need to perform additional steps. [Click here](https://github.com/SourcePointUSA/unity-sdk#usage--build-for-ios) for more information.
+Sourcepoint's plug and play Unity SDK can be integrated with both Android and iOS.
+
+> **Note**: The Unity SDK can not be demoed using Unity's Editor since it embeds native SDKs and those only work in their respective platforms.
+> <br><br>Additionally, this SDK utilizes [ExternalDependencyManager by Google](https://github.com/googlesamples/unity-jar-resolver) in order to fetch native SDKs and their dependencies. Ensure all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` are resolved before building your application.
+
+---
 
 # Instantiate consent UI
 
 To start, include the following library namepsace in your script:
+
 ```c#
 using ConsentManagementProviderLib;
 ```
 
-1. Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampaign` object should consist of `CAMPAIGN_TYPE` along with `TargetingParams` you need.
+Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampaign` object should consist of `CAMPAIGN_TYPE` along with the `TargetingParams` you need.
+
 ```c#
     List<SpCampaign> spCampaigns = new List<SpCampaign>();
 
@@ -27,25 +33,30 @@ using ConsentManagementProviderLib;
     spCampaigns.Add(ios14);
 ```
 
-2. In order to instantiate & trigger Consent Message Web View, you must call the `CMP.Initialize` function in `Awake` along with spCampaigns, accountId, propertyName and language.<br/> <br/>Additionally, you can also specify a `messageTimeout` which is set to **3 seconds** by default.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
+
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-                   propertyName: "sid-multi-campaign.com",
+                   propertyName: "mobile.multicampaign.demo",
                    language: MESSAGE_LANGUAGE.ENGLISH,
+                   campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
                    messageTimeoutInSeconds: 3);
 ```
 
-<mark>**Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).</mark>
+> **Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).
 
-3. Right after the  `LoadMessage` call, the SDK will construct the Web View for the end-user. <br/><br/> If there is a consent profile associated with authId "JohnDoe", the SDK will bring the consent data from the server, overwriting whatever was stored in the device.
+When the SDK receives the `LoadMessage` call, it will instantiate a webview if the end-user needs to see a message. <br/><br/> If there is a consent profile associated with `authId`, the SDK will bring the consent data from the server, overwriting whatever was stored in the device.
+
 ```c#
 private void Start()
 {
-    CMP.LoadMessage(authId: "JohnDoe");
+     CMP.LoadMessage(authId: null); // or pass it a String if you wish to use authenticated consent
 }
 ```
-3. In order to free memory, call `Dispose` as illustrated in the following example :
+
+In order to free memory, call `Dispose` as illustrated in the following example :
+
 ```c#
 private void OnDestroy()
 {
@@ -57,15 +68,16 @@ private void OnDestroy()
 
 Consent callbacks allow you to track progress and receive updates of user interaction. We provide the following interfaces:
 
-| Callback               | Description                                                                                                             |
-|------------------------|-------------------------------------------------------------------------------------------------------------------------|
-| `IOnConsentUIReady`    | Triggered when web view UI is ready and about to show                                                                   |
-| `IOnConsentAction`     | Triggered when user made an action, provides you instance of enum `CONSENT_ACTION_TYPE`. See below for more information.|
-| `IOnConsentError`      | Triggered when something went wrong, provides you instance of Exception                                                 |
-| `IOnConsentUIFinished` | Triggered when user interaction with web view UI is done and view is about to disappear                                 |
-| `IOnConsentReady`      | Triggered when server successfully reacted to user's consent, provides you `SpConsent` object with consent info         |
+| Callback               | Description                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `IOnConsentUIReady`    | Triggered when web view UI is ready and about to show                                                                    |
+| `IOnConsentAction`     | Triggered when user made an action, provides you instance of enum `CONSENT_ACTION_TYPE`. See below for more information. |
+| `IOnConsentError`      | Triggered when something went wrong, provides you instance of Exception                                                  |
+| `IOnConsentUIFinished` | Triggered when user interaction with web view UI is done and view is about to disappear                                  |
+| `IOnConsentReady`      | Triggered when server successfully reacted to user's consent, provides you `SpConsent` object with consent info          |
 
 `CONSENT_ACTION_TYPE` can return the following:
+
 ```c#
 public enum CONSENT_ACTION_TYPE
 {
@@ -79,9 +91,13 @@ public enum CONSENT_ACTION_TYPE
 ```
 
 # Workflow to handle callbacks using interfaces
-Once you created your own script which derives from `MonoBehaviour` and attached this component to your `GameObject` you should:
-1. Inherit your script from any number of interfaces from the `IConsentEventHandler` list you are interested in and implement its method(s).<br/>
-For example, suppose you want to handle Exception callback via `IOnConsentErrorEventHandler`, and you already implemented `IOnConsentErrorEventHandler` inheritance and `OnConsentError` method in your script and attached this script to generic `GameObject` in hierarchy. What's next?
+
+After you have created your own script which derives from `MonoBehaviour` and attached this component to your `GameObject` you should perform the following:
+
+Inherit your script from any number of interfaces from the `IConsentEventHandler` list you are interested in and implement its method(s).
+
+> Example<br>Suppose you want to handle exception callback via `IOnConsentErrorEventHandler`, and you already implemented `IOnConsentErrorEventHandler` inheritance and `OnConsentError` method in your script and attached this script to generic `GameObject` in hierarchy. What's next?
+
 ```c#
 public class ConsentEventHandler : MonoBehaviour, IOnConsentError
 {
@@ -91,24 +107,28 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentError
     }
 }
 ```
-2. Register your `gameObject` (which implements any inheritor of `IConsentEventHandler` interface) as an event listener with `ConsentMessenger.AddListener` static method. It can be registered any time before you call the `LoadMessage` method (`Awake`, `Start` is enough, but you can adopt registration to your own logic).
+
+Register your `gameObject` (which implements any inheritor of `IConsentEventHandler` interface) as an event listener with `ConsentMessenger.AddListener` static method. It can be registered any time before you call the `LoadMessage` method (`Awake`, `Start` is enough, but you can adopt the registration to your own logic).
+
+> In the example below, we have added the current `gameObject` as listener for `IOnConsentError` events.<br><br>The event will be executed on all components of the game object that can handle it, regardless of whether they are subscribed or not if at least one have registered the `gameObject` as a listener.
+
 ```c#
 void Awake()
 {
     ConsentMessenger.AddListener<IOnConsentError>(this.gameObject);
 }
 ```
- ⤤ Adds current `gameObject` as listener for `IOnConsentError` events ⤣<br/>
-<mark>**Note**: The event will be executed on all components of the game object that can handle it, regardless of whether they are subscribed or not if at least one have registered the `gameObject` as a listener.</mark>
 
-3. You should also unregister your listener when it becomes unnecessary due to garbage collection. `OnDestroy` is enough for our purposes:
+You should also unregister your listener when it becomes unnecessary due to garbage collection. `OnDestroy` is enough for our purposes:
+
 ```c#
 private void OnDestroy()
 {
     ConsentMessenger.RemoveListener<IOnConsentError>(this.gameObject);
 }
 ```
-4. The solution is ready. Configure it and deploy!
+
+The solution is ready. Configure it and deploy!
 
 Both calling & handling workflows are implemented in the `ConsentMessageProvider` and `ConsentEventHandler` scripts of our example app accordingly. Feel free to use these components.
 
@@ -150,7 +170,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
 
     public void OnConsentReady(SpConsents spConsents)
     {
-        Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; \n If it was the last from the series of consents, you can continue user's gaming experience!");
+       Debug.Log($"The user interaction on consent messages is done. You can use the spConsent info; " +
+          $"\n If it was the last from the series of consents, you can continue user's gaming experience!" +
+          $"\n {spConsents.ToString()}");
     }
 
     private void OnDestroy()
@@ -166,7 +188,8 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
 
 # Resurface Privacy Manager
 
-Once a player has completed the consent flow, you may be interested to resurface your privacy manager so the player can see/manage their consents. To do this we provide the `LoadPrivacyManager` method. The following code snippet will show a GDPR privacy manager with default tab open.
+Once a player has completed the consent flow, you might want to provide a way for them to resurface the privacy manager so they can see/manage their consents on an ongoing basis. To do this, we provide the `LoadPrivacyManager` method. The following code snippet will show a GDPR privacy manager with the default tab open.
+
 ```c#
     public void OnPrivacyManagerButtonClick()
     {
@@ -175,7 +198,9 @@ Once a player has completed the consent flow, you may be interested to resurface
                                tab: PRIVACY_MANAGER_TAB.DEFAULT);
     }
 ```
+
 Below is a list of available tabs in a GDPR privacy manager:
+
 ```c#
     public enum PRIVACY_MANAGER_TAB
     {
@@ -186,55 +211,6 @@ Below is a list of available tabs in a GDPR privacy manager:
     }
 ```
 
-# Custom GDPR Consent
-
-To provide you with the ability to request custom GDPR consent with specific vendors, categories, and legitimate interest categories we created the `CustomConsentGDPR` method. One additional step to handle the result of the call is the delegate which handles the `GdprConsent` object, represented as `SuccessDelegate` method in our code example below. It will be asynchronously triggered when the result of end-user interaction is handled.
-```c#
-    public void OnCustomConsentButtonClick()
-    {
-        CMP.CustomConsentGDPR(vendors: new string[] { "5fbe6f050d88c7d28d765d47" },
-                              categories: new string[] { "60657acc9c97c400122f21f3" },
-                              legIntCategories: new string[] { },
-                              onSuccessDelegate: SuccessDelegate);
-    }
-
-    private void SuccessDelegate(GdprConsent customConsent)
-    {
-        Debug.Log($"I am your success callback!");
-    }
-```
-
 # Build for iOS
 
-Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. You can follow the steps below to supplement our `CMPPostProcessBuild`[PostProcessBuild] script.
-
-## iOS – Adding the `ConsentViewController.xcframework`
-To use xcframework functionality you should tie it with your xcode project.
-1. Drag and drop `ConsentViewController.xcframework` to your Xcode project (into Project Navigator). Select the checkboxes for both **Unity-iPhone** and **UnityFrameworks** under the **Add to targets** field.
-2. Find in Project Navigator the `Unity-Iphone` icon. Usually it is topmost. Select it.
-3. Then select `Unity-iPhone` target
-4. Select `Build Phase`
-5. Add `ConsentViewController.xcframework` to `EmbedFramework` section
-6. **If building for device**: Tick the `Copy only when installing` checkbox. <mark>**Note**: Skip this step if you are building for a simulator.</mark>
-7. Select `UnityFramework` target
-8. Add `ConsentViewController.xcframework` to `Link Binary With Libraries` section
-
-<mark>**Note**: Unity may handle XCFramework in a wrong way if you store it in your Unity project and have any import settings applied. In such case, go to `UnityFramework` target > `Build Phases` > `Link Binary With Libraries` and delete all entries of `ConsentViewController.framework` (But make sure that **xcframework** is still there)
-<br/><br/>
-If you store xcframework under **Assets** folder in your unity project, to avoid this odd behaviour in the future, go to the  **ConsentViewController.xcframework** folder in Unity Editor, and perform the following for both **ios-arm64_armv7** and **ios-arm64_i386_x86_64-simulator** folders:
-<br/><br/>
-• Select **ConsentViewController.framework** <br/>
-• Untick every platform in **Select platforms for plugin**<br/> • Click **Apply** to import the new settings.
-</mark>
-
-## iOS – Enable `New Build System`
- Apple introduced .xcframework to replace the old .framework. The .xcframework requires a new build system. Unity older than 2020.3.10 enables `Legacy Build System (Deprecated)` by default so it is necessary to switch the `Build System` to the new one manually.
-1. In Xcode navigate to `Project` > `Project Settings`.
-2. Switch `Build System` to `New Build System (Default)`.
-
-## iOS – Add tracking disclaimer to `info.plist`
-This feature is also required by Apple due to privacy terms.
-1. Find in Project Navigator and open `info.plist` file.
-2. Click `+` icon which adds new row.
-3. Add following as a key: `Privacy - Tracking Usage Description`
-4. Add following as a value `This identifier will be used to deliver personalized ads to you.`
+Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed.

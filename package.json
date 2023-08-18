@@ -1,0 +1,26 @@
+{
+  "name": "com.sourcepoint.unitycmp",
+  "displayName": "Sourcepoint Consent Message Plugin",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "Native UI Privacy Manager for both GDPR and CCPA legislations.",
+  "author": {
+    "name": "Dmytro Fedko",
+    "email": "fedko.dmytro@gmail.com",
+    "url": "https://github.com/SourcePointUSA/unity-sdk"
+  },  
+  "files": [
+    "/Assets/Sourcepoint.asmdef",
+    "/Assets/Sourcepoint.asmdef.meta",
+    "/Assets/ConsentManagementProvider/*",
+    "/Assets/ConsentManagementProvider.meta",
+    "/Assets/ExampleApp/*",
+    "/Assets/ExampleApp.meta",
+    "/Assets/ExternalDependencyManager/*",
+    "/Assets/ExternalDependencyManager.meta",
+    "Assets.meta",
+    "LICENSE.meta",
+    "package.json.meta",
+    "README.md.meta"
+  ]
+}
