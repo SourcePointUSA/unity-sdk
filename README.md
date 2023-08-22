@@ -211,6 +211,42 @@ Below is a list of available tabs in a GDPR privacy manager:
     }
 ```
 
+# GetSpConsent
+
+Getter for SpConsents data. After calling, checks platform(Android or ios) and return SPConsents structure:
+
+```c#
+    SpConsents
+        |-- gdpr?
+        |   |-- applies: bool
+        |   |-- consents: GdprConsent
+        |       |-- uuid: String?
+        |       |-- tcData: Map<String, String>
+        |       |-- grants: Map<String, GDPRPurposeGrants>
+        |       |-- euconsent: String
+        |       |-- acceptedCategories: List<String>
+        |       |-- webConsentPayload: String
+        |       |-- consentStatus: ConsentStatus
+        |-- ccpa?
+            |-- applies: bool
+            |-- consents: CcpaConsent
+                |-- uuid: String?
+	        |-- rejectedCategories: List<String>
+                |-- rejectedVendors: List<String>
+                |-- status: String?
+                |-- uspstring: String
+                |-- childPmId: String
+                |-- signedLspa: bool
+                |-- webConsentPayload: String
+                |-- consentStatus: ConsentStatus?
+```
+
+This method may return null. Sample usage:
+
+```c#
+    CMP.GetSpConsents()
+```
+        
 # Build for iOS
 
 Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed.
