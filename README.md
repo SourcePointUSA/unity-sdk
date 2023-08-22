@@ -211,6 +211,59 @@ Below is a list of available tabs in a GDPR privacy manager:
     }
 ```
 
+# GetSpConsent
+
+This getter is used to retrieve `SpConsents` data. After calling, it checks the platform (Android or iOS) and returns the `SPConsents` structure:
+
+```c#
+    SpConsents
+        |-- gdpr?
+        |   |-- applies: bool
+        |   |-- consents: GdprConsent
+        |       |-- uuid: String?
+        |       |-- tcData: Map<String, String>
+        |       |-- grants: Map<String, GDPRPurposeGrants>
+        |       |-- euconsent: String
+        |       |-- acceptedCategories: List<String>
+        |       |-- consentStatus: ConsentStatus
+        |-- ccpa?
+            |-- applies: bool
+            |-- consents: CcpaConsent
+                |-- uuid: String?
+	        |-- rejectedCategories: List<String>
+                |-- rejectedVendors: List<String>
+                |-- status: String?
+                |-- uspstring: String
+                |-- childPmId: String
+                |-- signedLspa: bool
+                |-- consentStatus: ConsentStatus?
+```
+
+This method may return null. Sample usage:
+
+```c#
+    CMP.GetSpConsents()
+```
+
+## Verifying end-user consent for a given vendor
+
+### IAB Vendors
+If the vendor you're interested in verifying consent for is part of the IAB group, you don't need to manually check for consent. Our SDK implements the Transparency Consent Framework (TCF) spec and IAB vendors know how to retrieve consent from the local storage. 
+
+### Non-IAB vendors (aka custom vendors)
+For vendors that are not part of the IAB, you can verify the user consented to the vendor with the following:
+     
+```c#
+     consents = CMP.GetSpConsents();
+     
+     // for GDPR
+     bool isMyGDPRVendorConsented = consents.gdpr.consents.grants["a_vendor_id"].vendorGrant;
+     
+     // for CCPA
+     bool isMyCCPAVendorConsented = consents.ccpa.consents.status != "rejectedAll" ||
+                                       consents.ccpa.consents.rejectedVendors.Contains("a_vendor_id");
+```
+	
 # Build for iOS
 
 Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed.
