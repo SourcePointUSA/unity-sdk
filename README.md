@@ -245,7 +245,7 @@ This method may return null. Sample usage:
     CMP.GetSpConsents()
 ```
 
-## Verifying consent to a given vendor
+## Verifying end-user consent for a given vendor
 
 ### IAB Vendors
 If the vendor you're interested in verifying consent for is part of the IAB group, you don't need to manually check for consent. Our SDK implements the Transparency Consent Framework (TCF) spec and IAB vendors know how to retrieve consent from the local storage. 
