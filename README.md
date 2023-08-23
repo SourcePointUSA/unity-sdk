@@ -259,8 +259,8 @@ For vendors that are not part of the IAB, you can verify the user consented to t
      // for GDPR
      bool isMyGDPRVendorConsented = consents.gdpr.consents.grants["a_vendor_id"].vendorGrant;
      
-     // for CCPA
-     bool isMyCCPAVendorConsented = consents.ccpa.consents.status != "rejectedAll" ||
+     // for CCPA, notice vendors are "opted-in" by default
+     bool isMyCCPAVendorRejected = consents.ccpa.consents.status == "rejectedAll" ||
                                        consents.ccpa.consents.rejectedVendors.Contains("a_vendor_id");
 ```
 	
