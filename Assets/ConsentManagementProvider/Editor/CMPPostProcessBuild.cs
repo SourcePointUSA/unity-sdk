@@ -13,7 +13,8 @@ public static class CMPPostProcessBuild
         if (buildTarget == BuildTarget.iOS)
         {
             PBXProject pbxProject = new PBXProject();
-            string projPath = buildPath + "/Unity-Iphone.xcodeproj/project.pbxproj";
+            string projPath = PBXProject.GetPBXProjectPath(buildPath);
+
             pbxProject.ReadFromFile(projPath);
             string unityProjectGuid = pbxProject.ProjectGuid();
             string unityMainTargetGuid = pbxProject.GetUnityMainTargetGuid();
