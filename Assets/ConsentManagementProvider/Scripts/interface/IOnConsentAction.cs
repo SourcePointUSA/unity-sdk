@@ -5,6 +5,6 @@ namespace ConsentManagementProviderLib
 {
     public interface IOnConsentAction : IConsentEventHandler
     {
-        void OnConsentAction(CONSENT_ACTION_TYPE action);
+        void OnConsentAction(SpAction action);
     }
 }

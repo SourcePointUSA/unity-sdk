@@ -39,13 +39,18 @@ namespace ConsentManagementProviderLib.Android
             AndroidJavaObject wrapper = actionType.Call<AndroidJavaObject>("getActionType");
             CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE)wrapper.Call<int>("getCode");
             CmpDebugUtil.Log("Unwrapped ActionType is: " + unwrappedType);
-            
+
+            string customActionId = actionType.Call<string>("getCustomActionId");
+            CmpDebugUtil.Log("Unwrapped CustomActionId is: " + customActionId);
+
+            SpAction spAction = new SpAction(unwrappedType, customActionId);
+
             CmpDebugUtil.Log("Trying to put \"pb_key\", \"pb_value\" in pubData");
             AndroidJavaObject pubData = actionType.Call<AndroidJavaObject>("getPubData");
             pubData.Call<AndroidJavaObject>("put", "pb_key", "pb_value");
             CmpDebugUtil.Log("PUT IS SUCCESSFUL");
 
-            ConsentMessenger.Broadcast<IOnConsentAction>(unwrappedType);
+            ConsentMessenger.Broadcast<IOnConsentAction>(spAction);
             CmpDebugUtil.Log("Now I'll return actionType back to Java...");
             return actionType;
         }
