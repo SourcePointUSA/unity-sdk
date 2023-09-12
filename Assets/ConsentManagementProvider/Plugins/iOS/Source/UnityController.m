@@ -296,7 +296,11 @@
 //    NSLog(@"onAction");
     NSInteger actionTypeId = ((NSInteger)action.type);
     NSString *tmp = [NSString stringWithFormat:@"%ld", actionTypeId];
-    NSDictionary *arr = @{@"type": tmp, @"customActionId": action.customActionId};
+    NSString *tmpId = @"";
+    if (action.customActionId != NULL){
+        tmpId = action.customActionId;
+    }
+    NSDictionary *arr = @{@"type": tmp, @"customActionId": tmpId};
     NSData *data = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     const char *str = [jsonString UTF8String];
