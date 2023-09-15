@@ -296,7 +296,15 @@
 //    NSLog(@"onAction");
     NSInteger actionTypeId = ((NSInteger)action.type);
     NSString *tmp = [NSString stringWithFormat:@"%ld", actionTypeId];
-    const char *str = [tmp UTF8String];
+    NSString *tmpId = @"";
+    if (action.customActionId != NULL){
+        tmpId = action.customActionId;
+    }
+    NSDictionary *arr = @{@"type": tmp, @"customActionId": tmpId};
+    NSData *data = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    const char *str = [jsonString UTF8String];
+//    NSLog(@"%s", str);
     UnitySendMessage([self getGOName], "OnConsentAction", str);
 }
 

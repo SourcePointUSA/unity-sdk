@@ -27,7 +27,7 @@ namespace ConsentManagementProviderLib
                     BroadcastEventDispatcher.Execute<IOnConsentReady>(null, (i, d) => i.OnConsentReady(consents));
                     break;
                 case nameof(IOnConsentAction):
-                    CONSENT_ACTION_TYPE actionType = (CONSENT_ACTION_TYPE)list[0];
+                    SpAction actionType = (SpAction)list[0];
                     BroadcastEventDispatcher.Execute<IOnConsentAction>(null, (i, d) => i.OnConsentAction(actionType));
                     break;
                 case nameof(IOnConsentError):

@@ -19,9 +19,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         Debug.LogWarning("User will be shown the web view with series of consent messages!");
     }
 
-    public void OnConsentAction(CONSENT_ACTION_TYPE action)
+    public void OnConsentAction(SpAction action)
     {
-        Debug.LogWarning($"User made {action} action with consent view!");
+        Debug.LogWarning($"User made action={action.Type} and customActionId={action.CustomActionId} action with consent view!");
     }
 
     public void OnConsentError(Exception exception)

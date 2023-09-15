@@ -69,8 +69,11 @@ namespace ConsentManagementProviderLib.iOS
         void OnConsentAction(string message)
         {
             CmpDebugUtil.Log("OnConsentAction IOS_CALLBACK_RECEIVED: " + message);
-            CONSENT_ACTION_TYPE actionType = (CONSENT_ACTION_TYPE) Convert.ToInt32(message);
-            ConsentMessenger.Broadcast<IOnConsentAction>(actionType);
+            SpActionWrapper wrapped = JsonSerializer.Deserialize<SpActionWrapper>(message);
+            CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE) Convert.ToInt32(wrapped.type);
+            string customActionId = wrapped.customActionId.ToString();
+            SpAction spAction = new SpAction(unwrappedType, customActionId);
+            ConsentMessenger.Broadcast<IOnConsentAction>(spAction);
         }
 
         void OnConsentUIFinished(string message)
