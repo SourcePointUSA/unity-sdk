@@ -77,20 +77,24 @@ Consent callbacks allow you to track progress and receive updates of user intera
 | `IOnConsentUIFinished` | Triggered when user interaction with web view UI is done and view is about to disappear                                  |
 | `IOnConsentReady`      | Triggered when server successfully reacted to user's consent, provides you `SpConsent` object with consent info          |
 
-`CONSENT_ACTION_TYPE` can return the following:
+# Custom Action, OnConsentAction
 
+`IOnConsentAction` is triggered when the user takes an action in the first layer message or privacy manager, and provides you an instance of `SpAction` which contains:
+1) The enumeration of type `CONSENT_ACTION_TYPE` which indicates the type of action:
 ```c#
 public enum CONSENT_ACTION_TYPE
 {
     SAVE_AND_EXIT = 1,
     PM_DISMISS = 2,
+    CUSTOM_ACTION = 9,
     ACCEPT_ALL = 11,
     SHOW_OPTIONS = 12,
     REJECT_ALL = 13,
     MSG_CANCEL = 15,
 }
 ```
-
+2) `CustomActionId : String` - If the type of action is Custom, this attribute will contain the id you assigned to it when building the message in our message builder. In other cases the line is empty.
+   
 # Workflow to handle callbacks using interfaces
 
 After you have created your own script which derives from `MonoBehaviour` and attached this component to your `GameObject` you should perform the following:
@@ -154,9 +158,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         Debug.LogWarning("User will be shown the web view with series of consent messages!");
     }
 
-    public void OnConsentAction(CONSENT_ACTION_TYPE action)
+    public void OnConsentAction(SpAction action)
     {
-        Debug.LogWarning($"User made {action} action with consent view!");
+        Debug.LogWarning($"User made action={action.Type} and customActionId={action.CustomActionId} action with consent view!");
     }
 
     public void OnConsentError(Exception exception)
