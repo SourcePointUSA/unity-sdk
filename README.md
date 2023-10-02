@@ -33,15 +33,16 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     spCampaigns.Add(ios14);
 ```
 
-In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
+		   propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
                    language: MESSAGE_LANGUAGE.ENGLISH,
                    campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
-                   messageTimeoutInSeconds: 3);
+                   messageTimeoutInSeconds: 30);
 ```
 
 > **Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).
@@ -76,20 +77,24 @@ Consent callbacks allow you to track progress and receive updates of user intera
 | `IOnConsentUIFinished` | Triggered when user interaction with web view UI is done and view is about to disappear                                  |
 | `IOnConsentReady`      | Triggered when server successfully reacted to user's consent, provides you `SpConsent` object with consent info          |
 
-`CONSENT_ACTION_TYPE` can return the following:
+# Custom Action, OnConsentAction
 
+`IOnConsentAction` is triggered when the user takes an action in the first layer message or privacy manager, and provides you an instance of `SpAction` which contains:
+1) The enumeration of type `CONSENT_ACTION_TYPE` which indicates the type of action:
 ```c#
 public enum CONSENT_ACTION_TYPE
 {
     SAVE_AND_EXIT = 1,
     PM_DISMISS = 2,
+    CUSTOM_ACTION = 9,
     ACCEPT_ALL = 11,
     SHOW_OPTIONS = 12,
     REJECT_ALL = 13,
     MSG_CANCEL = 15,
 }
 ```
-
+2) `CustomActionId : String` - If the type of action is Custom, this attribute will contain the id you assigned to it when building the message in our message builder. In other cases the line is empty.
+   
 # Workflow to handle callbacks using interfaces
 
 After you have created your own script which derives from `MonoBehaviour` and attached this component to your `GameObject` you should perform the following:
@@ -153,9 +158,9 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         Debug.LogWarning("User will be shown the web view with series of consent messages!");
     }
 
-    public void OnConsentAction(CONSENT_ACTION_TYPE action)
+    public void OnConsentAction(SpAction action)
     {
-        Debug.LogWarning($"User made {action} action with consent view!");
+        Debug.LogWarning($"User made action={action.Type} and customActionId={action.CustomActionId} action with consent view!");
     }
 
     public void OnConsentError(Exception exception)
@@ -259,8 +264,8 @@ For vendors that are not part of the IAB, you can verify the user consented to t
      // for GDPR
      bool isMyGDPRVendorConsented = consents.gdpr.consents.grants["a_vendor_id"].vendorGrant;
      
-     // for CCPA
-     bool isMyCCPAVendorConsented = consents.ccpa.consents.status != "rejectedAll" ||
+     // for CCPA, notice vendors are "opted-in" by default
+     bool isMyCCPAVendorRejected = consents.ccpa.consents.status == "rejectedAll" ||
                                        consents.ccpa.consents.rejectedVendors.Contains("a_vendor_id");
 ```
 	
