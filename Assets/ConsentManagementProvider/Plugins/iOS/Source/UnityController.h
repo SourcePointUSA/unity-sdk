@@ -2,6 +2,7 @@
 //  Created by Dmytro Fedko on 31.05.2021.
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 @interface UnityController : UIViewController
 
