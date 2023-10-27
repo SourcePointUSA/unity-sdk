@@ -29,6 +29,10 @@ namespace ConsentManagementProviderLib.iOS
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
         [DllImport("__Internal")]
+        private static extern void _initLib();
+        [DllImport("__Internal")]
+        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, MESSAGE_LANGUAGE language, string gdprPmId, string ccpaPmId);
+        [DllImport("__Internal")]
         private static extern void _loadMessage(string authId);
         [DllImport("__Internal")]
         private static extern void _addTargetingParamForCampaignType(int campaignType, string key, string value);
@@ -81,6 +85,9 @@ namespace ConsentManagementProviderLib.iOS
             long messageTimeoutInSeconds = 3)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
+            _initLib();
+            _configLib(accountId, propertyId, propertyName, gdpr, ccpa, language, gdprPmId, ccpaPmId);
+            //
             _cleanDict();
             int campaignsAmount = spCampaigns.Count;
             int[] campaignTypes = new int[campaignsAmount];
