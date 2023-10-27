@@ -67,7 +67,18 @@ namespace ConsentManagementProviderLib.iOS
             iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
+        public void InitializeLib(
+            int accountId, 
+            int propertyId, 
+            string propertyName, 
+            bool gdpr, 
+            bool ccpa, 
+            MESSAGE_LANGUAGE language, 
+            string gdprPmId, 
+            string ccpaPmId,
+            List<SpCampaign> spCampaigns,
+            CAMPAIGN_ENV campaignsEnvironment, 
+            long messageTimeoutInSeconds = 3)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanDict();
@@ -102,17 +113,17 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        public void LoadGDPRPrivacyManager(string pmId, PRIVACY_MANAGER_TAB tab)
+        public void LoadGDPRPrivacyManager()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadGDPRPrivacyManager(pmId, (int)tab);
+            _loadGDPRPrivacyManager();
 #endif
         }
 
-        public void LoadCCPAPrivacyManager(string pmId, PRIVACY_MANAGER_TAB tab)
+        public void LoadCCPAPrivacyManager()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadCCPAPrivacyManager(pmId, (int)tab);
+            _loadCCPAPrivacyManager();
 #endif
         }
 

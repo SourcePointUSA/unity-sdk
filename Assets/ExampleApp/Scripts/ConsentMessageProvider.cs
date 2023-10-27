@@ -20,6 +20,15 @@ public class ConsentMessageProvider : MonoBehaviour
     long messageTimeoutInSeconds = 30;
     [SerializeField]
     string authID = null;
+    [Header("Only for IOS:")]
+    [SerializeField] 
+    bool gdpr = true;
+    [SerializeField] 
+    bool ccpa = true;
+    [SerializeField] 
+    string gdprPmId = "488393";
+    [SerializeField] 
+    string ccpaPmId = "509688";
 
     private void Awake()
     {
@@ -50,7 +59,11 @@ public class ConsentMessageProvider : MonoBehaviour
                        accountId: this.accountId,
                        propertyId: this.propertyId,
                        propertyName: this.propertyName,
+                       gdpr: this.gdpr,
+                       ccpa: this.ccpa,
                        language: this.language,
+                       gdprPmId: this.gdprPmId,
+                       ccpaPmId: this.ccpaPmId,
                        campaignsEnvironment: campaignEnvironment,
                        messageTimeoutInSeconds: this.messageTimeoutInSeconds);
     }

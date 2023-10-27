@@ -20,7 +20,11 @@ namespace ConsentManagementProviderLib
             int accountId,
             int propertyId,
             string propertyName, 
-            MESSAGE_LANGUAGE language, 
+            bool gdpr, 
+            bool ccpa, 
+            MESSAGE_LANGUAGE language,  
+            string gdprPmId, 
+            string ccpaPmId,
             CAMPAIGN_ENV campaignsEnvironment,
             long messageTimeoutInSeconds = 3)
         {
@@ -50,13 +54,17 @@ namespace ConsentManagementProviderLib
             if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
                 CreateBroadcastExecutorGO();
-                ConsentWrapperIOS.Instance.InitializeLib(spCampaigns: spCampaigns,
-                                                        accountId: accountId,
-                                                        propertyId: propertyId,
-                                                        propertyName: propertyName,
-                                                        language: language,
-                                                        campaignsEnvironment: campaignsEnvironment,
-                                                        messageTimeoutInSeconds: messageTimeoutInSeconds);
+                ConsentWrapperIOS.Instance.InitializeLib(accountId, 
+                                                        propertyId, 
+                                                        propertyName, 
+                                                        gdpr, 
+                                                        ccpa, 
+                                                        language, 
+                                                        gdprPmId, 
+                                                        ccpaPmId,
+                                                        spCampaigns,
+                                                        campaignsEnvironment,
+                                                        messageTimeoutInSeconds);
             }
 #endif
         }
@@ -103,13 +111,11 @@ namespace ConsentManagementProviderLib
             { 
                 if(campaignType == CAMPAIGN_TYPE.GDPR)
                 {
-                    ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(pmId: pmId, 
-                                                                      tab: tab);
+                    ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager();
                 }
                 else if(campaignType == CAMPAIGN_TYPE.CCPA)
                 {
-                    ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(pmId: pmId,
-                                                                      tab: tab);
+                    ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager();
                 }
             }
 #endif
