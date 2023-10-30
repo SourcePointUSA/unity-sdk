@@ -109,7 +109,7 @@ import UIKit
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "wormholy_fire"), object: nil)
     }
     
-    func onClearConsentTap(_ sender: Any) {
+    @objc public func onClearConsentTap() {
         SPConsentManager.clearAllData()
         myVendorAccepted = .Unknown
     }
@@ -277,18 +277,23 @@ public func printChar(text: UnsafePointer<CChar>?) {
     print(String(cString: text ?? base))
 }
 
-@available(iOS 15.0, *)
 extension UIApplication {
     var firstKeyWindow: UIWindow? {
-            let windowScenes = UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-            // 1
-            let activeScene = windowScenes
-                .filter { $0.activationState == .foregroundActive }
-            // 2
-            let firstActiveScene = activeScene.first
-            let keyWindow = firstActiveScene?.keyWindow
-            
-            return keyWindow
+        if #available(iOS 15.0, *) {
+            return UIApplication
+                .shared
+                .connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+                .last
+        } else {
+            if #available(iOS 13.0, *) {
+                return UIApplication
+                    .shared
+                    .connectedScenes
+                    .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+                    .last { $0.isKeyWindow }
+            }
         }
+        return UIApplication.shared.windows.last { $0.isKeyWindow }
+    }
 }
