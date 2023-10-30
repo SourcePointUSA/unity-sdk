@@ -7,10 +7,13 @@ using System.Collections.Generic;
 
 public class PrivacySettings : MonoBehaviour, IOnConsentReady
 {
-    public int accountId = 1909;
-    public string propertyName = "voodoo.ios";
-    public int propertyId = 31817;
-    public string pmId = "838714";
+    public int accountId = 22;
+    public int propertyId = 16893;    
+    public string propertyName = "mobile.multicampaign.demo";
+    public bool gdpr = true;
+    public bool ccpa = false;
+    public string gdprPmId = "488393";
+    public string ccpaPmId = "509688";
     public string authId = null;
     public List<CAMPAIGN_TYPE> campaignTypes = new ();
 
@@ -51,7 +54,11 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             accountId: accountId,
             propertyId: propertyId,
             propertyName: propertyName,
+            gdpr: gdpr, 
+            ccpa: ccpa, 
             language: language,
+            gdprPmId: gdprPmId, 
+            ccpaPmId: ccpaPmId,
             campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
             messageTimeoutInSeconds: 30
         );
@@ -67,7 +74,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         CMP.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
-            pmId: pmId,
+            pmId: gdprPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
         );
     }
@@ -76,6 +83,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         PlayerPrefs.DeleteAll();
         storedConsentString = null;
+        CMP.Dispose();
         updateUI();
     }
 
