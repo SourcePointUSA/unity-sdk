@@ -5,6 +5,7 @@ using UnityEditor.iOS.Xcode;
 using System.IO;
 using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
+using ConsentManagementProviderLib; 
 
 public static class CMPPostProcessBuild
 {
@@ -65,6 +66,13 @@ public static class CMPPostProcessBuild
             
         var buildKey = "NSUserTrackingUsageDescription";
         rootDict.SetString(buildKey,"This identifier will be used to deliver personalized ads to you.");
+        buildKey = "SPLogLevel";
+        var buildValue="prod";
+        if (CmpDebugUtil.isLogging())
+        {
+            buildValue="debug";
+        }
+        rootDict.SetString(buildKey,buildValue);
 
         File.WriteAllText(plistPath, plist.WriteToString());
     }
