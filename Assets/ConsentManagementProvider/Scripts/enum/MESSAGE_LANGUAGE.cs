@@ -28,7 +28,7 @@ namespace ConsentManagementProviderLib
         LITHUANIAN = 20,
         NORWEGIAN = 21,
         POLISH = 22,
-        PORTUGEESE = 23,
+        PORTUGUESE = 23,
         ROMANIAN = 24,
         RUSSIAN = 25,
         SERBIAN_CYRILLIC = 26,
