@@ -74,7 +74,7 @@ namespace ConsentManagementProviderLib.Android
                                                                                language: msgLang,
                                                                                campaignsEnvironment: campaignsEnvironment,
                                                                                spCampaigns: campaigns);
-                    consentLib = constructor.ConsrtuctLib(spConfig: spConfig,
+                    consentLib = constructor.ConstructLib(spConfig: spConfig,
                                                           activity: this.activity,
                                                           spClient: this.spClient);
                 }

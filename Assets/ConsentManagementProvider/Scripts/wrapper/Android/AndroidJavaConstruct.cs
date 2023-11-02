@@ -29,7 +29,7 @@ namespace ConsentManagementProviderLib.Android
             return activity;
         }
 
-        internal AndroidJavaObject ConsrtuctLib(AndroidJavaObject spConfig, AndroidJavaObject activity, SpClientProxy spClient)
+        internal AndroidJavaObject ConstructLib(AndroidJavaObject spConfig, AndroidJavaObject activity, SpClientProxy spClient)
         {
             AndroidJavaObject lib = pluginFactoryClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient);
             CmpDebugUtil.Log("consentLib is OK");
@@ -137,9 +137,7 @@ namespace ConsentManagementProviderLib.Android
             return campaignEnv;
         }
 
-        internal void Dispose()
-        {
+        internal void Dispose() => 
             this.pluginFactoryClass = null;
-        }
     }
 }
