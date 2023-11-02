@@ -25,7 +25,7 @@ namespace ConsentMessagePlugin.Android
             LITHUANIAN="LT",
             NORWEGIAN="NO",
             POLISH="PL",
-            PORTUGEESE="PT",
+            PORTUGUESE="PT",
             ROMANIAN="RO",
             RUSSIAN="RU",
             SERBIAN_CYRILLIC="SR-CYRL",
@@ -35,5 +35,42 @@ namespace ConsentMessagePlugin.Android
             SPANISH="ES",
             SWEDISH="SV",
             TURKISH="TR";
+    }
+
+    internal static class MESSAGE_LANGUAGE_FULL_STRING_KEY
+    {
+        internal const string
+            BULGARIAN="BULGARIAN",
+            CATALAN="CATALAN",
+            CHINESE="CHINESE",
+            CROATIAN="CROATIAN",
+            CZECH="CZECH",
+            DANISH="DANISH",
+            DUTCH="DUTCH",
+            ENGLISH="ENGLISH",
+            ESTONIAN="ESTONIAN",
+            FINNISH="FINNISH",
+            FRENCH="FRENCH",
+            GAELIC="GAELIC",
+            GERMAN="GERMAN",
+            GREEK="GREEK",
+            HUNGARIAN="HUNGARIAN",
+            ICELANDIC="ICELANDIC",
+            ITALIAN="ITALIAN",
+            JAPANESE="JAPANESE",
+            LATVIAN="LATVIAN",
+            LITHUANIAN="LITHUANIAN",
+            NORWEGIAN="NORWEGIAN",
+            POLISH="POLISH",
+            PORTUGUESE="PORTUGUESE",
+            ROMANIAN="ROMANIAN",
+            RUSSIAN="RUSSIAN",
+            SERBIAN_CYRILLIC="SERBIAN_CYRILLIC",
+            SERBIAN_LATIN="SERBIAN_LATIN",
+            SLOVAKIAN="SLOVAKIAN",
+            SLOVENIAN="SLOVENIAN",
+            SPANISH="SPANISH",
+            SWEDISH="SWEDISH",
+            TURKISH="TURKISH";
     }
 }

@@ -29,7 +29,7 @@ namespace ConsentManagementProviderLib.Android
             return activity;
         }
 
-        internal AndroidJavaObject ConsrtuctLib(AndroidJavaObject spConfig, AndroidJavaObject activity, SpClientProxy spClient)
+        internal AndroidJavaObject ConstructLib(AndroidJavaObject spConfig, AndroidJavaObject activity, SpClientProxy spClient)
         {
             AndroidJavaObject lib = pluginFactoryClass.CallStatic<AndroidJavaObject>("makeConsentLib", spConfig, activity, spClient);
             CmpDebugUtil.Log("consentLib is OK");
@@ -38,10 +38,14 @@ namespace ConsentManagementProviderLib.Android
 
         internal AndroidJavaObject ConstructPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
         {
-            AndroidJavaObject privacyManagerTabK = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.PMTab", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab), (int)tab);
-            privacyManagerTabK.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
+            string enumName = CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab);
+
+            AndroidJavaClass pmTabClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.model.PMTab");
+            AndroidJavaObject privacyManagerTab = pmTabClass.GetStatic<AndroidJavaObject>(enumName.ToUpper());
+            privacyManagerTab.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
+
             CmpDebugUtil.Log("PMTab is OK");
-            return privacyManagerTabK;
+            return privacyManagerTab;
         }
 
         internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, AndroidJavaObject targetingParams, CAMPAIGN_TYPE campaignTypeForLog)
@@ -73,8 +77,12 @@ namespace ConsentManagementProviderLib.Android
 
         internal AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
         {
-            AndroidJavaObject msgLang = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.MessageLanguage", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang), (int)lang);
+            string enumName = CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang);
+
+            AndroidJavaClass messageLanguageClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.model.MessageLanguage");
+            AndroidJavaObject msgLang = messageLanguageClass.GetStatic<AndroidJavaObject>(CSharp2JavaStringEnumMapper.GetMessageFullLanguageKey(lang));
             msgLang.Set("value", CSharp2JavaStringEnumMapper.GetMessageLanguageKey(lang));
+
             CmpDebugUtil.Log("MessageLanguage is OK");
             return msgLang;
         }
@@ -120,15 +128,16 @@ namespace ConsentManagementProviderLib.Android
 
         private AndroidJavaObject ConstructCampaignEnv(CAMPAIGN_ENV environment)
         {
-            AndroidJavaObject campaignEnv = new AndroidJavaObject("com.sourcepoint.cmplibrary.data.network.util.CampaignsEnv", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment), (int)environment);
-            campaignEnv.Set("env", CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
+            string enumName = CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment);
+
+            AndroidJavaClass campaignsEnvClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.data.network.util.CampaignsEnv");
+            AndroidJavaObject campaignEnv = campaignsEnvClass.GetStatic<AndroidJavaObject>(CSharp2JavaStringEnumMapper.GetCampaignEnvKey(environment));
+
             CmpDebugUtil.Log("campaignEnv is OK");
             return campaignEnv;
         }
 
-        internal void Dispose()
-        {
+        internal void Dispose() => 
             this.pluginFactoryClass = null;
-        }
     }
 }
