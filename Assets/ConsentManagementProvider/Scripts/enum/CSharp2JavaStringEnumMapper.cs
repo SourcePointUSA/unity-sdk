@@ -6,6 +6,7 @@ namespace ConsentManagementProviderLib.Enum
     internal static class CSharp2JavaStringEnumMapper
     {
         static Dictionary<PRIVACY_MANAGER_TAB, string> privacyManagerTabToJavaEnumKey;
+        static Dictionary<PRIVACY_MANAGER_TAB, string> privacyManagerTabToJavaEnum;
         static Dictionary<CAMPAIGN_ENV, string> campaignEnvToJavaEnumKey;
         static Dictionary<MESSAGE_LANGUAGE, string> messageLanguageToJavaKey;
         static Dictionary<MESSAGE_LANGUAGE, string> messageFullLanguageToJavaKey;
@@ -35,12 +36,18 @@ namespace ConsentManagementProviderLib.Enum
         {
             return privacyManagerTabToJavaEnumKey[tab];
         }
+
+        public static string GetPrivacyManagerTab(PRIVACY_MANAGER_TAB tab)
+        {
+            return privacyManagerTabToJavaEnum[tab];
+        }
         #endregion
 
         #region Initializers
         private static  void InitializeMapping()
         {
             InitializePrivacyManagerTabMapping();
+            InitializePrivacyManagerTabMappingKey();
             InitializeCampaignEnvMapping();
             InitializeMessageLanguageMapping();
             InitializeMessageFullLanguageMapping();
@@ -127,13 +134,22 @@ namespace ConsentManagementProviderLib.Enum
             campaignEnvToJavaEnumKey.Add(CAMPAIGN_ENV.STAGE, CAMPAIGN_ENV_STRING_KEY.STAGE);
         }
 
-        private static void InitializePrivacyManagerTabMapping()
+        private static void InitializePrivacyManagerTabMappingKey()
         {
             privacyManagerTabToJavaEnumKey = new Dictionary<PRIVACY_MANAGER_TAB, string>();
             privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.DEFAULT, PRIVACY_MANAGER_TAB_STRING_KEY.DEFAULT);
             privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.PURPOSES, PRIVACY_MANAGER_TAB_STRING_KEY.PURPOSES);
             privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.VENDORS, PRIVACY_MANAGER_TAB_STRING_KEY.VENDORS);
             privacyManagerTabToJavaEnumKey.Add(PRIVACY_MANAGER_TAB.FEATURES, PRIVACY_MANAGER_TAB_STRING_KEY.FEATURES);
+        }
+
+        private static void InitializePrivacyManagerTabMapping()
+        {
+            privacyManagerTabToJavaEnum = new Dictionary<PRIVACY_MANAGER_TAB, string>();
+            privacyManagerTabToJavaEnum.Add(PRIVACY_MANAGER_TAB.DEFAULT, PRIVACY_MANAGER_TAB_STRING.DEFAULT);
+            privacyManagerTabToJavaEnum.Add(PRIVACY_MANAGER_TAB.PURPOSES, PRIVACY_MANAGER_TAB_STRING.PURPOSES);
+            privacyManagerTabToJavaEnum.Add(PRIVACY_MANAGER_TAB.VENDORS, PRIVACY_MANAGER_TAB_STRING.VENDORS);
+            privacyManagerTabToJavaEnum.Add(PRIVACY_MANAGER_TAB.FEATURES, PRIVACY_MANAGER_TAB_STRING.FEATURES);
         }
         #endregion
     }
