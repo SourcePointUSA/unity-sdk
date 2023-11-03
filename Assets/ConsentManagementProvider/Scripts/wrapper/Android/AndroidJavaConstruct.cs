@@ -41,9 +41,6 @@ namespace ConsentManagementProviderLib.Android
             string enumName = CSharp2JavaStringEnumMapper.GetPrivacyManagerTab(tab);
 
             AndroidJavaClass pmTabClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.model.PMTab");
-
-            CmpDebugUtil.Log($"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX {tab} {enumName.ToUpper()}");
-
             AndroidJavaObject privacyManagerTab = pmTabClass.GetStatic<AndroidJavaObject>(enumName.ToUpper());
             privacyManagerTab.Set("key", CSharp2JavaStringEnumMapper.GetPrivacyManagerTabKey(tab));
 
