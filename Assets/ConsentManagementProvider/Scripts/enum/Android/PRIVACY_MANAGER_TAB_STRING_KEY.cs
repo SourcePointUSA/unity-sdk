@@ -12,9 +12,9 @@ namespace ConsentMessagePlugin.Android
     internal static class PRIVACY_MANAGER_TAB_STRING
     {
         internal const string
-            DEFAULT = "default",
-            PURPOSES = "purposes",
-            VENDORS = "vendors",
-            FEATURES = "features";
+            DEFAULT = "DEFAULT",
+            PURPOSES = "PURPOSES",
+            VENDORS = "VENDORS",
+            FEATURES = "FEATURES";
     }
 }
