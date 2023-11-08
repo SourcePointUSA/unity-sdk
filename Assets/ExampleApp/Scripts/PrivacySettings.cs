@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 public class PrivacySettings : MonoBehaviour, IOnConsentReady
 {
-    public int accountId = 1909;
-    public string propertyName = "voodoo.ios";
-    public int propertyId = 31817;
-    public string pmId = "838714";
+    public int accountId = 22;
+    public string propertyName = "mobile.multicampaign.demo";
+    public int propertyId = 16893;
+    public string pmId = "488393";
     public string authId = null;
     public List<CAMPAIGN_TYPE> campaignTypes = new ();
 
