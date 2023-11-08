@@ -70,6 +70,7 @@ namespace ConsentManagementProviderLib.Android
         {
             CmpDebugUtil.ForceEnableNextCmpLog();
             CmpDebugUtil.LogWarning($"I've reached the C# onSpFinished with JSON spConsents={spConsents}");
+            Console.WriteLine($"spConsents= `{spConsents}");
 
             try
             {
