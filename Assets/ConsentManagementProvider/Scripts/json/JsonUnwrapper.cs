@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using System.IO;
+using JsonNew = Newtonsoft.Json;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -8,32 +10,47 @@ namespace ConsentManagementProviderLib.Json
         #region Android 
         public static SpConsents UnwrapSpConsentsAndroid(string json)
         {
-            SpConsentsWrapperAndroid wrapped = JsonSerializer.Deserialize<SpConsentsWrapperAndroid>(json);
-            SpGdprConsent unwrappedGdpr = null;
-            SpCcpaConsent unwrappedCcpa = null;
-            if (wrapped.gdpr!= null)
+            using (StringReader stringReader = new StringReader(json))
+            using (JsonNew.JsonTextReader reader = new JsonNew.JsonTextReader(stringReader))
             {
-                unwrappedGdpr = UnwrapSpGdprConsentAndroid(wrapped.gdpr);
+                JsonNew.JsonSerializer serializer = new JsonNew.JsonSerializer();
+                SpConsentsWrapperAndroid wrapped = null;
+
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonNew.JsonToken.StartObject)
+                    {
+                        wrapped = serializer.Deserialize<SpConsentsWrapperAndroid>(reader);
+                    }
+                }
+
+                if (wrapped == null)
+                {
+                    throw new JsonException("JSON deserialization returned null.");
+                }
+
+                SpGdprConsent unwrappedGdpr = wrapped.gdpr != null ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = wrapped.ccpa != null ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
+
+                return new SpConsents(unwrappedGdpr, unwrappedCcpa);
             }
-            if (wrapped.ccpa != null)
-            {
-                unwrappedCcpa = UnwrapSpCcpaConsentAndroid(wrapped.ccpa);
-            }
-            return new SpConsents(unwrappedGdpr, unwrappedCcpa);
         }
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)
         {
-            CcpaConsent unwrapped = new CcpaConsent(uuid: wrappedCcpa.uuid,
-                                                    status: wrappedCcpa.status,
-                                                    uspstring: wrappedCcpa.uspstring,
-                                                    rejectedVendors: wrappedCcpa.rejectedVendors,
-                                                    rejectedCategories: wrappedCcpa.rejectedCategories,
-                                                    childPmId: wrappedCcpa.childPmId,
-                                                    applies: wrappedCcpa.applies,
-                                                    signedLspa: wrappedCcpa.signedLspa,
-                                                    webConsentPayload: wrappedCcpa.webConsentPayload,
-													null);
+            CcpaConsent unwrapped = new CcpaConsent(
+                uuid: wrappedCcpa.uuid,
+                status: wrappedCcpa.status,
+                uspstring: wrappedCcpa.uspstring,
+                rejectedVendors: wrappedCcpa.rejectedVendors,
+                rejectedCategories: wrappedCcpa.rejectedCategories,
+                childPmId: wrappedCcpa.childPmId,
+                applies: wrappedCcpa.applies,
+                signedLspa: wrappedCcpa.signedLspa,
+                webConsentPayload: wrappedCcpa.webConsentPayload,
+                null
+            );
+
             return new SpCcpaConsent(unwrapped);
         }
 
@@ -46,30 +63,13 @@ namespace ConsentManagementProviderLib.Json
                 TCData = wrappedGdpr.tcData,       
                 grants = new Dictionary<string, SpVendorGrant>()
             };
-            foreach (KeyValuePair<string, Dictionary<string, object>> vendorGrantWrapper in wrappedGdpr.grants)
-            {
-                Dictionary<string, bool> purposeGrants = new Dictionary<string, bool>();
-                bool isGranted = false;
 
-                if (vendorGrantWrapper.Value.ContainsKey("granted"))
-                    isGranted = ((JsonElement)vendorGrantWrapper.Value["granted"]).GetBoolean();
-                if (vendorGrantWrapper.Value.ContainsKey("purposeGrants"))
-                {
-                    JsonElement purposeGrantsElement = (JsonElement)vendorGrantWrapper.Value["purposeGrants"];
-                    foreach (JsonProperty purpGrant in purposeGrantsElement.EnumerateObject())
-                    {
-                        purposeGrants.Add(purpGrant.Name, purpGrant.Value.GetBoolean());
-                    }
-                }
-
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
-            }
             return new SpGdprConsent(unwrapped);
         }
         
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
         {
-            SpCustomConsentAndroid customConsent = JsonSerializer.Deserialize<SpCustomConsentAndroid>(spConsentsJson);
+            SpCustomConsentAndroid customConsent = JsonNew.JsonConvert.DeserializeObject<SpCustomConsentAndroid>(spConsentsJson);
             return customConsent;
         }
         #endregion
