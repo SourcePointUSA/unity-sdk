@@ -1,3 +1,6 @@
+# 2.1.3
+* Fixed `onConsentReady` - `onSpFinished` race condition for android
+
 # 2.1.2
 * Miscellaneous fixes
 * Improve logging system and error handling
