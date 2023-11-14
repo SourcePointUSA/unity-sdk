@@ -69,7 +69,15 @@ namespace ConsentManagementProviderLib.Json
         
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
         {
-            SpCustomConsentAndroid customConsent = JsonNew.JsonConvert.DeserializeObject<SpCustomConsentAndroid>(spConsentsJson);
+            SpCustomConsentAndroid customConsent;
+
+            using (StringReader stringReader = new StringReader(spConsentsJson))
+            using (JsonNew.JsonTextReader jsonReader = new JsonNew.JsonTextReader(stringReader))
+            {
+                JsonNew.JsonSerializer serializer = new JsonNew.JsonSerializer();
+                customConsent = serializer.Deserialize<SpCustomConsentAndroid>(jsonReader);
+            }
+
             return customConsent;
         }
         #endregion
