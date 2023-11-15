@@ -58,9 +58,6 @@ namespace ConsentManagementProviderLib.Android
         void onConsentReady(string spConsents) 
         {
             CmpDebugUtil.Log("I've reached the C# onConsentReady with json string: " + spConsents);
-             SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
-            _spConsents = consents;
-            ConsentMessenger.Broadcast<IOnConsentReady>(consents);
         }
         
         /**
@@ -75,6 +72,7 @@ namespace ConsentManagementProviderLib.Android
             {
                 SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
                 _spConsents = consents;
+                ConsentMessenger.Broadcast<IOnConsentReady>(consents);
                 ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
             }
             catch (Exception e)
