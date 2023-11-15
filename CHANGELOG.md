@@ -1,3 +1,6 @@
+# 2.1.4
+* [DIA-2808](https://sourcepoint.atlassian.net/browse/DIA-2808) DIA-2808 Implemented JSON parsing with Newtonsoft for Android [#20](https://github.com/SourcePointUSA/unity-sdk/pull/20)
+
 # 2.1.3
 * Fixed `onConsentReady` - `onSpFinished` race condition for android
 
