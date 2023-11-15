@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.IO;
-using JsonNew = Newtonsoft.Json;
+using NewtonsoftJson = Newtonsoft.Json;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -11,14 +11,14 @@ namespace ConsentManagementProviderLib.Json
         public static SpConsents UnwrapSpConsentsAndroid(string json)
         {
             using (StringReader stringReader = new StringReader(json))
-            using (JsonNew.JsonTextReader reader = new JsonNew.JsonTextReader(stringReader))
+            using (NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader))
             {
-                JsonNew.JsonSerializer serializer = new JsonNew.JsonSerializer();
+                NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
                 SpConsentsWrapperAndroid wrapped = null;
 
                 while (reader.Read())
                 {
-                    if (reader.TokenType == JsonNew.JsonToken.StartObject)
+                    if (reader.TokenType == NewtonsoftJson.JsonToken.StartObject)
                     {
                         wrapped = serializer.Deserialize<SpConsentsWrapperAndroid>(reader);
                     }
@@ -26,7 +26,7 @@ namespace ConsentManagementProviderLib.Json
 
                 if (wrapped == null)
                 {
-                    throw new JsonException("JSON deserialization returned null.");
+                    throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
                 }
 
                 SpGdprConsent unwrappedGdpr = wrapped.gdpr != null ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
@@ -72,9 +72,9 @@ namespace ConsentManagementProviderLib.Json
             SpCustomConsentAndroid customConsent;
 
             using (StringReader stringReader = new StringReader(spConsentsJson))
-            using (JsonNew.JsonTextReader jsonReader = new JsonNew.JsonTextReader(stringReader))
+            using (NewtonsoftJson.JsonTextReader jsonReader = new NewtonsoftJson.JsonTextReader(stringReader))
             {
-                JsonNew.JsonSerializer serializer = new JsonNew.JsonSerializer();
+                NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
                 customConsent = serializer.Deserialize<SpCustomConsentAndroid>(jsonReader);
             }
 
