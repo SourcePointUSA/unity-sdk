@@ -14,22 +14,19 @@ namespace ConsentManagementProviderLib.Json
         {
             try
             {
-                using (StringReader stringReader = new StringReader(json))
-                using (NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader))
-                {
-                    NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
-                    SpConsentsWrapperAndroid wrapped = serializer.Deserialize<SpConsentsWrapperAndroid>(reader);
+                using StringReader stringReader = new StringReader(json);
+                using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
+                
+                NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+                SpConsentsWrapperAndroid wrapped = serializer.Deserialize<SpConsentsWrapperAndroid>(reader);
 
-                    if (wrapped == null)
-                    {
-                        throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
-                    }
+                if (wrapped == null)
+                    throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
 
-                    SpGdprConsent unwrappedGdpr = wrapped.gdpr != null ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
-                    SpCcpaConsent unwrappedCcpa = wrapped.ccpa != null ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
+                SpGdprConsent unwrappedGdpr = wrapped.gdpr != null ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = wrapped.ccpa != null ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
 
-                    return new SpConsents(unwrappedGdpr, unwrappedCcpa);
-                }
+                return new SpConsents(unwrappedGdpr, unwrappedCcpa);
             }
             catch (NewtonsoftJson.JsonException ex)
             {
@@ -62,14 +59,10 @@ namespace ConsentManagementProviderLib.Json
         public static SpGdprConsent UnwrapSpGdprConsentAndroid(SpGdprConsentWrapperAndroid wrappedGdpr)
         {
             if (wrappedGdpr == null)
-            {
                 throw new ArgumentNullException(nameof(wrappedGdpr), "The GDPR consent wrapper cannot be null.");
-            }
 
             if (wrappedGdpr.grants == null)
-            {
                 throw new InvalidOperationException("The grants dictionary is null.");
-            }
 
             GdprConsent unwrapped = new GdprConsent
             {
@@ -88,13 +81,13 @@ namespace ConsentManagementProviderLib.Json
 
                 if (vendorGrantValue["granted"] != null)
                     isGranted = vendorGrantValue["granted"].ToObject<bool>();
+                
                 if (vendorGrantValue["purposeGrants"] != null)
                 {
                     var purposeGrantsElement = (JObject)vendorGrantValue["purposeGrants"];
-                    foreach (var purpGrant in purposeGrantsElement)
-                    {
-                        purposeGrants.Add(purpGrant.Key, purpGrant.Value.ToObject<bool>());
-                    }
+                    
+                    foreach (var purposeGrant in purposeGrantsElement)
+                        purposeGrants.Add(purposeGrant.Key, purposeGrant.Value.ToObject<bool>());
                 }
 
                 unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
@@ -102,6 +95,7 @@ namespace ConsentManagementProviderLib.Json
 
             return new SpGdprConsent(unwrapped);
         }
+        
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
         {
             try
