@@ -14,6 +14,6 @@ namespace ConsentManagementProviderLib.Json
         [JsonInclude] public bool applies;
         [JsonInclude] public bool signedLspa;
         [JsonInclude] public string webConsentPayload;
-        [JsonInclude] public object consentStatus;
+        [JsonInclude] public ConsentStatusWrapper consentStatus;
     }
 }
