@@ -13,8 +13,6 @@ namespace ConsentManagementProviderLib.iOS
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
     [DllImport("__Internal")]
-    private static extern void _setUnityCallback(string gameObjectName);
-    [DllImport("__Internal")]
     private static extern void _setCallbackDefault(Action<string> callback);
     [DllImport("__Internal")]
     private static extern void _setCallbackOnConsentReady(Action<string> callback);
@@ -40,7 +38,6 @@ namespace ConsentManagementProviderLib.iOS
 #if UNITY_IOS && !UNITY_EDITOR_OSX
         CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
         DontDestroyOnLoad(this.gameObject);
-        _setUnityCallback(gameObject.name);
         _setCallbackDefault(Callback);
         _setCallbackOnConsentReady(OnConsentReady);
         _setCallbackOnConsentUIReady(OnConsentUIReady);

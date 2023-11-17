@@ -12,10 +12,6 @@ typedef void (*СallbackCharMessage) (const char*);
 
 extern "C"
 {
-    void _setUnityCallback (const char * gameObjectName){
-        //
-    }
-
     void _setCallbackDefault (СallbackCharMessage callback){
         if (swiftBridge == nil)
             swiftBridge = [[SwiftBridge alloc] init];
@@ -91,6 +87,6 @@ extern "C"
     
     void _customConsentGDPRWithVendors()
     {
-        //
+        //TO-DO
     }
 }

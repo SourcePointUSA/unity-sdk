@@ -77,12 +77,8 @@ import UIKit
     var callbackOnErrorCallback: СallbackCharMessage? = nil
     var callbackOnSPFinished: СallbackCharMessage? = nil
     var callbackOnSPUIFinished: СallbackCharMessage? = nil
-    
-    @objc public func loadMessage() {
-        print("PURE SWIFT loadMessage")
-        consentManager.loadMessage(forAuthId: nil, publisherData: ["foo": AnyEncodable(99)])
-    }
-    
+
+// MARK: - Bridge config
     @objc public func configLib(
         accountId: Int,
         propertyId: Int,
@@ -104,11 +100,13 @@ import UIKit
                 ccpaPmId: ccpaPmId
             )}()
         }
-    
-    func onNetworkCallsTap(_ sender: Any) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "wormholy_fire"), object: nil)
+ 
+// MARK: - Manage lib
+    @objc public func loadMessage() {
+        print("PURE SWIFT loadMessage")
+        consentManager.loadMessage(forAuthId: nil, publisherData: ["foo": AnyEncodable(99)])
     }
-    
+
     @objc public func onClearConsentTap() {
         SPConsentManager.clearAllData()
         myVendorAccepted = .Unknown
@@ -122,6 +120,7 @@ import UIKit
         consentManager.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
     }
     
+    //TO-DO
     func onAcceptMyVendorTap(_ sender: Any) {
         consentManager.customConsentGDPR(
             vendors: [config.myVendorId],
@@ -131,6 +130,7 @@ import UIKit
             }
     }
     
+    //TO-DO
     func onDeleteMyVendorTap(_ sender: Any) {
         consentManager.deleteCustomConsentGDPR(
             vendors: [config.myVendorId],
@@ -144,17 +144,11 @@ import UIKit
 // MARK: - SPDelegate implementation
 extension SwiftBridge: SPDelegate {
     public func onSPUIReady(_ controller: UIViewController) {
-        if #available(iOS 15.0, *) {
-            let top = UIApplication.shared.firstKeyWindow?.rootViewController
-            controller.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
-            top?.present(controller, animated: true)
-        }
+        let top = UIApplication.shared.firstKeyWindow?.rootViewController
+        controller.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
+        top?.present(controller, animated: true)
         logger.log("PURE SWIFT onSPUIReady")
-        if callbackOnConsentUIReady != nil {
-            callbackOnConsentUIReady!("onSPUIReady")
-        }else{
-            (callbackDefault ?? callbackSystem)("onSPUIReady not set")
-        }
+        runCallback(callback: callbackOnConsentUIReady, arg: "onSPUIReady")
     }
     
     public func onAction(_ action: SPAction, from controller: UIViewController) {
@@ -169,24 +163,14 @@ extension SwiftBridge: SPDelegate {
         if let data = try? JSONEncoder().encode(responce) {
             resp = String(data: data, encoding: .utf8) ?? ""
         }
-        if callbackOnConsentAction != nil {
-            callbackOnConsentAction!(resp)
-        }else{
-            (callbackDefault ?? callbackSystem)("onAction not set")
-        }
+        runCallback(callback: callbackOnConsentAction, arg: resp)
     }
     
     public func onSPUIFinished(_ controller: UIViewController) {
-        if #available(iOS 15.0, *) {
-            let top = UIApplication.shared.firstKeyWindow?.rootViewController
-            top?.dismiss(animated: true)
-        }
+        let top = UIApplication.shared.firstKeyWindow?.rootViewController
+        top?.dismiss(animated: true)
         logger.log("PURE SWIFT onSPUIFinished")
-        if callbackOnSPUIFinished != nil {
-            callbackOnSPUIFinished!("onSPUIFinished")
-        }else{
-            (callbackDefault ?? callbackSystem)("onSPUIFinished not set")
-        }
+        runCallback(callback: callbackOnSPUIFinished, arg: "onSPUIFinished")
     }
     
     public func onConsentReady(userData: SPUserData) {
@@ -195,31 +179,19 @@ extension SwiftBridge: SPDelegate {
             fromBool: userData.gdpr?.consents?.vendorGrants[config.myVendorId]?.granted
         )
         logger.log("PURE SWIFT onConsentReady")
-        if callbackOnConsentReady != nil {
-            callbackOnConsentReady!(userData.toJSON())
-        }else{
-            (callbackDefault ?? callbackSystem)("onConsentReady not set")
-        }
+        runCallback(callback: callbackOnConsentReady, arg: userData.toJSON())
     }
     
     public func onSPFinished(userData: SPUserData) {
         logger.log("SDK DONE")
         logger.log("PURE SWIFT onSPFinished")
-        if callbackOnSPFinished != nil {
-            callbackOnSPFinished!(userData.toJSON())
-        }else{
-            (callbackDefault ?? callbackSystem)("onSPFinished not set")
-        }
+        runCallback(callback: callbackOnSPFinished, arg: userData.toJSON())
     }
     
     public func onError(error: SPError) {
         print("Something went wrong: ", error)
         logger.log("PURE SWIFT onError")
-        if callbackOnErrorCallback != nil {
-            callbackOnErrorCallback!(error.toJSON())
-        }else{
-            (callbackDefault ?? callbackSystem)("onError not set")
-        }
+        runCallback(callback: callbackOnErrorCallback, arg: error.toJSON())
     }
 }
 
@@ -258,6 +230,14 @@ extension SwiftBridge {
     @objc public func setCallbackOnSPFinished(callback: @escaping СallbackCharMessage) -> Void{
         print("setCallbackOnSPFinished")
         callbackOnSPFinished = callback
+    }
+    
+    func runCallback(callback: СallbackCharMessage?, arg: String?) {
+        if callback != nil {
+            callback!(arg)
+        }else{
+            (callbackDefault ?? callbackSystem)("onError not set")
+        }
     }
     
     public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
