@@ -58,25 +58,45 @@ namespace ConsentManagementProviderLib.Android
         void onConsentReady(string spConsents) 
         {
             CmpDebugUtil.Log("I've reached the C# onConsentReady with json string: " + spConsents);
-            SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
-            _spConsents = consents;
-            ConsentMessenger.Broadcast<IOnConsentReady>(consents);
+            try
+            {
+                SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                _spConsents = consents;
+                ConsentMessenger.Broadcast<IOnConsentReady>(consents);
+            }
+            catch (Exception e)
+            {
+                ConsentMessenger.Broadcast<IOnConsentError>(e);
+            }
         }
-
+        
+        /**
+         * It is invoked when the interaction with native WebView is done, consent sent, JSON received and CMP is ready to close the WebView
+         */
         void onSpFinished(string spConsents)
         {
-            CmpDebugUtil.Log("I've reached the C# onSpFinished");
-            SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
-            _spConsents = consents;
-            ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
+            CmpDebugUtil.ForceEnableNextCmpLog();
+            CmpDebugUtil.LogWarning($"I've reached the C# onSpFinished with JSON spConsents={spConsents}");
+            Console.WriteLine($"spConsents= `{spConsents}");
+            try
+            {
+                SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                _spConsents = consents;
+                ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
+            }
+            catch (Exception e)
+            {
+                ConsentMessenger.Broadcast<IOnConsentError>(e);
+            }
         }
-
 
         void onError(AndroidJavaObject rawThrowableObject)
         {
-            CmpDebugUtil.Log("I've reached the C# onError : " + rawThrowableObject.ToString());
+            CmpDebugUtil.ForceEnableNextCmpLog();
+            CmpDebugUtil.LogError("I've reached the C# onError : " + rawThrowableObject.ToString());
             Exception exception = CmpJavaToUnityUtils.ConvertThrowableToError(rawThrowableObject);
-            CmpDebugUtil.Log("Exception converted successfully : " + exception.ToString());
+            CmpDebugUtil.ForceEnableNextCmpLog();
+            CmpDebugUtil.LogError("Exception converted successfully : " + exception.ToString());
             ConsentMessenger.Broadcast<IOnConsentError>(exception);
         }
 
