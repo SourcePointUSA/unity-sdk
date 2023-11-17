@@ -10,6 +10,12 @@ import UIKit
 
 @objc public class SwiftBridge: NSObject {
     
+    enum CAMPAIGN_TYPE: Int {
+            case GDPR = 0
+            case IOS14 = 1
+            case CCPA = 2
+        }
+    
     enum VendorStatus: String {
         case Accepted
         case Rejected
@@ -34,8 +40,8 @@ import UIKit
         let language: SPMessageLanguage
         let gdprPmId, ccpaPmId: String?
         
-        let myVendorId = "5ff4d000a228633ac048be41"
-        let myPurposesId = ["608bad95d08d3112188e0e36", "608bad95d08d3112188e0e2f"]
+        let myVendorId: String = ""
+        let myPurposesId: [String] = []
     }
     
     var idfaStatus: SPIDFAStatus { SPIDFAStatus.current() }
@@ -51,6 +57,8 @@ import UIKit
         gdprPmId: "488393",
         ccpaPmId: "509688"
     )}()
+    lazy var gdprTargetingParams: SPTargetingParams = [:]
+    lazy var ccpaTargetingParams: SPTargetingParams = [:]
     
     lazy var consentManager: SPSDK = { SPConsentManager(
         accountId: config.accountId,
@@ -58,8 +66,8 @@ import UIKit
         // swiftlint:disable:next force_try
         propertyName: try! SPPropertyName(config.propertyName),
         campaigns: SPCampaigns(
-            gdpr: config.gdpr ? SPCampaign() : nil,
-            ccpa: config.ccpa ? SPCampaign() : nil,
+            gdpr: config.gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: config.gdprPmId) : nil,
+            ccpa: config.ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: config.ccpaPmId) : nil,
             ios14: config.att ? SPCampaign() : nil
         ),
         language: config.language,
@@ -79,6 +87,19 @@ import UIKit
     var callbackOnSPUIFinished: СallbackCharMessage? = nil
 
 // MARK: - Bridge config
+    @objc public func addTargetingParam(campaignType: Int, key: String, value: String){
+        switch CAMPAIGN_TYPE(rawValue: campaignType) {
+        case .GDPR: gdprTargetingParams[key]=value
+
+        case .IOS14: break
+
+        case .CCPA: ccpaTargetingParams[key]=value
+
+        case .none:
+            print("Incorrect campaignType on addTargetingParam")
+        }
+    }
+    
     @objc public func configLib(
         accountId: Int,
         propertyId: Int,
@@ -104,7 +125,7 @@ import UIKit
 // MARK: - Manage lib
     @objc public func loadMessage() {
         print("PURE SWIFT loadMessage")
-        consentManager.loadMessage(forAuthId: nil, publisherData: ["foo": AnyEncodable(99)])
+        consentManager.loadMessage(forAuthId: nil)
     }
 
     @objc public func onClearConsentTap() {
@@ -153,7 +174,6 @@ extension SwiftBridge: SPDelegate {
     
     public func onAction(_ action: SPAction, from controller: UIViewController) {
         print("onAction:", action)
-        action.publisherData = ["foo": .init("any encodable")]
         logger.log("PURE SWIFT onAction")
         let responce: Dictionary<String, String> = [
             "type":String(action.type.rawValue),

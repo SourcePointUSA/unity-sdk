@@ -60,6 +60,11 @@ extern "C"
             swiftBridge = [[SwiftBridge alloc] init];
     }
 
+    void _addTargetingParamForCampaignType(int campaignType, char* key, char* value)
+    {
+        [swiftBridge addTargetingParamWithCampaignType:campaignType key:[NSString stringWithFormat:@"%s", key] value:[NSString stringWithFormat:@"%s", value]];
+    }
+
     void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, SPMessageLanguage language, char* gdprPmId, char* ccpaPmId)
     {
         [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa language:language gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId]];
