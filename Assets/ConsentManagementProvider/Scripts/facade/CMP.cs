@@ -33,39 +33,38 @@ namespace ConsentManagementProviderLib
                 return;
             }
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            if (Application.platform != RuntimePlatform.Android) return;
+            CreateBroadcastExecutorGO();
+            //excluding ios14 campaign if any
+            RemoveIos14SpCampaign(ref spCampaigns);
+            if (!IsSpCampaignsValid(spCampaigns))
             {
-                CreateBroadcastExecutorGO();
-                //excluding ios14 campaign if any
-                RemoveIos14SpCampaign(ref spCampaigns);
-                if (!IsSpCampaignsValid(spCampaigns))
-                {
-                    return;
-                }
-                ConsentWrapperAndroid.Instance.InitializeLib(spCampaigns: spCampaigns,
-                                                            accountId: accountId,
-                                                            propertyId: propertyId,
-                                                            propertyName: propertyName,
-                                                            language: language,
-                                                            campaignsEnvironment: campaignsEnvironment,
-                                                            messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
+                return;
             }
+            ConsentWrapperAndroid.Instance.InitializeLib(
+                spCampaigns: spCampaigns,
+                accountId: accountId,
+                propertyId: propertyId,
+                propertyName: propertyName,
+                language: language,
+                campaignsEnvironment: campaignsEnvironment,
+                messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                CreateBroadcastExecutorGO();
-                ConsentWrapperIOS.Instance.InitializeLib(accountId, 
-                                                        propertyId, 
-                                                        propertyName, 
-                                                        gdpr, 
-                                                        ccpa, 
-                                                        language, 
-                                                        gdprPmId, 
-                                                        ccpaPmId,
-                                                        spCampaigns,
-                                                        campaignsEnvironment,
-                                                        messageTimeoutInSeconds);
-            }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return;
+            CreateBroadcastExecutorGO();
+            ConsentWrapperIOS.Instance.InitializeLib(
+                accountId, 
+                propertyId, 
+                propertyName, 
+                gdpr, 
+                ccpa, 
+                language, 
+                gdprPmId, 
+                ccpaPmId,
+                spCampaigns,
+                campaignsEnvironment,
+                messageTimeoutInSeconds);
 #endif
         }
         
@@ -78,15 +77,12 @@ namespace ConsentManagementProviderLib
             }
             
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ConsentWrapperAndroid.Instance.LoadMessage(authId: authId);
-            }
+            if (Application.platform != RuntimePlatform.Android) return;
+            ConsentWrapperAndroid.Instance.LoadMessage(authId: authId);
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
-            }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return;
+            ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
 #endif
         }
 
@@ -100,23 +96,17 @@ namespace ConsentManagementProviderLib
             }
             
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ConsentWrapperAndroid.Instance.LoadPrivacyManager(campaignType: campaignType,
-                                                                 pmId: pmId,
-                                                                 tab: tab);
-            }
+            if (Application.platform != RuntimePlatform.Android) return;
+            ConsentWrapperAndroid.Instance.LoadPrivacyManager(
+                campaignType: campaignType,
+                pmId: pmId,
+                tab: tab);
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if (Application.platform == RuntimePlatform.IPhonePlayer)
-            { 
-                if(campaignType == CAMPAIGN_TYPE.GDPR)
-                {
-                    ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager();
-                }
-                else if(campaignType == CAMPAIGN_TYPE.CCPA)
-                {
-                    ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager();
-                }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return;
+            switch (campaignType){
+                case CAMPAIGN_TYPE.GDPR: ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(); break;
+                case CAMPAIGN_TYPE.CCPA: ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(); break;
             }
 #endif
         }
@@ -124,21 +114,20 @@ namespace ConsentManagementProviderLib
         public static void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ConsentWrapperAndroid.Instance.CustomConsentGDPR(vendors: vendors,
-                                                                categories: categories,
-                                                                legIntCategories: legIntCategories,
-                                                                onSuccessDelegate: onSuccessDelegate);
-            }
+            if (Application.platform != RuntimePlatform.Android) return;
+            ConsentWrapperAndroid.Instance.CustomConsentGDPR(
+                vendors: vendors,
+                categories: categories,
+                legIntCategories: legIntCategories,
+                onSuccessDelegate: onSuccessDelegate);
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if(Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                ConsentWrapperIOS.Instance.CustomConsentGDPR(vendors: vendors,
-                                                           categories: categories,
-                                                           legIntCategories: legIntCategories,
-                                                           onSuccessDelegate: onSuccessDelegate);
-            }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return;
+            ConsentWrapperIOS.Instance.CustomConsentGDPR(
+                vendors: vendors,
+                categories: categories,
+                legIntCategories: legIntCategories,
+                onSuccessDelegate: onSuccessDelegate);
 #endif
         }
 
@@ -146,15 +135,12 @@ namespace ConsentManagementProviderLib
         {
             SpConsents result = null;
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                result = ConsentWrapperAndroid.Instance.GetSpConsents();
-            }
+            if (Application.platform != RuntimePlatform.Android) return null;
+            result = ConsentWrapperAndroid.Instance.GetSpConsents();
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if(Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                result = ConsentWrapperIOS.Instance.GetSpConsents();
-            }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return null;
+            result = ConsentWrapperIOS.Instance.GetSpConsents();
 #endif
             return result;
         }
@@ -163,15 +149,12 @@ namespace ConsentManagementProviderLib
         {
             GdprConsent result = null;
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                result = ConsentWrapperAndroid.Instance.GetCustomGdprConsent();
-            }
+            if (Application.platform != RuntimePlatform.Android) return null;
+            result = ConsentWrapperAndroid.Instance.GetCustomGdprConsent();
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if(Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                result = ConsentWrapperIOS.Instance.GetCustomGdprConsent();
-            }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return null;
+            result = ConsentWrapperIOS.Instance.GetCustomGdprConsent();
 #endif
             return result;
         }
@@ -179,15 +162,12 @@ namespace ConsentManagementProviderLib
         public static void Dispose()
         {
 #if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ConsentWrapperAndroid.Instance.Dispose();
-            }
+            if (Application.platform != RuntimePlatform.Android) return;
+            ConsentWrapperAndroid.Instance.Dispose();
+
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-            if(Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                ConsentWrapperIOS.Instance.Dispose();
-            }
+            if (Application.platform != RuntimePlatform.IPhonePlayer) return;
+            ConsentWrapperIOS.Instance.Dispose();
 #endif
         }
         
