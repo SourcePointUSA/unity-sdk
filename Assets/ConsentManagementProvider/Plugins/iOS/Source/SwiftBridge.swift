@@ -123,9 +123,9 @@ import UIKit
         }
  
 // MARK: - Manage lib
-    @objc public func loadMessage() {
+    @objc public func loadMessage(authId: String? = nil) {
         print("PURE SWIFT loadMessage")
-        consentManager.loadMessage(forAuthId: nil)
+        consentManager.loadMessage(forAuthId: authId)
     }
 
     @objc public func onClearConsentTap() {

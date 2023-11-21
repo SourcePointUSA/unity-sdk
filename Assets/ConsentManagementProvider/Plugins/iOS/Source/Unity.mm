@@ -72,7 +72,7 @@ extern "C"
 
     void _loadMessage(char * authId)
     {
-        [swiftBridge loadMessage];
+        [swiftBridge loadMessageWithAuthId:[NSString stringWithFormat:@"%s", authId]];
     }
 
     void _loadGDPRPrivacyManager()
