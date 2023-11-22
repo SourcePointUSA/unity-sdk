@@ -29,29 +29,23 @@ namespace ConsentManagementProviderLib.iOS
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
         [DllImport("__Internal")]
-        private static extern void _loadMessage(string authId);
+        private static extern void _initLib();
         [DllImport("__Internal")]
         private static extern void _addTargetingParamForCampaignType(int campaignType, string key, string value);
         [DllImport("__Internal")]
+        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, MESSAGE_LANGUAGE language, string gdprPmId, string ccpaPmId);
+        [DllImport("__Internal")]
+        private static extern void _loadMessage(string authId);
+        [DllImport("__Internal")]
         private static extern void _consrtuctLib(int accountId, int propId, string propName, int arrSize, int[] campaignTypes, int campaignsEnvironment, long timeOutSeconds);
         [DllImport("__Internal")]
-        private static extern void _setMessageLanguage(int langId);
+        private static extern void _loadGDPRPrivacyManager();
         [DllImport("__Internal")]
-        private static extern void _loadGDPRPrivacyManager(string pmId, int tabId);
+        private static extern void _loadCCPAPrivacyManager();
         [DllImport("__Internal")]
-        private static extern void _loadCCPAPrivacyManager(string pmId, int tabId);
-        [DllImport("__Internal")]
-        private static extern void _cleanDict();
-        [DllImport("__Internal")]
-        private static extern void _cleanArrays();
+        private static extern void _cleanConsent();
         [DllImport("__Internal")]
         private static extern void _customConsentGDPRWithVendors();
-        [DllImport("__Internal")]
-        private static extern void _addVendor(string vendor);
-        [DllImport("__Internal")]
-        private static extern void _addLegIntCategory(string legIntCategory);
-        [DllImport("__Internal")]
-        private static extern void _addCategory(string category);
 #endif
 
         public ConsentWrapperIOS()
@@ -67,10 +61,21 @@ namespace ConsentManagementProviderLib.iOS
             iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutInSeconds = 3)
+        public void InitializeLib(
+            int accountId, 
+            int propertyId, 
+            string propertyName, 
+            bool gdpr, 
+            bool ccpa, 
+            MESSAGE_LANGUAGE language, 
+            string gdprPmId, 
+            string ccpaPmId,
+            List<SpCampaign> spCampaigns,
+            CAMPAIGN_ENV campaignsEnvironment, 
+            long messageTimeoutInSeconds = 3)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _cleanDict();
+            _initLib();
             int campaignsAmount = spCampaigns.Count;
             int[] campaignTypes = new int[campaignsAmount];
             foreach(SpCampaign sp in spCampaigns)
@@ -84,14 +89,7 @@ namespace ConsentManagementProviderLib.iOS
             {
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
             }
-            _consrtuctLib(accountId: accountId,
-						  propId: propertyId,
-                          propName: propertyName,
-                          arrSize: campaignsAmount,
-                          campaignTypes: campaignTypes,
-                          campaignsEnvironment: (int) campaignsEnvironment,
-                          timeOutSeconds: messageTimeoutInSeconds);
-            _setMessageLanguage((int)language);
+            _configLib(accountId, propertyId, propertyName, gdpr, ccpa, language, gdprPmId, ccpaPmId);
 #endif
         }
 
@@ -102,36 +100,23 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        public void LoadGDPRPrivacyManager(string pmId, PRIVACY_MANAGER_TAB tab)
+        public void LoadGDPRPrivacyManager()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadGDPRPrivacyManager(pmId, (int)tab);
+            _loadGDPRPrivacyManager();
 #endif
         }
 
-        public void LoadCCPAPrivacyManager(string pmId, PRIVACY_MANAGER_TAB tab)
+        public void LoadCCPAPrivacyManager()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadCCPAPrivacyManager(pmId, (int)tab);
+            _loadCCPAPrivacyManager();
 #endif
         }
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _cleanArrays();
-            foreach (string vendor in vendors)
-            {
-                _addVendor(vendor);
-            }
-            foreach (string category in categories)
-            { 
-                _addCategory(category);
-            }
-            foreach (string legInt in legIntCategories)
-            {
-                _addLegIntCategory(legInt);
-            }
             iOSListener.SetCustomConsentsGDPRSuccessAction(onSuccessDelegate);
             _customConsentGDPRWithVendors();
 #endif
@@ -150,8 +135,7 @@ namespace ConsentManagementProviderLib.iOS
         public void Dispose()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _cleanArrays();
-            _cleanDict();
+            _cleanConsent();
 #endif
         }
     }

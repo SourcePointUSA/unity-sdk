@@ -2,75 +2,96 @@
 //  Created by Vilas Mane and Dmytro Fedko on 12/04/21.
 
 #import <Foundation/Foundation.h>
-#import "UnityController.h"
+#import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
+#import "ConsentViewController-Swift.h"
+#import "UnityPlugin-Bridging-Header.h"
 
-static UnityController * unityBridgePlugin = nil;
+static SwiftBridge * swiftBridge = nil;
+typedef void (*СallbackCharMessage) (const char*);
 
 extern "C"
 {
-    void _setUnityCallback (const char * gameObjectName){
-        if (unityBridgePlugin == nil)
-            unityBridgePlugin = [[UnityController alloc] init];
-        [unityBridgePlugin setUnityCallback: gameObjectName];
+    void _setCallbackDefault (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackDefaultWithCallback:callback];
     }
 
-    void _addTargetingParamForCampaignType(int campaignType, char * key, char * value)
-    {
-        [unityBridgePlugin addTargetingParamForCampaignType:campaignType :key :value];
+    void _setCallbackOnConsentReady (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnConsentReadyWithCallback:callback];
     }
 
-    void _consrtuctLib(int accountId, int propId, char* propName, int arrSize, int campaignTypes[], int campaignsEnvironment, long timeOutSeconds)
+    void _setCallbackOnConsentUIReady (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnConsentUIReadyWithCallback:callback];
+    }
+
+    void _setCallbackOnConsentAction (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnConsentActionWithCallback:callback];
+    }
+
+    void _setCallbackOnConsentUIFinished (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnConsentUIFinishedWithCallback:callback];
+    }
+
+    void _setCallbackOnErrorCallback (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnErrorCallbackWithCallback:callback];
+    }
+
+    void _setCallbackOnSPFinished (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnSPFinishedWithCallback:callback];
+    }
+
+    void _initLib()
     {
-        [unityBridgePlugin consrtuctLib:accountId _:propId _:propName _:arrSize _:campaignTypes _: campaignsEnvironment _: timeOutSeconds];
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+    }
+
+    void _addTargetingParamForCampaignType(int campaignType, char* key, char* value)
+    {
+        [swiftBridge addTargetingParamWithCampaignType:campaignType key:[NSString stringWithFormat:@"%s", key] value:[NSString stringWithFormat:@"%s", value]];
+    }
+
+    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, SPMessageLanguage language, char* gdprPmId, char* ccpaPmId)
+    {
+        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa language:language gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId]];
     }
 
     void _loadMessage(char * authId)
     {
-        [unityBridgePlugin loadMessage:authId];
+        [swiftBridge loadMessageWithAuthId:[NSString stringWithFormat:@"%s", authId]];
     }
 
-    void _setMessageLanguage(int langId)
+    void _loadGDPRPrivacyManager()
     {
-        [unityBridgePlugin setMessageLanguage:langId];
+        [swiftBridge onGDPRPrivacyManagerTap];
     }
 
-    void _loadGDPRPrivacyManager(char * pmId, int tabId)
+    void _loadCCPAPrivacyManager()
     {
-        [unityBridgePlugin loadGDPRPrivacyManager:pmId _:tabId];
+        [swiftBridge onCCPAPrivacyManagerTap];
     }
 
-    void _loadCCPAPrivacyManager(char * pmId, int tabId)
+    void _cleanConsent()
     {
-        [unityBridgePlugin loadCCPAPrivacyManager:pmId _:tabId];
-    }
-
-    void _cleanDict()
-    {
-        [unityBridgePlugin cleanDict];
-    }
-
-    void _cleanArrays()
-    {
-        [unityBridgePlugin cleanArrays];
+        [swiftBridge onClearConsentTap];
     }
     
     void _customConsentGDPRWithVendors()
     {
-        [unityBridgePlugin customConsentGDPRWithVendors];
-    }
-
-    void _addVendor(char* vendor)
-    {
-        [unityBridgePlugin addVendor:vendor];
-    }
-
-    void _addCategory(char* category)
-    {
-        [unityBridgePlugin addCategory:category];
-    }
-
-    void _addLegIntCategory(char* legIntCategory)
-    {
-        [unityBridgePlugin addLegIntCategory:legIntCategory];
+        //TO-DO
     }
 }
