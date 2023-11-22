@@ -8,19 +8,14 @@ using System.Collections.Generic;
 public class PrivacySettings : MonoBehaviour, IOnConsentReady
 {
     public int accountId = 22;
+    public int propertyId = 16893;    
     public string propertyName = "mobile.multicampaign.demo";
-    public int propertyId = 16893;
-    public string pmId = "488393";
+    public bool useGDPR = true;
+    public bool useCCPA = false;
+    public string gdprPmId = "488393";
+    public string ccpaPmId = "509688";
     public string authId = null;
     public List<CAMPAIGN_TYPE> campaignTypes = new ();
-
-    private List<SpCampaign> Campaigns
-    {
-        get
-        {
-            return campaignTypes.ConvertAll(type => new SpCampaign(type, targetingParams: new List<TargetingParam>()));
-        }
-    }
 
     private MESSAGE_LANGUAGE language
     {
@@ -46,12 +41,30 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         ConsentMessenger.AddListener<IOnConsentReady>(gameObject);
 
+        List<SpCampaign> spCampaigns = new List<SpCampaign>();
+        if (useGDPR)
+        {
+            List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
+            SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
+            spCampaigns.Add(gdpr);
+        }
+        if (useCCPA)
+        {
+            List<TargetingParam> ccpaParams = new List<TargetingParam> { new TargetingParam("location", "US") };
+            SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
+            spCampaigns.Add(ccpa);
+        }
+
         CMP.Initialize(
-            spCampaigns: Campaigns,
+            spCampaigns: spCampaigns,
             accountId: accountId,
             propertyId: propertyId,
             propertyName: propertyName,
+            gdpr: useGDPR, 
+            ccpa: useCCPA, 
             language: language,
+            gdprPmId: gdprPmId, 
+            ccpaPmId: ccpaPmId,
             campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
             messageTimeoutInSeconds: 30
         );
@@ -67,7 +80,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         CMP.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
-            pmId: pmId,
+            pmId: gdprPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
         );
     }
@@ -76,6 +89,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         PlayerPrefs.DeleteAll();
         storedConsentString = null;
+        CMP.Dispose();
         updateUI();
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using AOT;
 using UnityEngine;
 using System.Text.Json;
 using ConsentManagementProviderLib.Json;
@@ -12,20 +13,37 @@ namespace ConsentManagementProviderLib.iOS
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
     [DllImport("__Internal")]
-    private static extern void _setUnityCallback(string gameObjectName);
+    private static extern void _setCallbackDefault(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentReady(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentUIReady(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentAction(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentUIFinished(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnErrorCallback(Action<string> callback);
 #endif
 
+        public static CMPiOSListenerHelper self;
         private Action<GdprConsent> onCustomConsentsGDPRSuccessAction;
         internal GdprConsent customGdprConsent = null;
         internal SpConsents _spConsents = null;
         
         private void Awake()
         {
+            self=this;
             gameObject.name = "CMPiOSListenerHelper";
 #if UNITY_IOS && !UNITY_EDITOR_OSX
         CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
         DontDestroyOnLoad(this.gameObject);
-        _setUnityCallback(gameObject.name);
+        _setCallbackDefault(Callback);
+        _setCallbackOnConsentReady(OnConsentReady);
+        _setCallbackOnConsentUIReady(OnConsentUIReady);
+        _setCallbackOnConsentAction(OnConsentAction);
+        _setCallbackOnConsentUIFinished(OnConsentUIFinished);
+        _setCallbackOnErrorCallback(OnErrorCallback);
 #endif
         }
 
@@ -34,12 +52,14 @@ namespace ConsentManagementProviderLib.iOS
             this.onCustomConsentsGDPRSuccessAction = action;
         }
 
-        void Callback(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void Callback(string message)
         {
             CmpDebugUtil.Log("IOS_CALLBACK_RECEIVED: " + message);
         }
 
-        void OnConsentReady(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentReady(string message)
         {
             CmpDebugUtil.Log("OnConsentReady IOS_CALLBACK_RECEIVED: " + message);
             SpConsents spConsents = null;
@@ -55,18 +75,25 @@ namespace ConsentManagementProviderLib.iOS
             }
             finally
             {
-                _spConsents = spConsents;
+                self.SaveConsent(spConsents);
                 ConsentMessenger.Broadcast<IOnConsentReady>(spConsents);
             }
         }
 
-        void OnConsentUIReady(string message)
+        void SaveConsent(SpConsents consent)
+        {
+            _spConsents = consent;
+        }
+
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentUIReady(string message)
         {
             CmpDebugUtil.Log("OnConsentUIReady IOS_CALLBACK_RECEIVED: " + message);
             ConsentMessenger.Broadcast<IOnConsentUIReady>(message);
         }
 
-        void OnConsentAction(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentAction(string message)
         {
             CmpDebugUtil.Log("OnConsentAction IOS_CALLBACK_RECEIVED: " + message);
             SpActionWrapper wrapped = JsonSerializer.Deserialize<SpActionWrapper>(message);
@@ -76,13 +103,15 @@ namespace ConsentManagementProviderLib.iOS
             ConsentMessenger.Broadcast<IOnConsentAction>(spAction);
         }
 
-        void OnConsentUIFinished(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentUIFinished(string message)
         {
             CmpDebugUtil.Log("OnConsentUIFinished IOS_CALLBACK_RECEIVED: " + message);
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
         }
 
-        void OnErrorCallback(string jsonError)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnErrorCallback(string jsonError)
         {
             CmpDebugUtil.LogError("OnErrorCallback IOS_CALLBACK_RECEIVED: " + jsonError);
             Exception ex = new Exception(jsonError);
