@@ -246,7 +246,7 @@ namespace ConsentManagementProviderLib.Json
 
         private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapper wrappedCcpa)
         {
-            bool applies = ((JsonElement)wrappedCcpa.applies).GetBoolean();
+            bool applies = wrappedCcpa.applies;
             CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
             return new SpCcpaConsent(applies, consent);
         }

@@ -5,7 +5,7 @@ namespace ConsentManagementProviderLib.Json
 {
     internal class SpCcpaConsentWrapper
     {
-        [JsonInclude] public object applies;
+        [JsonInclude] public bool applies;
         [JsonInclude] public CcpaConsentWrapper consents;
     }
 }
