@@ -87,7 +87,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnClearDataPress()
     {
-        PlayerPrefs.DeleteAll();
+        CMP.ClearAllData();
+//         PlayerPrefs.DeleteAll();
         storedConsentString = null;
         CMP.Dispose();
         updateUI();
