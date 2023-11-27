@@ -1,17 +1,16 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace ConsentManagementProviderLib.Json
 {
     internal class GdprConsentWrapper
     {
-        [JsonInclude] public string uuid;
-        [JsonInclude] public string euconsent;
-        [JsonInclude] public Dictionary<string, object> TCData;
-        [JsonInclude] public Dictionary<string, SpVendorGrantWrapper> grants;
-        [JsonInclude] public List<string> acceptedCategories;
-        [JsonInclude] public bool applies;
-        [JsonInclude] public string webConsentPayload;
-        [JsonInclude] public ConsentStatusWrapper consentStatus;
+        public string uuid;
+        public string euconsent;
+        public Dictionary<string, object> TCData;
+        public Dictionary<string, SpVendorGrantWrapper> grants;
+        public List<string> acceptedCategories;
+        public bool applies;
+        public string webConsentPayload;
+        public ConsentStatusWrapper consentStatus;
     }
 }

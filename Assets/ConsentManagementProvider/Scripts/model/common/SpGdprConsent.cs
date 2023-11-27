@@ -1,11 +1,9 @@
-using System.Text.Json.Serialization;
-
 namespace ConsentManagementProviderLib
 {
     public class SpGdprConsent
     {
-        [JsonInclude] public bool applies;
-        [JsonInclude] public GdprConsent consents;
+        public bool applies;
+        public GdprConsent consents;
 
         public SpGdprConsent(bool applies, GdprConsent consents)
         {

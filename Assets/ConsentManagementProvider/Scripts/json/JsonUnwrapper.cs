@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.IO;
 using NewtonsoftJson = Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -130,7 +129,12 @@ namespace ConsentManagementProviderLib.Json
         #region IOS
         public static GdprConsent UnwrapGdprConsent(string json)
         {
-            GdprConsentWrapper wrapped = JsonSerializer.Deserialize<GdprConsentWrapper>(json);
+            using StringReader stringReader = new StringReader(json);
+            using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
+
+            NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+            GdprConsentWrapper wrapped = serializer.Deserialize<GdprConsentWrapper>(reader);
+
             GdprConsent unwrapped = UnwrapGdprConsent(wrapped);
             return unwrapped;
         }

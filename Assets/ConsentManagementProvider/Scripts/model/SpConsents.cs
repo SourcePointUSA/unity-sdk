@@ -1,11 +1,9 @@
-﻿using System.Text.Json.Serialization;
-
-namespace ConsentManagementProviderLib
+﻿namespace ConsentManagementProviderLib
 {
     public class SpConsents
     {
-        [JsonInclude] public SpGdprConsent gdpr;
-        [JsonInclude] public SpCcpaConsent ccpa;
+        public SpGdprConsent gdpr;
+        public SpCcpaConsent ccpa;
 
         public SpConsents(SpGdprConsent gdpr, SpCcpaConsent ccpa)
         {
