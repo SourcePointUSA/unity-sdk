@@ -102,6 +102,7 @@ namespace ConsentManagementProviderLib
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
             if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
+                ConsentWrapperIOS.Instance.ClearAllData();
             }
 #endif
         }
