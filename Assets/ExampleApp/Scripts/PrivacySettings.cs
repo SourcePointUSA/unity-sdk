@@ -1,7 +1,6 @@
 using ConsentManagementProviderLib;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
 
 
@@ -30,7 +29,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         }
     }
 
-    public TextMeshProUGUI consentValueText;
+    public Text consentValueText;
     public Button loadMessageButton;
     public Button privacySettingsButton;
     public Button clearDataButton;
