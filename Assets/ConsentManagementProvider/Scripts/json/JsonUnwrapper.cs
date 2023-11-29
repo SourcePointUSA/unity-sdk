@@ -22,8 +22,8 @@ namespace ConsentManagementProviderLib.Json
                 if (wrapped == null)
                     throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
 
-                SpGdprConsent unwrappedGdpr = wrapped.gdpr != null ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
-                SpCcpaConsent unwrappedCcpa = wrapped.ccpa != null ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
+                SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa);
             }
@@ -39,6 +39,8 @@ namespace ConsentManagementProviderLib.Json
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)
         {
+            if (wrappedCcpa == null)
+                throw new ArgumentNullException(nameof(wrappedCcpa), "The CCPA consent wrapper cannot be null.");
             CcpaConsent unwrapped = new CcpaConsent(
                 uuid: wrappedCcpa.uuid,
                 status: wrappedCcpa.status,
@@ -152,8 +154,8 @@ namespace ConsentManagementProviderLib.Json
                 if (wrapped == null)
                     throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
 
-                SpGdprConsent unwrappedGdpr = wrapped.gdpr != null ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
-                SpCcpaConsent unwrappedCcpa = wrapped.ccpa != null ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
+                SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa);
             }
@@ -250,6 +252,9 @@ namespace ConsentManagementProviderLib.Json
 
         private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapper wrappedCcpa)
         {
+            if (wrappedCcpa == null)
+                throw new ArgumentNullException(nameof(wrappedCcpa), "The CCPA consent wrapper cannot be null.");
+
             bool applies = wrappedCcpa.applies;
             CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
             return new SpCcpaConsent(applies, consent);
