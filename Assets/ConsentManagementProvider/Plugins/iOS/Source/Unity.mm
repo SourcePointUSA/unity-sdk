@@ -94,4 +94,9 @@ extern "C"
     {
         //TO-DO
     }
+
+    void _dispose()
+    {
+        [swiftBridge dispose];
+    }
 }

@@ -121,6 +121,18 @@ import UIKit
                 ccpaPmId: ccpaPmId
             )}()
         }
+    
+    @objc public func dispose() {
+        callbackDefault = nil
+        callbackOnConsentReady = nil
+        callbackOnConsentUIReady = nil
+        callbackOnConsentAction = nil
+        callbackOnConsentUIFinished = nil
+        callbackOnErrorCallback = nil
+        callbackOnSPFinished = nil
+        callbackOnSPUIFinished = nil
+        callbackOnCustomConsent = nil
+    }
  
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
