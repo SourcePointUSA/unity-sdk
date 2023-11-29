@@ -3,8 +3,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
-using System.Text.Json;
+using System.IO;
+using NewtonsoftJson = Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ConsentManagementProviderLib.Json;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib.iOS
 {
