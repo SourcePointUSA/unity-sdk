@@ -31,7 +31,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public Text consentValueText;
     public Button loadMessageButton;
-    public Button privacySettingsButton;
+    public Button gdprPrivacySettingsButton;
+    public Button ccpaPrivacySettingsButton;
+    public Button customConsentButton;
     public Button clearDataButton;
 
     private string storedConsentString = null;
@@ -75,11 +77,20 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         CMP.LoadMessage(authId: authId);
     }
 
-    public void OnPrivacyManagerButtonClick()
+    public void OnGDPRPrivacyManagerButtonClick()
     {
         CMP.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
             pmId: gdprPmId,
+            tab: PRIVACY_MANAGER_TAB.DEFAULT
+        );
+    }
+
+    public void OnCCPAPrivacyManagerButtonClick()
+    {
+        CMP.LoadPrivacyManager(
+            campaignType: CAMPAIGN_TYPE.CCPA,
+            pmId: ccpaPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
         );
     }
@@ -110,14 +121,18 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         if (storedConsentString != null)
         {
             loadMessageButton.interactable = false;
-            privacySettingsButton.interactable = true;
+            gdprPrivacySettingsButton.interactable = true;
+            ccpaPrivacySettingsButton.interactable = true;
+            customConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
         }
         else
         {
             loadMessageButton.interactable = true;
-            privacySettingsButton.interactable = false;
+            gdprPrivacySettingsButton.interactable = false;
+            ccpaPrivacySettingsButton.interactable = false;
+            customConsentButton.interactable = false;
             clearDataButton.interactable = false;
             consentValueText.text = "-";
         }
