@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace ConsentManagementProviderLib
 {
     public class CcpaConsent
     {
-        [JsonInclude] public string uuid;
-        [JsonInclude] public string status;
-        [JsonInclude] public string uspstring;
-        [JsonInclude] public List<string> rejectedVendors;
-        [JsonInclude] public List<string> rejectedCategories;
-        [JsonInclude] public string childPmId;
-        [JsonInclude] public bool applies;
-        [JsonInclude] public bool? signedLspa;
-        [JsonInclude] public string webConsentPayload;
-		[JsonInclude] public ConsentStatus? consentStatus;
+        public string uuid;
+        public string status;
+        public string uspstring;
+        public List<string> rejectedVendors;
+        public List<string> rejectedCategories;
+        public string childPmId;
+        public bool applies;
+        public bool? signedLspa;
+        public string webConsentPayload;
+		public ConsentStatus? consentStatus;
 
         public CcpaConsent(
                         string uuid,

@@ -33,14 +33,18 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     spCampaigns.Add(ios14);
 ```
 
-In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName`, `gdpr`, `ccpa`(allows using campains),`gdprPmId`, `ccpaPmId` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-		   propertyId: 16893,
+		           propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
+                   gdpr: true,
+                   ccpa: true,
                    language: MESSAGE_LANGUAGE.ENGLISH,
+                   gdprPmId: "488393",
+                   ccpaPmId: "509688",
                    campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
                    messageTimeoutInSeconds: 30);
 ```

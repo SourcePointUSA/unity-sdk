@@ -1,19 +1,18 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System.Text;
 
 namespace ConsentManagementProviderLib
 {
     public class GdprConsent
     {
-        [JsonInclude] public bool applies;
-        [JsonInclude] public string uuid;
-        [JsonInclude] public string webConsentPayload;
-        [JsonInclude] public string euconsent;
-        [JsonInclude] public Dictionary<string, object> TCData;
-        [JsonInclude] public Dictionary<string, SpVendorGrant> grants;
-		[JsonInclude] public List<string> acceptedCategories;
-        [JsonInclude] public ConsentStatus consentStatus;
+        public bool applies;
+        public string uuid;
+        public string webConsentPayload;
+        public string euconsent;
+        public Dictionary<string, object> TCData;
+        public Dictionary<string, SpVendorGrant> grants;
+		public List<string> acceptedCategories;
+        public ConsentStatus consentStatus;
 
         public string ToFullString()
         {
@@ -61,16 +60,16 @@ namespace ConsentManagementProviderLib
     
     public class ConsentStatus
     {
-        [JsonInclude] public bool? rejectedAny;
-        [JsonInclude] public bool? rejectedLI;
-        [JsonInclude] public bool? consentedAll;
-        [JsonInclude] public bool? consentedToAny;
-        [JsonInclude] public bool? vendorListAdditions;
-        [JsonInclude] public bool? legalBasisChanges;
-        [JsonInclude] public GranularStatus? granularStatus;
-        [JsonInclude] public bool hasConsentData;
-        [JsonInclude] public object rejectedVendors;
-        [JsonInclude] public object rejectedCategories;
+        public bool? rejectedAny;
+        public bool? rejectedLI;
+        public bool? consentedAll;
+        public bool? consentedToAny;
+        public bool? vendorListAdditions;
+        public bool? legalBasisChanges;
+        public GranularStatus? granularStatus;
+        public bool hasConsentData;
+        public object rejectedVendors;
+        public object rejectedCategories;
 
         public ConsentStatus(bool? rejectedAny, bool? rejectedLI, bool? consentedAll, 
             bool? consentedToAny, bool? vendorListAdditions, bool? legalBasisChanges, 

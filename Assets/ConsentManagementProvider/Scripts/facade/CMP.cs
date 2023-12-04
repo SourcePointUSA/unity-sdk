@@ -14,6 +14,9 @@ namespace ConsentManagementProviderLib
         private static bool IsEditor => Application.platform == RuntimePlatform.LinuxEditor
                                         || Application.platform == RuntimePlatform.WindowsEditor
                                         || Application.platform == RuntimePlatform.OSXEditor;
+
+        public static bool useGDPR = false;
+        public static bool useCCPA = false;
         
         public static void Initialize(
             List<SpCampaign> spCampaigns, 
@@ -32,6 +35,8 @@ namespace ConsentManagementProviderLib
             { 
                 return;
             }
+            useGDPR = gdpr;
+            useCCPA = ccpa;
 #if UNITY_ANDROID
             if (Application.platform != RuntimePlatform.Android) return;
             CreateBroadcastExecutorGO();
