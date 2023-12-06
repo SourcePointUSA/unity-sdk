@@ -91,6 +91,27 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
+        public static void ClearAllData(string authId = null)
+        {
+            if (IsEditor)
+            {
+                Debug.LogWarning("Emulating ClearAllData call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                return;
+            }
+
+#if UNITY_ANDROID
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                SpAndroidNativeUtils.ClearAllData();
+            }
+#elif UNITY_IOS && !UNITY_EDITOR_OSX
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                ConsentWrapperIOS.Instance.ClearAllData();
+            }
+#endif
+        }
+
         public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
             if (IsEditor)
