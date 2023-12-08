@@ -45,7 +45,17 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _cleanConsent();
         [DllImport("__Internal")]
-        private static extern void _customConsentGDPRWithVendors();
+        private static extern void _customConsentGDPR();
+        [DllImport("__Internal")]
+        private static extern void _deleteCustomConsentGDPR();
+        [DllImport("__Internal")]
+        private static extern void _addVendor(string vendor);
+        [DllImport("__Internal")]
+        private static extern void _addCategory(string category);
+        [DllImport("__Internal")]
+        private static extern void _addLegIntCategory(string legIntCategory);
+        [DllImport("__Internal")]
+        private static extern void _clearCustomArrays();
         [DllImport("__Internal")]
         private static extern void _dispose();
 #endif
@@ -119,8 +129,42 @@ namespace ConsentManagementProviderLib.iOS
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
+            _clearCustomArrays();
+            foreach (string vendor in vendors)
+            {
+                _addVendor(vendor);
+            }
+            foreach (string category in categories)
+            { 
+                _addCategory(category);
+            }
+            foreach (string legInt in legIntCategories)
+            {
+                _addLegIntCategory(legInt);
+            }
             iOSListener.SetCustomConsentsGDPRSuccessAction(onSuccessDelegate);
-            _customConsentGDPRWithVendors();
+            _customConsentGDPR();
+#endif
+        }
+
+        public void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _clearCustomArrays();
+            foreach (string vendor in vendors)
+            {
+                _addVendor(vendor);
+            }
+            foreach (string category in categories)
+            { 
+                _addCategory(category);
+            }
+            foreach (string legInt in legIntCategories)
+            {
+                _addLegIntCategory(legInt);
+            }
+            iOSListener.SetCustomConsentsGDPRSuccessAction(onSuccessDelegate);
+            _deleteCustomConsentGDPR();
 #endif
         }
 
