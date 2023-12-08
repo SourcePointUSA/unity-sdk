@@ -24,6 +24,8 @@ namespace ConsentManagementProviderLib.iOS
     private static extern void _setCallbackOnConsentUIFinished(Action<string> callback);
     [DllImport("__Internal")]
     private static extern void _setCallbackOnErrorCallback(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnCustomConsent(Action<string> callback);
 #endif
 
         public static CMPiOSListenerHelper self;
@@ -44,6 +46,7 @@ namespace ConsentManagementProviderLib.iOS
         _setCallbackOnConsentAction(OnConsentAction);
         _setCallbackOnConsentUIFinished(OnConsentUIFinished);
         _setCallbackOnErrorCallback(OnErrorCallback);
+        _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
 #endif
         }
 
@@ -118,7 +121,8 @@ namespace ConsentManagementProviderLib.iOS
             ConsentMessenger.Broadcast<IOnConsentError>(ex);
         }
 
-        void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
         {
             CmpDebugUtil.Log("OnCustomConsentGDPRCallback IOS_CALLBACK_RECEIVED: " + jsonSPGDPRConsent);
             GdprConsent unwrapped = null;
@@ -136,12 +140,12 @@ namespace ConsentManagementProviderLib.iOS
             {
                 if (unwrapped == null)
                 {
-                    onCustomConsentsGDPRSuccessAction?.Invoke(null);
+                    self.onCustomConsentsGDPRSuccessAction?.Invoke(null);
                 }
                 else
                 {
-                    customGdprConsent = unwrapped;
-                    onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
+                    self.customGdprConsent = unwrapped;
+                    self.onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
                 }
             }
         }
