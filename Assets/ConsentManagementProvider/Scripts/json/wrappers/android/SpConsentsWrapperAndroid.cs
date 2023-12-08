@@ -1,10 +1,8 @@
-﻿using System.Text.Json.Serialization;
-
-namespace ConsentManagementProviderLib.Json
+﻿namespace ConsentManagementProviderLib.Json
 {
     internal class SpConsentsWrapperAndroid
     {
-        [JsonInclude] public CcpaConsentWrapper? ccpa;
-        [JsonInclude] public SpGdprConsentWrapperAndroid? gdpr;
+        public CcpaConsentWrapper? ccpa;
+        public SpGdprConsentWrapperAndroid? gdpr;
     }
 }

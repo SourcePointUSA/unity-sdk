@@ -46,6 +46,8 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _cleanConsent();
         [DllImport("__Internal")]
         private static extern void _customConsentGDPRWithVendors();
+        [DllImport("__Internal")]
+        private static extern void _dispose();
 #endif
 
         public ConsentWrapperIOS()
@@ -132,10 +134,17 @@ namespace ConsentManagementProviderLib.iOS
             return iOSListener._spConsents;
         }
         
-        public void Dispose()
+        public void ClearAllData()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _cleanConsent();
+#endif
+        }
+
+        public void Dispose()
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _dispose();
 #endif
         }
     }

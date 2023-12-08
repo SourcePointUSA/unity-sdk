@@ -10,7 +10,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public int propertyId = 16893;    
     public string propertyName = "mobile.multicampaign.demo";
     public bool useGDPR = true;
-    public bool useCCPA = false;
+    public bool useCCPA = true;
     public string gdprPmId = "488393";
     public string ccpaPmId = "509688";
     public string authId = null;
@@ -97,9 +97,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnClearDataPress()
     {
-        PlayerPrefs.DeleteAll();
+        CMP.ClearAllData();
         storedConsentString = null;
-        CMP.Dispose();
         updateUI();
     }
 

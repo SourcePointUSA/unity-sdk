@@ -130,4 +130,9 @@ extern "C"
     {
         [swiftBridge dispose];
     }
+
+    void _dispose()
+    {
+        [swiftBridge dispose];
+    }
 }

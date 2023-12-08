@@ -14,6 +14,9 @@ namespace ConsentManagementProviderLib
         private static bool IsEditor => Application.platform == RuntimePlatform.LinuxEditor
                                         || Application.platform == RuntimePlatform.WindowsEditor
                                         || Application.platform == RuntimePlatform.OSXEditor;
+
+        public static bool useGDPR = false;
+        public static bool useCCPA = false;
         
         public static void Initialize(
             List<SpCampaign> spCampaigns, 
@@ -32,6 +35,8 @@ namespace ConsentManagementProviderLib
             { 
                 return;
             }
+            useGDPR = gdpr;
+            useCCPA = ccpa;
 #if UNITY_ANDROID
             if (Application.platform != RuntimePlatform.Android) return;
             CreateBroadcastExecutorGO();
@@ -83,6 +88,27 @@ namespace ConsentManagementProviderLib
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
             if (Application.platform != RuntimePlatform.IPhonePlayer) return;
             ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
+#endif
+        }
+
+        public static void ClearAllData(string authId = null)
+        {
+            if (IsEditor)
+            {
+                Debug.LogWarning("Emulating ClearAllData call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                return;
+            }
+
+#if UNITY_ANDROID
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                SpAndroidNativeUtils.ClearAllData();
+            }
+#elif UNITY_IOS && !UNITY_EDITOR_OSX
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                ConsentWrapperIOS.Instance.ClearAllData();
+            }
 #endif
         }
 
