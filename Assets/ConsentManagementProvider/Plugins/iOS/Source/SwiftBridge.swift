@@ -40,8 +40,9 @@ import UIKit
         let language: SPMessageLanguage
         let gdprPmId, ccpaPmId: String?
         
-        let myVendorId: String = ""
-        let myPurposesId: [String] = []
+        var vendors: [String] = []
+        var categories: [String] = []
+        var legIntCategories: [String] = []
     }
     
     var idfaStatus: SPIDFAStatus { SPIDFAStatus.current() }
@@ -85,6 +86,7 @@ import UIKit
     var callbackOnErrorCallback: СallbackCharMessage? = nil
     var callbackOnSPFinished: СallbackCharMessage? = nil
     var callbackOnSPUIFinished: СallbackCharMessage? = nil
+    var callbackOnCustomConsent: СallbackCharMessage? = nil
 
 // MARK: - Bridge config
     @objc public func addTargetingParam(campaignType: Int, key: String, value: String){
@@ -121,6 +123,36 @@ import UIKit
                 ccpaPmId: ccpaPmId
             )}()
         }
+    
+    @objc public func addCustomVendor(vendor: String) {
+        config.vendors.append(vendor)
+    }
+
+    @objc public func addCustomCategory(category: String) {
+        config.categories.append(category)
+    }
+
+    @objc public func addCustomLegIntCategory(legIntCategory: String) {
+        config.legIntCategories.append(legIntCategory)
+    }
+    
+    @objc public func clearCustomArrays() {
+        config.vendors = []
+        config.categories = []
+        config.legIntCategories = []
+    }
+    
+    @objc public func dispose() {
+        callbackDefault = nil
+        callbackOnConsentReady = nil
+        callbackOnConsentUIReady = nil
+        callbackOnConsentAction = nil
+        callbackOnConsentUIFinished = nil
+        callbackOnErrorCallback = nil
+        callbackOnSPFinished = nil
+        callbackOnSPUIFinished = nil
+        callbackOnCustomConsent = nil
+    }
  
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
@@ -140,24 +172,25 @@ import UIKit
     @objc public func onCCPAPrivacyManagerTap() {
         consentManager.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
     }
-    
-    //TO-DO
-    func onAcceptMyVendorTap(_ sender: Any) {
+
+
+    @objc public func customConsentToGDPR() {
         consentManager.customConsentGDPR(
-            vendors: [config.myVendorId],
-            categories: config.myPurposesId,
-            legIntCategories: []) { consents in
-                self.myVendorAccepted = VendorStatus(fromBool: consents.vendorGrants[self.config.myVendorId]?.granted)
+            vendors: config.vendors,
+            categories: config.categories,
+            legIntCategories: config.legIntCategories){contents in
+                self.print(contents)
+                self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
             }
     }
-    
-    //TO-DO
-    func onDeleteMyVendorTap(_ sender: Any) {
+
+    @objc public func deleteCustomConsentGDPR() {
         consentManager.deleteCustomConsentGDPR(
-            vendors: [config.myVendorId],
-            categories: config.myPurposesId,
-            legIntCategories: []) { consents in
-                self.myVendorAccepted = VendorStatus(fromBool: consents.vendorGrants[self.config.myVendorId]?.granted)
+            vendors: config.vendors,
+            categories: config.categories,
+            legIntCategories: config.legIntCategories){contents in
+                self.print(contents)
+                self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
             }
     }
 }
@@ -195,9 +228,6 @@ extension SwiftBridge: SPDelegate {
     
     public func onConsentReady(userData: SPUserData) {
         print("onConsentReady:", userData)
-        myVendorAccepted = VendorStatus(
-            fromBool: userData.gdpr?.consents?.vendorGrants[config.myVendorId]?.granted
-        )
         logger.log("PURE SWIFT onConsentReady")
         runCallback(callback: callbackOnConsentReady, arg: userData.toJSON())
     }
@@ -252,11 +282,16 @@ extension SwiftBridge {
         callbackOnSPFinished = callback
     }
     
+    @objc public func setCallbackOnCustomConsent(callback: @escaping СallbackCharMessage) -> Void{
+        print("setCallbackOnSPFinished")
+        callbackOnCustomConsent = callback
+    }
+
     func runCallback(callback: СallbackCharMessage?, arg: String?) {
         if callback != nil {
             callback!(arg)
         }else{
-            (callbackDefault ?? callbackSystem)("onError not set")
+            (callbackDefault ?? callbackSystem)("onError not set:"+(arg ?? ""))
         }
     }
     
