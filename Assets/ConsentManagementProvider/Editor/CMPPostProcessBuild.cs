@@ -9,6 +9,24 @@ using ConsentManagementProviderLib;
 
 public static class CMPPostProcessBuild
 {
+    [PostProcessBuild(50)]
+    public static void FixPodFile(BuildTarget buildTarget, string buildPath)
+    {
+        Debug.LogError($"Remove pod signature {buildPath}");
+        PBXProject pbxPods = new PBXProject();
+        string podsPath = buildPath+"/Pods/Pods.xcodeproj/project.pbxproj";
+        pbxPods.ReadFromFile(podsPath);
+        
+        using var sw = File.AppendText(buildPath + "/Podfile");
+        sw.WriteLine("post_install do |installer|");
+        sw.WriteLine("installer.pods_project.targets.each do |target|");
+        sw.WriteLine("target.build_configurations.each do |config|");
+        sw.WriteLine("config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = \"\"");
+        sw.WriteLine("config.build_settings['CODE_SIGNING_REQUIRED'] = \"NO\"");
+        sw.WriteLine("config.build_settings['CODE_SIGNING_ALLOWED'] = \"NO\"");
+        sw.WriteLine("end\nend\nend");
+    }
+    
     [PostProcessBuild(800)]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
