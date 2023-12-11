@@ -16,6 +16,11 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public string authId = null;
     public List<CAMPAIGN_TYPE> campaignTypes = new ();
 
+    // GDPR Custom Consent
+    public string[] vendors = { "5fbe6f050d88c7d28d765d47", "5ff4d000a228633ac048be41" };
+    public string[] categories = { "60657acc9c97c400122f21f3", "608bad95d08d3112188e0e36", "608bad95d08d3112188e0e2f" };
+    public string[] legIntCategories = { };
+    
     private MESSAGE_LANGUAGE language
     {
         get
@@ -84,6 +89,18 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             pmId: gdprPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
         );
+    }
+    public void OnCustomConsentButtonClick()
+    {
+        CMP.CustomConsentGDPR(vendors: this.vendors,
+            categories: this.categories,
+            legIntCategories: this.legIntCategories,
+            onSuccessDelegate: SuccessDelegate);
+    }
+
+    private void SuccessDelegate(GdprConsent customConsent)
+    {
+        Debug.Log($"I am your success callback!"); // TODO print customConsent
     }
 
     public void OnCCPAPrivacyManagerButtonClick()
