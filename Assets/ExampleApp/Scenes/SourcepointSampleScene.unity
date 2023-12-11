@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 131616237}
   - component: {fileID: 131616239}
   m_Layer: 0
-  m_Name: CMP
+  m_Name: Privacy Settings CMP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
