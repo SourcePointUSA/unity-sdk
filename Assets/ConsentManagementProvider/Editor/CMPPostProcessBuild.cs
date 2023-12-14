@@ -7,7 +7,7 @@ using UnityEditor.iOS.Xcode.Extensions;
 
 public static class CMPPostProcessBuild
 {
-    [PostProcessBuild]
+    [PostProcessBuild(800)]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
         if (buildTarget == BuildTarget.iOS)
@@ -29,10 +29,24 @@ public static class CMPPostProcessBuild
             EnableBitcode(pbxProject, unityProjectGuid, false);
 
             pbxProject.WriteToFile(projPath);
+
+            AddBridgeToPods(buildPath);
             
             string plistPath = buildPath + "/Info.plist";
             AddParameterToInfoPlist(plistPath);
         }
+    }
+
+    static void AddBridgeToPods(string path)
+    {
+        PBXProject pbxPods = new PBXProject();
+        string podsPath = path+"/Pods/Pods.xcodeproj/project.pbxproj";
+        pbxPods.ReadFromFile(podsPath);
+        string cmpGuid = pbxPods.TargetGuidByName("ConsentViewController");
+        string cmpCmpGuid = pbxPods.TargetGuidByName("ConsentViewController-ConsentViewController");
+        pbxPods.AddBuildProperty(cmpGuid, "CODE_SIGN_IDENTITY", "");
+        pbxPods.AddBuildProperty(cmpCmpGuid, "CODE_SIGN_IDENTITY", "");
+        pbxPods.WriteToFile(podsPath);
     }
 
     static void AddParameterToInfoPlist(string plistPath)
