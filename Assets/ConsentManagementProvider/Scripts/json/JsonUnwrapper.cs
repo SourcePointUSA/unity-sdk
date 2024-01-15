@@ -15,7 +15,6 @@ namespace ConsentManagementProviderLib.Json
             {
                 using StringReader stringReader = new StringReader(json);
                 using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
-                
                 NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
                 SpConsentsWrapperAndroid wrapped = serializer.Deserialize<SpConsentsWrapperAndroid>(reader);
 
@@ -60,10 +59,10 @@ namespace ConsentManagementProviderLib.Json
         public static SpGdprConsent UnwrapSpGdprConsentAndroid(SpGdprConsentWrapperAndroid wrappedGdpr)
         {
             if (wrappedGdpr == null)
-                throw new ArgumentNullException(nameof(wrappedGdpr), "The GDPR consent wrapper cannot be null.");
-
-            if (wrappedGdpr.grants == null)
-                throw new InvalidOperationException("The grants dictionary is null.");
+            {
+                CmpDebugUtil.LogError("The GDPR consent wrapper cannot be null.");
+                return null;
+            }
 
             GdprConsent unwrapped = new GdprConsent
             {
@@ -73,30 +72,36 @@ namespace ConsentManagementProviderLib.Json
                 grants = new Dictionary<string, SpVendorGrant>()
             };
 
-            foreach (var vendorGrantWrapper in wrappedGdpr.grants)
+            if (wrappedGdpr.grants == null)
             {
-                var purposeGrants = new Dictionary<string, bool>();
-                bool isGranted = false;
-
-                var vendorGrantValue = JToken.FromObject(vendorGrantWrapper.Value);
-
-                if (vendorGrantValue["granted"] != null)
-                    isGranted = vendorGrantValue["granted"].ToObject<bool>();
-                
-                if (vendorGrantValue["purposeGrants"] != null)
+                CmpDebugUtil.LogError("The grants dictionary is null.");
+            }
+            else
+            {
+                foreach (var vendorGrantWrapper in wrappedGdpr.grants)
                 {
-                    var purposeGrantsElement = (JObject)vendorGrantValue["purposeGrants"];
-                    
-                    foreach (var purposeGrant in purposeGrantsElement)
-                        purposeGrants.Add(purposeGrant.Key, purposeGrant.Value.ToObject<bool>());
-                }
+                    var purposeGrants = new Dictionary<string, bool>();
+                    bool isGranted = false;
 
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
+                    var vendorGrantValue = JToken.FromObject(vendorGrantWrapper.Value);
+
+                    if (vendorGrantValue["granted"] != null)
+                        isGranted = vendorGrantValue["granted"].ToObject<bool>();
+
+                    if (vendorGrantValue["purposeGrants"] != null)
+                    {
+                        var purposeGrantsElement = (JObject)vendorGrantValue["purposeGrants"];
+
+                        foreach (var purposeGrant in purposeGrantsElement)
+                            purposeGrants.Add(purposeGrant.Key, purposeGrant.Value.ToObject<bool>());
+                    }
+                    unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
+                }
             }
 
             return new SpGdprConsent(unwrapped);
         }
-        
+
         public static SpCustomConsentAndroid UnwrapSpCustomConsentAndroid(string spConsentsJson)
         {
             try
@@ -147,7 +152,7 @@ namespace ConsentManagementProviderLib.Json
             {
                 using StringReader stringReader = new StringReader(json);
                 using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
-                
+
                 NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
                 SpConsentsWrapper wrapped = serializer.Deserialize<SpConsentsWrapper>(reader);
 
@@ -168,17 +173,20 @@ namespace ConsentManagementProviderLib.Json
                 throw new ApplicationException("An error occurred during JSON unwrapping.", ex);
             }
         }
-        
+
         private static SpGdprConsent UnwrapSpGdprConsent(SpGdprConsentWrapper wrappedGdpr)
         {
             if (wrappedGdpr == null)
-                throw new ArgumentNullException(nameof(wrappedGdpr), "The GDPR consent wrapper cannot be null.");
-        
+            {
+                CmpDebugUtil.LogError("The GDPR consent wrapper cannot be null.");
+                return null;
+            }
+
             bool applies = wrappedGdpr.applies;
             GdprConsent consent = UnwrapGdprConsent(wrappedGdpr.consents);
             return new SpGdprConsent(applies, consent);
         }
-        
+
         private static GdprConsent UnwrapGdprConsent(GdprConsentWrapper wrapped)
         {
             GdprConsent unwrapped = new GdprConsent
@@ -192,40 +200,46 @@ namespace ConsentManagementProviderLib.Json
             };
 
             if (wrapped.grants == null)
-                throw new InvalidOperationException("The grants dictionary is null.");
-
-            foreach (var vendorGrantWrapper in wrapped.grants)
             {
-                var purposeGrants = new Dictionary<string, bool>();
-                bool isGranted = false;
-
-                var vendorGrantValue = JToken.FromObject(vendorGrantWrapper.Value);
-
-                if (vendorGrantValue["granted"] != null)
-                    isGranted = vendorGrantValue["granted"].ToObject<bool>();
-                
-                if (vendorGrantValue["purposeGrants"] != null)
+                CmpDebugUtil.LogError("The grants dictionary is null.");
+            }
+            else
+            {
+                foreach (var vendorGrantWrapper in wrapped.grants)
                 {
-                    var purposeGrantsElement = (JObject)vendorGrantValue["purposeGrants"];
-                    
-                    foreach (var purposeGrant in purposeGrantsElement)
-                        purposeGrants.Add(purposeGrant.Key, purposeGrant.Value.ToObject<bool>());
-                }
+                    var purposeGrants = new Dictionary<string, bool>();
+                    bool isGranted = false;
 
-                unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
+                    var vendorGrantValue = JToken.FromObject(vendorGrantWrapper.Value);
+
+                    if (vendorGrantValue["granted"] != null)
+                        isGranted = vendorGrantValue["granted"].ToObject<bool>();
+
+                    if (vendorGrantValue["purposeGrants"] != null)
+                    {
+                        var purposeGrantsElement = (JObject)vendorGrantValue["purposeGrants"];
+
+                        foreach (var purposeGrant in purposeGrantsElement)
+                            purposeGrants.Add(purposeGrant.Key, purposeGrant.Value.ToObject<bool>());
+                    }
+
+                    unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
+                }
             }
 
-            if (wrapped.consentStatus != null){
+            if (wrapped.consentStatus != null)
+            {
                 unwrapped.consentStatus = UnwrapConsentStatus(wrapped.consentStatus);
             }
-            
+
             return unwrapped;
         }
 
         private static ConsentStatus UnwrapConsentStatus(ConsentStatusWrapper wrappedconsentStatus)
         {
             GranularStatus granularStatus = null;
-            if (wrappedconsentStatus.granularStatus != null){
+            if (wrappedconsentStatus.granularStatus != null)
+            {
                 granularStatus = new GranularStatus(
                     wrappedconsentStatus.granularStatus.vendorConsent,
                     wrappedconsentStatus.granularStatus.vendorLegInt,
@@ -253,7 +267,10 @@ namespace ConsentManagementProviderLib.Json
         private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapper wrappedCcpa)
         {
             if (wrappedCcpa == null)
-                throw new ArgumentNullException(nameof(wrappedCcpa), "The CCPA consent wrapper cannot be null.");
+            {
+                CmpDebugUtil.LogError("The CCPA consent wrapper cannot be null.");
+                return null;
+            }
 
             bool applies = wrappedCcpa.applies;
             CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
@@ -263,15 +280,15 @@ namespace ConsentManagementProviderLib.Json
         private static CcpaConsent UnwrapCcpaConsent(CcpaConsentWrapper wrapped)
         {
             ConsentStatus _consentStatus = UnwrapConsentStatus(wrapped.consentStatus);
-            
-            return new CcpaConsent(uuid: wrapped.uuid, 
+
+            return new CcpaConsent(uuid: wrapped.uuid,
                                     status: wrapped.status,
-                                    uspstring: wrapped.uspstring, 
-                                    rejectedVendors: wrapped.rejectedVendors, 
+                                    uspstring: wrapped.uspstring,
+                                    rejectedVendors: wrapped.rejectedVendors,
                                     rejectedCategories: wrapped.rejectedCategories,
-									childPmId:"",
-									applies: wrapped.applies,
-									signedLspa: null,
+                                    childPmId: "",
+                                    applies: wrapped.applies,
+                                    signedLspa: null,
                                     webConsentPayload: wrapped.webConsentPayload,
                                     consentStatus: _consentStatus);
         }
