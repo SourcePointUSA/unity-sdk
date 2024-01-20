@@ -19,5 +19,10 @@ namespace ConsentManagementProviderLib.Observer
                 actions.Enqueue(delegate { ExecuteEvents.Execute<T>(handler, eventData, functor); });
             }
         }
+
+        public static void Execute(Action action)
+        {
+            actions.Enqueue(action);
+        }
     }
 }
