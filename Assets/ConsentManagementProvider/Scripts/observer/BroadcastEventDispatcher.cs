@@ -13,7 +13,7 @@ namespace ConsentManagementProviderLib.Observer
         {
             var handlers = BroadcastReceivers.GetHandlersForEvent<T>();
             if (handlers == null) return;
-            CmpDebugUtil.Log($"{typeof(T).Name} has {handlers.Count} invokable instances");
+            CmpDebugUtil.Log($"{typeof(T).Name} has {handlers.Length} invokable instances");
             foreach (var handler in handlers)
             {
                 actions.Enqueue(delegate { ExecuteEvents.Execute<T>(handler, eventData, functor); });
