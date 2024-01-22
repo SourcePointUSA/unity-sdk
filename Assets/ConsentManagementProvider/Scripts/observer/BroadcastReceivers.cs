@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConsentManagementProviderLib.EventHandlerInterface;
 using UnityEngine;
 
@@ -9,37 +10,47 @@ namespace ConsentManagementProviderLib.Observer
     {
         private static readonly IDictionary<Type, IList<GameObject>> BroadcastsReceivers = new Dictionary<Type, IList<GameObject>>();
 
-        public static IList<GameObject> GetHandlersForEvent<T>() where T : IConsentEventHandler
+        public static GameObject[] GetHandlersForEvent<T>() where T : IConsentEventHandler
         {
-            if (!BroadcastsReceivers.ContainsKey(typeof(T)))
+            lock (BroadcastsReceivers)
             {
-                return null;
+                if (!BroadcastsReceivers.ContainsKey(typeof(T)))
+                {
+                    return null;
+                }
+
+                return BroadcastsReceivers[typeof(T)].ToArray();
             }
-            return BroadcastsReceivers[typeof(T)];
         }
 
         public static void RegisterBroadcastReceiver<T>(GameObject go) where T : IConsentEventHandler
         {
-            if (BroadcastsReceivers.ContainsKey(typeof(T)))
+            lock (BroadcastsReceivers)
             {
-                BroadcastsReceivers[typeof(T)].Add(go);
-            }
-            else
-            {
-                BroadcastsReceivers.Add(typeof(T), new List<GameObject>());
-                BroadcastsReceivers[typeof(T)].Add(go);
+                if (BroadcastsReceivers.ContainsKey(typeof(T)))
+                {
+                    BroadcastsReceivers[typeof(T)].Add(go);
+                }
+                else
+                {
+                    BroadcastsReceivers.Add(typeof(T), new List<GameObject>());
+                    BroadcastsReceivers[typeof(T)].Add(go);
+                }
             }
         }
 
         public static void UnregisterBroadcastReceiver<T>(GameObject go) where T : IConsentEventHandler
         {
-            if (BroadcastsReceivers.ContainsKey(typeof(T)) && BroadcastsReceivers[typeof(T)].Contains(go))
+            lock (BroadcastsReceivers)
             {
-                BroadcastsReceivers[typeof(T)].Remove(go);
-            }
-            else
-            {
-                CmpDebugUtil.LogWarning($"{go.name} is not subscribed to handle {typeof(T)}");
+                if (BroadcastsReceivers.ContainsKey(typeof(T)) && BroadcastsReceivers[typeof(T)].Contains(go))
+                {
+                    BroadcastsReceivers[typeof(T)].Remove(go);
+                }
+                else
+                {
+                    CmpDebugUtil.LogWarning($"{go.name} is not subscribed to handle {typeof(T)}");
+                }
             }
         }
     }

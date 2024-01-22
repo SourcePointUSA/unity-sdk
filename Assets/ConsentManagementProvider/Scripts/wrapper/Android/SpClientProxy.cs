@@ -1,5 +1,6 @@
 ﻿using System;
 using ConsentManagementProviderLib.Json;
+using ConsentManagementProviderLib.Observer;
 using UnityEngine;
 
 namespace ConsentManagementProviderLib.Android
@@ -58,16 +59,20 @@ namespace ConsentManagementProviderLib.Android
         void onConsentReady(string spConsents) 
         {
             CmpDebugUtil.Log("I've reached the C# onConsentReady with json string: " + spConsents);
-            try
+
+            BroadcastEventDispatcher.Execute(() =>
             {
-                SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
-                _spConsents = consents;
-                ConsentMessenger.Broadcast<IOnConsentReady>(consents);
-            }
-            catch (Exception e)
-            {
-                ConsentMessenger.Broadcast<IOnConsentError>(e);
-            }
+                try
+                {
+                    SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                    _spConsents = consents;
+                    ConsentMessenger.Broadcast<IOnConsentReady>(consents);
+                }
+                catch (Exception e)
+                {
+                    ConsentMessenger.Broadcast<IOnConsentError>(e);
+                }
+            });
         }
         
         /**
@@ -78,16 +83,20 @@ namespace ConsentManagementProviderLib.Android
             CmpDebugUtil.ForceEnableNextCmpLog();
             CmpDebugUtil.LogWarning($"I've reached the C# onSpFinished with JSON spConsents={spConsents}");
             Console.WriteLine($"spConsents= `{spConsents}");
-            try
+
+            BroadcastEventDispatcher.Execute(() =>
             {
-                SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
-                _spConsents = consents;
-                ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
-            }
-            catch (Exception e)
-            {
-                ConsentMessenger.Broadcast<IOnConsentError>(e);
-            }
+                try
+                {
+                    SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                    _spConsents = consents;
+                    ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
+                }
+                catch (Exception e)
+                {
+                    ConsentMessenger.Broadcast<IOnConsentError>(e);
+                }
+            });
         }
 
         void onError(AndroidJavaObject rawThrowableObject)
