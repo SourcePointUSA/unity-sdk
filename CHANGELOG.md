@@ -1,3 +1,6 @@
+# 2.1.6
+* [DIA-3423](https://sourcepoint.atlassian.net/browse/DIA-3423)[DIA-3349](https://sourcepoint.atlassian.net/browse/DIA-3349) DIA-3423, DIA-3349 Fix Unity racing conditions [#28](https://github.com/SourcePointUSA/unity-sdk/pull/28)
+
 # 2.1.5
 * [DIA-2811](https://sourcepoint.atlassian.net/browse/DIA-2811) DIA-2811 Removed code signing for IOS [#25](https://github.com/SourcePointUSA/unity-sdk/pull/25)
 
