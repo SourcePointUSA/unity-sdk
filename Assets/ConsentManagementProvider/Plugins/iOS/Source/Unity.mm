@@ -54,6 +54,12 @@ extern "C"
         [swiftBridge setCallbackOnSPFinishedWithCallback:callback];
     }
 
+    void _setCallbackOnCustomConsent (СallbackCharMessage callback){
+        if (swiftBridge == nil)
+            swiftBridge = [[SwiftBridge alloc] init];
+        [swiftBridge setCallbackOnCustomConsentWithCallback:callback];
+    }
+
     void _initLib()
     {
         if (swiftBridge == nil)
@@ -89,10 +95,35 @@ extern "C"
     {
         [swiftBridge onClearConsentTap];
     }
-    
-    void _customConsentGDPRWithVendors()
+
+    void _customConsentGDPR()
     {
-        //TO-DO
+        [swiftBridge customConsentToGDPR];
+    }
+
+    void _deleteCustomConsentGDPR()
+    {
+        [swiftBridge deleteCustomConsentGDPR];
+    }
+
+    void _addVendor(char* vendor)
+    {
+        [swiftBridge addCustomVendorWithVendor:[NSString stringWithFormat:@"%s", vendor]];
+    }
+
+    void _addCategory(char* category)
+    {
+        [swiftBridge addCustomCategoryWithCategory:[NSString stringWithFormat:@"%s", category]];
+    }
+
+    void _addLegIntCategory(char* legIntCategory)
+    {
+        [swiftBridge addCustomLegIntCategoryWithLegIntCategory:[NSString stringWithFormat:@"%s", legIntCategory]];
+    }
+
+    void _clearCustomArrays()
+    {
+        [swiftBridge clearCustomArrays];
     }
 
     void _dispose()

@@ -12,9 +12,9 @@ namespace ConsentManagementProviderLib.Observer
 
         private void Update()
         {
-            while (BroadcastEventDispatcher.actions.Count > 0)
+            while (BroadcastEventDispatcher.actions.TryDequeue(out var action))
             {
-                BroadcastEventDispatcher.actions.Dequeue()?.Invoke();
+                action?.Invoke();
             }
         }
     }
