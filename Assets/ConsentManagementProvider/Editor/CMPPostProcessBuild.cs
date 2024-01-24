@@ -8,7 +8,7 @@ using UnityEngine;
 using ConsentManagementProviderLib; 
 
 public static class CMPPostProcessBuild
-{
+{    
     [PostProcessBuild(800)]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
@@ -54,7 +54,10 @@ public static class CMPPostProcessBuild
         pbxPods.ReadFromFile(podsPath);
         string bridgeGuid = pbxPods.AddFile(path+"/"+bridgePath,"Pods/ConsentViewController/SwiftBridge.swift");
         string cmpGuid = pbxPods.TargetGuidByName("ConsentViewController");
+        string cmpCmpGuid = pbxPods.TargetGuidByName("ConsentViewController-ConsentViewController");
         pbxPods.AddFileToBuild(cmpGuid,bridgeGuid);
+        pbxPods.AddBuildProperty(cmpGuid, "CODE_SIGN_IDENTITY", "");
+        pbxPods.AddBuildProperty(cmpCmpGuid, "CODE_SIGN_IDENTITY", "");
         pbxPods.WriteToFile(podsPath);
     }
 
