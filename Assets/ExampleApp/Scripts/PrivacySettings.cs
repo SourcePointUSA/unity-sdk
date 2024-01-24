@@ -16,6 +16,11 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public string authId = null;
     public List<CAMPAIGN_TYPE> campaignTypes = new ();
 
+    // GDPR Custom Consent
+    public string[] vendors = { "5fbe6f050d88c7d28d765d47", "5ff4d000a228633ac048be41" };
+    public string[] categories = { "60657acc9c97c400122f21f3", "608bad95d08d3112188e0e36", "608bad95d08d3112188e0e2f" };
+    public string[] legIntCategories = { };
+    
     private MESSAGE_LANGUAGE language
     {
         get
@@ -31,7 +36,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public Text consentValueText;
     public Button loadMessageButton;
-    public Button privacySettingsButton;
+    public Button gdprPrivacySettingsButton;
+    public Button ccpaPrivacySettingsButton;
+    public Button customConsentButton;
     public Button clearDataButton;
 
     private string storedConsentString = null;
@@ -75,11 +82,32 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         CMP.LoadMessage(authId: authId);
     }
 
-    public void OnPrivacyManagerButtonClick()
+    public void OnGDPRPrivacyManagerButtonClick()
     {
         CMP.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
             pmId: gdprPmId,
+            tab: PRIVACY_MANAGER_TAB.DEFAULT
+        );
+    }
+    public void OnCustomConsentButtonClick()
+    {
+        CMP.CustomConsentGDPR(vendors: this.vendors,
+            categories: this.categories,
+            legIntCategories: this.legIntCategories,
+            onSuccessDelegate: SuccessDelegate);
+    }
+
+    private void SuccessDelegate(GdprConsent customConsent)
+    {
+        Debug.Log($"I am your success callback!"); // TODO print customConsent
+    }
+
+    public void OnCCPAPrivacyManagerButtonClick()
+    {
+        CMP.LoadPrivacyManager(
+            campaignType: CAMPAIGN_TYPE.CCPA,
+            pmId: ccpaPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
         );
     }
@@ -109,14 +137,18 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         if (storedConsentString != null)
         {
             loadMessageButton.interactable = false;
-            privacySettingsButton.interactable = true;
+            gdprPrivacySettingsButton.interactable = true;
+            ccpaPrivacySettingsButton.interactable = true;
+            customConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
         }
         else
         {
             loadMessageButton.interactable = true;
-            privacySettingsButton.interactable = false;
+            gdprPrivacySettingsButton.interactable = false;
+            ccpaPrivacySettingsButton.interactable = false;
+            customConsentButton.interactable = false;
             clearDataButton.interactable = false;
             consentValueText.text = "-";
         }
