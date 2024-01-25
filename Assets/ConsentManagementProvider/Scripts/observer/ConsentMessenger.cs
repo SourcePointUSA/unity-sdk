@@ -33,8 +33,8 @@ namespace ConsentManagementProviderLib
                 case nameof(IOnConsentError):
                     Exception exception= (Exception)list[0];
 
-                    Debug.LogError("Error message: " + exception.Message);
-                    Debug.LogError("Stack Trace: " + exception.StackTrace);
+                    CmpDebugUtil.LogError("Error message: " + exception.Message);
+                    CmpDebugUtil.LogError("Stack Trace: " + exception.StackTrace);
 
                     BroadcastEventDispatcher.Execute<IOnConsentError>(null, (i, d) => i.OnConsentError(exception));
                     break;

@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.IO;
 using NewtonsoftJson = Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace ConsentManagementProviderLib.Json
 {
