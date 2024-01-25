@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.IO;
 using NewtonsoftJson = Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -34,12 +35,17 @@ namespace ConsentManagementProviderLib.Json
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred during JSON unwrapping.", ex);
+                throw new ApplicationException("An error occurred during JSON unwrapping." + ex.Message, ex);
             }
         }
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)
         {
+            if (wrappedCcpa == null)
+            {
+                CmpDebugUtil.LogError("The CCPA consent wrapper cannot be null.");
+                return null;
+            }
             CcpaConsent unwrapped = new CcpaConsent(
                 uuid: wrappedCcpa.uuid,
                 status: wrappedCcpa.status,
