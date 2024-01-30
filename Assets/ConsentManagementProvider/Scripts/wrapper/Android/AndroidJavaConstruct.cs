@@ -111,7 +111,7 @@ namespace ConsentManagementProviderLib.Android
                     SpConfigDataBuilderClass.Call<AndroidJavaObject>("addCampaign", camp);
                     CmpDebugUtil.Log("addCampaign is OK");
                 }
-
+                SpConfigDataBuilderClass.Call<AndroidJavaObject>("addLogger", new CmpDebugUtilAndroid());
                 spConfig = SpConfigDataBuilderClass.Call<AndroidJavaObject>("build");
                 CmpDebugUtil.Log("build() is OK");
             }
