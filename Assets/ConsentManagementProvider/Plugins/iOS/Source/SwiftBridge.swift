@@ -151,11 +151,19 @@ import UIKit
     }
     
     @objc public func onGDPRPrivacyManagerTap() {
-        consentManager.loadGDPRPrivacyManager(withId: config.gdprPmId!)
+        if let pmId = config.gdprPmId {
+            consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!)
+        } else {
+            logger.error("Tried to load GDPR pm without ccpa pm id")
+        }
     }
     
     @objc public func onCCPAPrivacyManagerTap() {
-        consentManager.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
+        if let pmId = config.ccpaPmId {
+            consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
+        } else {
+            logger.error("Tried to load CCPA pm without ccpa pm id")
+        }
     }
 
 
