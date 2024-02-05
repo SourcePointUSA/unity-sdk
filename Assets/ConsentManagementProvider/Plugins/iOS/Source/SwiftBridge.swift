@@ -9,7 +9,16 @@ import Foundation
 import UIKit
 
 @objc public class SwiftBridge: NSObject {
-    
+    public override init() {
+        config = Config(
+            gdprPmId: nil,
+            ccpaPmId: nil,
+            vendors: [],
+            categories: [],
+            legIntCategories: []
+        )
+        
+    }
     enum CAMPAIGN_TYPE: Int {
             case GDPR = 0
             case IOS14 = 1
@@ -33,13 +42,7 @@ import UIKit
     }
     
     struct Config {
-        
-        let accountId, propertyId: Int
-        let propertyName: String
-        let gdpr, ccpa, att: Bool
-        let language: SPMessageLanguage
-        let gdprPmId, ccpaPmId: String?
-        
+        var gdprPmId, ccpaPmId: String?
         var vendors: [String] = []
         var categories: [String] = []
         var legIntCategories: [String] = []
@@ -47,33 +50,11 @@ import UIKit
     
     var idfaStatus: SPIDFAStatus { SPIDFAStatus.current() }
     var myVendorAccepted: VendorStatus = .Unknown
-    lazy var config = { Config(
-        accountId: 22,
-        propertyId: 16893,
-        propertyName: "mobile.multicampaign.demo",
-        gdpr: true,
-        ccpa: true,
-        att: true,
-        language: .BrowserDefault,
-        gdprPmId: "488393",
-        ccpaPmId: "509688"
-    )}()
+    var config: Config
     lazy var gdprTargetingParams: SPTargetingParams = [:]
     lazy var ccpaTargetingParams: SPTargetingParams = [:]
     
-    lazy var consentManager: SPSDK = { SPConsentManager(
-        accountId: config.accountId,
-        propertyId: config.propertyId,
-        // swiftlint:disable:next force_try
-        propertyName: try! SPPropertyName(config.propertyName),
-        campaigns: SPCampaigns(
-            gdpr: config.gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: config.gdprPmId) : nil,
-            ccpa: config.ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: config.ccpaPmId) : nil,
-            ios14: config.att ? SPCampaign() : nil
-        ),
-        language: config.language,
-        delegate: self
-    )}()
+    var consentManager: SPSDK?
     let logger: OSLogger = OSLogger.standard
 
     public typealias СallbackCharMessage = @convention(c) (UnsafePointer<CChar>?) -> Void
@@ -111,16 +92,20 @@ import UIKit
         language: SPMessageLanguage,
         gdprPmId: String,
         ccpaPmId: String) {
-            self.config = { Config(
+            self.config.gdprPmId = gdprPmId
+            self.config.ccpaPmId = ccpaPmId
+            self.consentManager = { SPConsentManager(
                 accountId: accountId,
                 propertyId: propertyId,
-                propertyName: propertyName,
-                gdpr: gdpr,
-                ccpa: ccpa,
-                att: true,
+                // swiftlint:disable:next force_try
+                propertyName: try! SPPropertyName(propertyName),
+                campaigns: SPCampaigns(
+                    gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: gdprPmId) : nil,
+                    ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: ccpaPmId) : nil,
+                    ios14: SPCampaign()
+                ),
                 language: language,
-                gdprPmId: gdprPmId,
-                ccpaPmId: ccpaPmId
+                delegate: self
             )}()
         }
     
@@ -157,7 +142,7 @@ import UIKit
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
         print("PURE SWIFT loadMessage")
-        consentManager.loadMessage(forAuthId: authId)
+        consentManager?.loadMessage(forAuthId: authId)
     }
 
     @objc public func onClearConsentTap() {
@@ -175,7 +160,7 @@ import UIKit
 
 
     @objc public func customConsentToGDPR() {
-        consentManager.customConsentGDPR(
+        consentManager?.customConsentGDPR(
             vendors: config.vendors,
             categories: config.categories,
             legIntCategories: config.legIntCategories){contents in
@@ -185,7 +170,7 @@ import UIKit
     }
 
     @objc public func deleteCustomConsentGDPR() {
-        consentManager.deleteCustomConsentGDPR(
+        consentManager?.deleteCustomConsentGDPR(
             vendors: config.vendors,
             categories: config.categories,
             legIntCategories: config.legIntCategories){contents in
