@@ -205,7 +205,7 @@ extension SwiftBridge: SPDelegate {
             "type":String(action.type.rawValue),
             "customActionId":action.customActionId ?? ""
         ]
-        var resp = "type:0"
+        var resp = ""
         if let data = try? JSONEncoder().encode(responce) {
             resp = String(data: data, encoding: .utf8) ?? ""
         }
@@ -213,8 +213,7 @@ extension SwiftBridge: SPDelegate {
     }
     
     public func onSPUIFinished(_ controller: UIViewController) {
-        let top = UIApplication.shared.firstKeyWindow?.rootViewController
-        top?.dismiss(animated: true)
+        UIApplication.shared.firstKeyWindow?.rootViewController?.dismiss(animated: true)
         logger.log("PURE SWIFT onSPUIFinished")
         runCallback(callback: callbackOnSPUIFinished, arg: "onSPUIFinished")
     }
