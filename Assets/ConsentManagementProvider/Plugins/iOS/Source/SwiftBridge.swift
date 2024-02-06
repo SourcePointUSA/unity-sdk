@@ -94,11 +94,17 @@ import UIKit
         ccpaPmId: String) {
             self.config.gdprPmId = gdprPmId
             self.config.ccpaPmId = ccpaPmId
+            var propName: SPPropertyName
+            do {
+                propName = try SPPropertyName(propertyName)
+            } catch {
+                print("`propertyName` invalid!")
+                return
+            }
             self.consentManager = { SPConsentManager(
                 accountId: accountId,
                 propertyId: propertyId,
-                // swiftlint:disable:next force_try
-                propertyName: try! SPPropertyName(propertyName),
+                propertyName: propName,
                 campaigns: SPCampaigns(
                     gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: gdprPmId) : nil,
                     ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: ccpaPmId) : nil,
@@ -151,7 +157,7 @@ import UIKit
     }
     
     @objc public func onGDPRPrivacyManagerTap() {
-        if let pmId = config.gdprPmId {
+        if config.gdprPmId != nil {
             consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!)
         } else {
             logger.error("Tried to load GDPR pm without ccpa pm id")
@@ -159,7 +165,7 @@ import UIKit
     }
     
     @objc public func onCCPAPrivacyManagerTap() {
-        if let pmId = config.ccpaPmId {
+        if config.ccpaPmId != nil {
             consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
         } else {
             logger.error("Tried to load CCPA pm without ccpa pm id")
