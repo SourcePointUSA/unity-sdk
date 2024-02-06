@@ -20,10 +20,10 @@ import UIKit
         
     }
     enum CAMPAIGN_TYPE: Int {
-            case GDPR = 0
-            case IOS14 = 1
-            case CCPA = 2
-        }
+        case GDPR = 0
+        case IOS14 = 1
+        case CCPA = 2
+    }
     
     enum VendorStatus: String {
         case Accepted
@@ -144,13 +144,13 @@ import UIKit
         callbackOnSPUIFinished = nil
         callbackOnCustomConsent = nil
     }
- 
+
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
         print("PURE SWIFT loadMessage")
-        consentManager?.loadMessage(forAuthId: authId)
+        (consentManager != nil) ? consentManager?.loadMessage(forAuthId: authId) : print("Library was not initialized correctly!")
     }
-
+    
     @objc public func onClearConsentTap() {
         SPConsentManager.clearAllData()
         myVendorAccepted = .Unknown
@@ -158,7 +158,7 @@ import UIKit
     
     @objc public func onGDPRPrivacyManagerTap() {
         if config.gdprPmId != nil {
-            consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!)
+            (consentManager != nil) ? consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) : print("Library was not initialized correctly!")
         } else {
             logger.error("Tried to load GDPR pm without ccpa pm id")
         }
@@ -166,31 +166,38 @@ import UIKit
     
     @objc public func onCCPAPrivacyManagerTap() {
         if config.ccpaPmId != nil {
-            consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
+            (consentManager != nil) ? consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) : print("Library was not initialized correctly")
         } else {
             logger.error("Tried to load CCPA pm without ccpa pm id")
         }
     }
 
-
     @objc public func customConsentToGDPR() {
-        consentManager?.customConsentGDPR(
-            vendors: config.vendors,
-            categories: config.categories,
-            legIntCategories: config.legIntCategories){contents in
-                self.print(contents)
-                self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
-            }
+        if consentManager != nil {
+            consentManager?.customConsentGDPR(
+                vendors: config.vendors,
+                categories: config.categories,
+                legIntCategories: config.legIntCategories){contents in
+                    self.print(contents)
+                    self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
+                }
+        } else {
+            print("Library was not initialized correctly!")
+        }
     }
 
     @objc public func deleteCustomConsentGDPR() {
-        consentManager?.deleteCustomConsentGDPR(
-            vendors: config.vendors,
-            categories: config.categories,
-            legIntCategories: config.legIntCategories){contents in
-                self.print(contents)
-                self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
-            }
+        if consentManager != nil {
+            consentManager?.deleteCustomConsentGDPR(
+                vendors: config.vendors,
+                categories: config.categories,
+                legIntCategories: config.legIntCategories){contents in
+                    self.print(contents)
+                    self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
+                }
+        } else {
+            print("Library was not initialized correctly!")
+        }
     }
 }
     
