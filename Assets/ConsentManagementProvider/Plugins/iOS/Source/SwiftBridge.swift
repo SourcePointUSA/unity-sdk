@@ -98,7 +98,7 @@ import UIKit
             do {
                 propName = try SPPropertyName(propertyName)
             } catch {
-                print("`propertyName` invalid!")
+                printLog("`propertyName` invalid!")
                 return
             }
             self.consentManager = { SPConsentManager(
@@ -148,7 +148,7 @@ import UIKit
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
         print("PURE SWIFT loadMessage")
-        (consentManager != nil) ? consentManager?.loadMessage(forAuthId: authId) : print("Library was not initialized correctly!")
+        (consentManager != nil) ? consentManager?.loadMessage(forAuthId: authId) : printLog("Library was not initialized correctly!")
     }
     
     @objc public func onClearConsentTap() {
@@ -158,17 +158,17 @@ import UIKit
     
     @objc public func onGDPRPrivacyManagerTap() {
         if config.gdprPmId != nil {
-            (consentManager != nil) ? consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) : print("Library was not initialized correctly!")
+            (consentManager != nil) ? consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) : printLog("Library was not initialized correctly!")
         } else {
-            logger.error("Tried to load GDPR pm without ccpa pm id")
+            printLog("Tried to load GDPR pm without ccpa pm id")
         }
     }
     
     @objc public func onCCPAPrivacyManagerTap() {
         if config.ccpaPmId != nil {
-            (consentManager != nil) ? consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) : print("Library was not initialized correctly")
+            (consentManager != nil) ? consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) : printLog("Library was not initialized correctly")
         } else {
-            logger.error("Tried to load CCPA pm without ccpa pm id")
+            printLog("Tried to load CCPA pm without ccpa pm id")
         }
     }
 
@@ -182,7 +182,7 @@ import UIKit
                     self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
                 }
         } else {
-            print("Library was not initialized correctly!")
+            printLog("Library was not initialized correctly!")
         }
     }
 
@@ -196,7 +196,7 @@ import UIKit
                     self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
                 }
         } else {
-            print("Library was not initialized correctly!")
+            printLog("Library was not initialized correctly!")
         }
     }
 }
@@ -244,7 +244,7 @@ extension SwiftBridge: SPDelegate {
     }
     
     public func onError(error: SPError) {
-        print("Something went wrong: ", error)
+        printLog("Something went wrong: ", error)
         logger.log("PURE SWIFT onError")
         runCallback(callback: callbackOnErrorCallback, arg: error.toJSON())
     }
@@ -309,7 +309,7 @@ extension SwiftBridge {
 
 // MARK: - Util
 public func printLog(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-    Swift.print("SWIFT LOG:",items)
+    Swift.print("CMP SWIFT LOG:",items)
 }
 
 public func printChar(text: UnsafePointer<CChar>?) {
