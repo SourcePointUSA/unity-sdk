@@ -8,12 +8,23 @@ namespace ConsentManagementProviderLib.Android
 
         public CmpAndroidLoggerProxy() : base(new AndroidJavaClass(NativeJavaInterfaceName)) { }
 
+        /**
+        * The [error] method receives contains the logic to communicate with the server
+        * it is used only in production
+        * @param e instance of [ConsentLibExceptionK]
+        */
         void error(AndroidJavaObject RuntimeException)
         {
             CmpDebugUtil.LogError("Got logger: error");
             CmpDebugUtil.LogError(RuntimeException.ToString());
         }
 
+        /**
+        * Send an {@link #ERROR} log message.
+        * @param tag Used to identify the source of a log message.  It usually identifies
+        *        the class or activity where the log call occurs.
+        * @param msg The message you would like logged.
+        */
         void e(string tag, string msg)
         {
             CmpDebugUtil.Log("Got logger: e");
@@ -21,6 +32,13 @@ namespace ConsentManagementProviderLib.Android
             CmpDebugUtil.Log("MSG: "+msg);
         }
 
+        /**
+         * The [i] method receives contains the logic to communicate with the server
+         * it is used only in debug
+         * @param tag Used to identify the source of a log message.
+         *            It usually identifies the class or activity where the log call occurs.
+        * @param msg The message you would like logged.
+         */
         void i(string tag, string msg)
         {
             CmpDebugUtil.Log("Got logger: i");
@@ -28,6 +46,13 @@ namespace ConsentManagementProviderLib.Android
             CmpDebugUtil.Log("MSG: " + msg);
         }
 
+        /**
+        * The [d] method receives contains the logic to communicate with the server
+        * it is used only in debug
+        * @param tag Used to identify the source of a log message.
+        *            It usually identifies the class or activity where the log call occurs.
+        * @param msg The message you would like logged.
+        */
         void d(string tag, string msg)
         {
             CmpDebugUtil.Log("Got logger: d");
@@ -35,6 +60,13 @@ namespace ConsentManagementProviderLib.Android
             CmpDebugUtil.Log("MSG: " + msg);
         }
 
+        /**
+        * The [v] method receives contains the logic to communicate with the server
+        * it is used only in debug
+        * @param tag Used to identify the source of a log message.
+        *            It usually identifies the class or activity where the log call occurs.
+        * @param msg The message you would like logged.
+        */
         void v(string tag, string msg)
         {
             CmpDebugUtil.Log("Got logger: v");
