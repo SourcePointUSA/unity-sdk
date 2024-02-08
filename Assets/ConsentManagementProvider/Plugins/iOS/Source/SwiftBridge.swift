@@ -17,7 +17,6 @@ import UIKit
             categories: [],
             legIntCategories: []
         )
-        
     }
     enum CAMPAIGN_TYPE: Int {
         case GDPR = 0
@@ -98,7 +97,7 @@ import UIKit
             do {
                 propName = try SPPropertyName(propertyName)
             } catch {
-                printLog("`propertyName` invalid!")
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "`propertyName` invalid!")
                 return
             }
             self.consentManager = { SPConsentManager(
@@ -148,7 +147,9 @@ import UIKit
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
         print("PURE SWIFT loadMessage")
-        (consentManager != nil) ? consentManager?.loadMessage(forAuthId: authId) : printLog("Library was not initialized correctly!")
+        (consentManager != nil) ? 
+            consentManager?.loadMessage(forAuthId: authId) :
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
     }
     
     @objc public func onClearConsentTap() {
@@ -158,17 +159,21 @@ import UIKit
     
     @objc public func onGDPRPrivacyManagerTap() {
         if config.gdprPmId != nil {
-            (consentManager != nil) ? consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) : printLog("Library was not initialized correctly!")
+            (consentManager != nil) ? 
+                consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) :
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         } else {
-            printLog("Tried to load GDPR pm without ccpa pm id")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load GDPR pm without ccpa pm id")
         }
     }
     
     @objc public func onCCPAPrivacyManagerTap() {
         if config.ccpaPmId != nil {
-            (consentManager != nil) ? consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) : printLog("Library was not initialized correctly")
+            (consentManager != nil) ? 
+                consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) :
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         } else {
-            printLog("Tried to load CCPA pm without ccpa pm id")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load CCPA pm without ccpa pm id")
         }
     }
 
@@ -182,7 +187,7 @@ import UIKit
                     self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
                 }
         } else {
-            printLog("Library was not initialized correctly!")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         }
     }
 
@@ -196,7 +201,7 @@ import UIKit
                     self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
                 }
         } else {
-            printLog("Library was not initialized correctly!")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         }
     }
 }
