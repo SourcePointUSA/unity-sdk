@@ -11,24 +11,20 @@ namespace ConsentManagementProviderLib.Android
         /**
         * The [error] method receives contains the logic to communicate with the server
         * it is used only in production
-        * @param e instance of [ConsentLibExceptionK]
+        * @param RuntimeException instance of [ConsentLibExceptionK]
         */
         void error(AndroidJavaObject RuntimeException) =>
-            CmpDebugUtil.LogError($"ERROR: {RuntimeException.Get<string>("description")} ....  "); //TODO: StringBuilder
+            CmpDebugUtil.LogError($"ERROR: {RuntimeException.Get<string>("description")}");
 
         /**
         * Send an {@link #ERROR} log message.
         * @param tag Used to identify the source of a log message.
-        * It usually identifies
-        * the class or activity where the log call occurs.
+        * It usually identifies the class or activity where the log call occurs.
         * @param msg The message you would like logged.
         */
         void e(string tag, string msg)
         {
-            //TODO: INLINE
-            CmpDebugUtil.Log("Got logger: e ");
-            CmpDebugUtil.Log("TAG: "+tag);
-            CmpDebugUtil.Log("MSG: "+msg);
+            CmpDebugUtil.Log($"E  TAG: {tag}, MSG: {msg}");
         }
 
         /**
@@ -40,9 +36,7 @@ namespace ConsentManagementProviderLib.Android
          */
         void i(string tag, string msg)
         {
-            CmpDebugUtil.Log("Got logger: i ");
-            CmpDebugUtil.Log("TAG: " + tag);
-            CmpDebugUtil.Log("MSG: " + msg);
+            CmpDebugUtil.Log($"I  TAG: {tag}, MSG: {msg}");
         }
 
 #region DEBUG ONLY
@@ -55,9 +49,7 @@ namespace ConsentManagementProviderLib.Android
         */
         void d(string tag, string msg)
         {
-            CmpDebugUtil.Log("Got logger: d");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
+            CmpDebugUtil.Log($"D  TAG: {tag}, MSG: {msg}");
         }
 
         /**
@@ -69,9 +61,7 @@ namespace ConsentManagementProviderLib.Android
         */
         void v(string tag, string msg)
         {
-            CmpDebugUtil.Log("Got logger: v");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
+            CmpDebugUtil.Log($"V  TAG: {tag}, MSG: {msg}");
         }
 #endregion
 
@@ -79,86 +69,56 @@ namespace ConsentManagementProviderLib.Android
         // Web Request Log
         void req(string tag, string url, string type, string body)
         {
-            CmpDebugUtil.Log("Got logger: req");
-            CmpDebugUtil.Log("TAG: " + tag);
-            CmpDebugUtil.Log("URL: " + url);
-            CmpDebugUtil.Log("TYPE: " + type);
-            CmpDebugUtil.Log("BODY: " + body);
+            CmpDebugUtil.Log($"REQ  TAG: {tag}, URL: {url}, TYPE: {type}, BODY: {body}");
         }
 
         // Web Response Log
         void res(string tag, string msg, string status, string body)
         {
-            CmpDebugUtil.Log("Got logger: res");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
-            CmpDebugUtil.Log("STATUS:" + status);
-            CmpDebugUtil.Log("BODY:" + body);
+            CmpDebugUtil.Log($"RES  TAG: {tag}, MSG: {msg}, STATUS: {status}, BODY: {body}");
         }
 
         // TODO: ADD DESCRIPTION
         void webAppAction(string tag, string msg, AndroidJavaObject? json)
         {
-            CmpDebugUtil.LogWarning("Got logger: webAppAction");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
-            if(json != null) CmpDebugUtil.Log("json:" + json.ToString());
+            CmpDebugUtil.Log($"WebAppAction  TAG: {tag}, MSG: {msg}, JSON: {(json != null? json : "nil")}");
         }
  #endregion
  
         // TODO: ADD DESCRIPTION
         void nativeMessageAction(string tag, string msg, AndroidJavaObject? json)
         {
-            CmpDebugUtil.LogWarning("Got logger: nativeMessageAction");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
-            if (json != null) CmpDebugUtil.Log("json:" + json.ToString());
+            CmpDebugUtil.Log($"NativeMessageAction  TAG: {tag}, MSG: {msg}, JSON: {(json != null ? json : "nil")}");
         }
         // TODO: ADD DESCRIPTION
 
         void computation(string tag, string msg)
         {
-            CmpDebugUtil.Log("Got logger: computation");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
+            CmpDebugUtil.Log($"Computation  TAG: {tag}, MSG: {msg}");
         }
         // TODO: ADD DESCRIPTION
 
         void computation(string tag, string msg, AndroidJavaObject? json)
         {
-            CmpDebugUtil.Log("Got logger: computation2");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("MSG:" + msg);
-            if (json != null) CmpDebugUtil.Log("json:" + json.ToString());
+            CmpDebugUtil.Log($"Computation2  TAG: {tag}, MSG: {msg}, JSON: {(json != null ? json : "nil")}");
         }
         // TODO: ADD DESCRIPTION
 
         void clientEvent(string _event, string msg, string content)
         {
-            CmpDebugUtil.LogWarning("Got logger: clientEvent");
-            CmpDebugUtil.Log("EVENT:" + _event);
-            CmpDebugUtil.Log("MSG:" + msg);
-            CmpDebugUtil.Log("CONTENT:" + content);
+            CmpDebugUtil.Log($"ClientEvent  EVENT: {_event}, MSG: {msg}, CONTENT: {content}");
         }
         // TODO: ADD DESCRIPTION
 
         void pm(string tag, string url, string type, string? _params)
         {
-            CmpDebugUtil.LogWarning("Got logger: pm");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("URL:" + url);
-            CmpDebugUtil.Log("TYPE:" + type);
-            if (_params != null) CmpDebugUtil.Log("PARAMS:" + _params);
+            CmpDebugUtil.Log($"Pm  TAG: {tag}, URL: {url}, TYPE: {type}, PARAMS: {(_params != null ? _params : "nil")}");
         }
         
         // TODO: ADD DESCRIPTION
         void flm(string tag, string url, string type, AndroidJavaObject json)
         {
-            CmpDebugUtil.LogWarning("Got logger: flm");
-            CmpDebugUtil.Log("TAG:" + tag);
-            CmpDebugUtil.Log("URL:" + url);
-            CmpDebugUtil.Log("TYPE:" + type);
-            CmpDebugUtil.Log("json:" + json);
+            CmpDebugUtil.Log($"Flm  TAG: {tag}, URL: {url}, TYPE: {type}, JSON: {json}");
         }
     }
 }
