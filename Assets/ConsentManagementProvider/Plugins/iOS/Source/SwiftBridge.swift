@@ -93,10 +93,7 @@ import UIKit
         ccpaPmId: String) {
             self.config.gdprPmId = gdprPmId
             self.config.ccpaPmId = ccpaPmId
-            var propName: SPPropertyName
-            do {
-                propName = try SPPropertyName(propertyName)
-            } catch {
+            guard let propName = try? SPPropertyName(propertyName) else {
                 self.runCallback(callback: self.callbackOnErrorCallback, arg: "`propertyName` invalid!")
                 return
             }
@@ -178,8 +175,8 @@ import UIKit
     }
 
     @objc public func customConsentToGDPR() {
-        if consentManager != nil {
-            consentManager?.customConsentGDPR(
+        if let consentManager = consentManager {
+            consentManager.customConsentGDPR(
                 vendors: config.vendors,
                 categories: config.categories,
                 legIntCategories: config.legIntCategories){contents in
@@ -192,8 +189,8 @@ import UIKit
     }
 
     @objc public func deleteCustomConsentGDPR() {
-        if consentManager != nil {
-            consentManager?.deleteCustomConsentGDPR(
+        if let consentManager = consentManager {
+            consentManager.deleteCustomConsentGDPR(
                 vendors: config.vendors,
                 categories: config.categories,
                 legIntCategories: config.legIntCategories){contents in
