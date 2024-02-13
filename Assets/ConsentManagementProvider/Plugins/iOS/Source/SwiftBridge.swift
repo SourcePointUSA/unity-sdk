@@ -9,12 +9,20 @@ import Foundation
 import UIKit
 
 @objc public class SwiftBridge: NSObject {
-    
+    public override init() {
+        config = Config(
+            gdprPmId: nil,
+            ccpaPmId: nil,
+            vendors: [],
+            categories: [],
+            legIntCategories: []
+        )
+    }
     enum CAMPAIGN_TYPE: Int {
-            case GDPR = 0
-            case IOS14 = 1
-            case CCPA = 2
-        }
+        case GDPR = 0
+        case IOS14 = 1
+        case CCPA = 2
+    }
     
     enum VendorStatus: String {
         case Accepted
@@ -33,13 +41,7 @@ import UIKit
     }
     
     struct Config {
-        
-        let accountId, propertyId: Int
-        let propertyName: String
-        let gdpr, ccpa, att: Bool
-        let language: SPMessageLanguage
-        let gdprPmId, ccpaPmId: String?
-        
+        var gdprPmId, ccpaPmId: String?
         var vendors: [String] = []
         var categories: [String] = []
         var legIntCategories: [String] = []
@@ -47,33 +49,11 @@ import UIKit
     
     var idfaStatus: SPIDFAStatus { SPIDFAStatus.current() }
     var myVendorAccepted: VendorStatus = .Unknown
-    lazy var config = { Config(
-        accountId: 22,
-        propertyId: 16893,
-        propertyName: "mobile.multicampaign.demo",
-        gdpr: true,
-        ccpa: true,
-        att: true,
-        language: .BrowserDefault,
-        gdprPmId: "488393",
-        ccpaPmId: "509688"
-    )}()
+    var config: Config
     lazy var gdprTargetingParams: SPTargetingParams = [:]
     lazy var ccpaTargetingParams: SPTargetingParams = [:]
     
-    lazy var consentManager: SPSDK = { SPConsentManager(
-        accountId: config.accountId,
-        propertyId: config.propertyId,
-        // swiftlint:disable:next force_try
-        propertyName: try! SPPropertyName(config.propertyName),
-        campaigns: SPCampaigns(
-            gdpr: config.gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: config.gdprPmId) : nil,
-            ccpa: config.ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: config.ccpaPmId) : nil,
-            ios14: config.att ? SPCampaign() : nil
-        ),
-        language: config.language,
-        delegate: self
-    )}()
+    var consentManager: SPSDK?
     let logger: OSLogger = OSLogger.standard
 
     public typealias СallbackCharMessage = @convention(c) (UnsafePointer<CChar>?) -> Void
@@ -111,16 +91,23 @@ import UIKit
         language: SPMessageLanguage,
         gdprPmId: String,
         ccpaPmId: String) {
-            self.config = { Config(
+            self.config.gdprPmId = gdprPmId
+            self.config.ccpaPmId = ccpaPmId
+            guard let propName = try? SPPropertyName(propertyName) else {
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "`propertyName` invalid!")
+                return
+            }
+            self.consentManager = { SPConsentManager(
                 accountId: accountId,
                 propertyId: propertyId,
-                propertyName: propertyName,
-                gdpr: gdpr,
-                ccpa: ccpa,
-                att: true,
+                propertyName: propName,
+                campaigns: SPCampaigns(
+                    gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: gdprPmId) : nil,
+                    ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: ccpaPmId) : nil,
+                    ios14: SPCampaign()
+                ),
                 language: language,
-                gdprPmId: gdprPmId,
-                ccpaPmId: ccpaPmId
+                delegate: self
             )}()
         }
     
@@ -153,45 +140,66 @@ import UIKit
         callbackOnSPUIFinished = nil
         callbackOnCustomConsent = nil
     }
- 
+
 // MARK: - Manage lib
     @objc public func loadMessage(authId: String? = nil) {
         print("PURE SWIFT loadMessage")
-        consentManager.loadMessage(forAuthId: authId)
+        (consentManager != nil) ? 
+            consentManager?.loadMessage(forAuthId: authId) :
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
     }
-
+    
     @objc public func onClearConsentTap() {
         SPConsentManager.clearAllData()
         myVendorAccepted = .Unknown
     }
     
     @objc public func onGDPRPrivacyManagerTap() {
-        consentManager.loadGDPRPrivacyManager(withId: config.gdprPmId!)
+        if config.gdprPmId != nil {
+            (consentManager != nil) ? 
+                consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) :
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+        } else {
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load GDPR pm without gdpr pm id")
+        }
     }
     
     @objc public func onCCPAPrivacyManagerTap() {
-        consentManager.loadCCPAPrivacyManager(withId: config.ccpaPmId!)
+        if config.ccpaPmId != nil {
+            (consentManager != nil) ? 
+                consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) :
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+        } else {
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load CCPA pm without ccpa pm id")
+        }
     }
 
-
     @objc public func customConsentToGDPR() {
-        consentManager.customConsentGDPR(
-            vendors: config.vendors,
-            categories: config.categories,
-            legIntCategories: config.legIntCategories){contents in
-                self.print(contents)
-                self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
-            }
+        if let consentManager = consentManager {
+            consentManager.customConsentGDPR(
+                vendors: config.vendors,
+                categories: config.categories,
+                legIntCategories: config.legIntCategories){contents in
+                    self.print(contents)
+                    self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
+                }
+        } else {
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+        }
     }
 
     @objc public func deleteCustomConsentGDPR() {
-        consentManager.deleteCustomConsentGDPR(
-            vendors: config.vendors,
-            categories: config.categories,
-            legIntCategories: config.legIntCategories){contents in
-                self.print(contents)
-                self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
-            }
+        if let consentManager = consentManager {
+            consentManager.deleteCustomConsentGDPR(
+                vendors: config.vendors,
+                categories: config.categories,
+                legIntCategories: config.legIntCategories){contents in
+                    self.print(contents)
+                    self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
+                }
+        } else {
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+        }
     }
 }
     
@@ -212,7 +220,7 @@ extension SwiftBridge: SPDelegate {
             "type":String(action.type.rawValue),
             "customActionId":action.customActionId ?? ""
         ]
-        var resp = "type:0"
+        var resp = ""
         if let data = try? JSONEncoder().encode(responce) {
             resp = String(data: data, encoding: .utf8) ?? ""
         }
@@ -220,8 +228,7 @@ extension SwiftBridge: SPDelegate {
     }
     
     public func onSPUIFinished(_ controller: UIViewController) {
-        let top = UIApplication.shared.firstKeyWindow?.rootViewController
-        top?.dismiss(animated: true)
+        UIApplication.shared.firstKeyWindow?.rootViewController?.dismiss(animated: true)
         logger.log("PURE SWIFT onSPUIFinished")
         runCallback(callback: callbackOnSPUIFinished, arg: "onSPUIFinished")
     }
@@ -239,7 +246,7 @@ extension SwiftBridge: SPDelegate {
     }
     
     public func onError(error: SPError) {
-        print("Something went wrong: ", error)
+        printLog("Something went wrong: ", error)
         logger.log("PURE SWIFT onError")
         runCallback(callback: callbackOnErrorCallback, arg: error.toJSON())
     }
@@ -304,7 +311,7 @@ extension SwiftBridge {
 
 // MARK: - Util
 public func printLog(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-    Swift.print("SWIFT LOG:",items)
+    Swift.print("CMP SWIFT LOG:",items)
 }
 
 public func printChar(text: UnsafePointer<CChar>?) {

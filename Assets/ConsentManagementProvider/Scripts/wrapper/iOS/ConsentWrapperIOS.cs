@@ -37,8 +37,6 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _loadMessage(string authId);
         [DllImport("__Internal")]
-        private static extern void _consrtuctLib(int accountId, int propId, string propName, int arrSize, int[] campaignTypes, int campaignsEnvironment, long timeOutSeconds);
-        [DllImport("__Internal")]
         private static extern void _loadGDPRPrivacyManager();
         [DllImport("__Internal")]
         private static extern void _loadCCPAPrivacyManager();
