@@ -143,6 +143,25 @@ namespace ConsentManagementProviderLib
 #endif
         }
 
+        public static void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
+        {
+#if UNITY_ANDROID
+            // TO-DO
+            /*ConsentWrapperAndroid.Instance.DeleteCustomConsentGDPR(
+                vendors: vendors,
+                categories: categories,
+                legIntCategories: legIntCategories,
+                onSuccessDelegate: onSuccessDelegate);*/
+
+#elif UNITY_IOS && !UNITY_EDITOR_OSX
+            ConsentWrapperIOS.Instance.DeleteCustomConsentGDPR(
+                vendors: vendors,
+                categories: categories,
+                legIntCategories: legIntCategories,
+                onSuccessDelegate: onSuccessDelegate);
+#endif
+        }
+
         public static SpConsents GetSpConsents()
         {
             SpConsents result = null;
