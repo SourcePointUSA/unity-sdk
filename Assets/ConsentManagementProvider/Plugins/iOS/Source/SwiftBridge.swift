@@ -160,7 +160,7 @@ import UIKit
                 consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) :
                 self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load GDPR pm without ccpa pm id")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load GDPR pm without gdpr pm id")
         }
     }
     
