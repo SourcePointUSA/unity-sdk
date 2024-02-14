@@ -1,3 +1,14 @@
+# 2.2.0
+* [DIA-3263](https://sourcepoint.atlassian.net/browse/DIA-3263) Update of the Native Android SDK to 7.6.0 (fix of no internet connection issue on Android) [#30](https://github.com/SourcePointUSA/unity-sdk/pull/30)
+* [DIA-2815](https://sourcepoint.atlassian.net/browse/DIA-2815) Implemented new swift bridge for IOS [#21](https://github.com/SourcePointUSA/unity-sdk/pull/21)
+* [DIA-3045](https://sourcepoint.atlassian.net/browse/DIA-3045) Remove TextMeshPro asset [#22](https://github.com/SourcePointUSA/unity-sdk/pull/22)
+* [DIA-2586](https://sourcepoint.atlassian.net/browse/DIA-2586) Implemented ClearAllData() feature for Android, iOS [#24](https://github.com/SourcePointUSA/unity-sdk/pull/24)
+* [DIA-2584](https://sourcepoint.atlassian.net/browse/DIA-2584) Implemented cutomConsentTo (for iOS and Android) / deleteCustomConsent (for iOS) features [#26](https://github.com/SourcePointUSA/unity-sdk/pull/26), [#34](https://github.com/SourcePointUSA/unity-sdk/pull/34)
+* Improve Android logging experience: introduce CmpAndroidLoggerProxy C#-native implementation of logger derived from native com.sourcepoint.cmplibrary.exception.Logger interface [#33](https://github.com/SourcePointUSA/unity-sdk/pull/33)
+* Get rid of System.Threading.Tasks.Extensions.dll, Microsoft.Bcl.AsyncInterfaces.dll, System.Buffers.dll, System.Memory.dll, System.Numerics.Vectors.dll, System.Runtime.CompilerServices.Unsafe.dll, System.Text.Encodings.Web.dll which were used by System.Text.Json.dll
+* Newtonsoft JSON parsing: safety measures and improvements!
+* CCPA campaign added to the PrivacySettings.cs script for the Example App
+
 # 2.1.7
 * [DIA-3263](https://sourcepoint.atlassian.net/browse/DIA-3263) DIA-3263 Fix internet connection issue [#32](https://github.com/SourcePointUSA/unity-sdk/pull/32)
 * Added native support for v7.6.0 Android

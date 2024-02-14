@@ -1,9 +1,14 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using AOT;
 using UnityEngine;
-using System.Text.Json;
+using System.IO;
+using NewtonsoftJson = Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ConsentManagementProviderLib.Json;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib.iOS
 {
@@ -12,20 +17,40 @@ namespace ConsentManagementProviderLib.iOS
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
     [DllImport("__Internal")]
-    private static extern void _setUnityCallback(string gameObjectName);
+    private static extern void _setCallbackDefault(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentReady(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentUIReady(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentAction(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnConsentUIFinished(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnErrorCallback(Action<string> callback);
+    [DllImport("__Internal")]
+    private static extern void _setCallbackOnCustomConsent(Action<string> callback);
 #endif
 
+        public static CMPiOSListenerHelper self;
         private Action<GdprConsent> onCustomConsentsGDPRSuccessAction;
         internal GdprConsent customGdprConsent = null;
         internal SpConsents _spConsents = null;
         
         private void Awake()
         {
+            self=this;
             gameObject.name = "CMPiOSListenerHelper";
 #if UNITY_IOS && !UNITY_EDITOR_OSX
         CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
         DontDestroyOnLoad(this.gameObject);
-        _setUnityCallback(gameObject.name);
+        _setCallbackDefault(Callback);
+        _setCallbackOnConsentReady(OnConsentReady);
+        _setCallbackOnConsentUIReady(OnConsentUIReady);
+        _setCallbackOnConsentAction(OnConsentAction);
+        _setCallbackOnConsentUIFinished(OnConsentUIFinished);
+        _setCallbackOnErrorCallback(OnErrorCallback);
+        _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
 #endif
         }
 
@@ -34,12 +59,14 @@ namespace ConsentManagementProviderLib.iOS
             this.onCustomConsentsGDPRSuccessAction = action;
         }
 
-        void Callback(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void Callback(string message)
         {
             CmpDebugUtil.Log("IOS_CALLBACK_RECEIVED: " + message);
         }
 
-        void OnConsentReady(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentReady(string message)
         {
             CmpDebugUtil.Log("OnConsentReady IOS_CALLBACK_RECEIVED: " + message);
             SpConsents spConsents = null;
@@ -55,41 +82,56 @@ namespace ConsentManagementProviderLib.iOS
             }
             finally
             {
-                _spConsents = spConsents;
+                self.SaveConsent(spConsents);
                 ConsentMessenger.Broadcast<IOnConsentReady>(spConsents);
             }
         }
 
-        void OnConsentUIReady(string message)
+        void SaveConsent(SpConsents consent)
+        {
+            _spConsents = consent;
+        }
+
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentUIReady(string message)
         {
             CmpDebugUtil.Log("OnConsentUIReady IOS_CALLBACK_RECEIVED: " + message);
             ConsentMessenger.Broadcast<IOnConsentUIReady>(message);
         }
 
-        void OnConsentAction(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentAction(string message)
         {
             CmpDebugUtil.Log("OnConsentAction IOS_CALLBACK_RECEIVED: " + message);
-            SpActionWrapper wrapped = JsonSerializer.Deserialize<SpActionWrapper>(message);
+            using StringReader stringReader = new StringReader(message);
+            using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
+
+            NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+            SpActionWrapper wrapped = serializer.Deserialize<SpActionWrapper>(reader);
+
             CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE) Convert.ToInt32(wrapped.type);
             string customActionId = wrapped.customActionId.ToString();
             SpAction spAction = new SpAction(unwrappedType, customActionId);
             ConsentMessenger.Broadcast<IOnConsentAction>(spAction);
         }
 
-        void OnConsentUIFinished(string message)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentUIFinished(string message)
         {
             CmpDebugUtil.Log("OnConsentUIFinished IOS_CALLBACK_RECEIVED: " + message);
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
         }
 
-        void OnErrorCallback(string jsonError)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnErrorCallback(string jsonError)
         {
             CmpDebugUtil.LogError("OnErrorCallback IOS_CALLBACK_RECEIVED: " + jsonError);
             Exception ex = new Exception(jsonError);
             ConsentMessenger.Broadcast<IOnConsentError>(ex);
         }
 
-        void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnCustomConsentGDPRCallback(string jsonSPGDPRConsent)
         {
             CmpDebugUtil.Log("OnCustomConsentGDPRCallback IOS_CALLBACK_RECEIVED: " + jsonSPGDPRConsent);
             GdprConsent unwrapped = null;
@@ -107,12 +149,12 @@ namespace ConsentManagementProviderLib.iOS
             {
                 if (unwrapped == null)
                 {
-                    onCustomConsentsGDPRSuccessAction?.Invoke(null);
+                    self.onCustomConsentsGDPRSuccessAction?.Invoke(null);
                 }
                 else
                 {
-                    customGdprConsent = unwrapped;
-                    onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
+                    self.customGdprConsent = unwrapped;
+                    self.onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
                 }
             }
         }

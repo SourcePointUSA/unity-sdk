@@ -1,19 +1,18 @@
 using System;
-using System.Text.Json.Serialization;
 
 namespace ConsentManagementProviderLib.Json
 {
     internal class CcpaConsentWrapper
     {
-        [JsonInclude] public string uuid;
-        [JsonInclude] public string status;
-        [JsonInclude] public string uspstring;
-        [JsonInclude] public string[] rejectedVendors;
-        [JsonInclude] public string[] rejectedCategories;
-        [JsonInclude] public string childPmId;
-        [JsonInclude] public bool applies;
-        [JsonInclude] public bool signedLspa;
-        [JsonInclude] public string webConsentPayload;
-        [JsonInclude] public object consentStatus;
+        public string uuid;
+        public string status;
+        public string uspstring;
+        public string[] rejectedVendors;
+        public string[] rejectedCategories;
+        public string childPmId;
+        public bool applies;
+        public bool signedLspa;
+        public string webConsentPayload;
+        public ConsentStatusWrapper consentStatus;
     }
 }

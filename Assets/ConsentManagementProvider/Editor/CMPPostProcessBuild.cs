@@ -4,9 +4,11 @@ using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using System.IO;
 using UnityEditor.iOS.Xcode.Extensions;
+using UnityEngine;
+using ConsentManagementProviderLib; 
 
 public static class CMPPostProcessBuild
-{
+{    
     [PostProcessBuild(800)]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
     {
@@ -28,22 +30,32 @@ public static class CMPPostProcessBuild
             EnableObjectiveCExceptions(pbxProject);
             EnableBitcode(pbxProject, unityProjectGuid, false);
 
+            string bridgePath="Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
+            RemoveBridge(pbxProject,bridgePath);
             pbxProject.WriteToFile(projPath);
 
-            AddBridgeToPods(buildPath);
-            
+            AddBridgeToPods(buildPath, bridgePath);
+
             string plistPath = buildPath + "/Info.plist";
             AddParameterToInfoPlist(plistPath);
         }
     }
 
-    static void AddBridgeToPods(string path)
+    static void RemoveBridge(PBXProject proj, string bridgePath)
+    {
+        string bridgeGuid = proj.FindFileGuidByProjectPath(bridgePath);
+        proj.RemoveFile(bridgeGuid);
+    }
+
+    static void AddBridgeToPods(string path, string bridgePath)
     {
         PBXProject pbxPods = new PBXProject();
         string podsPath = path+"/Pods/Pods.xcodeproj/project.pbxproj";
         pbxPods.ReadFromFile(podsPath);
+        string bridgeGuid = pbxPods.AddFile(path+"/"+bridgePath,"Pods/ConsentViewController/SwiftBridge.swift");
         string cmpGuid = pbxPods.TargetGuidByName("ConsentViewController");
         string cmpCmpGuid = pbxPods.TargetGuidByName("ConsentViewController-ConsentViewController");
+        pbxPods.AddFileToBuild(cmpGuid,bridgeGuid);
         pbxPods.AddBuildProperty(cmpGuid, "CODE_SIGN_IDENTITY", "");
         pbxPods.AddBuildProperty(cmpCmpGuid, "CODE_SIGN_IDENTITY", "");
         pbxPods.WriteToFile(podsPath);
@@ -57,6 +69,13 @@ public static class CMPPostProcessBuild
             
         var buildKey = "NSUserTrackingUsageDescription";
         rootDict.SetString(buildKey,"This identifier will be used to deliver personalized ads to you.");
+        buildKey = "SPLogLevel";
+        var buildValue="prod";
+        if (CmpDebugUtil.isLogging())
+        {
+            buildValue="debug";
+        }
+        rootDict.SetString(buildKey,buildValue);
 
         File.WriteAllText(plistPath, plist.WriteToString());
     }
@@ -69,7 +88,6 @@ public static class CMPPostProcessBuild
     static void TieBridgingHeader(PBXProject pbxProject, string targetGuid)
     {
         pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/Source/UnityPlugin-Bridging-Header.h");
-        pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "UnityController.h");
     }
 
     private static void EnableBitcode(PBXProject pbxProject, string targetGuid, bool enabled)

@@ -21,26 +21,30 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     List<SpCampaign> spCampaigns = new List<SpCampaign>();
 
     List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
-    SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, CAMPAIGN_ENV.PUBLIC, gdprParams);
+    SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
     spCampaigns.Add(gdpr);
 
     List<TargetingParam> ccpaParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-    SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, CAMPAIGN_ENV.PUBLIC, ccpaParams);
+    SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
     spCampaigns.Add(ccpa);
 
     List<TargetingParam> ios14Params = new List<TargetingParam>();
-    SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, CAMPAIGN_ENV.PUBLIC, ios14Params);
+    SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, ios14Params);
     spCampaigns.Add(ios14);
 ```
 
-In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName`, `gdpr`, `ccpa`(allows using campains),`gdprPmId`, `ccpaPmId` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-		   propertyId: 16893,
+		           propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
+                   gdpr: true,
+                   ccpa: true,
                    language: MESSAGE_LANGUAGE.ENGLISH,
+                   gdprPmId: "488393",
+                   ccpaPmId: "509688",
                    campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
                    messageTimeoutInSeconds: 30);
 ```
@@ -56,6 +60,15 @@ private void Start()
 }
 ```
 
+Utilize the following method if an end-user requests to have their data deleted:
+
+```c#
+private void ClearData()
+    {
+        CMP.ClearAllData();
+    }
+```
+
 In order to free memory, call `Dispose` as illustrated in the following example :
 
 ```c#
@@ -63,6 +76,11 @@ private void OnDestroy()
 {
     CMP.Dispose();
 }
+```
+
+If you need library logs, you can use this:
+```c#
+CmpDebugUtil.EnableCmpLogs(true)
 ```
 
 # Handle consent callbacks
@@ -268,7 +286,23 @@ For vendors that are not part of the IAB, you can verify the user consented to t
      bool isMyCCPAVendorRejected = consents.ccpa.consents.status == "rejectedAll" ||
                                        consents.ccpa.consents.rejectedVendors.Contains("a_vendor_id");
 ```
-	
+
+## Adding or Removing custom consents
+
+It's possible to programmatically consent the current user to a list of custom vendors, categories and legitimate interest categories with the method:
+
+```c#
+void CustomConsentGDPR(
+    string[] vendors, 
+    string[] categories, 
+    string[] legIntCategories, 
+    Action<GdprConsent> onSuccessDelegate)
+```
+
+The vendor grants will be re-generated, this time taking into consideration the list of vendors, categories and legitimate interest categories you pass as parameters. The method is asynchronous so you must pass a completion handler that will receive back an instance of `GdprConsent` in case of success or it'll call the delegate method `onError` in case of failure.
+
+It's important to notice, this methods are intended to be used for **custom** vendors and purposes only. For IAB vendors and purposes, it's still required to get consent via the consent message or privacy manager.
+
 # Build for iOS
 
 Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed.

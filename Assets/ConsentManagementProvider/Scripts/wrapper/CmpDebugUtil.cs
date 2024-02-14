@@ -51,5 +51,10 @@ namespace ConsentManagementProviderLib
             //if(EnableLogging)
                 Debug.LogError(message);
         }
+
+        public static bool isLogging()
+        {
+            return enableLogging;
+        }
     }
 }

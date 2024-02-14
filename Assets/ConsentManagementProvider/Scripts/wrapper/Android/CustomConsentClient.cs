@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using ConsentManagementProviderLib.Json;
+using JetBrains.Annotations;
 
 namespace ConsentManagementProviderLib.Android
 {
@@ -15,7 +16,7 @@ namespace ConsentManagementProviderLib.Android
             this.callback = callback;
         }
 
-        void transferCustomConsentToUnity(string spConsentsJson)
+        [UsedImplicitly] void transferCustomConsentToUnity(string spConsentsJson)
         {
             CmpDebugUtil.Log("transferCustomConsentToUnitySide c#-side custom consent ->" + spConsentsJson.ToString());
             SpCustomConsentAndroid parsed = null;
