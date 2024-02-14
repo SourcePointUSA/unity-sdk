@@ -9,6 +9,10 @@
 * Newtonsoft JSON parsing: safety measures and improvements!
 * CCPA campaign added to the PrivacySettings.cs script for the Example App
 
+# 2.1.7
+* [DIA-3263](https://sourcepoint.atlassian.net/browse/DIA-3263) DIA-3263 Fix internet connection issue [#32](https://github.com/SourcePointUSA/unity-sdk/pull/32)
+* Added native support for v7.6.0 Android
+
 # 2.1.6
 * [DIA-3423](https://sourcepoint.atlassian.net/browse/DIA-3423)[DIA-3349](https://sourcepoint.atlassian.net/browse/DIA-3349) DIA-3423, DIA-3349 Fix Unity racing conditions [#28](https://github.com/SourcePointUSA/unity-sdk/pull/28)
 
