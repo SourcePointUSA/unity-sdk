@@ -303,7 +303,7 @@ extension SwiftBridge {
     }
     
     public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if logger.level == .debug {
+        if OSLogger.defaultLevel == .debug {
             printLog(items)
         }
     }
