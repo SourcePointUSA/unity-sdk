@@ -1,3 +1,6 @@
+# 2.2.1
+* [DIA-3594](https://sourcepoint.atlassian.net/browse/DIA-3594) Unity SDK brought to v7.7.0 Android & v.7.6.0 iOS [#36](https://github.com/SourcePointUSA/unity-sdk/pull/36), [#37](https://github.com/SourcePointUSA/unity-sdk/pull/37)
+
 # 2.2.0
 * [DIA-3263](https://sourcepoint.atlassian.net/browse/DIA-3263) Update of the Native Android SDK to 7.6.0 (fix of no internet connection issue on Android) [#30](https://github.com/SourcePointUSA/unity-sdk/pull/30)
 * [DIA-2815](https://sourcepoint.atlassian.net/browse/DIA-2815) Implemented new swift bridge for IOS [#21](https://github.com/SourcePointUSA/unity-sdk/pull/21)
