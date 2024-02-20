@@ -38,7 +38,7 @@ In order to instantiate & trigger `Consent Message Web View`, you must call the 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-		           propertyId: 16893,
+		   propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
                    gdpr: true,
                    ccpa: true,
