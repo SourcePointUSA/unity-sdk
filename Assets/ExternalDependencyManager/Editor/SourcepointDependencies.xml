@@ -40,5 +40,9 @@
   <androidPackages>
 <!--    <androidPackage spec="org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.0" />-->
 <!--    <androidPackage spec="com.sourcepoint.cmplibrary:cmplibrary:7.7.0" />-->
+    <androidPackage spec="org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.5.10" />
+    <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1" />
+    <androidPackage spec="org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.0" />
+    <androidPackage spec="com.squareup.okhttp3:okhttp:4.9.0" />
   </androidPackages>
 </dependencies>
