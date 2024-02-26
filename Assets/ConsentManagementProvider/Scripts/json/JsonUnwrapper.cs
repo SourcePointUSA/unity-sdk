@@ -102,6 +102,13 @@ namespace ConsentManagementProviderLib.Json
                 }
             }
 
+            unwrapped.googleConsentMode = new SPGCMData(
+                wrappedGdpr.gcmStatus.ad_storage,
+                wrappedGdpr.gcmStatus.analytics_storage,
+                wrappedGdpr.gcmStatus.ad_user_data,
+                wrappedGdpr.gcmStatus.ad_personalization
+            );
+
             return new SpGdprConsent(unwrapped);
         }
 
