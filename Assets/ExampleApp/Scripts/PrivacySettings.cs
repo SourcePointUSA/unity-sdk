@@ -119,6 +119,18 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         updateUI();
     }
 
+    public void OnClearCustomConsentDataPress()
+    {
+        CMP.DeleteCustomConsentGDPR(
+            vendors: this.vendors,
+            categories: this.categories,
+            legIntCategories: this.legIntCategories,
+            onSuccessDelegate: SuccessDelegate
+        );
+        storedConsentString = null;
+        updateUI();
+    }
+
     public void OnLoadMessagePress()
     {
         storedConsentString = null;
