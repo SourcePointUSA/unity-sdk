@@ -250,6 +250,10 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |       |-- acceptedCategories: List<String>
         |       |-- consentStatus: ConsentStatus
         |       |-- googleConsentMode: SPGCMData
+        |           |-- adStorage: SPGCMData.Status?
+        |           |-- analyticsStorage: SPGCMData.Status?
+        |           |-- adUserData: SPGCMData.Status?
+        |           |-- adPersonalization: SPGCMData.Status?
         |-- ccpa?
             |-- applies: bool
             |-- consents: CcpaConsent
