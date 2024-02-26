@@ -135,6 +135,12 @@ namespace ConsentManagementProviderLib.Android
             consentLib.Call("customConsentGDPR", vendors, categories, legIntCategories, customConsentClient);
         }
 
+        public void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
+        {
+            this.customConsentClient = new CustomConsentClient(onSuccessDelegate);
+            consentLib.Call("deleteCustomConsentTo", vendors, categories, legIntCategories, customConsentClient);
+        }
+
         public GdprConsent GetCustomGdprConsent()
         {
             if (this.customConsentClient != null)
