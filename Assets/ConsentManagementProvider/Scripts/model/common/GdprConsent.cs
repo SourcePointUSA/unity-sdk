@@ -55,7 +55,7 @@ namespace ConsentManagementProviderLib
                     sb.AppendLine($"    {category}");
             }
 
-            sb.AppendLine($"adStorage: {googleConsentMode.adStorage.ToString()}, analyticsStorage: {googleConsentMode.analyticsStorage.ToString()}, adUserData: {googleConsentMode.adUserData.ToString()}, adPersonalization: {googleConsentMode.adPersonalization.ToString()}");
+            sb.AppendLine($"adStorage: {googleConsentMode.adStorage}, analyticsStorage: {googleConsentMode.analyticsStorage}, adUserData: {googleConsentMode.adUserData}, adPersonalization: {googleConsentMode.adPersonalization}");
 
             return sb.ToString();
         }
@@ -70,8 +70,11 @@ namespace ConsentManagementProviderLib
         }
         public Status? adStorage, analyticsStorage, adUserData, adPersonalization;
 
-        public SPGCMData(Status? adStorage, Status? analyticsStorage, 
-            Status? adUserData, Status? adPersonalization)
+        public SPGCMData(
+            Status? adStorage, 
+            Status? analyticsStorage, 
+            Status? adUserData, 
+            Status? adPersonalization)
         {
             this.adStorage = adStorage;
             this.analyticsStorage = analyticsStorage;
@@ -93,9 +96,17 @@ namespace ConsentManagementProviderLib
         public object rejectedVendors;
         public object rejectedCategories;
 
-        public ConsentStatus(bool? rejectedAny, bool? rejectedLI, bool? consentedAll, 
-            bool? consentedToAny, bool? vendorListAdditions, bool? legalBasisChanges, 
-            bool? hasConsentData, GranularStatus? granularStatus, object rejectedVendors, object rejectedCategories)
+        public ConsentStatus(
+            bool? rejectedAny, 
+            bool? rejectedLI, 
+            bool? consentedAll, 
+            bool? consentedToAny, 
+            bool? vendorListAdditions, 
+            bool? legalBasisChanges, 
+            bool? hasConsentData, 
+            GranularStatus? granularStatus, 
+            object rejectedVendors, 
+            object rejectedCategories)
         {
             this.rejectedAny = rejectedAny;
             this.rejectedLI = rejectedLI;
@@ -118,7 +129,13 @@ namespace ConsentManagementProviderLib
         public string? purposeLegInt;
         public bool? previousOptInAll;
         public bool? defaultConsent;
-        public GranularStatus(string? vendorConsent, string? vendorLegInt, string? purposeConsent, string? purposeLegInt, bool? previousOptInAll, bool? defaultConsent)
+        public GranularStatus(
+            string? vendorConsent, 
+            string? vendorLegInt, 
+            string? purposeConsent, 
+            string? purposeLegInt, 
+            bool? previousOptInAll, 
+            bool? defaultConsent)
         {
             this.vendorConsent = vendorConsent;
             this.vendorLegInt = vendorLegInt;
