@@ -102,6 +102,16 @@ namespace ConsentManagementProviderLib.Json
                 }
             }
 
+            if (wrappedGdpr.gcmStatus != null)
+            {
+                unwrapped.googleConsentMode = new SPGCMData(
+                    wrappedGdpr.gcmStatus.ad_storage,
+                    wrappedGdpr.gcmStatus.analytics_storage,
+                    wrappedGdpr.gcmStatus.ad_user_data,
+                    wrappedGdpr.gcmStatus.ad_personalization
+                );
+            }
+
             return new SpGdprConsent(unwrapped);
         }
 
@@ -234,7 +244,17 @@ namespace ConsentManagementProviderLib.Json
             {
                 unwrapped.consentStatus = UnwrapConsentStatus(wrapped.consentStatus);
             }
-
+            
+            if (wrapped.gcmStatus != null)
+            {
+                unwrapped.googleConsentMode = new SPGCMData(
+                    wrapped.gcmStatus.ad_storage,
+                    wrapped.gcmStatus.analytics_storage,
+                    wrapped.gcmStatus.ad_user_data,
+                    wrapped.gcmStatus.ad_personalization
+                );
+            }
+            
             return unwrapped;
         }
 

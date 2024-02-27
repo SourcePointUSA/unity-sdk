@@ -12,5 +12,6 @@ namespace ConsentManagementProviderLib.Json
         public bool applies;
         public string webConsentPayload;
         public ConsentStatusWrapper consentStatus;
+        public GCMDataWrapper? gcmStatus;
     }
 }

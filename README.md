@@ -249,6 +249,11 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |       |-- euconsent: String
         |       |-- acceptedCategories: List<String>
         |       |-- consentStatus: ConsentStatus
+        |       |-- googleConsentMode: SPGCMData?
+        |           |-- adStorage: SPGCMData.Status?
+        |           |-- analyticsStorage: SPGCMData.Status?
+        |           |-- adUserData: SPGCMData.Status?
+        |           |-- adPersonalization: SPGCMData.Status?
         |-- ccpa?
             |-- applies: bool
             |-- consents: CcpaConsent
@@ -287,6 +292,14 @@ For vendors that are not part of the IAB, you can verify the user consented to t
                                        consents.ccpa.consents.rejectedVendors.Contains("a_vendor_id");
 ```
 
+## Google Consent Mode
+
+[Google Consent Mode 2.0](https://developers.google.com/tag-platform/security/concepts/consent-mode) ensures that Google vendors on your property comply with an end-user's consent choices for purposes (called consent checks) defined by Google. It is implemented via [Google Analytics for Firebase SDK](https://firebase.google.com/docs/analytics/unity/start).
+
+### Update consent checks
+
+Use Google's `setConsent` method to update the relevant consent checks when the appropriate purposes are consented to/rejected. Be advised that the `googleConsentMode` object in `GdprConsent` will only return values for Google consent checks that are mapped to a custom purpose within your vendor list. For all other Google consent checks, the response will be `null`.
+
 ## Adding or Removing custom consents
 
 It's possible to programmatically consent the current user to a list of custom vendors, categories and legitimate interest categories with the method:
@@ -300,6 +313,16 @@ void CustomConsentGDPR(
 ```
 
 The vendor grants will be re-generated, this time taking into consideration the list of vendors, categories and legitimate interest categories you pass as parameters. The method is asynchronous so you must pass a completion handler that will receive back an instance of `GdprConsent` in case of success or it'll call the delegate method `onError` in case of failure.
+
+Using the same strategy for the custom consent, it's possible to programmatically delete the current user consent to a list of vendors, categories and legitimate interest categories by using the following method from the consent lib:
+
+```c#
+void DeleteCustomConsentGDPR(
+    string[] vendors, 
+    string[] categories, 
+    string[] legIntCategories, 
+    Action<GdprConsent> onSuccessDelegate)
+```
 
 It's important to notice, this methods are intended to be used for **custom** vendors and purposes only. For IAB vendors and purposes, it's still required to get consent via the consent message or privacy manager.
 

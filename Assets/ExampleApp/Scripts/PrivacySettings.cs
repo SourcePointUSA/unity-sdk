@@ -101,6 +101,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     private void SuccessDelegate(GdprConsent customConsent)
     {
         Debug.Log($"I am your success callback!"); // TODO print customConsent
+        storedConsentString = customConsent.euconsent;
+        updateUI();
     }
 
     public void OnCCPAPrivacyManagerButtonClick()
@@ -119,6 +121,17 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         updateUI();
     }
 
+    public void OnClearCustomConsentDataPress()
+    {
+        CMP.DeleteCustomConsentGDPR(
+            vendors: this.vendors,
+            categories: this.categories,
+            legIntCategories: this.legIntCategories,
+            onSuccessDelegate: SuccessDelegate
+        );
+        updateUI();
+    }
+
     public void OnLoadMessagePress()
     {
         storedConsentString = null;
@@ -128,7 +141,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnConsentReady(SpConsents consents)
     {
-        storedConsentString = consents.gdpr.consents.euconsent;
+        storedConsentString = consents.gdpr.consents.euconsent ?? "--";
+        CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
         updateUI();
     }
 
@@ -137,8 +151,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         if (storedConsentString != null)
         {
             loadMessageButton.interactable = false;
-            gdprPrivacySettingsButton.interactable = true;
-            ccpaPrivacySettingsButton.interactable = true;
+            gdprPrivacySettingsButton.interactable = useGDPR;
+            ccpaPrivacySettingsButton.interactable = useCCPA;
             customConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;

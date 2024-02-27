@@ -1,9 +1,9 @@
 <dependencies>
   <packages>
-    <package>com.sourcepoint.cmplibrary:cmplibrary:7.7.0</package>
+    <package>com.sourcepoint.cmplibrary:cmplibrary:7.7.1</package>
   </packages>
   <files>
-    <file>Assets/Plugins/Android/com.sourcepoint.cmplibrary.cmplibrary-7.7.0.aar</file>
+    <file>Assets/Plugins/Android/com.sourcepoint.cmplibrary.cmplibrary-7.7.1.aar</file>
     <file>Assets/Plugins/Android/com.squareup.okhttp3.okhttp-4.9.0.jar</file>
     <file>Assets/Plugins/Android/com.squareup.okio.okio-2.8.0.jar</file>
     <file>Assets/Plugins/Android/org.jetbrains.annotations-13.0.jar</file>
