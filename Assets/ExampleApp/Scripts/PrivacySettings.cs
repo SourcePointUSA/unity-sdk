@@ -101,6 +101,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     private void SuccessDelegate(GdprConsent customConsent)
     {
         Debug.Log($"I am your success callback!"); // TODO print customConsent
+        storedConsentString = customConsent.euconsent;
+        updateUI();
     }
 
     public void OnCCPAPrivacyManagerButtonClick()
@@ -128,7 +130,6 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             onSuccessDelegate: SuccessDelegate
         );
         storedConsentString = null;
-        updateUI();
     }
 
     public void OnLoadMessagePress()
