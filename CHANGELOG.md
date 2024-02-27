@@ -1,3 +1,9 @@
+# 2.2.2
+* [DIA-3628](https://sourcepoint.atlassian.net/browse/DIA-3628), [DIA-3629](https://sourcepoint.atlassian.net/browse/DIA-3629) Implemented GCM company for IOS and Android [#41](https://github.com/SourcePointUSA/unity-sdk/pull/41), [#43](https://github.com/SourcePointUSA/unity-sdk/pull/43)
+* [DIA-3350](https://sourcepoint.atlassian.net/browse/DIA-3350) Unity SDK brought to v7.7.1 Android & v.7.6.3 iOS [#44](https://github.com/SourcePointUSA/unity-sdk/pull/44), [#42](https://github.com/SourcePointUSA/unity-sdk/pull/42)
+* [DIA-2585](https://sourcepoint.atlassian.net/browse/DIA-2585) Implemented cutomConsentTo (for iOS and Android) / deleteCustomConsent (for Android) features [#42](https://github.com/SourcePointUSA/unity-sdk/pull/42)
+* Miscellaneous fixes
+
 # 2.2.1
 * [DIA-3594](https://sourcepoint.atlassian.net/browse/DIA-3594) Unity SDK brought to v7.7.0 Android & v.7.6.0 iOS [#36](https://github.com/SourcePointUSA/unity-sdk/pull/36), [#37](https://github.com/SourcePointUSA/unity-sdk/pull/37)
 
