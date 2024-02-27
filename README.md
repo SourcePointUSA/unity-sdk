@@ -249,7 +249,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |       |-- euconsent: String
         |       |-- acceptedCategories: List<String>
         |       |-- consentStatus: ConsentStatus
-        |       |-- googleConsentMode: SPGCMData
+        |       |-- googleConsentMode: SPGCMData?
         |           |-- adStorage: SPGCMData.Status?
         |           |-- analyticsStorage: SPGCMData.Status?
         |           |-- adUserData: SPGCMData.Status?
@@ -313,6 +313,16 @@ void CustomConsentGDPR(
 ```
 
 The vendor grants will be re-generated, this time taking into consideration the list of vendors, categories and legitimate interest categories you pass as parameters. The method is asynchronous so you must pass a completion handler that will receive back an instance of `GdprConsent` in case of success or it'll call the delegate method `onError` in case of failure.
+
+Using the same strategy for the custom consent, it's possible to programmatically delete the current user consent to a list of vendors, categories and legitimate interest categories by using the following method from the consent lib:
+
+```c#
+void DeleteCustomConsentGDPR(
+    string[] vendors, 
+    string[] categories, 
+    string[] legIntCategories, 
+    Action<GdprConsent> onSuccessDelegate)
+```
 
 It's important to notice, this methods are intended to be used for **custom** vendors and purposes only. For IAB vendors and purposes, it's still required to get consent via the consent message or privacy manager.
 
