@@ -13,7 +13,7 @@ namespace ConsentManagementProviderLib
         public Dictionary<string, SpVendorGrant> grants;
 		public List<string> acceptedCategories;
         public ConsentStatus consentStatus;
-        public SPGCMData googleConsentMode;
+        public SPGCMData? googleConsentMode;
 
         public string ToFullString()
         {
@@ -55,7 +55,8 @@ namespace ConsentManagementProviderLib
                     sb.AppendLine($"    {category}");
             }
 
-            sb.AppendLine($"adStorage: {googleConsentMode.adStorage}, analyticsStorage: {googleConsentMode.analyticsStorage}, adUserData: {googleConsentMode.adUserData}, adPersonalization: {googleConsentMode.adPersonalization}");
+            if(googleConsentMode != null)
+                sb.AppendLine($"adStorage: {googleConsentMode.adStorage}, analyticsStorage: {googleConsentMode.analyticsStorage}, adUserData: {googleConsentMode.adUserData}, adPersonalization: {googleConsentMode.adPersonalization}");
 
             return sb.ToString();
         }
