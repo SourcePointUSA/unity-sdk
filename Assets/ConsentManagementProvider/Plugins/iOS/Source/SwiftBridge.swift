@@ -290,7 +290,7 @@ extension SwiftBridge {
     }
     
     @objc public func setCallbackOnCustomConsent(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnSPFinished")
+        print("setCallbackOnCustomConsent")
         callbackOnCustomConsent = callback
     }
 

@@ -129,7 +129,6 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             legIntCategories: this.legIntCategories,
             onSuccessDelegate: SuccessDelegate
         );
-        storedConsentString = null;
         updateUI();
     }
 
@@ -142,7 +141,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnConsentReady(SpConsents consents)
     {
-        storedConsentString = consents.gdpr.consents.euconsent;
+        storedConsentString = consents.gdpr.consents.euconsent ?? "--";
+        CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
         updateUI();
     }
 
@@ -151,8 +151,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         if (storedConsentString != null)
         {
             loadMessageButton.interactable = false;
-            gdprPrivacySettingsButton.interactable = true;
-            ccpaPrivacySettingsButton.interactable = true;
+            gdprPrivacySettingsButton.interactable = useGDPR;
+            ccpaPrivacySettingsButton.interactable = useCCPA;
             customConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
