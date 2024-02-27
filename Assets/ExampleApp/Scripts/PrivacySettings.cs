@@ -130,6 +130,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             onSuccessDelegate: SuccessDelegate
         );
         storedConsentString = null;
+        updateUI();
     }
 
     public void OnLoadMessagePress()
