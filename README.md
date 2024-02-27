@@ -249,6 +249,11 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |       |-- euconsent: String
         |       |-- acceptedCategories: List<String>
         |       |-- consentStatus: ConsentStatus
+        |       |-- googleConsentMode: SPGCMData
+        |           |-- adStorage: SPGCMData.Status?
+        |           |-- analyticsStorage: SPGCMData.Status?
+        |           |-- adUserData: SPGCMData.Status?
+        |           |-- adPersonalization: SPGCMData.Status?
         |-- ccpa?
             |-- applies: bool
             |-- consents: CcpaConsent
@@ -286,6 +291,14 @@ For vendors that are not part of the IAB, you can verify the user consented to t
      bool isMyCCPAVendorRejected = consents.ccpa.consents.status == "rejectedAll" ||
                                        consents.ccpa.consents.rejectedVendors.Contains("a_vendor_id");
 ```
+
+## Google Consent Mode
+
+[Google Consent Mode 2.0](https://developers.google.com/tag-platform/security/concepts/consent-mode) ensures that Google vendors on your property comply with an end-user's consent choices for purposes (called consent checks) defined by Google. It is implemented via [Google Analytics for Firebase SDK](https://firebase.google.com/docs/analytics/unity/start).
+
+### Update consent checks
+
+Use Google's `setConsent` method to update the relevant consent checks when the appropriate purposes are consented to/rejected. Be advised that the `googleConsentMode` object in `GdprConsent` will only return values for Google consent checks that are mapped to a custom purpose within your vendor list. For all other Google consent checks, the response will be `null`.
 
 ## Adding or Removing custom consents
 
