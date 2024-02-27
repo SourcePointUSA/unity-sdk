@@ -249,7 +249,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |       |-- euconsent: String
         |       |-- acceptedCategories: List<String>
         |       |-- consentStatus: ConsentStatus
-        |       |-- googleConsentMode: SPGCMData
+        |       |-- googleConsentMode: SPGCMData?
         |           |-- adStorage: SPGCMData.Status?
         |           |-- analyticsStorage: SPGCMData.Status?
         |           |-- adUserData: SPGCMData.Status?
