@@ -4,6 +4,7 @@ namespace ConsentManagementProviderLib.Json
 {
     internal class ConsentStatusWrapper
     {
+#nullable enable
         public bool? rejectedAny;
         public bool? rejectedLI;
         public bool? consentedAll;
@@ -11,6 +12,7 @@ namespace ConsentManagementProviderLib.Json
         public bool? vendorListAdditions;
         public bool? legalBasisChanges;
         public GranularStatusWrapper? granularStatus;
+#nullable disable
         public bool hasConsentData;
         public object rejectedVendors;
         public object rejectedCategories;

@@ -13,7 +13,9 @@ namespace ConsentManagementProviderLib
         public Dictionary<string, SpVendorGrant> grants;
 		public List<string> acceptedCategories;
         public ConsentStatus consentStatus;
+#nullable enable
         public SPGCMData? googleConsentMode;
+#nullable disable
 
         public string ToFullString()
         {
@@ -86,6 +88,7 @@ namespace ConsentManagementProviderLib
 
     public class ConsentStatus
     {
+#nullable enable
         public bool? rejectedAny;
         public bool? rejectedLI;
         public bool? consentedAll;
@@ -93,11 +96,13 @@ namespace ConsentManagementProviderLib
         public bool? vendorListAdditions;
         public bool? legalBasisChanges;
         public GranularStatus? granularStatus;
+#nullable disable
         public bool hasConsentData;
         public object rejectedVendors;
         public object rejectedCategories;
 
         public ConsentStatus(
+#nullable enable
             bool? rejectedAny, 
             bool? rejectedLI, 
             bool? consentedAll, 
@@ -108,6 +113,7 @@ namespace ConsentManagementProviderLib
             GranularStatus? granularStatus, 
             object rejectedVendors, 
             object rejectedCategories)
+#nullable disable
         {
             this.rejectedAny = rejectedAny;
             this.rejectedLI = rejectedLI;

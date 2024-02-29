@@ -12,11 +12,14 @@ namespace ConsentManagementProviderLib
         public List<string> rejectedCategories;
         public string childPmId;
         public bool applies;
+#nullable enable
         public bool? signedLspa;
         public string webConsentPayload;
 		public ConsentStatus? consentStatus;
+#nullable disable
 
         public CcpaConsent(
+#nullable enable
                         string uuid,
                         string status,
                         string uspstring,
@@ -27,6 +30,7 @@ namespace ConsentManagementProviderLib
                         bool? signedLspa,
                         string webConsentPayload,
 						ConsentStatus? consentStatus
+#nullable disable
         ) {
             this.uuid = uuid;
             this.webConsentPayload = webConsentPayload;
@@ -42,6 +46,7 @@ namespace ConsentManagementProviderLib
         }
         
         public CcpaConsent(
+#nullable enable
                         string uuid,
                         string status,
                         string uspstring,
@@ -52,6 +57,7 @@ namespace ConsentManagementProviderLib
                         bool? signedLspa,
                         string webConsentPayload,
 						ConsentStatus consentStatus
+#nullable disable
         ) {
             this.uuid = uuid;
             this.status = status;
