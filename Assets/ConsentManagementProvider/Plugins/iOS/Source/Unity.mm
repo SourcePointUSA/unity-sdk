@@ -71,9 +71,9 @@ extern "C"
         [swiftBridge addTargetingParamWithCampaignType:campaignType key:[NSString stringWithFormat:@"%s", key] value:[NSString stringWithFormat:@"%s", value]];
     }
 
-    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, SPMessageLanguage language, char* gdprPmId, char* ccpaPmId)
+    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, bool usnat, SPMessageLanguage language, char* gdprPmId, char* ccpaPmId, char* usnatPmId)
     {
-        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa language:language gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId]];
+        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:language gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId] usnatPmId:[NSString stringWithFormat:@"%s", usnatPmId]];
     }
 
     void _loadMessage(char * authId)
@@ -90,6 +90,12 @@ extern "C"
     {
         [swiftBridge onCCPAPrivacyManagerTap];
     }
+
+    void _loadUSNATPrivacyManager()
+    {
+        [swiftBridge onUSNATPrivacyManagerTap];
+    }
+
 
     void _cleanConsent()
     {

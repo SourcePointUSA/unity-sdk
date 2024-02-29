@@ -13,6 +13,7 @@ import UIKit
         config = Config(
             gdprPmId: nil,
             ccpaPmId: nil,
+            usnatPmId: nil,
             vendors: [],
             categories: [],
             legIntCategories: []
@@ -22,6 +23,7 @@ import UIKit
         case GDPR = 0
         case IOS14 = 1
         case CCPA = 2
+        case USNAT = 3
     }
     
     enum VendorStatus: String {
@@ -41,7 +43,7 @@ import UIKit
     }
     
     struct Config {
-        var gdprPmId, ccpaPmId: String?
+        var gdprPmId, ccpaPmId, usnatPmId: String?
         var vendors: [String] = []
         var categories: [String] = []
         var legIntCategories: [String] = []
@@ -52,6 +54,7 @@ import UIKit
     var config: Config
     lazy var gdprTargetingParams: SPTargetingParams = [:]
     lazy var ccpaTargetingParams: SPTargetingParams = [:]
+    lazy var usnatTargetingParams: SPTargetingParams = [:]
     
     var consentManager: SPSDK?
     let logger: OSLogger = OSLogger.standard
@@ -76,6 +79,8 @@ import UIKit
         case .IOS14: break
 
         case .CCPA: ccpaTargetingParams[key]=value
+            
+        case .USNAT: usnatTargetingParams[key]=value
 
         case .none:
             print("Incorrect campaignType on addTargetingParam")
@@ -88,11 +93,14 @@ import UIKit
         propertyName: String,
         gdpr: Bool,
         ccpa: Bool,
+        usnat: Bool,
         language: SPMessageLanguage,
         gdprPmId: String,
-        ccpaPmId: String) {
+        ccpaPmId: String,
+        usnatPmId: String) {
             self.config.gdprPmId = gdprPmId
             self.config.ccpaPmId = ccpaPmId
+            self.config.usnatPmId = usnatPmId
             guard let propName = try? SPPropertyName(propertyName) else {
                 self.runCallback(callback: self.callbackOnErrorCallback, arg: "`propertyName` invalid!")
                 return
@@ -104,6 +112,7 @@ import UIKit
                 campaigns: SPCampaigns(
                     gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: gdprPmId) : nil,
                     ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: ccpaPmId) : nil,
+                    usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, groupPmId: usnatPmId) : nil,
                     ios14: SPCampaign()
                 ),
                 language: language,
@@ -171,6 +180,16 @@ import UIKit
                 self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         } else {
             self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load CCPA pm without ccpa pm id")
+        }
+    }
+    
+    @objc public func onUSNATPrivacyManagerTap() {
+        if config.usnatPmId != nil {
+            (consentManager != nil) ?
+                consentManager?.loadUSNatPrivacyManager(withId: config.usnatPmId!) :
+                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+        } else {
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load USNAT pm without ccpa pm id")
         }
     }
 
