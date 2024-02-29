@@ -17,17 +17,20 @@ namespace ConsentManagementProviderLib
 
         public static bool useGDPR = false;
         public static bool useCCPA = false;
+        public static bool useUSNAT = false;
         
         public static void Initialize(
             List<SpCampaign> spCampaigns, 
             int accountId,
             int propertyId,
             string propertyName, 
-            bool gdpr, 
-            bool ccpa, 
+            bool gdpr,
+            bool ccpa,
+            bool usnat,
             MESSAGE_LANGUAGE language,  
             string gdprPmId, 
             string ccpaPmId,
+            string usnatPmId,
             CAMPAIGN_ENV campaignsEnvironment,
             long messageTimeoutInSeconds = 3)
         {
@@ -37,6 +40,7 @@ namespace ConsentManagementProviderLib
             }
             useGDPR = gdpr;
             useCCPA = ccpa;
+            useUSNAT = usnat;
 #if UNITY_ANDROID
             CreateBroadcastExecutorGO();
             //excluding ios14 campaign if any
@@ -45,6 +49,7 @@ namespace ConsentManagementProviderLib
             {
                 return;
             }
+            //TO-DO add usnat
             ConsentWrapperAndroid.Instance.InitializeLib(
                 spCampaigns: spCampaigns,
                 accountId: accountId,
@@ -60,11 +65,13 @@ namespace ConsentManagementProviderLib
                 accountId, 
                 propertyId, 
                 propertyName, 
-                gdpr, 
-                ccpa, 
+                gdpr,
+                ccpa,
+                usnat,
                 language, 
                 gdprPmId, 
                 ccpaPmId,
+                usnatPmId,
                 spCampaigns,
                 campaignsEnvironment,
                 messageTimeoutInSeconds);
@@ -121,6 +128,7 @@ namespace ConsentManagementProviderLib
             switch (campaignType){
                 case CAMPAIGN_TYPE.GDPR: ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(); break;
                 case CAMPAIGN_TYPE.CCPA: ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(); break;
+                case CAMPAIGN_TYPE.USNAT: ConsentWrapperIOS.Instance.LoadUSNATPrivacyManager(); break;
             }
 #endif
         }
