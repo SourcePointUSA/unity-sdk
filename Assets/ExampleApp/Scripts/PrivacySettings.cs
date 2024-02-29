@@ -84,7 +84,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             ccpaPmId: ccpaPmId,
             usnatPmId: usnatPmId,
             campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
-            messageTimeoutInSeconds: 30
+            messageTimeoutInSeconds: 30,
+            transitionCCPAAuth: false,
+            supportLegacyUSPString: false
         );
     }
 
@@ -164,8 +166,10 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public void OnConsentReady(SpConsents consents)
     {
         storedConsentString = consents.gdpr.consents.euconsent ?? "--";
-        CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
-        CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
+        if(useGDPR) 
+            CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
+        if(useUSNAT)
+            CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
         updateUI();
     }
 

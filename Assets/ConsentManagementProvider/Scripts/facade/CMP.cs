@@ -32,7 +32,9 @@ namespace ConsentManagementProviderLib
             string ccpaPmId,
             string usnatPmId,
             CAMPAIGN_ENV campaignsEnvironment,
-            long messageTimeoutInSeconds = 3)
+            long messageTimeoutInSeconds = 3,
+            bool? transitionCCPAAuth = null,
+            bool? supportLegacyUSPString = null)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
@@ -74,7 +76,9 @@ namespace ConsentManagementProviderLib
                 usnatPmId,
                 spCampaigns,
                 campaignsEnvironment,
-                messageTimeoutInSeconds);
+                messageTimeoutInSeconds,
+                transitionCCPAAuth,
+                supportLegacyUSPString);
 #endif
         }
         

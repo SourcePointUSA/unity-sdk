@@ -14,6 +14,8 @@ import UIKit
             gdprPmId: nil,
             ccpaPmId: nil,
             usnatPmId: nil,
+            transitionCCPAAuth: nil,
+            supportLegacyUSPString: nil,
             vendors: [],
             categories: [],
             legIntCategories: []
@@ -44,6 +46,7 @@ import UIKit
     
     struct Config {
         var gdprPmId, ccpaPmId, usnatPmId: String?
+        var transitionCCPAAuth, supportLegacyUSPString: Bool?
         var vendors: [String] = []
         var categories: [String] = []
         var legIntCategories: [String] = []
@@ -87,6 +90,16 @@ import UIKit
         }
     }
     
+    @objc public func setTransitionCCPAAuth(value: Bool){
+        print("transitionCCPAAuth set to "+String(value))
+        config.transitionCCPAAuth = value
+    }
+    
+    @objc public func setSupportLegacyUSPString(value: Bool){
+        print("supportLegacyUSPString set to "+String(value))
+        config.supportLegacyUSPString = value
+    }
+
     @objc public func configLib(
         accountId: Int,
         propertyId: Int,
@@ -112,7 +125,7 @@ import UIKit
                 campaigns: SPCampaigns(
                     gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: gdprPmId) : nil,
                     ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: ccpaPmId) : nil,
-                    usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, groupPmId: usnatPmId) : nil,
+                    usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, groupPmId: usnatPmId, transitionCCPAAuth: config.transitionCCPAAuth, supportLegacyUSPString: config.supportLegacyUSPString) : nil,
                     ios14: SPCampaign()
                 ),
                 language: language,

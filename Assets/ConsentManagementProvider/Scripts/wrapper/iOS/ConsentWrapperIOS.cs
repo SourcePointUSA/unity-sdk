@@ -33,6 +33,10 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _addTargetingParamForCampaignType(int campaignType, string key, string value);
         [DllImport("__Internal")]
+        private static extern void _setTransitionCCPAAuth(bool value);
+        [DllImport("__Internal")]
+        private static extern void _setSupportLegacyUSPString(bool value);
+        [DllImport("__Internal")]
         private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, MESSAGE_LANGUAGE language, string gdprPmId, string ccpaPmId, string usnatPmId);
         [DllImport("__Internal")]
         private static extern void _loadMessage(string authId);
@@ -86,7 +90,9 @@ namespace ConsentManagementProviderLib.iOS
             string usnatPmId,
             List<SpCampaign> spCampaigns,
             CAMPAIGN_ENV campaignsEnvironment, 
-            long messageTimeoutInSeconds = 3)
+            long messageTimeoutInSeconds = 3,
+            bool? transitionCCPAAuth = null,
+            bool? supportLegacyUSPString = null)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();
@@ -103,6 +109,10 @@ namespace ConsentManagementProviderLib.iOS
             {
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
             }
+            if(transitionCCPAAuth != null)
+                _setTransitionCCPAAuth((bool)transitionCCPAAuth);
+            if(supportLegacyUSPString != null)
+                _setSupportLegacyUSPString((bool)supportLegacyUSPString);
             _configLib(accountId, propertyId, propertyName, gdpr, ccpa, usnat, language, gdprPmId, ccpaPmId, usnatPmId);
 #endif
         }
