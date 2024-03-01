@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -6,12 +8,29 @@ namespace ConsentManagementProviderLib.Json
     {
 #nullable enable
         public string? uuid;
-        public bool applies;
-        public string? webConsentPayload;
-		public ConsentStatusWrapper? consentStatus;
 #nullable disable
+		public ConsentStatusWrapper consentStatus;
+        public bool applies;
         public List<ConsentStringWrapper> consentStrings;
-        public string[] categories;
+        public UserConsentsWrapper userConsents;
+
+        [JsonIgnore]
+        public List<ConsentableWrapper> vendors { get => userConsents.vendors; }
+        [JsonIgnore]
+        public List<ConsentableWrapper> categories { get => userConsents.categories; }
+    }
+
+    internal class UserConsentsWrapper
+    {
+        public List<ConsentableWrapper> vendors;
+        public List<ConsentableWrapper> categories;
+    }
+
+    internal class ConsentableWrapper
+    {
+        [JsonProperty("_id")]
+        public string id;
+        public bool consented;
     }
 
     internal class ConsentStringWrapper

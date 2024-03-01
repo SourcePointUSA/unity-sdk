@@ -25,7 +25,7 @@ namespace ConsentManagementProviderLib.Json
 
                 SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
                 SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
-                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? null : null; //TO-DO parce
+                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? null : null; //TODO parse
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
@@ -348,12 +348,22 @@ namespace ConsentManagementProviderLib.Json
             {
                 _consentStrings.Add(new ConsentString(_string.consentString, _string.sectionId, _string.sectionName));
             }
+            List<Consentable> _vendors = new List<Consentable>();
+            foreach (ConsentableWrapper _consentable in wrapped.vendors)
+            {
+                _vendors.Add(new Consentable{id = _consentable.id, consented = _consentable.consented});
+            }
+            List<Consentable> _categories = new List<Consentable>();
+            foreach (ConsentableWrapper _consentable in wrapped.categories)
+            {
+                _categories.Add(new Consentable{id = _consentable.id, consented = _consentable.consented});
+            }
 
             return new UsnatConsent(uuid: wrapped.uuid,
                                     applies: wrapped.applies,
                                     consentStrings: _consentStrings,
-                                    categories: wrapped.categories,
-                                    webConsentPayload: wrapped.webConsentPayload,
+                                    vendors: _vendors,
+                                    categories: _categories,
                                     consentStatus: _consentStatus);
         }
         #endregion

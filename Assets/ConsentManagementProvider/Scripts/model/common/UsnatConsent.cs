@@ -8,51 +8,29 @@ namespace ConsentManagementProviderLib
     {
 #nullable enable
         public string? uuid;
+#nullable disable
         public bool applies;
         public List<ConsentString> consentStrings;
-        public List<string> categories;
-        public string? webConsentPayload;
-		public ConsentStatus? consentStatus;
-#nullable disable
+        public List<Consentable> vendors;
+        public List<Consentable> categories;
+		public StatusesUsnat statuses;
 
         public UsnatConsent(
 #nullable enable
                         string? uuid,
                         bool applies,
                         List<ConsentString> consentStrings,
-                        List<string> categories,
-                        string? webConsentPayload,
-						ConsentStatus? consentStatus
+                        List<Consentable> vendors,
+                        List<Consentable> categories,
+						ConsentStatus consentStatus
 #nullable disable
         ) {
             this.uuid = uuid;
             this.applies = applies;
             this.consentStrings = consentStrings;
+            this.vendors = vendors;
             this.categories = categories;
-            this.webConsentPayload = webConsentPayload;
-            this.consentStatus = consentStatus;
-        }
-
-        public UsnatConsent(
-#nullable enable
-                        string? uuid,
-                        bool applies,
-                        List<ConsentString> consentStrings,
-                        string[] categories,
-                        string? webConsentPayload,
-						ConsentStatus? consentStatus
-#nullable disable
-        ) {
-            this.uuid = uuid;
-            this.applies = applies;
-            this.consentStrings = consentStrings;
-            if (this.categories == null)
-            {
-                this.categories = new List<string>();
-            }
-            this.categories.AddRange(categories);
-            this.webConsentPayload = webConsentPayload;
-			this.consentStatus = consentStatus;
+            this.statuses = StatusesUsnat.collectData(consentStatus);
         }
         
         public string ToFullString()
@@ -64,25 +42,72 @@ namespace ConsentManagementProviderLib
             if(uuid != null)
                 sb.AppendLine($"UUID: {uuid}");
             sb.AppendLine($"Applies: {applies}");
-            sb.AppendLine($"WebConsentPayload: {webConsentPayload}");
 
             sb.AppendLine($"ConsentStrings:");
             foreach (var _string in consentStrings)
             {
                 sb.AppendLine($"    sectionId: {_string.sectionId}, sectionName: {_string.sectionName}, consentString: {_string.consentString}");
             }
-
             sb.AppendLine("Categories:");
-            foreach (var _string in categories)
+            foreach (var _consentable in categories)
             {
-                sb.AppendLine($"    {_string}");
+                sb.AppendLine($"    id:{_consentable.id}, consented:{_consentable.consented}");
             }
-
-            if(consentStatus != null)
-                sb = consentStatus.ToFullString(sb);
-
+            sb.AppendLine("Vendors:");
+            foreach (var _consentable in vendors)
+            {
+                sb.AppendLine($"    id:{_consentable.id}, consented:{_consentable.consented}");
+            }
+            sb = statuses.ToFullString(sb);
             return sb.ToString();
         }
+    }
+
+    public class StatusesUsnat
+    {        
+        public bool? rejectedAny, consentedToAll, consentedToAny,
+            hasConsentData, sellStatus, shareStatus,
+            sensitiveDataStatus, gpcStatus;
+
+        internal static StatusesUsnat collectData(ConsentStatus status)
+        {
+            return new StatusesUsnat
+            {
+                rejectedAny = status.rejectedAny,
+                consentedToAll = status.consentedToAll,
+                consentedToAny = status.consentedToAny,
+                hasConsentData = status.hasConsentData,
+                sellStatus = status.granularStatus?.sellStatus,
+                shareStatus = status.granularStatus?.shareStatus,
+                sensitiveDataStatus = status.granularStatus?.sensitiveDataStatus,
+                gpcStatus = status.granularStatus?.gpcStatus
+            };
+        }
+
+        public StringBuilder ToFullString(StringBuilder sb)
+        {
+            sb.AppendLine("ConsentStatus:");
+            if(rejectedAny != null)
+                sb.AppendLine($"    rejectedAny: {rejectedAny}");
+            if(consentedToAll != null)
+                sb.AppendLine($"    consentedToAll: {consentedToAll}");
+            if(consentedToAny != null)
+                sb.AppendLine($"    consentedToAny: {consentedToAny}");
+            if(hasConsentData != null)
+                sb.AppendLine($"    hasConsentData: {hasConsentData}");
+            if(sellStatus != null)
+                sb.AppendLine($"    sellStatus: {sellStatus}");
+            if(shareStatus != null)
+                sb.AppendLine($"    shareStatus: {shareStatus}");
+
+            return sb;
+        }
+    }
+
+    public class Consentable
+    {
+        public string id;
+        public bool consented;
     }
 
     public class ConsentString 
