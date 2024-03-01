@@ -264,10 +264,10 @@ namespace ConsentManagementProviderLib.Json
 
         private static ConsentStatus UnwrapConsentStatus(ConsentStatusWrapper wrappedconsentStatus)
         {
-            GranularStatus granularStatus = null;
+            GranularStatus _granularStatus = null;
             if (wrappedconsentStatus.granularStatus != null)
             {
-                granularStatus = new GranularStatus(
+                _granularStatus = new GranularStatus(
                     wrappedconsentStatus.granularStatus.vendorConsent,
                     wrappedconsentStatus.granularStatus.vendorLegInt,
                     wrappedconsentStatus.granularStatus.purposeConsent,
@@ -280,18 +280,20 @@ namespace ConsentManagementProviderLib.Json
                     wrappedconsentStatus.granularStatus.gpcStatus
                 );
             }
-            ConsentStatus consentStatus = new ConsentStatus(
-                wrappedconsentStatus.rejectedAny,
-                wrappedconsentStatus.rejectedLI,
-                wrappedconsentStatus.consentedAll,
-                wrappedconsentStatus.consentedToAny,
-                wrappedconsentStatus.vendorListAdditions,
-                wrappedconsentStatus.legalBasisChanges,
-                wrappedconsentStatus.hasConsentData,
-                granularStatus,
-                wrappedconsentStatus.rejectedVendors,
-                wrappedconsentStatus.rejectedCategories
-            );
+            ConsentStatus consentStatus = new ConsentStatus{
+                rejectedAny = wrappedconsentStatus.rejectedAny,
+                rejectedLI = wrappedconsentStatus.rejectedLI,
+                consentedAll = wrappedconsentStatus.consentedAll,
+                consentedToAll = wrappedconsentStatus.consentedToAll,
+                consentedToAny = wrappedconsentStatus.consentedToAny,
+                rejectedAll = wrappedconsentStatus.rejectedAll,
+                vendorListAdditions = wrappedconsentStatus.vendorListAdditions,
+                legalBasisChanges = wrappedconsentStatus.legalBasisChanges,
+                granularStatus = _granularStatus,
+                hasConsentData = wrappedconsentStatus.hasConsentData,
+                rejectedVendors = wrappedconsentStatus.rejectedVendors,
+                rejectedCategories = wrappedconsentStatus.rejectedCategories
+            };
             return consentStatus;
         }
 

@@ -95,7 +95,9 @@ namespace ConsentManagementProviderLib
         public bool? rejectedAny;
         public bool? rejectedLI;
         public bool? consentedAll;
+        public bool? consentedToAll;
         public bool? consentedToAny;
+        public bool? rejectedAll;
         public bool? vendorListAdditions;
         public bool? legalBasisChanges;
         public GranularStatus? granularStatus;
@@ -103,32 +105,6 @@ namespace ConsentManagementProviderLib
         public bool hasConsentData;
         public object rejectedVendors;
         public object rejectedCategories;
-
-        public ConsentStatus(
-#nullable enable
-            bool? rejectedAny, 
-            bool? rejectedLI, 
-            bool? consentedAll, 
-            bool? consentedToAny, 
-            bool? vendorListAdditions, 
-            bool? legalBasisChanges, 
-            bool? hasConsentData, 
-            GranularStatus? granularStatus, 
-            object rejectedVendors, 
-            object rejectedCategories)
-#nullable disable
-        {
-            this.rejectedAny = rejectedAny;
-            this.rejectedLI = rejectedLI;
-            this.consentedAll = consentedAll;
-            this.consentedToAny = consentedToAny;
-            this.vendorListAdditions = vendorListAdditions;
-            this.legalBasisChanges = legalBasisChanges;
-            this.hasConsentData = hasConsentData ?? false;
-            this.granularStatus = granularStatus;
-            this.rejectedVendors = rejectedVendors;
-            this.rejectedCategories = rejectedCategories;
-        }
 
         public StringBuilder ToFullString(StringBuilder sb)
         {
