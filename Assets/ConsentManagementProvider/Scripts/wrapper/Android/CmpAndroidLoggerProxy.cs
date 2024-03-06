@@ -72,11 +72,14 @@ namespace ConsentManagementProviderLib.Android
         void computation(string tag, string msg) => 
             CmpDebugUtil.Log($"Computation  TAG: {tag}, MSG: {msg}");
 
+#nullable enable
         void computation(string tag, string msg, AndroidJavaObject? json) => 
             CmpDebugUtil.Log($"Computation2  TAG: {tag}, MSG: {msg}, JSON: {(json != null ? json : "nil")}");
+#nullable disable
 #endregion COMPUTATION
 
 #region WebApp
+#nullable enable
         // TODO
         void nativeMessageAction(string tag, string msg, AndroidJavaObject? json) => 
             CmpDebugUtil.Log($"NativeMessageAction  TAG: {tag}, MSG: {msg}, JSON: {(json != null ? json : "nil")}");
@@ -84,14 +87,17 @@ namespace ConsentManagementProviderLib.Android
         // WebApp action on pm tab or first layer tab
         void webAppAction(string tag, string msg, AndroidJavaObject? json) => 
             CmpDebugUtil.Log($"WebAppAction  TAG: {tag}, MSG: {msg}, JSON: {(json != null ? json : "nil")}");
+#nullable disable
 
         // Client action on pm tab or first layer tab
         void clientEvent(string _event, string msg, string content) => 
             CmpDebugUtil.Log($"ClientEvent  EVENT: {_event}, MSG: {msg}, CONTENT: {content}");
 
+#nullable enable
         // Information about pm tabs(gdpr, ccpa)
         void pm(string tag, string url, string type, string? _params) => 
             CmpDebugUtil.Log($"Pm  TAG: {tag}, URL: {url}, TYPE: {type}, PARAMS: {(_params != null ? _params : "nil")}");
+#nullable disable
 
         // Information about preloading tabs
         void flm(string tag, string url, string type, AndroidJavaObject json) => 
