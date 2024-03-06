@@ -67,6 +67,9 @@ namespace ConsentManagementProviderLib.Android
                 case CAMPAIGN_TYPE.CCPA:
                     type = enumClass.GetStatic<AndroidJavaObject>("CCPA");
                     break;
+                case CAMPAIGN_TYPE.USNAT:
+                    type = enumClass.GetStatic<AndroidJavaObject>("USNAT");
+                    break;
                 default:
                     CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");
                     break;
