@@ -67,7 +67,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         if (useUSNAT)
         {
             List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-            SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.CCPA, usnatParams);
+            SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
             spCampaigns.Add(usnat);
         }
 
