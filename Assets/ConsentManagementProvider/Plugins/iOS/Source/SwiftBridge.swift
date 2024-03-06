@@ -123,9 +123,9 @@ import UIKit
                 propertyId: propertyId,
                 propertyName: propName,
                 campaigns: SPCampaigns(
-                    gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams, groupPmId: gdprPmId) : nil,
-                    ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams, groupPmId: ccpaPmId) : nil,
-                    usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, groupPmId: usnatPmId, transitionCCPAAuth: config.transitionCCPAAuth, supportLegacyUSPString: config.supportLegacyUSPString) : nil,
+                    gdpr: gdpr ? SPCampaign(targetingParams: gdprTargetingParams) : nil,
+                    ccpa: ccpa ? SPCampaign(targetingParams: ccpaTargetingParams) : nil,
+                    usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, transitionCCPAAuth: config.transitionCCPAAuth, supportLegacyUSPString: config.supportLegacyUSPString) : nil,
                     ios14: SPCampaign()
                 ),
                 language: language,
@@ -202,7 +202,7 @@ import UIKit
                 consentManager?.loadUSNatPrivacyManager(withId: config.usnatPmId!) :
                 self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load USNAT pm without ccpa pm id")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load USNAT pm without usnat pm id")
         }
     }
 
