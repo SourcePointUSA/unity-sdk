@@ -51,7 +51,6 @@ namespace ConsentManagementProviderLib
             {
                 return;
             }
-            //TO-DO add usnat
             ConsentWrapperAndroid.Instance.InitializeLib(
                 spCampaigns: spCampaigns,
                 accountId: accountId,

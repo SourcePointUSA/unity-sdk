@@ -32,7 +32,26 @@ namespace ConsentManagementProviderLib
             this.categories = categories;
             this.statuses = StatusesUsnat.collectData(consentStatus);
         }
-        
+
+        public UsnatConsent(
+#nullable enable
+                string? uuid,
+                bool applies,
+                List<ConsentString> consentStrings,
+                List<Consentable> vendors,
+                List<Consentable> categories,
+                StatusesUsnat statuses
+#nullable disable
+)
+        {
+            this.uuid = uuid;
+            this.applies = applies;
+            this.consentStrings = consentStrings;
+            this.vendors = vendors;
+            this.categories = categories;
+            this.statuses = statuses;
+        }
+
         public string ToFullString()
         {
             StringBuilder sb = new StringBuilder();
@@ -113,10 +132,10 @@ namespace ConsentManagementProviderLib
     public class ConsentString 
     {
         public string consentString;
-        public string sectionId;
+        public int sectionId;
         public string sectionName;
 
-        public ConsentString(string consentString, string sectionId, string sectionName)
+        public ConsentString(string consentString, int sectionId, string sectionName)
         {
             this.consentString = consentString;
             this.sectionId = sectionId;
