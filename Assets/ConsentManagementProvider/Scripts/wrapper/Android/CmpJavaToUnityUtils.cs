@@ -17,6 +17,16 @@ namespace ConsentManagementProviderLib.Android
             }
         }
 
+        internal static AndroidJavaObject ConvertArrayToSet(AndroidJavaObject[] array)
+        {
+            using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))
+            {
+                CmpDebugUtil.Log("C# : passing Array to Set conversion to Android's UnityUtils...");
+                AndroidJavaObject set = UnityUtils.CallStatic<AndroidJavaObject>("arrayToSet", new AndroidJavaObject[][] { array });
+                return set;
+            }
+        }
+
         internal static Exception ConvertThrowableToError(AndroidJavaObject rawErr)
         {
             using (AndroidJavaClass UnityUtils = new AndroidJavaClass(UnityUtilsPackageName))

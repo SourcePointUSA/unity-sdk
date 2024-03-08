@@ -58,7 +58,9 @@ namespace ConsentManagementProviderLib
                 propertyName: propertyName,
                 language: language,
                 campaignsEnvironment: campaignsEnvironment,
-                messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
+                messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000,
+                transitionCCPAAuth: transitionCCPAAuth,
+                supportLegacyUSPString: supportLegacyUSPString);
 
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
             CreateBroadcastExecutorGO();
