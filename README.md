@@ -28,26 +28,46 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
     spCampaigns.Add(ccpa);
 
-    List<TargetingParam> ios14Params = new List<TargetingParam>();
-    SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, ios14Params);
-    spCampaigns.Add(ios14);
+    List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
+    SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
+    spCampaigns.Add(usnat);
 ```
 
-In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName`, `gdpr`, `ccpa`(allows using campains),`gdprPmId`, `ccpaPmId` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName`, `gdpr`, `ccpa`, `usnat`,`gdprPmId`, `ccpaPmId`, `usnatPmId` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-		   propertyId: 16893,
+		           propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
                    gdpr: true,
                    ccpa: true,
+                   usnat: true,
                    language: MESSAGE_LANGUAGE.ENGLISH,
                    gdprPmId: "488393",
                    ccpaPmId: "509688",
+                   usnatPmId: "943886",
                    campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
-                   messageTimeoutInSeconds: 30);
+                   messageTimeoutInSeconds: 30,
+                   transitionCCPAAuth: false,
+                   supportLegacyUSPString: false);
 ```
+
+| Field          | **Description**                                                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `spCampaigns`  | List with campaigns launched on the property through the Sourcepoint portal                                                                                               |
+| `accountId`    | Organization's account ID found in the Sourcepoint portal                                                                                                                 |
+| `propertyId`   | ID for property found in the Sourcepoint portal                                                                                                                           |
+| `propertyName` | Name of property found in the Sourcepoint portal                                                                                                                          |
+| `gdpr`         | Allows using `gdpr` campaign                                                                                                                                              |
+| `ccpa`         | Allows using `ccpa` campaign                                                                                                                                              |
+| `usnat`        | Allows using `usnat` campaign                                                                                                                                             |
+| `language`     | Force a message to be displayed in a certain language. Look `MESSAGE_LANGUAGE` for all available languages                                                                |
+| `gdprPmId`     | Id of the privacy manager for `gdpr` campaign                                                                                                                             |
+| `ccpaPmId`     | Id of the privacy manager for `ccpa` campaign                                                                                                                             |
+| `usnatPmId`    | Id of the privacy manager for `usnat` campaign                                                                                                                            |
+| `transitionCCPAAuth`     | Transfer opt-in/opt out preferences from U.S. Privacy (Legacy) to U.S. Multi-State Privacy [ios](https://github.com/SourcePointUSA/ios-cmp-app?tab=readme-ov-file#transfer-opt-inopt-out-preferences-from-us-privacy-legacy-to-us-multi-state-privacy), [android](https://github.com/SourcePointUSA/android-cmp-app?tab=readme-ov-file#transfer-opt-inopt-out-preferences-from-us-privacy-legacy-to-us-multi-state-privacy)    |
+| `supportLegacyUSPString` | Support U.S. Privacy (Legacy) with U.S. Multi-State Privacy [ios](https://github.com/SourcePointUSA/ios-cmp-app?tab=readme-ov-file#support-us-privacy-legacy-with-us-multi-state-privacy)                                                                                                                          |
 
 > **Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).
 
@@ -255,16 +275,33 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |           |-- adUserData: SPGCMData.Status?
         |           |-- adPersonalization: SPGCMData.Status?
         |-- ccpa?
+        |   |-- applies: bool
+        |   |-- consents: CcpaConsent
+        |       |-- uuid: String?
+	    |       |-- rejectedCategories: List<String>
+        |       |-- rejectedVendors: List<String>
+        |       |-- status: String?
+        |       |-- uspstring: String
+        |       |-- childPmId: String
+        |       |-- signedLspa: bool
+        |       |-- consentStatus: ConsentStatus?
+        |-- usnat?
             |-- applies: bool
             |-- consents: CcpaConsent
                 |-- uuid: String?
-	        |-- rejectedCategories: List<String>
-                |-- rejectedVendors: List<String>
-                |-- status: String?
-                |-- uspstring: String
-                |-- childPmId: String
-                |-- signedLspa: bool
-                |-- consentStatus: ConsentStatus?
+                |-- applies: bool
+	            |-- consentStrings: List<ConsentString>
+                |-- vendors: List<Consentable> //[{id: String, consented: bool }]
+                |-- categories: List<Consentable> //[{id: String, consented: bool }]
+                |-- statuses: StatusesUsnat
+                    |-- rejectedAny: bool?
+                    |-- consentedToAll: bool?
+                    |-- consentedToAny: bool?
+                    |-- hasConsentData: bool?
+                    |-- sellStatus: bool?
+                    |-- shareStatus: bool?
+                    |-- sensitiveDataStatus: bool?
+                    |-- gpcStatus: bool?
 ```
 
 This method may return null. Sample usage:
