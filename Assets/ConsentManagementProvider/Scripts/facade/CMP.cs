@@ -23,10 +23,7 @@ namespace ConsentManagementProviderLib
             List<SpCampaign> spCampaigns, 
             int accountId,
             int propertyId,
-            string propertyName, 
-            bool gdpr,
-            bool ccpa,
-            bool usnat,
+            string propertyName,
             MESSAGE_LANGUAGE language,  
             string gdprPmId, 
             string ccpaPmId,
@@ -40,9 +37,16 @@ namespace ConsentManagementProviderLib
             { 
                 return;
             }
-            useGDPR = gdpr;
-            useCCPA = ccpa;
-            useUSNAT = usnat;
+
+            foreach (SpCampaign sp in spCampaigns)
+            {
+                switch (sp.CampaignType)
+                {
+                    case CAMPAIGN_TYPE.GDPR: useGDPR = true; break;
+                    case CAMPAIGN_TYPE.CCPA: useCCPA = true; break;
+                    case CAMPAIGN_TYPE.USNAT: useUSNAT = true; break;
+                }
+            }
 #if UNITY_ANDROID
             CreateBroadcastExecutorGO();
             //excluding ios14 campaign if any
@@ -68,9 +72,9 @@ namespace ConsentManagementProviderLib
                 accountId, 
                 propertyId, 
                 propertyName, 
-                gdpr,
-                ccpa,
-                usnat,
+                useGDPR,
+                useCCPA,
+                useUSNAT,
                 language, 
                 gdprPmId, 
                 ccpaPmId,

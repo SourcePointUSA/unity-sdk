@@ -9,9 +9,6 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public int accountId = 22;
     public int propertyId = 16893;    
     public string propertyName = "mobile.multicampaign.demo";
-    public bool useGDPR = true;
-    public bool useCCPA = true;
-    public bool useUSNAT = true;
     public string gdprPmId = "488393";
     public string ccpaPmId = "509688";
     public string usnatPmId = "943886";
@@ -52,33 +49,26 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         ConsentMessenger.AddListener<IOnConsentReady>(gameObject);
 
         List<SpCampaign> spCampaigns = new List<SpCampaign>();
-        if (useGDPR)
-        {
-            List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
-            SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
-            spCampaigns.Add(gdpr);
-        }
-        if (useCCPA)
-        {
-            List<TargetingParam> ccpaParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-            SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
-            spCampaigns.Add(ccpa);
-        }
-        if (useUSNAT)
-        {
-            List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-            SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
-            spCampaigns.Add(usnat);
-        }
+        List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
+        SpCampaign gdpr = new SpCampaign(CAMPAIGN_TYPE.GDPR, gdprParams);
+        spCampaigns.Add(gdpr);
+        campaignTypes.Add(CAMPAIGN_TYPE.GDPR);
+        
+        List<TargetingParam> ccpaParams = new List<TargetingParam> { new TargetingParam("location", "US") };
+        SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
+        spCampaigns.Add(ccpa);
+        campaignTypes.Add(CAMPAIGN_TYPE.CCPA);
+
+        List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
+        SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
+        spCampaigns.Add(usnat);
+        campaignTypes.Add(CAMPAIGN_TYPE.USNAT);
 
         CMP.Initialize(
             spCampaigns: spCampaigns,
             accountId: accountId,
             propertyId: propertyId,
             propertyName: propertyName,
-            gdpr: useGDPR,
-            ccpa: useCCPA,
-            usnat: useUSNAT,
             language: language,
             gdprPmId: gdprPmId, 
             ccpaPmId: ccpaPmId,
@@ -166,9 +156,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public void OnConsentReady(SpConsents consents)
     {
         storedConsentString = consents.gdpr.consents.euconsent ?? "--";
-        if(useGDPR) 
+        if(CMP.useGDPR) 
             CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
-        if(useUSNAT)
+        if(CMP.useUSNAT)
             CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
         updateUI();
     }
@@ -178,9 +168,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         if (storedConsentString != null)
         {
             loadMessageButton.interactable = false;
-            gdprPrivacySettingsButton.interactable = useGDPR;
-            ccpaPrivacySettingsButton.interactable = useCCPA;
-            usnatPrivacySettingsButton.interactable = useUSNAT;
+            gdprPrivacySettingsButton.interactable = CMP.useGDPR;
+            ccpaPrivacySettingsButton.interactable = CMP.useCCPA;
+            usnatPrivacySettingsButton.interactable = CMP.useUSNAT;
             customConsentButton.interactable = true;
             deleteCustomConsentButton.interactable = true;
             clearDataButton.interactable = true;
