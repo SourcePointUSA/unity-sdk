@@ -28,6 +28,10 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     SpCampaign ccpa = new SpCampaign(CAMPAIGN_TYPE.CCPA, ccpaParams);
     spCampaigns.Add(ccpa);
 
+    List<TargetingParam> ios14Params = new List<TargetingParam>();
+    SpCampaign ios14 = new SpCampaign(CAMPAIGN_TYPE.IOS14, ios14Params);
+    spCampaigns.Add(ios14);
+
     List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
     SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
     spCampaigns.Add(usnat);
@@ -38,7 +42,7 @@ In order to instantiate & trigger `Consent Message Web View`, you must call the 
 ```c#
     CMP.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
-		           propertyId: 16893,
+                   propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
                    gdpr: true,
                    ccpa: true,
@@ -59,9 +63,6 @@ In order to instantiate & trigger `Consent Message Web View`, you must call the 
 | `accountId`    | Organization's account ID found in the Sourcepoint portal                                                                                                                 |
 | `propertyId`   | ID for property found in the Sourcepoint portal                                                                                                                           |
 | `propertyName` | Name of property found in the Sourcepoint portal                                                                                                                          |
-| `gdpr`         | Allows using `gdpr` campaign                                                                                                                                              |
-| `ccpa`         | Allows using `ccpa` campaign                                                                                                                                              |
-| `usnat`        | Allows using `usnat` campaign                                                                                                                                             |
 | `language`     | Force a message to be displayed in a certain language. Look `MESSAGE_LANGUAGE` for all available languages                                                                |
 | `gdprPmId`     | Id of the privacy manager for `gdpr` campaign                                                                                                                             |
 | `ccpaPmId`     | Id of the privacy manager for `ccpa` campaign                                                                                                                             |
