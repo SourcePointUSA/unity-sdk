@@ -237,7 +237,7 @@ MonoBehaviour:
   propertyId: 16893
   propertyName: mobile.multicampaign.demo
   useGDPR: 1
-  useCCPA: 0
+  useCCPA: 1
   useUSNAT: 1
   gdprPmId: 488393
   ccpaPmId: 509688

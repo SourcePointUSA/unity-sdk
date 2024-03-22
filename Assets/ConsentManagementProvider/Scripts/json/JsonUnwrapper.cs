@@ -25,18 +25,60 @@ namespace ConsentManagementProviderLib.Json
 
                 SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
                 SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
-                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? null : null; //TODO parse
+                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? UnwrapSpUsnatConsentAndroid(wrapped.usnat) : null;
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
             catch (NewtonsoftJson.JsonException ex)
             {
+                CmpDebugUtil.LogError(ex.Message);
                 throw new ApplicationException("Error deserializing JSON.", ex);
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("An error occurred during JSON unwrapping." + ex.Message, ex);
             }
+        }
+
+        private static SpUsnatConsent UnwrapSpUsnatConsentAndroid(SpUsnatConsentWrapperAndroid wrapped)
+        {
+            StatusesUsnat _statuses = new StatusesUsnat
+            {
+                hasConsentData = wrapped.statuses.hasConsentData,
+                rejectedAny = wrapped.statuses.rejectedAny,
+                consentedToAll = wrapped.statuses.consentedToAll,
+                consentedToAny = wrapped.statuses.consentedToAny,
+                sellStatus = wrapped.statuses.sellStatus,
+                shareStatus = wrapped.statuses.shareStatus,
+                sensitiveDataStatus = wrapped.statuses.sensitiveDataStatus,
+                gpcStatus = wrapped.statuses.gpcStatus
+            };
+            List<ConsentString> _consentStrings = new List<ConsentString>();
+            List<ConsentStringWrapper> _consentStringsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentStringWrapper>>(wrapped.consentStrings);
+            foreach (ConsentStringWrapper _string in _consentStringsWrapped)
+            {
+                _consentStrings.Add(new ConsentString(_string.consentString, _string.sectionId, _string.sectionName));
+            }
+
+            List<Consentable> _vendors = new List<Consentable>();
+            List<ConsentableWrapper> _vendorsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.vendors);
+            foreach (ConsentableWrapper _consentable in _vendorsWrapped)
+            {
+                _vendors.Add(new Consentable { id = _consentable.id, consented = _consentable.consented });
+            }
+
+            List<Consentable> _categories = new List<Consentable>();
+            List<ConsentableWrapper> _categoriesWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.categories);
+            foreach (ConsentableWrapper _consentable in _categoriesWrapped)
+            {
+                _categories.Add(new Consentable { id = _consentable.id, consented = _consentable.consented });
+            }
+            return new SpUsnatConsent(new UsnatConsent(uuid: wrapped.uuid,
+                                    applies: wrapped.applies,
+                                    consentStrings: _consentStrings,
+                                    vendors: _vendors,
+                                    categories: _categories,
+                                    statuses: _statuses));
         }
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)

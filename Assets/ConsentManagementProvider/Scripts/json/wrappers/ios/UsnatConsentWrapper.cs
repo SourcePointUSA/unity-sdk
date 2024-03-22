@@ -28,15 +28,17 @@ namespace ConsentManagementProviderLib.Json
 
     internal class ConsentableWrapper
     {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
         [JsonProperty("_id")]
+#endif
         public string id;
         public bool consented;
     }
 
     internal class ConsentStringWrapper
     {
-        public string consentString;
-        public string sectionId;
+        public int sectionId;
         public string sectionName;
+        public string consentString;
     }
 }
