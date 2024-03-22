@@ -39,6 +39,6 @@
 
   <androidPackages>
 <!--    <androidPackage spec="org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.0" />-->
-    <androidPackage spec="com.sourcepoint.cmplibrary:cmplibrary:7.8.0" />
+    <androidPackage spec="com.sourcepoint.cmplibrary:cmplibrary:7.8.1" />
   </androidPackages>
 </dependencies>
