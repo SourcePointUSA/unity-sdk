@@ -366,4 +366,18 @@ It's important to notice, this methods are intended to be used for **custom** ve
 
 # Build for iOS
 
-Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed.
+Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed. 
+
+You also need to check lines `33`, `55` and `90` of the `CMPPostProcessBuild` script, the paths may differ. Check that the path of the file `SwiftBridge.swift` in the Unity project matches that specified in the `33` line and the `55` line in the exported Xcode project. You also need to check the path of the file `UnityPlugin-Bridging-Header.h` in the project exported to xcode with path on line `90`.
+
+## Troubleshooting
+### `ConsentViewController-Swift.h` file not found (IOS)
+Every time you update the Unity SDK from an older to a newer version, you are likely to encounter the absence of the newer version of the native iOS SDK in your build machine's cocoapods cache.
+The fix is:
+Try to update cocoapods to the latest version (1.15.2 at the moment) on your build machine and execute the commands consequently:
+1) pod update  
+2) pod install 
+
+In the terminal where the "Podfile" is situated (usually, it is situated in the folder where Unity exports the Xcode project). 
+It will fetch the native ConsentViewController version specified in Podfile (X.Y.Z) in your build machine cache. 
+It should be performed once, after this the build machine will have an X.Y.Z version of SDK in cocoapod's cache and consequent builds will go smoothly.
