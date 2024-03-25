@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using NewtonsoftJson = Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Collections;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -23,17 +25,60 @@ namespace ConsentManagementProviderLib.Json
 
                 SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
                 SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
+                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? UnwrapSpUsnatConsentAndroid(wrapped.usnat) : null;
 
-                return new SpConsents(unwrappedGdpr, unwrappedCcpa);
+                return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
             catch (NewtonsoftJson.JsonException ex)
             {
+                CmpDebugUtil.LogError(ex.Message);
                 throw new ApplicationException("Error deserializing JSON.", ex);
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("An error occurred during JSON unwrapping." + ex.Message, ex);
             }
+        }
+
+        private static SpUsnatConsent UnwrapSpUsnatConsentAndroid(SpUsnatConsentWrapperAndroid wrapped)
+        {
+            StatusesUsnat _statuses = new StatusesUsnat
+            {
+                hasConsentData = wrapped.statuses.hasConsentData,
+                rejectedAny = wrapped.statuses.rejectedAny,
+                consentedToAll = wrapped.statuses.consentedToAll,
+                consentedToAny = wrapped.statuses.consentedToAny,
+                sellStatus = wrapped.statuses.sellStatus,
+                shareStatus = wrapped.statuses.shareStatus,
+                sensitiveDataStatus = wrapped.statuses.sensitiveDataStatus,
+                gpcStatus = wrapped.statuses.gpcStatus
+            };
+            List<ConsentString> _consentStrings = new List<ConsentString>();
+            List<ConsentStringWrapper> _consentStringsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentStringWrapper>>(wrapped.consentStrings);
+            foreach (ConsentStringWrapper _string in _consentStringsWrapped)
+            {
+                _consentStrings.Add(new ConsentString(_string.consentString, _string.sectionId, _string.sectionName));
+            }
+
+            List<Consentable> _vendors = new List<Consentable>();
+            List<ConsentableWrapper> _vendorsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.vendors);
+            foreach (ConsentableWrapper _consentable in _vendorsWrapped)
+            {
+                _vendors.Add(new Consentable { id = _consentable.id, consented = _consentable.consented });
+            }
+
+            List<Consentable> _categories = new List<Consentable>();
+            List<ConsentableWrapper> _categoriesWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.categories);
+            foreach (ConsentableWrapper _consentable in _categoriesWrapped)
+            {
+                _categories.Add(new Consentable { id = _consentable.id, consented = _consentable.consented });
+            }
+            return new SpUsnatConsent(new UsnatConsent(uuid: wrapped.uuid,
+                                    applies: wrapped.applies,
+                                    consentStrings: _consentStrings,
+                                    vendors: _vendors,
+                                    categories: _categories,
+                                    statuses: _statuses));
         }
 
         private static SpCcpaConsent UnwrapSpCcpaConsentAndroid(CcpaConsentWrapper wrappedCcpa)
@@ -174,8 +219,9 @@ namespace ConsentManagementProviderLib.Json
 
                 SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
                 SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
+                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? UnwrapSpUsnatConsent(wrapped.usnat) : null;
 
-                return new SpConsents(unwrappedGdpr, unwrappedCcpa);
+                return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
             catch (NewtonsoftJson.JsonException ex)
             {
@@ -260,30 +306,36 @@ namespace ConsentManagementProviderLib.Json
 
         private static ConsentStatus UnwrapConsentStatus(ConsentStatusWrapper wrappedconsentStatus)
         {
-            GranularStatus granularStatus = null;
+            GranularStatus _granularStatus = null;
             if (wrappedconsentStatus.granularStatus != null)
             {
-                granularStatus = new GranularStatus(
+                _granularStatus = new GranularStatus(
                     wrappedconsentStatus.granularStatus.vendorConsent,
                     wrappedconsentStatus.granularStatus.vendorLegInt,
                     wrappedconsentStatus.granularStatus.purposeConsent,
                     wrappedconsentStatus.granularStatus.purposeLegInt,
                     wrappedconsentStatus.granularStatus.previousOptInAll,
-                    wrappedconsentStatus.granularStatus.defaultConsent
+                    wrappedconsentStatus.granularStatus.defaultConsent,
+                    wrappedconsentStatus.granularStatus.sellStatus,
+                    wrappedconsentStatus.granularStatus.shareStatus,
+                    wrappedconsentStatus.granularStatus.sensitiveDataStatus,
+                    wrappedconsentStatus.granularStatus.gpcStatus
                 );
             }
-            ConsentStatus consentStatus = new ConsentStatus(
-                wrappedconsentStatus.rejectedAny,
-                wrappedconsentStatus.rejectedLI,
-                wrappedconsentStatus.consentedAll,
-                wrappedconsentStatus.consentedToAny,
-                wrappedconsentStatus.vendorListAdditions,
-                wrappedconsentStatus.legalBasisChanges,
-                wrappedconsentStatus.hasConsentData,
-                granularStatus,
-                wrappedconsentStatus.rejectedVendors,
-                wrappedconsentStatus.rejectedCategories
-            );
+            ConsentStatus consentStatus = new ConsentStatus{
+                rejectedAny = wrappedconsentStatus.rejectedAny,
+                rejectedLI = wrappedconsentStatus.rejectedLI,
+                consentedAll = wrappedconsentStatus.consentedAll,
+                consentedToAll = wrappedconsentStatus.consentedToAll,
+                consentedToAny = wrappedconsentStatus.consentedToAny,
+                rejectedAll = wrappedconsentStatus.rejectedAll,
+                vendorListAdditions = wrappedconsentStatus.vendorListAdditions,
+                legalBasisChanges = wrappedconsentStatus.legalBasisChanges,
+                granularStatus = _granularStatus,
+                hasConsentData = wrappedconsentStatus.hasConsentData,
+                rejectedVendors = wrappedconsentStatus.rejectedVendors,
+                rejectedCategories = wrappedconsentStatus.rejectedCategories
+            };
             return consentStatus;
         }
 
@@ -313,6 +365,47 @@ namespace ConsentManagementProviderLib.Json
                                     applies: wrapped.applies,
                                     signedLspa: null,
                                     webConsentPayload: wrapped.webConsentPayload,
+                                    consentStatus: _consentStatus);
+        }
+
+        private static SpUsnatConsent UnwrapSpUsnatConsent(SpUsnatConsentWrapper wrappedUsnat)
+        {
+            if (wrappedUsnat == null)
+            {
+                CmpDebugUtil.LogError("The USNAT consent wrapper cannot be null.");
+                return null;
+            }
+
+            bool applies = wrappedUsnat.applies;
+            UsnatConsent consent = UnwrapUsnatConsent(wrappedUsnat.consents);
+            return new SpUsnatConsent(applies, consent);
+        }
+
+        private static UsnatConsent UnwrapUsnatConsent(UsnatConsentWrapper wrapped)
+        {
+            ConsentStatus _consentStatus = UnwrapConsentStatus(wrapped.consentStatus);
+
+            List<ConsentString> _consentStrings = new List<ConsentString>();
+            foreach (ConsentStringWrapper _string in wrapped.consentStrings)
+            {
+                _consentStrings.Add(new ConsentString(_string.consentString, _string.sectionId, _string.sectionName));
+            }
+            List<Consentable> _vendors = new List<Consentable>();
+            foreach (ConsentableWrapper _consentable in wrapped.vendors)
+            {
+                _vendors.Add(new Consentable{id = _consentable.id, consented = _consentable.consented});
+            }
+            List<Consentable> _categories = new List<Consentable>();
+            foreach (ConsentableWrapper _consentable in wrapped.categories)
+            {
+                _categories.Add(new Consentable{id = _consentable.id, consented = _consentable.consented});
+            }
+
+            return new UsnatConsent(uuid: wrapped.uuid,
+                                    applies: wrapped.applies,
+                                    consentStrings: _consentStrings,
+                                    vendors: _vendors,
+                                    categories: _categories,
                                     consentStatus: _consentStatus);
         }
         #endregion

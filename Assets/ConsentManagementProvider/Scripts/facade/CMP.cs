@@ -17,26 +17,36 @@ namespace ConsentManagementProviderLib
 
         public static bool useGDPR = false;
         public static bool useCCPA = false;
+        public static bool useUSNAT = false;
         
         public static void Initialize(
             List<SpCampaign> spCampaigns, 
             int accountId,
             int propertyId,
-            string propertyName, 
-            bool gdpr, 
-            bool ccpa, 
+            string propertyName,
             MESSAGE_LANGUAGE language,  
             string gdprPmId, 
             string ccpaPmId,
+            string usnatPmId,
             CAMPAIGN_ENV campaignsEnvironment,
-            long messageTimeoutInSeconds = 3)
+            long messageTimeoutInSeconds = 3,
+            bool? transitionCCPAAuth = null,
+            bool? supportLegacyUSPString = null)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
                 return;
             }
-            useGDPR = gdpr;
-            useCCPA = ccpa;
+
+            foreach (SpCampaign sp in spCampaigns)
+            {
+                switch (sp.CampaignType)
+                {
+                    case CAMPAIGN_TYPE.GDPR: useGDPR = true; break;
+                    case CAMPAIGN_TYPE.CCPA: useCCPA = true; break;
+                    case CAMPAIGN_TYPE.USNAT: useUSNAT = true; break;
+                }
+            }
 #if UNITY_ANDROID
             CreateBroadcastExecutorGO();
             //excluding ios14 campaign if any
@@ -52,7 +62,9 @@ namespace ConsentManagementProviderLib
                 propertyName: propertyName,
                 language: language,
                 campaignsEnvironment: campaignsEnvironment,
-                messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000);
+                messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000,
+                transitionCCPAAuth: transitionCCPAAuth,
+                supportLegacyUSPString: supportLegacyUSPString);
 
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
             CreateBroadcastExecutorGO();
@@ -60,14 +72,18 @@ namespace ConsentManagementProviderLib
                 accountId, 
                 propertyId, 
                 propertyName, 
-                gdpr, 
-                ccpa, 
+                useGDPR,
+                useCCPA,
+                useUSNAT,
                 language, 
                 gdprPmId, 
                 ccpaPmId,
+                usnatPmId,
                 spCampaigns,
                 campaignsEnvironment,
-                messageTimeoutInSeconds);
+                messageTimeoutInSeconds,
+                transitionCCPAAuth,
+                supportLegacyUSPString);
 #endif
         }
         
@@ -121,6 +137,7 @@ namespace ConsentManagementProviderLib
             switch (campaignType){
                 case CAMPAIGN_TYPE.GDPR: ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(); break;
                 case CAMPAIGN_TYPE.CCPA: ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(); break;
+                case CAMPAIGN_TYPE.USNAT: ConsentWrapperIOS.Instance.LoadUSNATPrivacyManager(); break;
             }
 #endif
         }

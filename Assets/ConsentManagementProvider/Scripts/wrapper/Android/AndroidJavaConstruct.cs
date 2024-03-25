@@ -1,5 +1,7 @@
 ﻿using ConsentManagementProviderLib.Enum;
 using ConsentMessagePlugin.Android;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ConsentManagementProviderLib.Android
@@ -55,6 +57,26 @@ namespace ConsentManagementProviderLib.Android
             return campaign;
         }
 
+        internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, AndroidJavaObject targetingParams, CAMPAIGN_TYPE campaignTypeForLog, bool? transitionCCPAAuth = null, bool? supportLegacyUSPString = null)
+        {
+            AndroidJavaObject[] configOptions = new AndroidJavaObject[2];
+            AndroidJavaClass enumConfigOption = new AndroidJavaClass("com.sourcepoint.cmplibrary.creation.ConfigOption");
+            if (transitionCCPAAuth.HasValue && transitionCCPAAuth==true)
+            {
+                AndroidJavaObject option = enumConfigOption.GetStatic<AndroidJavaObject>(CONFIG_OPTION_FULL_KEY.TRANSITION_CCPA_AUTH);
+                configOptions.Append(option);
+            }
+            if (supportLegacyUSPString.HasValue && supportLegacyUSPString==true)
+            {
+                AndroidJavaObject option = enumConfigOption.GetStatic<AndroidJavaObject>(CONFIG_OPTION_FULL_KEY.SUPPORT_LEGACY_USPSTRING);
+                configOptions.Append(option);
+            }
+            AndroidJavaObject configSet = CmpJavaToUnityUtils.ConvertArrayToSet(configOptions);
+            AndroidJavaObject campaign = new AndroidJavaObject("com.sourcepoint.cmplibrary.model.exposed.SpCampaign", campaignType, targetingParams, configSet);
+            CmpDebugUtil.Log($"Campaign {campaignTypeForLog} with configOptions is OK");
+            return campaign;
+        }
+
         internal AndroidJavaObject ConstructCampaignType(CAMPAIGN_TYPE campaignType)
         {
             AndroidJavaObject type = null;
@@ -66,6 +88,9 @@ namespace ConsentManagementProviderLib.Android
                     break;
                 case CAMPAIGN_TYPE.CCPA:
                     type = enumClass.GetStatic<AndroidJavaObject>("CCPA");
+                    break;
+                case CAMPAIGN_TYPE.USNAT:
+                    type = enumClass.GetStatic<AndroidJavaObject>("USNAT");
                     break;
                 default:
                     CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");

@@ -45,7 +45,7 @@ namespace ConsentManagementProviderLib.Android
 #endif
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000)
+        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000, bool? transitionCCPAAuth = null, bool? supportLegacyUSPString = null)
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
@@ -64,7 +64,11 @@ namespace ConsentManagementProviderLib.Android
                             paramsArray[sp.TargetingParams.IndexOf(tp)] = param;
                         }
                         AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
-                        AndroidJavaObject campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
+                        AndroidJavaObject campaign;
+                        if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (transitionCCPAAuth.HasValue || supportLegacyUSPString.HasValue))
+                            campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, transitionCCPAAuth, supportLegacyUSPString);
+                        else
+                            campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
                         campaigns[spCampaigns.IndexOf(sp)] = campaign;
                     }
                     AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
