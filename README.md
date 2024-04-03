@@ -86,7 +86,7 @@ Utilize the following method if an end-user requests to have their data deleted:
 ```c#
 private void ClearData()
 {
-        CMP.ClearAllData();
+     CMP.ClearAllData();
 }
 ```
 
