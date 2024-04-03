@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Parameters used by tests at runtime -->
+  <TestRunParameters>
+    <Parameter name="platformName" value="Android" />
+    <Parameter name="deviceName" value="emulator-5554" />
+    <Parameter name="appium:app" value="/Users/wombatmbp17/Documents/CMP-Unity-SDK/UI-TESTS/BUILDS/Android/CMP_Unity_Example_App_v2.3.0.apk" />
+    <Parameter name="appium:automationName" value="UiAutomator2" />
+    <Parameter name="appium:chromedriverExecutable" value="/Users/wombatmbp17/Documents/CMP-Unity-SDK/UI-TESTS/chromedriver" />
+    <Parameter name="AcceptAllFirstLayerGDPR" value="//button[text()='Accept All']" />
+  </TestRunParameters>
+</RunSettings>

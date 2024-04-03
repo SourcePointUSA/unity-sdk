@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Parameters used by tests at runtime -->
+  <TestRunParameters>
+    <Parameter name="platformName" value="iOS" />
+    <Parameter name="deviceName" value="iPhone 15 Pro" />
+    <Parameter name="appium:app" value="/Users/wombatmbp17/Library/Developer/Xcode/DerivedData/Unity-iPhone-ckbqpiuikfcudobqslcnlmcikjko/Build/Products/ReleaseForRunning-iphonesimulator/ConsentMessagePlugin.app" />
+    <Parameter name="appium:automationName" value="xcuitest" />
+    <Parameter name="AcceptAllFirstLayerGDPR" value="//XCUIElementTypeButton[@name='Accept All']" />
+  </TestRunParameters>
+</RunSettings>
