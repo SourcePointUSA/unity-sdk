@@ -85,9 +85,9 @@ Utilize the following method if an end-user requests to have their data deleted:
 
 ```c#
 private void ClearData()
-    {
+{
         CMP.ClearAllData();
-    }
+}
 ```
 
 In order to free memory, call `Dispose` as illustrated in the following example :
