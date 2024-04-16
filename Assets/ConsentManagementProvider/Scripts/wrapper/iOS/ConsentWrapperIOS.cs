@@ -200,6 +200,7 @@ namespace ConsentManagementProviderLib.iOS
         public void ClearAllData()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
+            iOSListener._spConsents = null;
             _cleanConsent();
 #endif
         }
