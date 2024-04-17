@@ -1,3 +1,6 @@
+# 2.3.1
+* [DIA-3944](https://sourcepoint.atlassian.net/browse/DIA-3944)  ClearAllData() method for IOS clears cached value in c# [#53](https://github.com/SourcePointUSA/unity-sdk/pull/53)
+
 # 2.3.0
 * [DIA-3046](https://sourcepoint.atlassian.net/browse/DIA-3046) Implemented USNat company for IOS [#47](https://github.com/SourcePointUSA/unity-sdk/pull/47)
 * [DIA-3630](https://sourcepoint.atlassian.net/browse/DIA-3630) Implemented USNat company for Android [#48](https://github.com/SourcePointUSA/unity-sdk/pull/48)
