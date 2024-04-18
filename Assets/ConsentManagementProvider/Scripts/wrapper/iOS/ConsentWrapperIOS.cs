@@ -96,6 +96,12 @@ namespace ConsentManagementProviderLib.iOS
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();
+            if(iOSListener == null)
+            {
+                CmpDebugUtil.Log("Creating iosListener");
+                CreateHelperIOSListener();
+            }
+
             int campaignsAmount = spCampaigns.Count;
             int[] campaignTypes = new int[campaignsAmount];
             foreach(SpCampaign sp in spCampaigns)
@@ -200,6 +206,7 @@ namespace ConsentManagementProviderLib.iOS
         public void ClearAllData()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
+            iOSListener._spConsents = null;
             _cleanConsent();
 #endif
         }
@@ -208,6 +215,7 @@ namespace ConsentManagementProviderLib.iOS
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _dispose();
+            iOSListener.Dispose();
 #endif
         }
     }
