@@ -42,9 +42,9 @@ namespace ConsentManagementProviderLib.iOS
             self=this;
             gameObject.name = "CMPiOSListenerHelper";
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-        CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
-        DontDestroyOnLoad(this.gameObject);
-        SetBridgeCallbacks();
+            CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
+            DontDestroyOnLoad(this.gameObject);
+            SetBridgeCallbacks();
 #endif
         }
 
