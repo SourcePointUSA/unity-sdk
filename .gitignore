@@ -64,3 +64,4 @@ Thumbs.db.meta
 /UI-TESTS/BUILDS/iOS/
 /UI-TESTS/obj/project.nuget.cache
 /UI-TESTS/obj/
+!/UI-TESTS/UI-TESTS.csproj
