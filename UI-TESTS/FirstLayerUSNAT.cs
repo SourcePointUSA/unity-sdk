@@ -25,10 +25,7 @@ namespace UnityAppiumTests
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
         
-        public FirstLayerUSNATAndroid(WebDriverWait wait)
-        {
-            webDriverWait = wait;
-        }
+        public FirstLayerUSNATAndroid(WebDriverWait wait) => webDriverWait = wait;
     }
 
     public class FirstLayerUSNATIOS: FirstLayerUSNAT
@@ -40,9 +37,6 @@ namespace UnityAppiumTests
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
         
-        public FirstLayerUSNATIOS(WebDriverWait wait)
-        {
-            webDriverWait = wait;
-        }
+        public FirstLayerUSNATIOS(WebDriverWait wait) => webDriverWait = wait;
     }
 }

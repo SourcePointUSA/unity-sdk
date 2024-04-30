@@ -8,10 +8,7 @@ namespace UnityAppiumTests
     	const string elementText = "-";
         AltDriver altDriver;
 
-        public NativeAppLayer(AltDriver driver)
-        {
-            altDriver = driver;
-        }
+        public NativeAppLayer(AltDriver driver) => altDriver = driver;
 
         public string getConsentValueText()
         {

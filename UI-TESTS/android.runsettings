@@ -6,7 +6,6 @@
     <Parameter name="deviceName" value="emulator-5554" />
     <Parameter name="appium:app" value="/BUILDS/Android/ConsentMessagePlugin.apk" />
     <Parameter name="appium:automationName" value="UiAutomator2" />
-    <Parameter name="AcceptAllFirstLayerGDPR" value="//button[text()='Accept All']" />
     <Parameter name="appium:chromedriverExecutable" value="/chromedriver_103.0.5060.71" />
   </TestRunParameters>
 </RunSettings>

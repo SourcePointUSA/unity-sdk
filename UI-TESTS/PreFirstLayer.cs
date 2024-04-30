@@ -22,7 +22,7 @@ namespace UnityAppiumTests
 				    break;
 				}
 			}
-			return "";
+			return string.Empty;
         }
 
         public abstract string SelectFirstLayer();

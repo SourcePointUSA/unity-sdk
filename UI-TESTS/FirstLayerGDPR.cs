@@ -27,10 +27,7 @@ namespace UnityAppiumTests
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
 
-        public FirstLayerGDPRAndroid(WebDriverWait wait)
-        {
-            webDriverWait = wait;
-        }
+        public FirstLayerGDPRAndroid(WebDriverWait wait) => webDriverWait = wait;
     }
 
     public class FirstLayerGDPRIOS: FirstLayerGDPR
@@ -43,9 +40,6 @@ namespace UnityAppiumTests
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
         
-        public FirstLayerGDPRIOS(WebDriverWait wait)
-        {
-            webDriverWait = wait;
-        }
+        public FirstLayerGDPRIOS(WebDriverWait wait) => webDriverWait = wait;
     }
 }

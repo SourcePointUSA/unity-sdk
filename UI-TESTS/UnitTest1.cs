@@ -27,9 +27,8 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalCapability("appium:app", (string)rootDir+TestContext.Parameters["appium:app"]);
 			desiredCaps.AddAdditionalCapability("appium:automationName", TestContext.Parameters["appium:automationName"]);
 			desiredCaps.AddAdditionalCapability("appium:altUnityHost", "192.168.1.78"); //appium --use-plugins=altunity
-			// desiredCaps.AddAdditionalCapability("appium:altUnityHost", "127.0.0.1"); //appium --use-plugins=altunity
-			desiredCaps.AddAdditionalCapability("appium:altUnityPort", 13000); //dotnet test -s android.runsettings
-			desiredCaps.AddAdditionalCapability("appium:sendKeyStrategy", "setValue"); //grouped");
+			desiredCaps.AddAdditionalCapability("appium:altUnityPort", 13000);
+			desiredCaps.AddAdditionalCapability("appium:sendKeyStrategy", "setValue");
 			if (platformAndroid)
 			{
 				// desiredCaps.AddAdditionalCapability("appium:chromedriverAutodownload", true);

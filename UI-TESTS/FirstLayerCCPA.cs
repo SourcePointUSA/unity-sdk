@@ -27,10 +27,7 @@ namespace UnityAppiumTests
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
         
-        public FirstLayerCCPAAndroid(WebDriverWait wait)
-        {
-            webDriverWait = wait;
-        }
+        public FirstLayerCCPAAndroid(WebDriverWait wait) => webDriverWait = wait;
     }
 
     public class FirstLayerCCPAIOS: FirstLayerCCPA
@@ -43,9 +40,6 @@ namespace UnityAppiumTests
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
         
-        public FirstLayerCCPAIOS(WebDriverWait wait)
-        {
-            webDriverWait = wait;
-        }
+        public FirstLayerCCPAIOS(WebDriverWait wait) => webDriverWait = wait;
     }
 }
