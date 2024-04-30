@@ -15,12 +15,17 @@ namespace UnityAppiumTests
 		WebDriverWait webDriverWait;
 
 		public Pages pages;
+		public ShellHelper shellHelper;
 
 		[SetUp]
 		public void Setup()
 		{
 			string testDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory;
 			var rootDir = testDir.Substring(0,testDir.IndexOf("UI-TESTS"))+"UI-TESTS";
+			shellHelper = new ShellHelper(rootDir);
+			shellHelper.StartAppium();
+			shellHelper.StartAltTester();
+			System.Threading.Thread.Sleep(10000);
 			var desiredCaps = new AppiumOptions();
 			desiredCaps.AddAdditionalCapability("platformName", TestContext.Parameters["platformName"]);
 			desiredCaps.AddAdditionalCapability("deviceName", TestContext.Parameters["deviceName"]);
@@ -39,8 +44,8 @@ namespace UnityAppiumTests
 			}
 			if (platformIOS)
 				driverIOS = new IOSDriver<IOSElement>(appiumServerUri, desiredCaps, initTimeoutSec);
-        
-        	altDriver = new AltDriver();
+			
+        	altDriver = new AltDriver(host: "192.168.1.78", enableLogging: false);
 
 			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
@@ -63,9 +68,43 @@ namespace UnityAppiumTests
 			else
 				Console.WriteLine($"Current context: {driverIOS.Context}");
 
+			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
 			pages.firstLayerGDPR.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
 			pages.firstLayerCCPA.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
 			pages.firstLayerUSNAT.pressAcceptAll();
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+			
+    		Assert.That(data!="-", Is.True);	
+		}
+
+		[Test]
+		public void ClickRejecttAllButtonTest()
+		{
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+			//pages.preFirstLayer.SetContex(firstLayerContext);
+
+			// Ensure the Context is changed
+			if (platformAndroid)
+				Console.WriteLine($"Current context: {driverAndroid.Context}");
+			else
+				Console.WriteLine($"Current context: {driverIOS.Context}");
+
+			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressRejectAll");
+			pages.firstLayerGDPR.pressRejectAll();
+			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressRejectAll");
+			pages.firstLayerCCPA.pressRejectAll();
+			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressRejectAll");
+			pages.firstLayerUSNAT.pressRejectAll();
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
         	var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
 
@@ -75,10 +114,12 @@ namespace UnityAppiumTests
         [TearDown]
         public void Teardown()
         {
-	        driver.Quit();
+            driver.Quit();
         	altDriver.Stop();
-            if (platformAndroid)
+			if (platformAndroid)
         		AltReversePortForwarding.RemoveReversePortForwardingAndroid();
+			shellHelper.StopAltTester();
+			shellHelper.StopAppium();
         }
     }
 }

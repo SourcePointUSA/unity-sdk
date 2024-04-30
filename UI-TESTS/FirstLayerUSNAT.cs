@@ -14,6 +14,13 @@ namespace UnityAppiumTests
             IWebElement acceptAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(acceptAllPath))); 
 			acceptAllButton.Click();
         }
+
+        public void pressRejectAll()
+        {
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(showOptionsPath))); 
+            IWebElement rejectAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(rejectAllPath))); 
+			rejectAllButton.Click();
+        }
     } 
 
     public class FirstLayerUSNATAndroid: FirstLayerUSNAT
