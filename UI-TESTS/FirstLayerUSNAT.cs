@@ -7,17 +7,24 @@ namespace UnityAppiumTests
         public abstract string rejectAllPath { get; }
         public abstract string acceptAllPath { get; }
         public abstract WebDriverWait wait { get; }
+        public DriverHelper driverHelper;
 
         public void pressAcceptAll()
         {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(showOptionsPath))); 
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
+			System.Threading.Thread.Sleep(3000);
+            driverHelper.SwipeUp();
+			System.Threading.Thread.Sleep(1000);
             IWebElement acceptAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(acceptAllPath))); 
 			acceptAllButton.Click();
         }
 
         public void pressRejectAll()
         {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(showOptionsPath))); 
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
+			System.Threading.Thread.Sleep(3000);
+            driverHelper.SwipeUp();
+			System.Threading.Thread.Sleep(1000);
             IWebElement rejectAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(rejectAllPath))); 
 			rejectAllButton.Click();
         }

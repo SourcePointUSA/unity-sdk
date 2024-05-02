@@ -27,6 +27,7 @@ namespace UnityAppiumTests
 
         public abstract string SelectFirstLayer();
         public abstract void SetContex(string contex);
+        public abstract int GetContexNum();
     }
     
     public class PreFirstLayerAndroid: PreFirstLayer
@@ -43,15 +44,9 @@ namespace UnityAppiumTests
             driver = driverAndroid;
         }
 
-        public override string SelectFirstLayer()
-        {
-            return SelectFirstLayerGen<AndroidDriver<AndroidElement>>(driver, x => driver.Contexts);
-        }
-
-        public override void SetContex(string contex)
-        {
-            ((AndroidDriver<AndroidElement>)driver).Context = contex;
-        }
+        public override string SelectFirstLayer() => SelectFirstLayerGen<AndroidDriver<AndroidElement>>(driver, x => driver.Contexts);
+        public override void SetContex(string contex) => ((AndroidDriver<AndroidElement>)driver).Context = contex;
+        public override int GetContexNum() => ((AndroidDriver<AndroidElement>)driver).Context.Count();
     }
     
     public class PreFirstLayerIOS: PreFirstLayer
@@ -77,9 +72,7 @@ namespace UnityAppiumTests
             return layer;
         }
         
-        public override void SetContex(string contex)
-        {
-            ((IOSDriver<IOSElement>)driver).Context = contex;
-        }
+        public override void SetContex(string contex) => ((IOSDriver<IOSElement>)driver).Context = contex;
+        public override int GetContexNum() => ((IOSDriver<IOSElement>)driver).Context.Count();
     }
 }
