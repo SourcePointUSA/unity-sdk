@@ -8,6 +8,7 @@ global using OpenQA.Selenium.Support.UI;
 global using OpenQA.Selenium.Interactions;
 global using SeleniumExtras.WaitHelpers; // SeleniumExtras is used for WaitHelpers
 global using System;
+global using System.Drawing;
 global using System.Collections;
 global using System.Collections.Generic;
 global using AltTester.AltTesterUnitySDK.Driver;
