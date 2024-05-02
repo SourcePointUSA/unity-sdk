@@ -19,5 +19,9 @@ namespace UnityAppiumTests
     		var altElement = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, ConsentValueText);
     		return altElement.CallComponentMethod<string>(textComponentName, textMethodName, textAssemblyName, new object[] { });
         }
+
+        public void pressGDPRPmLayer() => altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, GDPRPmButton).Click();
+        public void pressCCPAPmLayer() => altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, CCPAPmButton).Click();
+        public void pressUSNATPmLayer() => altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, USNATPmButton).Click();
     }
 }

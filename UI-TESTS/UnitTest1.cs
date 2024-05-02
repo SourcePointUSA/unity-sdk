@@ -111,6 +111,62 @@ namespace UnityAppiumTests
     		Assert.That(data!="-", Is.True);
 		}
 
+		[Test]
+		public void OpenPmLayersTest()
+		{
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+			bool isOpen = false;
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+			//pages.preFirstLayer.SetContex(firstLayerContext);
+
+			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
+			pages.firstLayerGDPR.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
+			pages.firstLayerCCPA.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
+			pages.firstLayerUSNAT.pressAcceptAll();
+
+			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
+			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
+
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+			
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressGDPRPmLayer");
+        	pages.nativeAppLayer.pressGDPRPmLayer();
+			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
+			isOpen = pages.pmLayerGDPR.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressExit");
+        	pages.pmLayerGDPR.pressExit();
+			
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressCCPAPmLayer");
+        	pages.nativeAppLayer.pressCCPAPmLayer();
+			Console.WriteLine($"Check for webView open: pmLayerCCPA.webViewIsOpen");
+			isOpen = pages.pmLayerCCPA.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressExit");
+        	pages.pmLayerCCPA.pressExit();
+			
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressUSNATPmLayer");
+        	pages.nativeAppLayer.pressUSNATPmLayer();
+			Console.WriteLine($"Check for webView open: pmLayerUSNAT.webViewIsOpen");
+			isOpen = pages.pmLayerUSNAT.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressExit");
+        	pages.pmLayerUSNAT.pressExit();
+			
+    		Assert.That(data!="-", Is.True);	
+		}
+
         [TearDown]
         public void Teardown()
         {
