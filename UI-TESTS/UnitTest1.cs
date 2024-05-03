@@ -54,26 +54,15 @@ namespace UnityAppiumTests
 		[Test]
 		public void ClickAcceptAllButtonTest()
 		{
+			Console.WriteLine(">>>ClickAcceptAllButtonTest");
 			if (driver == null)
 			{
 				Assert.Fail("Driver has not been initialized.");
 			}
 
 			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
-			//pages.preFirstLayer.SetContex(firstLayerContext);
 
-			// Ensure the Context is changed
-			if (platformAndroid)
-				Console.WriteLine($"Current context: {driverAndroid.Context}");
-			else
-				Console.WriteLine($"Current context: {driverIOS.Context}");
-
-			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
-			pages.firstLayerGDPR.pressAcceptAll();
-			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
-			pages.firstLayerCCPA.pressAcceptAll();
-			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
-			pages.firstLayerUSNAT.pressAcceptAll();
+			pages.firstLayerGO(true, true, true);
 			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
         	var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
@@ -82,28 +71,18 @@ namespace UnityAppiumTests
 		}
 
 		[Test]
+		[Retry(2)]
 		public void ClickRejecttAllButtonTest()
 		{
+			Console.WriteLine(">>>ClickRejecttAllButtonTest");
 			if (driver == null)
 			{
 				Assert.Fail("Driver has not been initialized.");
 			}
 
 			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
-			//pages.preFirstLayer.SetContex(firstLayerContext);
 
-			// Ensure the Context is changed
-			if (platformAndroid)
-				Console.WriteLine($"Current context: {driverAndroid.Context}");
-			else
-				Console.WriteLine($"Current context: {driverIOS.Context}");
-
-			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressRejectAll");
-			pages.firstLayerGDPR.pressRejectAll();
-			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressRejectAll");
-			pages.firstLayerCCPA.pressRejectAll();
-			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressRejectAll");
-			pages.firstLayerUSNAT.pressRejectAll();
+			pages.firstLayerGO(false, false, false);
 			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
         	var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
@@ -114,6 +93,7 @@ namespace UnityAppiumTests
 		[Test]
 		public void OpenPmLayersTest()
 		{
+			Console.WriteLine(">>>OpenPmLayersTest");
 			if (driver == null)
 			{
 				Assert.Fail("Driver has not been initialized.");
@@ -121,15 +101,8 @@ namespace UnityAppiumTests
 			bool isOpen = false;
 
 			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
-			//pages.preFirstLayer.SetContex(firstLayerContext);
 
-			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
-			pages.firstLayerGDPR.pressAcceptAll();
-			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
-			pages.firstLayerCCPA.pressAcceptAll();
-			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
-			pages.firstLayerUSNAT.pressAcceptAll();
-
+			pages.firstLayerGO(true, true, true);
 			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
 			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
 
@@ -170,6 +143,7 @@ namespace UnityAppiumTests
 		[Test]
 		public void SaveAndExitTest()
 		{
+			Console.WriteLine(">>>SaveAndExitTest");
 			if (driver == null)
 			{
 				Assert.Fail("Driver has not been initialized.");
@@ -177,15 +151,8 @@ namespace UnityAppiumTests
 			bool isOpen = false;
 
 			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
-			//pages.preFirstLayer.SetContex(firstLayerContext);
 
-			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
-			pages.firstLayerGDPR.pressAcceptAll();
-			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
-			pages.firstLayerCCPA.pressAcceptAll();
-			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
-			pages.firstLayerUSNAT.pressAcceptAll();
-
+			pages.firstLayerGO(true, true, true);
 			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
 			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
 

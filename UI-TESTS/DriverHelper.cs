@@ -5,11 +5,14 @@ namespace UnityAppiumTests
         public string platform;
         public AndroidDriver<AndroidElement> driverAndroid;
         public IOSDriver<IOSElement> driverIOS;
-        public DriverHelper(string platform, AndroidDriver<AndroidElement> driverAndroid, IOSDriver<IOSElement> driverIOS)
+        public WebDriverWait webDriverWait;
+
+        public DriverHelper(string platform, AndroidDriver<AndroidElement> driverAndroid, IOSDriver<IOSElement> driverIOS, WebDriverWait webDriverWait)
         {
             this.platform = platform;
             this.driverAndroid = driverAndroid;
             this.driverIOS = driverIOS;
+            this.webDriverWait = webDriverWait;
         }
         public void SwipeUp()
         {
@@ -25,6 +28,26 @@ namespace UnityAppiumTests
                 driverAndroid.PerformActions(new List<ActionSequence> { swipe });
             else
                 driverIOS.PerformActions(new List<ActionSequence> { swipe });
+        }
+
+        public void pressButton(string buttonPath, string expectedWebViewName = null, bool needSwipe = false, bool needWait = false)
+        {
+            if (expectedWebViewName != null)
+                webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(expectedWebViewName)));
+            if (needWait)
+			    System.Threading.Thread.Sleep(1000);
+            if (needSwipe)
+                SwipeUp();
+            if (needWait)
+			    System.Threading.Thread.Sleep(1000);
+            IWebElement button = webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(buttonPath))); 
+			button.Click();
+        }
+
+        public bool webViewIsOpen(string expectedWebViewName)
+        {
+            webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(expectedWebViewName)));
+            return true;
         }
     }
 }

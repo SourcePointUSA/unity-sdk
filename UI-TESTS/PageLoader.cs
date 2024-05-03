@@ -24,9 +24,49 @@ namespace UnityAppiumTests
             pmLayerCCPA = platformName == "Android" ? new PmLayerCCPAAndroid(webDriverWait) : new PmLayerCCPAIOS(webDriverWait);
             pmLayerUSNAT = platformName == "Android" ? new PmLayerUSNATAndroid(webDriverWait) : new PmLayerUSNATIOS(webDriverWait);
 
-            driverHelper = new DriverHelper(platformName, driverAndroid, driverIOS);
+            driverHelper = new DriverHelper(platformName, driverAndroid, driverIOS, webDriverWait);
+            firstLayerGDPR.driverHelper = driverHelper;
+            firstLayerCCPA.driverHelper = driverHelper;
             firstLayerUSNAT.driverHelper = driverHelper;
+            pmLayerGDPR.driverHelper = driverHelper;
+            pmLayerCCPA.driverHelper = driverHelper;
             pmLayerUSNAT.driverHelper = driverHelper;
+        }
+
+        public void firstLayerGO(bool acceptGDPR, bool acceptCCPA, bool acceptUSNAT)
+        {
+            if (acceptGDPR)
+            {
+			    Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
+			    firstLayerGDPR.pressAcceptAll();
+            }
+            else
+            {
+			    Console.WriteLine($"Current button for tap: firstLayerGDPR.pressRejectAll");
+			    firstLayerGDPR.pressRejectAll();
+            }
+
+            if (acceptCCPA)
+            {
+			    Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
+			    firstLayerCCPA.pressAcceptAll();
+            }
+            else
+            {
+			    Console.WriteLine($"Current button for tap: firstLayerCCPA.pressRejectAll");
+			    firstLayerCCPA.pressRejectAll();
+            }
+
+            if (acceptUSNAT)
+            {
+			    Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
+			    firstLayerUSNAT.pressAcceptAll();
+            }
+            else
+            {
+			    Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressRejectAll");
+			    firstLayerUSNAT.pressRejectAll();
+            }
         }
     }
 }
