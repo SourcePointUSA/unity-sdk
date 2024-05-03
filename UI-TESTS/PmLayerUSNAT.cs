@@ -1,43 +1,11 @@
 namespace UnityAppiumTests
 {
-    public abstract class PmLayerUSNAT
+    public abstract class PmLayerUSNAT: PmLayer
     {
-        public abstract string textViewPath { get; }
-        public abstract string saveAndExitPath { get; }
-        public abstract string exitButtonPath { get; }
-        public abstract string switchPrefix { get; }
-        public abstract string switchPostfix { get; }
-        public abstract string[] switches { get; }
-        public abstract WebDriverWait wait { get; }
-        public DriverHelper driverHelper;
-
-        public void pressExit()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-			System.Threading.Thread.Sleep(1000);
-            driverHelper.SwipeUp();
-			System.Threading.Thread.Sleep(1000);
-            IWebElement exitButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(exitButtonPath))); 
-			exitButton.Click();
-        }
-
-        public bool webViewIsOpen()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath)));
-            return true;
-        }
-
-        public int getCheckedSwitchesNum()
-        {
-            int num = 0;
-            foreach (string _switchName in switches)
-            {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
-                if(_switch.GetAttribute("checked") != null && _switch.GetAttribute("checked").Equals(true))
-                    num++;
-            }
-            return num;
-        }
+        public void pressSaveAndExit() => driverHelper.pressButton(saveAndExitPath, textViewPath, true, true);
+        public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath, true, true);
+        public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true);
+        public int getCheckedSwitchesNum() => base.getCheckedSwitchesNum(true);
     } 
 
     public class PmLayerUSNATAndroid: PmLayerUSNAT

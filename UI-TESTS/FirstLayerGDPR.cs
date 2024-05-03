@@ -1,29 +1,8 @@
 namespace UnityAppiumTests
 {
-    public abstract class FirstLayerGDPR
+    public abstract class FirstLayerGDPR: FirstLayer
     {
-        public abstract string textViewPath { get; }
-        public abstract string showOptionsPath { get; }
-        public abstract string rejectAllPath { get; }
-        public abstract string acceptAllPath { get; }
         public abstract string exitButtonPath { get; }
-        public abstract WebDriverWait wait { get; }
-
-        public void pressAcceptAll()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-			System.Threading.Thread.Sleep(1000);
-            IWebElement acceptAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(acceptAllPath))); 
-			acceptAllButton.Click();
-        }
-
-        public void pressRejectAll()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-			System.Threading.Thread.Sleep(1000);
-            IWebElement rejectAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(rejectAllPath))); 
-			rejectAllButton.Click();
-        }
     } 
 
     public class FirstLayerGDPRAndroid: FirstLayerGDPR

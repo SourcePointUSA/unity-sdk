@@ -1,76 +1,12 @@
 namespace UnityAppiumTests
 {
-    public abstract class PmLayerGDPR
+    public abstract class PmLayerGDPR: PmLayer
     {
-        public abstract string textViewPath { get; }
-        public abstract string saveAndExitPath { get; }
         public abstract string rejectAllPath { get; }
         public abstract string acceptAllPath { get; }
-        public abstract string exitButtonPath { get; }
-        public abstract string switchPrefix { get; }
-        public abstract string switchPostfix { get; }
-        public abstract string[] switches { get; }
-        public abstract WebDriverWait wait { get; }
 
-        public void pressAcceptAll()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-            IWebElement acceptAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(acceptAllPath))); 
-			acceptAllButton.Click();
-        }
-
-        public void pressRejectAll()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-            IWebElement rejectAllButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(rejectAllPath))); 
-			rejectAllButton.Click();
-        }
-
-        public void pressSaveAndExit()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-            IWebElement saveAndExitButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(saveAndExitPath))); 
-			saveAndExitButton.Click();
-        }
-
-        public void pressExit()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
-            IWebElement exitButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(exitButtonPath))); 
-			exitButton.Click();
-        }
-
-        public bool webViewIsOpen()
-        {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath)));
-            return true;
-        }
-
-        public int clickOnSwitches(int num = 1)
-        {
-            int clicks = 0;
-            foreach (string _switchName in switches)
-            {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
-                _switch.Click();
-                clicks++;
-                if (num <= clicks)
-                    break;
-            }
-            return num;
-        }
-
-        public int getCheckedSwitchesNum()
-        {
-            int num = 0;
-            foreach (string _switchName in switches)
-            {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
-                if(_switch.GetAttribute("checked") != null && _switch.GetAttribute("checked").Equals("true"))
-                    num++;
-            }
-            return num;
-        }
+        public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
+        public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
     } 
 
     public class PmLayerGDPRAndroid: PmLayerGDPR
