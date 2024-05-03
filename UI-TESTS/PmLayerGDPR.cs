@@ -26,6 +26,13 @@ namespace UnityAppiumTests
 			rejectAllButton.Click();
         }
 
+        public void pressSaveAndExit()
+        {
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
+            IWebElement saveAndExitButton = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(saveAndExitPath))); 
+			saveAndExitButton.Click();
+        }
+
         public void pressExit()
         {
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(textViewPath))); 
@@ -39,13 +46,27 @@ namespace UnityAppiumTests
             return true;
         }
 
+        public int clickOnSwitches(int num = 1)
+        {
+            int clicks = 0;
+            foreach (string _switchName in switches)
+            {
+                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
+                _switch.Click();
+                clicks++;
+                if (num <= clicks)
+                    break;
+            }
+            return num;
+        }
+
         public int getCheckedSwitchesNum()
         {
             int num = 0;
             foreach (string _switchName in switches)
             {
                 IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
-                if(_switch.GetAttribute("checked") != null && _switch.GetAttribute("checked").Equals(true))
+                if(_switch.GetAttribute("checked") != null && _switch.GetAttribute("checked").Equals("true"))
                     num++;
             }
             return num;

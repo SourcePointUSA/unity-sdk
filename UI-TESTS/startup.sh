@@ -9,5 +9,7 @@ sleep 5
 dotnet test -s android.runsettings --filter Name=ClickRejecttAllButtonTest
 sleep 5
 dotnet test -s android.runsettings --filter Name=OpenPmLayersTest
+sleep 5
+dotnet test -s android.runsettings --filter Name=SaveAndExitTest
 
 #osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''

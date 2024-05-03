@@ -167,6 +167,66 @@ namespace UnityAppiumTests
     		Assert.That(data!="-", Is.True);	
 		}
 
+		[Test]
+		public void SaveAndExitTest()
+		{
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+			bool isOpen = false;
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+			//pages.preFirstLayer.SetContex(firstLayerContext);
+
+			Console.WriteLine($"Current button for tap: firstLayerGDPR.pressAcceptAll");
+			pages.firstLayerGDPR.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: firstLayerCCPA.pressAcceptAll");
+			pages.firstLayerCCPA.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: firstLayerUSNAT.pressAcceptAll");
+			pages.firstLayerUSNAT.pressAcceptAll();
+
+			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
+			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
+
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+			
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressGDPRPmLayer");
+        	pages.nativeAppLayer.pressGDPRPmLayer();
+			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
+			isOpen = pages.pmLayerGDPR.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum"); 
+         	int num = pages.pmLayerGDPR.getCheckedSwitchesNum(); 
+   			Console.WriteLine($"CheckedSwitches: {num}");
+			Console.WriteLine($"Try to click: pmLayerGDPR.clickOnSwitches(2)"); 
+			pages.pmLayerGDPR.clickOnSwitches(2);
+			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressSaveAndExit");
+        	pages.pmLayerGDPR.pressSaveAndExit();
+						
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressGDPRPmLayer");
+        	pages.nativeAppLayer.pressGDPRPmLayer();
+			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
+			isOpen = pages.pmLayerGDPR.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum"); 
+         	num = pages.pmLayerGDPR.getCheckedSwitchesNum(); 
+   			Console.WriteLine($"CheckedSwitches: {num}");
+			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressExit");
+        	pages.pmLayerGDPR.pressExit();
+
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var dataNew = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {dataNew}");
+			
+    		Assert.That(num==2, Is.True);
+    		Assert.That(data!=dataNew, Is.True);	
+		}
+
         [TearDown]
         public void Teardown()
         {
