@@ -193,6 +193,40 @@ namespace UnityAppiumTests
     		Assert.That(data!=dataNew, Is.True);	
 		}
 
+		[Test]
+		public void ClearAllButtonTest()
+		{
+			Console.WriteLine(">>>ClearAllButtonTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			System.Threading.Thread.Sleep(2000);
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+    		Assert.That(data!="-", Is.True);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressClearAll");
+			pages.nativeAppLayer.pressClearAll();
+			System.Threading.Thread.Sleep(2000);
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+    		Assert.That(data=="-", Is.True);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressLoadMessage");
+			pages.nativeAppLayer.pressLoadMessage();
+			pages.firstLayerGO(true, true, true);
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+    		Assert.That(data!="-", Is.True);
+
+		}
+
         [TearDown]
         public void Teardown()
         {

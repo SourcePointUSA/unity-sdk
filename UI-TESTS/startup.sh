@@ -34,6 +34,8 @@ sleep 5
 runTest android.runsettings OpenPmLayersTest
 sleep 5
 runTest android.runsettings SaveAndExitTest
+sleep 5
+runTest android.runsettings ClearAllButtonTest
 
 #Test ios
 sleep 5
@@ -44,5 +46,7 @@ sleep 5
 runTest ios.runsettings OpenPmLayersTest
 sleep 5
 runTest ios.runsettings SaveAndExitTest
+sleep 5
+runTest ios.runsettings ClearAllButtonTest
 
 osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''

@@ -3,6 +3,15 @@ namespace UnityAppiumTests
     public abstract class FirstLayerGDPR: FirstLayer
     {
         public abstract string exitButtonPath { get; }
+        public abstract bool needSwipe { get; }
+
+        public void pressAcceptAll() 
+        {
+            if (needSwipe)
+                driverHelper.pressButton(acceptAllPath, textViewPath, true, true);
+            else
+                base.pressAcceptAll();
+        }
     } 
 
     public class FirstLayerGDPRAndroid: FirstLayerGDPR

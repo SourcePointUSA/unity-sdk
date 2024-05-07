@@ -4,9 +4,12 @@ namespace UnityAppiumTests
     {
         public abstract string rejectAllPath { get; }
         public abstract string acceptAllPath { get; }
+        public abstract string attributeName { get; }
+        public abstract string attributeValue { get; }
 
         public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
         public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
+        public int getCheckedSwitchesNum() => base.getCheckedSwitchesNum(false, attributeName, attributeValue);
     } 
 
     public class PmLayerGDPRAndroid: PmLayerGDPR
@@ -25,6 +28,8 @@ namespace UnityAppiumTests
             "Create profiles for personalised advertising",
             "Use profiles to select personalised advertising"
         };
+        public override string attributeName => "checked";
+        public override string attributeValue => "true";
         public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
 
@@ -47,6 +52,8 @@ namespace UnityAppiumTests
             "Create profiles for personalised advertising",
             "Use profiles to select personalised advertising"
         };
+        public override string attributeName => "value";
+        public override string attributeValue => "1";
         public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
         
