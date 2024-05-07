@@ -7,12 +7,12 @@ namespace UnityAppiumTests
 
     public class FirstLayerCCPAAndroid: FirstLayerCCPA
     {            
-        public override string textViewPath { get { return "//android.widget.TextView[@text='CCPA Message']"; } }
-        public override string showOptionsPath { get { return "//android.widget.Button[@text='Show Options']"; } }
-        public override string rejectAllPath { get { return "//android.widget.Button[@text='Reject All']"; } }
-        public override string acceptAllPath { get { return "//android.widget.Button[@text='Accept All']"; } }
-        public override string exitButtonPath { get { return "//android.widget.TextView[@text='X']"; } }
-        public override WebDriverWait wait {get { return webDriverWait; } }
+        public override string textViewPath => "//android.widget.TextView[@text='CCPA Message']";
+        public override string showOptionsPath => "//android.widget.Button[@text='Show Options']";
+        public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
+        public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
+        public override string exitButtonPath => "//android.widget.TextView[@text='X']";
+        public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
         
         public FirstLayerCCPAAndroid(WebDriverWait wait) => webDriverWait = wait;
@@ -20,12 +20,12 @@ namespace UnityAppiumTests
 
     public class FirstLayerCCPAIOS: FirstLayerCCPA
     {
-        public override string textViewPath { get { return "//XCUIElementTypeStaticText[@name='CCPA Message']"; } }
-        public override string showOptionsPath { get { return "//XCUIElementTypeButton[@name='Show Options']"; } }
-        public override string rejectAllPath { get { return "//XCUIElementTypeButton[@name='Reject All']"; } }
-        public override string acceptAllPath { get { return "//XCUIElementTypeButton[@name='Accept All']"; } }
-        public override string exitButtonPath { get { return "//XCUIElementTypeStaticText[@name='X']"; } }
-        public override WebDriverWait wait {get { return webDriverWait; } }
+        public override string textViewPath => "//XCUIElementTypeStaticText[@name='CCPA Message']";
+        public override string showOptionsPath => "//XCUIElementTypeButton[@name='Show Options']";
+        public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
+        public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";
+        public override string exitButtonPath => "//XCUIElementTypeStaticText[@name='X']";
+        public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
         
         public FirstLayerCCPAIOS(WebDriverWait wait) => webDriverWait = wait;

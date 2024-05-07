@@ -30,7 +30,7 @@ namespace UnityAppiumTests
             }
         }
 
-        public int getCheckedSwitchesNum(bool needSwipe = false)
+        public int getCheckedSwitchesNum(bool needSwipe = false, string attributeName = "checked", string attributeValue = "true")
         {
             if (needSwipe)
                 driverHelper.SwipeUp();
@@ -38,7 +38,7 @@ namespace UnityAppiumTests
             foreach (string _switchName in switches)
             {
                 IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
-                if(_switch.GetAttribute("checked") != null && _switch.GetAttribute("checked").Equals("true"))
+                if(_switch.GetAttribute(attributeName) != null && _switch.GetAttribute(attributeName).Equals(attributeValue))
                     num++;
             }
             return num;

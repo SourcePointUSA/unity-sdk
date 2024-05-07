@@ -5,6 +5,7 @@
     <Parameter name="platformName" value="iOS" />
     <Parameter name="deviceName" value="iPhone 15 Pro" />
     <Parameter name="appium:app" value="/BUILDS/IOS/ConsentMessagePlugin.app" />
+    <Parameter name="altTesterIP" value="192.168.1.78" />
     <Parameter name="appium:automationName" value="xcuitest" />
   </TestRunParameters>
 </RunSettings>

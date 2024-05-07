@@ -4,6 +4,7 @@
   <TestRunParameters>
     <Parameter name="platformName" value="Android" />
     <Parameter name="deviceName" value="emulator-5554" />
+    <Parameter name="altTesterIP" value="192.168.1.78" />
     <Parameter name="appium:app" value="/BUILDS/Android/ConsentMessagePlugin.apk" />
     <Parameter name="appium:automationName" value="UiAutomator2" />
     <Parameter name="appium:chromedriverExecutable" value="/chromedriver_103.0.5060.71" />

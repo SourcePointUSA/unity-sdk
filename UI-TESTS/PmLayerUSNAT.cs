@@ -24,9 +24,9 @@ namespace UnityAppiumTests
 
     public class PmLayerUSNATIOS: PmLayerUSNAT
     {
-        public override string textViewPath => "//XCUIElementTypeStaticText[@name='GDPR Privacy Manager']";
+        public override string textViewPath => "//XCUIElementTypeStaticText[@name='USNat Privacy Manager']";
         public override string saveAndExitPath => "//XCUIElementTypeButton[@name='Save & Exit']";
-        public override string exitButtonPath => "//XCUIElementTypeStaticText[@name='Cancel']";
+        public override string exitButtonPath => "//XCUIElementTypeButton[@name='Cancel']";
         public override string switchPrefix => "?";
         public override string switchPostfix => "']";
         public override string[] switches => new[] {"1", "2"};

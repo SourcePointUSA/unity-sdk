@@ -31,7 +31,7 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalCapability("deviceName", TestContext.Parameters["deviceName"]);
 			desiredCaps.AddAdditionalCapability("appium:app", (string)rootDir+TestContext.Parameters["appium:app"]);
 			desiredCaps.AddAdditionalCapability("appium:automationName", TestContext.Parameters["appium:automationName"]);
-			desiredCaps.AddAdditionalCapability("appium:altUnityHost", "192.168.1.78"); //appium --use-plugins=altunity
+			desiredCaps.AddAdditionalCapability("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
 			desiredCaps.AddAdditionalCapability("appium:altUnityPort", 13000);
 			desiredCaps.AddAdditionalCapability("appium:sendKeyStrategy", "setValue");
 			if (platformAndroid)
@@ -45,7 +45,7 @@ namespace UnityAppiumTests
 			if (platformIOS)
 				driverIOS = new IOSDriver<IOSElement>(appiumServerUri, desiredCaps, initTimeoutSec);
 			
-        	altDriver = new AltDriver(host: "192.168.1.78", enableLogging: false);
+        	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
 
 			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
@@ -71,8 +71,7 @@ namespace UnityAppiumTests
 		}
 
 		[Test]
-		[Retry(2)]
-		public void ClickRejecttAllButtonTest()
+		public void ClickRejectAllButtonTest()
 		{
 			Console.WriteLine(">>>ClickRejecttAllButtonTest");
 			if (driver == null)

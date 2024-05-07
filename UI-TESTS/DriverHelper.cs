@@ -19,6 +19,11 @@ namespace UnityAppiumTests
             var finger = new PointerInputDevice(PointerKind.Touch);
             var start = new Point(5, 2106);
             var end = new Point(3, 305);
+            if (platform == "iOS")
+            {
+                start = new Point(14, 580);
+                end = new Point(18, 50);
+            }
             var swipe = new ActionSequence(finger);
             swipe.AddAction(finger.CreatePointerMove(CoordinateOrigin.Viewport, start.X, start.Y, TimeSpan.Zero));
             swipe.AddAction(finger.CreatePointerDown(MouseButton.Left));

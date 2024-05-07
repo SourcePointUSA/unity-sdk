@@ -18,7 +18,6 @@ namespace UnityAppiumTests
         public override string exitButtonPath => "//android.widget.Button[@text='Cancel']";
         public override string switchPrefix => "//android.widget.ToggleButton[@text='";
         public override string switchPostfix => "']";
-
         public override string[] switches => new[]
         {
             "Store and/or access information on a device",
@@ -38,10 +37,9 @@ namespace UnityAppiumTests
         public override string saveAndExitPath => "//XCUIElementTypeButton[@name='Save & Exit']";
         public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
         public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";
-        public override string exitButtonPath => "//XCUIElementTypeStaticText[@name='Cancel']";
-        public override string switchPrefix => "?";
+        public override string exitButtonPath => "//XCUIElementTypeButton[@name='Cancel']";
+        public override string switchPrefix => "//XCUIElementTypeSwitch[@name='";
         public override string switchPostfix => "']";
-
         public override string[] switches => new[]
         {
             "Store and/or access information on a device",
