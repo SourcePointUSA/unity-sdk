@@ -15,38 +15,57 @@ runTest()
     done
 }
 
-#start Android Emulator
+#Make sure adb server working
+adb kill-server
+adb start-server
+sleep 5
+
+#Start Android Emulator
 targetWindowName=$(osascript -e 'tell app "Terminal" to do script "~/Library/Android/sdk/emulator/emulator -avd Pixel_XL_API_33"')
-
 androidEmulator_window_id=$(echo ${targetWindowName} | sed 's/.*window id \([0-9]*\).*/\1/')
-echo "Appium window ${androidEmulator_window_id}"
+echo "Android window ${androidEmulator_window_id}"
 
-#boot IOS Simulator
-osascript -e 'tell app "Terminal" to do script "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator -CurrentDeviceUDID 75EBD8C0-A809-4C7C-B45D-169469835DC4"'
+#Boot IOS Simulator
+targetWindowName=$(osascript -e 'tell app "Terminal" to do script "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator -CurrentDeviceUDID 75EBD8C0-A809-4C7C-B45D-169469835DC4"')
+iosEmulator_window_id=$(echo ${targetWindowName} | sed 's/.*window id \([0-9]*\).*/\1/')
+echo "IOS window ${iosEmulator_window_id}"
 
-sleep 30
+#Wait for emulators
+sleep 20
 
 #Test android
-runTest android.runsettings ClickAcceptAllButtonTest
+#runTest android.runsettings ClickAcceptAllButtonTest
+#sleep 5
+#runTest android.runsettings ClickRejectAllButtonTest
+#sleep 5
+#runTest android.runsettings OpenPmLayersTest
+#sleep 5
+runTest android.runsettings SaveAndExitGDPRTest
 sleep 5
-runTest android.runsettings ClickRejectAllButtonTest
 sleep 5
-runTest android.runsettings OpenPmLayersTest
+runTest android.runsettings SaveAndExitUSNATTest
 sleep 5
-runTest android.runsettings SaveAndExitTest
+#runTest android.runsettings ClearAllButtonTest
+#sleep 5
+
+#Kill android emulator
+osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''
 sleep 5
-runTest android.runsettings ClearAllButtonTest
 
 #Test ios
+#runTest ios.runsettings ClickAcceptAllButtonTest
+#sleep 5
+#runTest ios.runsettings ClickRejecttAllButtonTest
+#sleep 5
+#runTest ios.runsettings OpenPmLayersTest
+#sleep 5
+runTest ios.runsettings SaveAndExitGDPRTest
 sleep 5
-runTest ios.runsettings ClickAcceptAllButtonTest
 sleep 5
-runTest ios.runsettings ClickRejectAllButtonTest
-sleep 5
-runTest ios.runsettings OpenPmLayersTest
-sleep 5
-runTest ios.runsettings SaveAndExitTest
-sleep 5
-runTest ios.runsettings ClearAllButtonTest
+runTest ios.runsettings SaveAndExitUSNATTest
+#sleep 5
+#runTest ios.runsettings ClearAllButtonTest
+#sleep 5
 
-osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''
+#Kill ios emulator
+osascript -e 'tell app "Terminal" to close window id '${iosEmulator_window_id}''
