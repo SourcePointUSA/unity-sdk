@@ -59,7 +59,13 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>osascript -e 'tell app "Terminal" to do script "appium --use-plugins=altunity"'</string>
+					<string>osascript -e 'tell app "Terminal" to close (every window whose name contains "appium")'
+osascript -e 'tell app "Terminal"
+activate
+do script "appium --use-plugins=altunity"
+set input to "\"\\033]0;appium\\007\""
+do script "echo -n -e " &amp; input in front window
+end tell'</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -169,8 +175,6 @@
 						<string>4</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<integer>1</integer>
 				<key>location</key>

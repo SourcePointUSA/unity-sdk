@@ -59,10 +59,14 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string>targetWindowName=$(osascript -e 'tell app "Terminal" to do script "cd /Applications &amp;&amp;
-AltTesterDesktop.app/Contents/MacOS/AltTester\\ Desktop -port 13000"')
-alttester_window_id=$(echo ${targetWindowName} | sed 's/.*window id \([0-9]*\).*/\1/')
-echo ${alttester_window_id}</string>
+					<string>osascript -e 'tell app "Terminal" to close (every window whose name contains "AltTester")'
+osascript -e 'tell app "Terminal"
+activate
+do script "cd /Applications &amp;&amp;
+AltTesterDesktop.app/Contents/MacOS/AltTester\\ Desktop -port 13000"
+set input to "\"\\033]0;AltTester\\007\""
+do script "echo -n -e " &amp; input in front window
+end tell'</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
@@ -172,12 +176,10 @@ echo ${alttester_window_id}</string>
 						<string>4</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<integer>1</integer>
 				<key>location</key>
-				<string>309.000000:432.000000</string>
+				<string>309.000000:252.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
