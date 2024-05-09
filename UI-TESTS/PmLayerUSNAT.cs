@@ -5,7 +5,18 @@ namespace UnityAppiumTests
         public void pressSaveAndExit() => driverHelper.pressButton(saveAndExitPath, textViewPath, true, true);
         public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath, true, true);
         public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true);
-        public int getCheckedSwitchesNum() => base.getCheckedSwitchesNum(true);
+        public int getCheckedSwitchesNum() 
+        {
+            int num;
+            if (driverHelper.platform == "iOS")
+            {
+			    System.Threading.Thread.Sleep(1000);
+                num = driverHelper.driverIOS.FindElements(OpenQA.Selenium.By.XPath(switchPrefix+switches.First()+switchPostfix)).Count;
+            }
+            else
+                num = base.getCheckedSwitchesNum(true);
+            return num;
+        }
     } 
 
     public class PmLayerUSNATAndroid: PmLayerUSNAT
@@ -27,9 +38,9 @@ namespace UnityAppiumTests
         public override string textViewPath => "//XCUIElementTypeStaticText[@name='USNat Privacy Manager']";
         public override string saveAndExitPath => "//XCUIElementTypeButton[@name='Save & Exit']";
         public override string exitButtonPath => "//XCUIElementTypeButton[@name='Cancel']";
-        public override string switchPrefix => "?";
+        public override string switchPrefix => "//XCUIElementTypeSwitch[@name='Off On";
         public override string switchPostfix => "']";
-        public override string[] switches => new[] {"1", "2"};
+        public override string[] switches => new[] { "' and @value='1" }; 
         public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
         

@@ -140,9 +140,9 @@ namespace UnityAppiumTests
 		}
 
 		[Test]
-		public void SaveAndExitTest()
+		public void SaveAndExitGDPRTest()
 		{
-			Console.WriteLine(">>>SaveAndExitTest");
+			Console.WriteLine(">>>SaveAndExitTestGDPR");
 			if (driver == null)
 			{
 				Assert.Fail("Driver has not been initialized.");
@@ -191,6 +191,56 @@ namespace UnityAppiumTests
 			
     		Assert.That(num==2, Is.True);
     		Assert.That(data!=dataNew, Is.True);	
+		}
+
+
+		[Test]
+		public void SaveAndExitUSNATTest()
+		{
+			Console.WriteLine(">>>SaveAndExitTestUSNAT");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+			bool isOpen = false;
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
+			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
+
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+			
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressUSNATPmLayer");
+        	pages.nativeAppLayer.pressUSNATPmLayer();
+			Console.WriteLine($"Check for webView open: pmLayerUSNAT.webViewIsOpen");
+			isOpen = pages.pmLayerUSNAT.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Try to get: pmLayerUSNAT.getCheckedSwitchesNum"); 
+         	int num = pages.pmLayerUSNAT.getCheckedSwitchesNum(); 
+   			Console.WriteLine($"CheckedSwitches: {num}");
+			Console.WriteLine($"Try to click: pmLayerUSNAT.clickOnSwitches(1)"); 
+			pages.pmLayerUSNAT.clickOnSwitches(1);
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressSaveAndExit");
+        	pages.pmLayerUSNAT.pressSaveAndExit();
+						
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressUSNATPmLayer");
+        	pages.nativeAppLayer.pressUSNATPmLayer();
+			Console.WriteLine($"Check for webView open: pmLayerUSNAT.webViewIsOpen");
+			isOpen = pages.pmLayerUSNAT.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Try to get: pmLayerUSNAT.getCheckedSwitchesNum"); 
+         	num = pages.pmLayerUSNAT.getCheckedSwitchesNum(); 
+   			Console.WriteLine($"CheckedSwitches: {num}");
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressExit");
+        	pages.pmLayerUSNAT.pressExit();
+			
+    		Assert.That(num==0, Is.True);	
 		}
 
 		[Test]

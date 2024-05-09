@@ -15,14 +15,14 @@ namespace UnityAppiumTests
         public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath);
         public bool webViewIsOpen() => driverHelper.webViewIsOpen(textViewPath);
 
-        public void clickOnSwitches(int num = 1, bool needSwipe = false)
+        public void clickOnSwitches(int num = 1, bool needSwipe = false, string additionalPrefix = "")
         {
             if (needSwipe)
                 driverHelper.SwipeUp();
             int clicks = 0;
             foreach (string _switchName in switches)
             {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
+                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
                 _switch.Click();
                 clicks++;
                 if (num <= clicks)
@@ -30,14 +30,14 @@ namespace UnityAppiumTests
             }
         }
 
-        public int getCheckedSwitchesNum(bool needSwipe = false, string attributeName = "checked", string attributeValue = "true")
+        public int getCheckedSwitchesNum(bool needSwipe = false, string attributeName = "checked", string attributeValue = "true", string additionalPrefix = "")
         {
             if (needSwipe)
                 driverHelper.SwipeUp();
             int num = 0;
             foreach (string _switchName in switches)
             {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+_switchName+switchPostfix)));
+                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
                 if(_switch.GetAttribute(attributeName) != null && _switch.GetAttribute(attributeName).Equals(attributeValue))
                     num++;
             }
