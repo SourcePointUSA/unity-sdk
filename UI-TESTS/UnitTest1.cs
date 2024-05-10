@@ -193,6 +193,54 @@ namespace UnityAppiumTests
     		Assert.That(data!=dataNew, Is.True);	
 		}
 
+		[Test]
+		public void SaveAndExitCCPATest()
+		{
+			Console.WriteLine(">>>SaveAndExitTestCCPA");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+			bool isOpen = false;
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
+			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
+
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+			
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressCCPAPmLayer");
+        	pages.nativeAppLayer.pressCCPAPmLayer();
+			Console.WriteLine($"Check for webView open: PmLayerCCPA.webViewIsOpen");
+			isOpen = pages.pmLayerCCPA.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum"); 
+         	int num = pages.pmLayerCCPA.getCheckedSwitchesNum(); 
+   			Console.WriteLine($"CheckedSwitches: {num}");
+			Console.WriteLine($"Try to click: pmLayerCCPA.clickOnSwitches(2)"); 
+			pages.pmLayerCCPA.clickOnSwitches(2);
+			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressSaveAndExit");
+        	pages.pmLayerCCPA.pressSaveAndExit();
+						
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressCCPAPmLayer");
+        	pages.nativeAppLayer.pressCCPAPmLayer();
+			Console.WriteLine($"Check for webView open: PmLayerCCPA.webViewIsOpen");
+			isOpen = pages.pmLayerCCPA.webViewIsOpen();
+    		Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum"); 
+         	num = pages.pmLayerCCPA.getCheckedSwitchesNum(); 
+   			Console.WriteLine($"CheckedSwitches: {num}");
+			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressExit");
+        	pages.pmLayerCCPA.pressExit();
+			
+    		Assert.That(num==1, Is.True);	
+		}
 
 		[Test]
 		public void SaveAndExitUSNATTest()

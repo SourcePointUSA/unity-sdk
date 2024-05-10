@@ -4,9 +4,23 @@ namespace UnityAppiumTests
     {
         public abstract string rejectAllPath { get; }
         public abstract string acceptAllPath { get; }
+        public abstract string switchValueOn { get; }
 
         public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
         public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
+        public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true, switchValueOn, driverHelper.platform == "iOS");
+        public int getCheckedSwitchesNum() 
+        {
+            int num;
+            if (driverHelper.platform == "iOS")
+            {
+			    System.Threading.Thread.Sleep(1000);
+                num = driverHelper.driverIOS.FindElements(MobileBy.IosClassChain(switchPrefix+switchValueOn)).Count;
+            }
+            else
+                num = base.getCheckedSwitchesNum();
+            return num;
+        }
     } 
 
     public class PmLayerCCPAAndroid: PmLayerCCPA
@@ -17,8 +31,8 @@ namespace UnityAppiumTests
         public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
         public override string exitButtonPath => "//android.widget.Button[@text='Cancel']";
         public override string switchPrefix => "//android.view.View[@text='";
-        public override string switchPostfix => "']/android.view.View[1]/android.widget.ToggleButton/android.widget.TextView";
-
+        public override string switchValueOn => "";
+        public override string switchPostfix => "']/android.view.View[1]/android.widget.ToggleButton";
         public override string[] switches => new[]
         {
             "Category 1 Freewheel Freewheel", 
@@ -38,9 +52,10 @@ namespace UnityAppiumTests
         public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
         public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";
         public override string exitButtonPath => "//XCUIElementTypeButton[@name='Cancel']";
-        public override string switchPrefix => "(//XCUIElementTypeSwitch[@value='0'])[";
+        public override string switchPrefix => "**/XCUIElementTypeSwitch[`value=='";
+        public override string switchValueOn => "1'`]";
         public override string switchPostfix => "]";
-        public override string[] switches => new[] { "1", "2", "3" };
+        public override string[] switches => new[] { "[1", "[2", "[3" };
         public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
         

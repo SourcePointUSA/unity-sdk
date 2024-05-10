@@ -15,14 +15,18 @@ namespace UnityAppiumTests
         public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath);
         public bool webViewIsOpen() => driverHelper.webViewIsOpen(textViewPath);
 
-        public void clickOnSwitches(int num = 1, bool needSwipe = false, string additionalPrefix = "")
+        public void clickOnSwitches(int num = 1, bool needSwipe = false, string additionalPrefix = "", bool byIosClass = false)
         {
             if (needSwipe)
                 driverHelper.SwipeUp();
             int clicks = 0;
             foreach (string _switchName in switches)
             {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
+                IWebElement _switch;
+                if (byIosClass)
+                    _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.IosClassChain(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
+                else
+                    _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
                 _switch.Click();
                 clicks++;
                 if (num <= clicks)

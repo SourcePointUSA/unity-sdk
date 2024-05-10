@@ -31,41 +31,43 @@ iosEmulator_window_id=$(echo ${targetWindowName} | sed 's/.*window id \([0-9]*\)
 echo "IOS window ${iosEmulator_window_id}"
 
 #Wait for emulators
-sleep 20
+sleep 60
 
 #Test android
-#runTest android.runsettings ClickAcceptAllButtonTest
-#sleep 5
-#runTest android.runsettings ClickRejectAllButtonTest
-#sleep 5
-#runTest android.runsettings OpenPmLayersTest
-#sleep 5
+runTest android.runsettings ClickAcceptAllButtonTest
+sleep 5
+runTest android.runsettings ClickRejectAllButtonTest
+sleep 5
+runTest android.runsettings OpenPmLayersTest
+sleep 5
 runTest android.runsettings SaveAndExitGDPRTest
 sleep 5
+runTest android.runsettings SaveAndExitCCPATest
 sleep 5
 runTest android.runsettings SaveAndExitUSNATTest
 sleep 5
-#runTest android.runsettings ClearAllButtonTest
-#sleep 5
+runTest android.runsettings ClearAllButtonTest
+sleep 5
 
 #Kill android emulator
 osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''
 sleep 5
 
 #Test ios
-#runTest ios.runsettings ClickAcceptAllButtonTest
-#sleep 5
-#runTest ios.runsettings ClickRejecttAllButtonTest
-#sleep 5
-#runTest ios.runsettings OpenPmLayersTest
-#sleep 5
+runTest ios.runsettings ClickAcceptAllButtonTest
+sleep 5
+runTest ios.runsettings ClickRejecttAllButtonTest
+sleep 5
+runTest ios.runsettings OpenPmLayersTest
+sleep 5
 runTest ios.runsettings SaveAndExitGDPRTest
 sleep 5
+runTest ios.runsettings SaveAndExitCCPATest
 sleep 5
 runTest ios.runsettings SaveAndExitUSNATTest
-#sleep 5
-#runTest ios.runsettings ClearAllButtonTest
-#sleep 5
+sleep 5
+runTest ios.runsettings ClearAllButtonTest
+sleep 5
 
 #Kill ios emulator
 osascript -e 'tell app "Terminal" to close window id '${iosEmulator_window_id}''
