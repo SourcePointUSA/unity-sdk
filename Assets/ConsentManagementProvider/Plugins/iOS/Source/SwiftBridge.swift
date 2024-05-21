@@ -164,14 +164,23 @@ import UIKit
     }
 
 // MARK: - Manage lib
-    @objc public func loadMessage(authId: String? = nil) {
+    @objc public func loadMessage() {
         print("PURE SWIFT loadMessage")
         (consentManager != nil) ? 
+            consentManager?.loadMessage() :
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+    }
+
+    @objc public func loadMessage(authId: String? = nil) {
+        print("PURE SWIFT loadMessage with authId")
+        print("AuthId="+(authId ?? "nil"))
+        (consentManager != nil) ?
             consentManager?.loadMessage(forAuthId: authId) :
             self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
     }
     
     @objc public func onClearConsentTap() {
+        print("PURE SWIFT onClearConsentTap")
         SPConsentManager.clearAllData()
         myVendorAccepted = .Unknown
     }
