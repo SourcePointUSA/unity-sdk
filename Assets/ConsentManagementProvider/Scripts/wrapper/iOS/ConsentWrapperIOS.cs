@@ -39,7 +39,9 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, MESSAGE_LANGUAGE language, string gdprPmId, string ccpaPmId, string usnatPmId);
         [DllImport("__Internal")]
-        private static extern void _loadMessage(string authId);
+        private static extern void _loadMessage();
+        [DllImport("__Internal")]
+        private static extern void _loadMessageWithAuthId(string authId);
         [DllImport("__Internal")]
         private static extern void _loadGDPRPrivacyManager();
         [DllImport("__Internal")]
@@ -96,6 +98,12 @@ namespace ConsentManagementProviderLib.iOS
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();
+            if(iOSListener == null)
+            {
+                CmpDebugUtil.Log("Creating iosListener");
+                CreateHelperIOSListener();
+            }
+
             int campaignsAmount = spCampaigns.Count;
             int[] campaignTypes = new int[campaignsAmount];
             foreach(SpCampaign sp in spCampaigns)
@@ -120,7 +128,16 @@ namespace ConsentManagementProviderLib.iOS
         public void LoadMessage(string authId = null)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadMessage(authId);
+            if (string.IsNullOrEmpty(authId))
+            {
+                CmpDebugUtil.Log("Calling load message without authId");
+                _loadMessage();
+            }
+            else 
+            {
+                CmpDebugUtil.Log($"Calling load message with authId={authId}");
+                _loadMessageWithAuthId(authId);
+            }
 #endif
         }
 
@@ -200,6 +217,7 @@ namespace ConsentManagementProviderLib.iOS
         public void ClearAllData()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
+            iOSListener._spConsents = null;
             _cleanConsent();
 #endif
         }
@@ -208,6 +226,7 @@ namespace ConsentManagementProviderLib.iOS
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _dispose();
+            iOSListener.Dispose();
 #endif
         }
     }
