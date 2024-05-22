@@ -7,6 +7,7 @@ namespace UnityAppiumTests
     	const string textAssemblyName = "UnityEngine.UI";
 
     	const string ConsentValueText = "Consent String Value Text";
+    	const string AuthIdText = "AuthId Text";
         const string LoadMessageButton = "Load Message";
     	const string GDPRPmButton = "GDPR Privacy Settings Button";
     	const string CCPAPmButton = "CCPA Privacy Settings Button";
@@ -19,6 +20,12 @@ namespace UnityAppiumTests
         public string getConsentValueText()
         {
     		var altElement = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, ConsentValueText);
+    		return altElement.CallComponentMethod<string>(textComponentName, textMethodName, textAssemblyName, new object[] { });
+        }
+
+        public string getAuthIdText()
+        {
+    		var altElement = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, AuthIdText);
     		return altElement.CallComponentMethod<string>(textComponentName, textMethodName, textAssemblyName, new object[] { });
         }
 

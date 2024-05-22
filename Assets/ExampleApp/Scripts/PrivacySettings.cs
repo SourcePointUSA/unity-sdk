@@ -2,6 +2,7 @@ using ConsentManagementProviderLib;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using ConsentManagementProviderLib.iOS;
 
 
 public class PrivacySettings : MonoBehaviour, IOnConsentReady
@@ -34,6 +35,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     }
 
     public Text consentValueText;
+    public Text authIdText;
     public Button loadMessageButton;
     public Button gdprPrivacySettingsButton;
     public Button ccpaPrivacySettingsButton;
@@ -175,6 +177,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             deleteCustomConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
+            authIdText.text = ConsentWrapperIOS.Instance.GetBridgeString("AuthId:"+authId);
         }
         else
         {
@@ -186,6 +189,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             deleteCustomConsentButton.interactable = false;
             clearDataButton.interactable = false;
             consentValueText.text = "-";
+            authIdText.text = "-";
         }
     }
 

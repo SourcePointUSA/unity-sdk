@@ -64,6 +64,8 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _clearCustomArrays();
         [DllImport("__Internal")]
         private static extern void _dispose();
+        [DllImport("__Internal")]
+        private static extern string _checkGetString(string value);
 #endif
 
         public ConsentWrapperIOS()
@@ -228,6 +230,15 @@ namespace ConsentManagementProviderLib.iOS
             _dispose();
             iOSListener.Dispose();
 #endif
+        }
+
+        public string GetBridgeString(string value)
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            string val = _checkGetString(value);
+            return val;
+#endif
+            return null;
         }
     }
 }
