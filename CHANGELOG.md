@@ -1,3 +1,6 @@
+# 2.3.2
+* Fix of the null authId interpreted as "" (an empty string) [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55)
+
 # 2.3.1
 * [DIA-3844](https://sourcepoint.atlassian.net/browse/DIA-3844) Destroy CMPiOSListenerHelper GameObject in Dispose() call and re-initialize it in CMP.Initialize() call if needed. Also, ClearAllData() method for IOS clears cached value in c# [#53](https://github.com/SourcePointUSA/unity-sdk/pull/53)
 
