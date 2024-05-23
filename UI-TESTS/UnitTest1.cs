@@ -339,6 +339,11 @@ namespace UnityAppiumTests
         	var data = pages.nativeAppLayer.getAuthIdText();
 			Console.WriteLine($"AuthIdText: {data}");
     		Assert.That(data=="AuthId:", Is.True);
+
+			Console.WriteLine("String send: Test");
+			data = altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "GetBridgeString", "Assembly-CSharp", new[] { "Test" });
+			Console.WriteLine($"Got: {data}");
+    		Assert.That(data=="Test", Is.True);
 		}
 
         [TearDown]

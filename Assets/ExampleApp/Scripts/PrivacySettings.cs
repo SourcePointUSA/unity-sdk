@@ -177,7 +177,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             deleteCustomConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
-            authIdText.text = ConsentWrapperIOS.Instance.GetBridgeString("AuthId:"+authId);
+            authIdText.text = CMP.GetBridgeString("AuthId:"+authId);
         }
         else
         {
