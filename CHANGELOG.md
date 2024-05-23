@@ -1,4 +1,5 @@
 # 2.3.2
+* Unity SDK brought v7.6.8 iOS [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55)
 * Fix of the null authId interpreted as "" (an empty string) [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55)
 
 # 2.3.1
