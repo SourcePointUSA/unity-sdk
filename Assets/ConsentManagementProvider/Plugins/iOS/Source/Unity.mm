@@ -88,7 +88,7 @@ extern "C"
 
     void _loadMessage()
     {
-        [swiftBridge loadMessage];
+        [swiftBridge loadMessageWithAuthId:nil];
     }
 
     void _loadMessageWithAuthId(char * authId)
