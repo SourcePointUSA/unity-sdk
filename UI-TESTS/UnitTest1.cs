@@ -322,7 +322,28 @@ namespace UnityAppiumTests
         	data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
     		Assert.That(data!="-", Is.True);
+		}
 
+		[Test]
+		public void CheckBridgeStringConvertTest()
+		{
+			Console.WriteLine(">>>CheckBridgeStringConvertTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGDPR.pressAcceptAll();
+        	var data = pages.nativeAppLayer.getAuthIdText();
+			Console.WriteLine($"AuthIdText: {data}");
+    		Assert.That(data=="AuthId:", Is.True);
+
+			Console.WriteLine("String send: Test");
+			data = altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "GetBridgeString", "Assembly-CSharp", new[] { "Test" });
+			Console.WriteLine($"Got: {data}");
+    		Assert.That(data=="Test", Is.True);
 		}
 
         [TearDown]
