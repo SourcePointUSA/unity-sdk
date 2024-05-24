@@ -1,3 +1,8 @@
+# 2.3.2
+* Unity SDK brought v7.6.8 iOS [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55)
+* [DIA-4048] (https://sourcepoint.atlassian.net/browse/DIA-4048) Fix: of the null authId interpreted as "" (an empty string) [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55) 
+* Fix: JsonUnwrapper on iOS has incorrect key for VendorGrant [#57](https://github.com/SourcePointUSA/unity-sdk/pull/57) by @OmarVector 
+
 # 2.3.1
 * [DIA-3844](https://sourcepoint.atlassian.net/browse/DIA-3844) Destroy CMPiOSListenerHelper GameObject in Dispose() call and re-initialize it in CMP.Initialize() call if needed. Also, ClearAllData() method for IOS clears cached value in c# [#53](https://github.com/SourcePointUSA/unity-sdk/pull/53)
 

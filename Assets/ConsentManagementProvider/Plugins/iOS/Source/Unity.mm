@@ -86,7 +86,12 @@ extern "C"
         [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:language gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId] usnatPmId:[NSString stringWithFormat:@"%s", usnatPmId]];
     }
 
-    void _loadMessage(char * authId)
+    void _loadMessage()
+    {
+        [swiftBridge loadMessageWithAuthId:nil];
+    }
+
+    void _loadMessageWithAuthId(char * authId)
     {
         [swiftBridge loadMessageWithAuthId:[NSString stringWithFormat:@"%s", authId]];
     }
