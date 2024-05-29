@@ -2,7 +2,6 @@ using ConsentManagementProviderLib;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using ConsentManagementProviderLib.iOS;
 
 
 public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinished
