@@ -68,7 +68,7 @@ runTest ios.runsettings SaveAndExitUSNATTest
 sleep 5
 runTest ios.runsettings ClearAllButtonTest
 sleep 5
-runTest ios.runsettings CheckBridgeStringConvertTest
+runTest ios.runsettings AuthIdTest
 
 #Kill ios emulator
 osascript -e 'tell app "Terminal" to close window id '${iosEmulator_window_id}''
