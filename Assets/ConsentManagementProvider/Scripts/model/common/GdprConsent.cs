@@ -21,6 +21,8 @@ namespace ConsentManagementProviderLib
         {
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine($"GDPR");
+
             sb.AppendLine($"UUID: {uuid}");
             sb.AppendLine($"EUConsent: {euconsent}");
             sb.AppendLine($"Applies: {applies}");
