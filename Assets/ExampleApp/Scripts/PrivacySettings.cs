@@ -158,6 +158,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         storedConsentString = consents.gdpr.consents.euconsent ?? "--";
         if(CMP.useGDPR) 
             CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
+        if(CMP.useCCPA) 
+            CmpDebugUtil.Log(consents.ccpa.consents.ToFullString());
         if(CMP.useUSNAT)
             CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
         updateUI();
