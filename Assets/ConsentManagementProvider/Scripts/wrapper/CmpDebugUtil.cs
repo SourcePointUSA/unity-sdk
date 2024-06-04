@@ -37,7 +37,7 @@ namespace ConsentManagementProviderLib
         public static void Log(string message)
         {
             if(IsLoggingEnabled)
-                Debug.Log(message);
+                printLog(message);
         }
 
         public static void LogWarning(string message)
@@ -55,6 +55,20 @@ namespace ConsentManagementProviderLib
         public static bool isLogging()
         {
             return enableLogging;
+        }
+
+        private static void printLog(string message)
+        {
+            int maxLogSize = 1000;
+            int start = 0;
+            int end = 0;
+            for(int i = 0; i <= (message.Length / maxLogSize)-1; i++) {
+                start = i * maxLogSize;
+                end = (i+1) * maxLogSize;
+                end = end > message.Length ? message.Length : end;
+                Debug.Log(message.Substring(start, maxLogSize));
+            }
+            Debug.Log(message.Substring(end));
         }
     }
 }
