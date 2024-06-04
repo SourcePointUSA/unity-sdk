@@ -240,10 +240,8 @@ namespace ConsentManagementProviderLib.Json
                 CmpDebugUtil.LogError("The GDPR consent wrapper cannot be null.");
                 return null;
             }
-
-            bool applies = wrappedGdpr.applies;
             GdprConsent consent = UnwrapGdprConsent(wrappedGdpr.consents);
-            return new SpGdprConsent(applies, consent);
+            return new SpGdprConsent(consent);
         }
 
         private static GdprConsent UnwrapGdprConsent(GdprConsentWrapper wrapped)
@@ -346,10 +344,8 @@ namespace ConsentManagementProviderLib.Json
                 CmpDebugUtil.LogError("The CCPA consent wrapper cannot be null.");
                 return null;
             }
-
-            bool applies = wrappedCcpa.applies;
             CcpaConsent consent = UnwrapCcpaConsent(wrappedCcpa.consents);
-            return new SpCcpaConsent(applies, consent);
+            return new SpCcpaConsent(consent);
         }
 
         private static CcpaConsent UnwrapCcpaConsent(CcpaConsentWrapper wrapped)
@@ -375,10 +371,8 @@ namespace ConsentManagementProviderLib.Json
                 CmpDebugUtil.LogError("The USNAT consent wrapper cannot be null.");
                 return null;
             }
-
-            bool applies = wrappedUsnat.applies;
             UsnatConsent consent = UnwrapUsnatConsent(wrappedUsnat.consents);
-            return new SpUsnatConsent(applies, consent);
+            return new SpUsnatConsent(consent);
         }
 
         private static UsnatConsent UnwrapUsnatConsent(UsnatConsentWrapper wrapped)
