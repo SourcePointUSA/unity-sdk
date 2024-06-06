@@ -27,6 +27,8 @@ namespace ConsentManagementProviderLib.iOS
     [DllImport("__Internal")]
     private static extern void _setCallbackOnConsentUIFinished(Action<string> callback);
     [DllImport("__Internal")]
+    private static extern void _setCallbackOnSPFinished(Action<string> callback);
+    [DllImport("__Internal")]
     private static extern void _setCallbackOnErrorCallback(Action<string> callback);
     [DllImport("__Internal")]
     private static extern void _setCallbackOnCustomConsent(Action<string> callback);
@@ -42,15 +44,23 @@ namespace ConsentManagementProviderLib.iOS
             self=this;
             gameObject.name = "CMPiOSListenerHelper";
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-        CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
-        DontDestroyOnLoad(this.gameObject);
-        _setCallbackDefault(Callback);
-        _setCallbackOnConsentReady(OnConsentReady);
-        _setCallbackOnConsentUIReady(OnConsentUIReady);
-        _setCallbackOnConsentAction(OnConsentAction);
-        _setCallbackOnConsentUIFinished(OnConsentUIFinished);
-        _setCallbackOnErrorCallback(OnErrorCallback);
-        _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
+            CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
+            DontDestroyOnLoad(this.gameObject);
+            SetBridgeCallbacks();
+#endif
+        }
+
+        internal void SetBridgeCallbacks()
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _setCallbackDefault(Callback);
+            _setCallbackOnConsentReady(OnConsentReady);
+            _setCallbackOnConsentUIReady(OnConsentUIReady);
+            _setCallbackOnConsentAction(OnConsentAction);
+            _setCallbackOnConsentUIFinished(OnConsentUIFinished);
+            _setCallbackOnSPFinished(OnConsentSPFinished);
+            _setCallbackOnErrorCallback(OnErrorCallback);
+            _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
 #endif
         }
 
@@ -123,6 +133,13 @@ namespace ConsentManagementProviderLib.iOS
         }
 
         [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentSPFinished(string message)
+        {
+            CmpDebugUtil.Log("OnConsentSpFinished IOS_CALLBACK_RECEIVED: " + message);
+            ConsentMessenger.Broadcast<IOnConsentSpFinished>();
+        }
+
+        [MonoPInvokeCallback(typeof(Action<string>))]
         static void OnErrorCallback(string jsonError)
         {
             CmpDebugUtil.LogError("OnErrorCallback IOS_CALLBACK_RECEIVED: " + jsonError);
@@ -156,6 +173,15 @@ namespace ConsentManagementProviderLib.iOS
                     self.customGdprConsent = unwrapped;
                     self.onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (self != null)
+            {
+                Destroy(self.gameObject);
+                self = null;
             }
         }
     }
