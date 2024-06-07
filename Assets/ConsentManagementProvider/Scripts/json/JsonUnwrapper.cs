@@ -269,8 +269,8 @@ namespace ConsentManagementProviderLib.Json
 
                     var vendorGrantValue = JToken.FromObject(vendorGrantWrapper.Value);
 
-                    if (vendorGrantValue["granted"] != null)
-                        isGranted = vendorGrantValue["granted"].ToObject<bool>();
+                    if (vendorGrantValue["vendorGrant"] != null)
+                        isGranted = vendorGrantValue["vendorGrant"].ToObject<bool>();
 
                     if (vendorGrantValue["purposeGrants"] != null)
                     {

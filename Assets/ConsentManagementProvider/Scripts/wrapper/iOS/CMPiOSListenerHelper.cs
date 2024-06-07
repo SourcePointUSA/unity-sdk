@@ -42,15 +42,22 @@ namespace ConsentManagementProviderLib.iOS
             self=this;
             gameObject.name = "CMPiOSListenerHelper";
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-        CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
-        DontDestroyOnLoad(this.gameObject);
-        _setCallbackDefault(Callback);
-        _setCallbackOnConsentReady(OnConsentReady);
-        _setCallbackOnConsentUIReady(OnConsentUIReady);
-        _setCallbackOnConsentAction(OnConsentAction);
-        _setCallbackOnConsentUIFinished(OnConsentUIFinished);
-        _setCallbackOnErrorCallback(OnErrorCallback);
-        _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
+            CmpDebugUtil.Log("Constructing CMPiOSListenerHelper game object...");
+            DontDestroyOnLoad(this.gameObject);
+            SetBridgeCallbacks();
+#endif
+        }
+
+        internal void SetBridgeCallbacks()
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _setCallbackDefault(Callback);
+            _setCallbackOnConsentReady(OnConsentReady);
+            _setCallbackOnConsentUIReady(OnConsentUIReady);
+            _setCallbackOnConsentAction(OnConsentAction);
+            _setCallbackOnConsentUIFinished(OnConsentUIFinished);
+            _setCallbackOnErrorCallback(OnErrorCallback);
+            _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
 #endif
         }
 
@@ -156,6 +163,15 @@ namespace ConsentManagementProviderLib.iOS
                     self.customGdprConsent = unwrapped;
                     self.onCustomConsentsGDPRSuccessAction?.Invoke(unwrapped);
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (self != null)
+            {
+                Destroy(self.gameObject);
+                self = null;
             }
         }
     }
