@@ -1,3 +1,10 @@
+# 2.3.3
+* Unity SDK brought up to v7.8.3 of Native Android SDK [#58](https://github.com/SourcePointUSA/unity-sdk/pull/58) which fixes the following:
+* [DIA-4087](https://sourcepoint.atlassian.net/browse/DIA-4087) Fixed: Empty consent when GDPR/CCPA applies is false
+* Also, in Unity SDK version 2.3.3, due to Java version upgrade as well as Gradle upgrade to version 7.5 in native Android SDK 7.8.2 (which is a dependency of Unity SDK), CMP SDK is now supported on Unity version 2022.3 and higher. However, we are able to build with Gradle v7.2 which is built-in in Unity 2022.3, so using Gradle 7.5 is not required.
+* Please also note that in order to build a project you need to use a custom template for Gradle, please refer to "Plugins\Android\mainTemplate.gradle", lines 41-43.
+* Various minor improvements.
+
 # 2.3.2
 * Unity SDK brought v7.6.8 iOS [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55)
 * [DIA-4048] (https://sourcepoint.atlassian.net/browse/DIA-4048) Fix: of the null authId interpreted as "" (an empty string) [#55](https://github.com/SourcePointUSA/unity-sdk/pull/55) 

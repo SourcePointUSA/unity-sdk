@@ -8,6 +8,8 @@ namespace ConsentManagementProviderLib
         private static bool enableDebugging = false;
         private static bool forceEnableSingleLog;
 
+        public static bool IsLogging => enableLogging;
+        
         private static bool IsLoggingEnabled
         {
             get
@@ -37,7 +39,7 @@ namespace ConsentManagementProviderLib
         public static void Log(string message)
         {
             if(IsLoggingEnabled)
-                Debug.Log(message);
+                PrintLog(message);
         }
 
         public static void LogWarning(string message)
@@ -51,10 +53,23 @@ namespace ConsentManagementProviderLib
             //if(EnableLogging)
                 Debug.LogError(message);
         }
-
-        public static bool isLogging()
+        
+        /// <summary>
+        /// Some logs we print are ENORMOUS and logcat shortens the lenght of a string.
+        /// To workaround it, we'll use this method.
+        /// </summary>
+        private static void PrintLog(string message)
         {
-            return enableLogging;
+            int maxLogSize = 1000;
+            int start = 0;
+            int end = 0;
+            for(int i = 0; i <= (message.Length / maxLogSize)-1; i++) {
+                start = i * maxLogSize;
+                end = (i+1) * maxLogSize;
+                end = end > message.Length ? message.Length : end;
+                Debug.Log(message.Substring(start, maxLogSize));
+            }
+            Debug.Log(message.Substring(end));
         }
     }
 }
