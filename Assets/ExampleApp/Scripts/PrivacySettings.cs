@@ -15,7 +15,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public string authId = null;
     public List<CAMPAIGN_TYPE> campaignTypes = new ();
 
-    // GDPR Custom Consent
+    [Header("GDPR Custom Consent")]
     public string[] vendors = { "5fbe6f050d88c7d28d765d47", "5ff4d000a228633ac048be41" };
     public string[] categories = { "60657acc9c97c400122f21f3", "608bad95d08d3112188e0e36", "608bad95d08d3112188e0e2f" };
     public string[] legIntCategories = { };
@@ -33,6 +33,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         }
     }
 
+    [Header("UI")]
     public Text consentValueText;
     public Button loadMessageButton;
     public Button gdprPrivacySettingsButton;
@@ -68,9 +69,11 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             spCampaigns: spCampaigns,
             accountId: accountId,
             propertyId: propertyId,
-            propertyName: propertyName,
+            propertyName: propertyName,  // pay attention to any leading and trailing whitespaces; 
+                                         // it's unlikely you voluntarily use them in property name, but if you do
+                                         // please note that we Trim them down in the call tree.
             language: language,
-            gdprPmId: gdprPmId, 
+            gdprPmId: gdprPmId,
             ccpaPmId: ccpaPmId,
             usnatPmId: usnatPmId,
             campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
@@ -158,6 +161,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         storedConsentString = consents.gdpr.consents.euconsent ?? "--";
         if(CMP.useGDPR) 
             CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
+        if(CMP.useCCPA) 
+            CmpDebugUtil.Log(consents.ccpa.consents.ToFullString());
         if(CMP.useUSNAT)
             CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
         updateUI();

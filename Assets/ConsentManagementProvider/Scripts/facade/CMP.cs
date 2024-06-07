@@ -47,6 +47,12 @@ namespace ConsentManagementProviderLib
                     case CAMPAIGN_TYPE.USNAT: useUSNAT = true; break;
                 }
             }
+
+            propertyName = propertyName.Trim();
+            gdprPmId = gdprPmId.Trim();
+            ccpaPmId = ccpaPmId.Trim();
+            usnatPmId = usnatPmId.Trim();
+
 #if UNITY_ANDROID
             CreateBroadcastExecutorGO();
             //excluding ios14 campaign if any
