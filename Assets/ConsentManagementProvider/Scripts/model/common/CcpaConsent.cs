@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib
@@ -79,5 +80,39 @@ namespace ConsentManagementProviderLib
 			this.consentStatus = consentStatus;
         }
         
+           public string ToFullString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"CCPA");
+
+            sb.AppendLine($"UUID: {uuid}");
+            sb.AppendLine($"Applies: {applies}");
+            sb.AppendLine($"Status: {status}");
+            sb.AppendLine($"Uspstring: {uspstring}");
+            sb.AppendLine($"ChildPmId: {childPmId}");
+            if (signedLspa != null)
+                sb.AppendLine($"SignedLspa: {signedLspa}");
+            sb.AppendLine($"WebConsentPayload: {webConsentPayload}");
+            
+            if(rejectedVendors != null)
+            {
+                sb.AppendLine("Rejected Vendors:");
+                foreach (var vendor in rejectedVendors)
+                    sb.AppendLine($"    {vendor}");
+            }
+
+            if(rejectedCategories != null)
+            {
+                sb.AppendLine("Rejected Categories:");
+                foreach (var category in rejectedCategories)
+                    sb.AppendLine($"    {category}");
+            }
+
+            if (consentStatus != null)
+                sb = consentStatus.ToFullString(sb);
+
+            return sb.ToString();
+        }
     }
 }

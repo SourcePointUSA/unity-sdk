@@ -71,7 +71,7 @@ public static class CMPPostProcessBuild
         rootDict.SetString(buildKey,"This identifier will be used to deliver personalized ads to you.");
         buildKey = "SPLogLevel";
         var buildValue="prod";
-        if (CmpDebugUtil.isLogging())
+        if (CmpDebugUtil.IsLogging)
         {
             buildValue="debug";
         }
