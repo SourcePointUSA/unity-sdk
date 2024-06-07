@@ -26,7 +26,6 @@ android {
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/mips/*' + '*')
       exclude ('/lib/mips64/*' + '*')
-      pickFirst "META-INF/DEPENDENCIES" // PLEASE PAY ATTENTION: This line is needed to avoid gradle-related exceptions while building an Android build
   }
 }
 // Android Resolver Exclusions End
@@ -35,6 +34,10 @@ android {
 
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
+
+    packagingOptions {
+        pickFirst "META-INF/DEPENDENCIES" // PLEASE PAY ATTENTION: This line is needed to avoid gradle-related exceptions while building an Android build  
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
