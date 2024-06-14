@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Parameters used by tests at runtime -->
+  <TestRunParameters>
+    <Parameter name="platformName" value="Android" />
+    <Parameter name="deviceName" value="emulator-5554" />
+    <Parameter name="altTesterIP" value="127.0.0.1" />
+    <Parameter name="appium:app" value="/BUILDS/Android/ConsentMessagePlugin.apk" />
+    <Parameter name="appium:automationName" value="UiAutomator2" />
+    <Parameter name="appium:chromedriverExecutable" value="/chromedriver_103.0.5060.71" />
+  </TestRunParameters>
+</RunSettings>

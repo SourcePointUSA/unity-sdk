@@ -255,6 +255,14 @@ namespace ConsentManagementProviderLib
             
             return true;
         }
+
+        public static string GetBridgeString(string value)
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            return ConsentWrapperIOS.Instance.GetBridgeString(value);
+#endif
+            return value;
+        }
         #endregion
     }
 }

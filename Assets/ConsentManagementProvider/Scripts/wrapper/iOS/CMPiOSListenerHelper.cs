@@ -27,6 +27,8 @@ namespace ConsentManagementProviderLib.iOS
     [DllImport("__Internal")]
     private static extern void _setCallbackOnConsentUIFinished(Action<string> callback);
     [DllImport("__Internal")]
+    private static extern void _setCallbackOnSPFinished(Action<string> callback);
+    [DllImport("__Internal")]
     private static extern void _setCallbackOnErrorCallback(Action<string> callback);
     [DllImport("__Internal")]
     private static extern void _setCallbackOnCustomConsent(Action<string> callback);
@@ -56,6 +58,7 @@ namespace ConsentManagementProviderLib.iOS
             _setCallbackOnConsentUIReady(OnConsentUIReady);
             _setCallbackOnConsentAction(OnConsentAction);
             _setCallbackOnConsentUIFinished(OnConsentUIFinished);
+            _setCallbackOnSPFinished(OnConsentSPFinished);
             _setCallbackOnErrorCallback(OnErrorCallback);
             _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
 #endif
@@ -127,6 +130,13 @@ namespace ConsentManagementProviderLib.iOS
         {
             CmpDebugUtil.Log("OnConsentUIFinished IOS_CALLBACK_RECEIVED: " + message);
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
+        }
+
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentSPFinished(string message)
+        {
+            CmpDebugUtil.Log("OnConsentSpFinished IOS_CALLBACK_RECEIVED: " + message);
+            ConsentMessenger.Broadcast<IOnConsentSpFinished>();
         }
 
         [MonoPInvokeCallback(typeof(Action<string>))]
