@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using ConsentManagementProviderLib.Enum;
 using ConsentManagementProviderLib.Observer;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.Android
 {
-    internal class ConsentWrapperAndroid
+    internal class ConsentWrapperAndroid: IMobileAndroid
     {
         private AndroidJavaObject consentLib;
         private AndroidJavaObject activity;
@@ -14,23 +15,8 @@ namespace ConsentManagementProviderLib.Android
 
         private AndroidJavaConstruct constructor;
         private CustomConsentClient customConsentClient;
-        
-        private static ConsentWrapperAndroid instance;
-        public static ConsentWrapperAndroid Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new ConsentWrapperAndroid();
-                return instance;
-            }
-            private set
-            {
-                instance = value;
-            }
-        }
 
-        ConsentWrapperAndroid()
+        public ConsentWrapperAndroid()
         {
 #if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
@@ -45,12 +31,30 @@ namespace ConsentManagementProviderLib.Android
 #endif
         }
 
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000, bool? transitionCCPAAuth = null, bool? supportLegacyUSPString = null)
+        public void InitializeLib(
+            int accountId, 
+            int propertyId, 
+            string propertyName, 
+            bool gdpr, 
+            bool ccpa, 
+            bool usnat, 
+            MESSAGE_LANGUAGE language, 
+            string gdprPmId, 
+            string ccpaPmId, 
+            string usnatPmId, 
+            List<SpCampaign> spCampaigns, 
+            CAMPAIGN_ENV campaignsEnvironment, 
+            long messageTimeoutInSeconds = 3, 
+            bool? transitionCCPAAuth = null, 
+            bool? supportLegacyUSPString = null)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            if (!ValidateSpCampaigns(ref spCampaigns))
             {
-                try
+                return;
+            }
+            long messageTimeoutMilliSeconds = messageTimeoutInSeconds * 1000;
+#if UNITY_ANDROID
+            try
                 {
                     AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
                     AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
@@ -86,7 +90,6 @@ namespace ConsentManagementProviderLib.Android
                 {
                     CmpDebugUtil.LogError(e.Message);
                 }
-            }
 #endif
         }
 
@@ -145,7 +148,19 @@ namespace ConsentManagementProviderLib.Android
             consentLib.Call("deleteCustomConsentTo", vendors, categories, legIntCategories, customConsentClient);
         }
 
-        public GdprConsent GetCustomGdprConsent()
+        public SpConsents GetSpConsents()
+        {
+            if (spClient != null)
+            {
+                return spClient._spConsents;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public GdprConsent GetCustomConsent()
         {
             if (this.customConsentClient != null)
             {
@@ -156,8 +171,13 @@ namespace ConsentManagementProviderLib.Android
                 return null;
             }
         }
+
+        public void ClearAllData()
+        {
+            SpAndroidNativeUtils.ClearAllData();
+        }
         
-        internal void Dispose()
+        public void Dispose()
         {
             if (consentLib != null)
             {
@@ -168,18 +188,19 @@ namespace ConsentManagementProviderLib.Android
             }
         }
 
-        internal void CallShowView(AndroidJavaObject view)
+        public void CallShowView(AndroidJavaObject view)
         {
             consentLib.Call("showView", view);
             CmpDebugUtil.Log("C# : View showing passed to Android's consent lib");
         }
 
-        internal void CallRemoveView(AndroidJavaObject view)
+        public void CallRemoveView(AndroidJavaObject view)
         {
             consentLib.Call("removeView", view);
             CmpDebugUtil.Log("C# : View removal passed to Android's consent lib");
         }
 
+        #region private methods
         private void RunOnUiThread(Action action)
         {
             CmpDebugUtil.Log(">>>STARTING RUNNABLE ON UI THREAD!");
@@ -221,16 +242,24 @@ namespace ConsentManagementProviderLib.Android
             finally { CmpDebugUtil.Log("loadMessage(authId: String) DONE"); }
         }
 
-        public SpConsents GetSpConsents()
+        private static bool ValidateSpCampaigns(ref List<SpCampaign> spCampaigns)
         {
-            if (spClient != null)
+            List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
+            if (ios14 != null && ios14.Count > 0)
             {
-                return spClient._spConsents;
+                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
+                foreach (SpCampaign ios in ios14)
+                {
+                    spCampaigns.Remove(ios);
+                }
             }
-            else
+            if (spCampaigns.Count == 0)
             {
-                return null;
+                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
+                return false;
             }
+            return true;
         }
+        #endregion
     }
 }
