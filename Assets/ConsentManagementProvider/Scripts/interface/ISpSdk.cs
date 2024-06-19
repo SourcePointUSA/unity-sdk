@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib
 {
-    public interface IMobile
+    public interface ISpSdk
     {
         void InitializeLib(
             int accountId, 

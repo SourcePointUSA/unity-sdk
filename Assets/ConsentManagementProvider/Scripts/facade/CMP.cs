@@ -11,8 +11,8 @@ namespace ConsentManagementProviderLib
     public static class CMP
     {
         private static GameObject mainThreadBroadcastEventsExecutor;
-        private static IMobile instance;
-        public static IMobile Instance
+        private static ISpSdk instance;
+        internal static ISpSdk Instance
         {
             get
             {

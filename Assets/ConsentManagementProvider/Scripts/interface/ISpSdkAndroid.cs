@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib
 {
-    public interface IMobileAndroid: IMobile
+    public interface ISpSdkAndroid: ISpSdk
     {
         void CallShowView(AndroidJavaObject view);
         void CallRemoveView(AndroidJavaObject view);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.UnityEditor
 {
-    public class ConsentWrapperUnityEditor: IMobile
+    public class ConsentWrapperUnityEditor: ISpSdk
     {
         public ConsentWrapperUnityEditor() =>
             Debug.LogWarning("ATTENTION! Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");

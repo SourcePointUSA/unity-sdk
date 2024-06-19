@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.iOS
 {
-    internal class ConsentWrapperIOS: IMobile
+    internal class ConsentWrapperIOS: ISpSdk
     {
         private static GameObject IOSListenerGO;
         private static CMPiOSListenerHelper iOSListener;

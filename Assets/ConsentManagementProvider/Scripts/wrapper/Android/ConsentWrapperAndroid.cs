@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.Android
 {
-    internal class ConsentWrapperAndroid: IMobileAndroid
+    internal class ConsentWrapperAndroid: ISpSdkAndroid
     {
         private AndroidJavaObject consentLib;
         private AndroidJavaObject activity;
