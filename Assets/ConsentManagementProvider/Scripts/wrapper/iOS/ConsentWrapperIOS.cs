@@ -64,13 +64,10 @@ namespace ConsentManagementProviderLib.iOS
             iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
 
-        public void InitializeLib(
+        public void Initialize(
             int accountId, 
             int propertyId, 
             string propertyName, 
-            bool gdpr,
-            bool ccpa,
-            bool usnat,
             MESSAGE_LANGUAGE language, 
             string gdprPmId, 
             string ccpaPmId,
@@ -106,7 +103,7 @@ namespace ConsentManagementProviderLib.iOS
                 _setTransitionCCPAAuth((bool)transitionCCPAAuth);
             if(supportLegacyUSPString != null)
                 _setSupportLegacyUSPString((bool)supportLegacyUSPString);
-            _configLib(accountId, propertyId, propertyName, gdpr, ccpa, usnat, (int)language, gdprPmId, ccpaPmId, usnatPmId); //TO-DO: add messageTimeoutInSeconds to call
+            _configLib(accountId, propertyId, propertyName, CMP.useGDPR, CMP.useCCPA, CMP.useUSNAT, (int)language, gdprPmId, ccpaPmId, usnatPmId); //TO-DO: add messageTimeoutInSeconds to call
 #endif
         }
 

@@ -31,13 +31,10 @@ namespace ConsentManagementProviderLib.Android
 #endif
         }
 
-        public void InitializeLib(
+        public void Initialize(
             int accountId, 
             int propertyId, 
             string propertyName, 
-            bool gdpr, 
-            bool ccpa, 
-            bool usnat, 
             MESSAGE_LANGUAGE language, 
             string gdprPmId, 
             string ccpaPmId, 

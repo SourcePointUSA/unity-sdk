@@ -5,13 +5,10 @@ namespace ConsentManagementProviderLib
 {
     public interface ISpSdk
     {
-        void InitializeLib(
+        void Initialize(
             int accountId, 
             int propertyId, 
-            string propertyName, 
-            bool gdpr,
-            bool ccpa,
-            bool usnat,
+            string propertyName,
             MESSAGE_LANGUAGE language, 
             string gdprPmId, 
             string ccpaPmId,

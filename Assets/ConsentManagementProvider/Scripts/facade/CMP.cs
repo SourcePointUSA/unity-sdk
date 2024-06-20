@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib
 {
-    public static class CMP
+    public class CMP: ISpSdk
     {
         private static GameObject mainThreadBroadcastEventsExecutor;
         private static ISpSdk instance;
@@ -28,12 +28,19 @@ namespace ConsentManagementProviderLib
             }
         }
 
-        public static bool useGDPR = false;
-        public static bool useCCPA = false;
-        public static bool useUSNAT = false;
+        private static CMP self;
+        public static CMP GetInstance()
+        {
+            if (self == null)
+                self = new CMP();
+            return self;
+        }
+
+        internal static bool useGDPR = false;
+        internal static bool useCCPA = false;
+        internal static bool useUSNAT = false;
         
-        public static void Initialize(
-            List<SpCampaign> spCampaigns, 
+        public void Initialize(
             int accountId,
             int propertyId,
             string propertyName,
@@ -41,6 +48,7 @@ namespace ConsentManagementProviderLib
             string gdprPmId, 
             string ccpaPmId,
             string usnatPmId,
+            List<SpCampaign> spCampaigns, 
             CAMPAIGN_ENV campaignsEnvironment,
             long messageTimeoutInSeconds = 3,
             bool? transitionCCPAAuth = null,
@@ -68,13 +76,10 @@ namespace ConsentManagementProviderLib
 
             CreateBroadcastExecutorGO();
 
-            Instance.InitializeLib(
+            Instance.Initialize(
                 accountId: accountId, 
                 propertyId: propertyId, 
                 propertyName: propertyName, 
-                gdpr: useGDPR,
-                ccpa: useCCPA,
-                usnat: useUSNAT,
                 language: language, 
                 gdprPmId: gdprPmId, 
                 ccpaPmId: ccpaPmId,
@@ -86,11 +91,11 @@ namespace ConsentManagementProviderLib
                 supportLegacyUSPString: supportLegacyUSPString);
         }
 
-        public static void LoadMessage(string authId = null) => Instance.LoadMessage(authId: authId);
+        public void LoadMessage(string authId = null) => Instance.LoadMessage(authId: authId);
 
-        public static void ClearAllData(string authId = null) => Instance.ClearAllData();
+        public void ClearAllData() => Instance.ClearAllData();
 
-        public static void LoadPrivacyManager(
+        public void LoadPrivacyManager(
             CAMPAIGN_TYPE campaignType, 
             string pmId, 
             PRIVACY_MANAGER_TAB tab) => Instance.LoadPrivacyManager(
@@ -98,7 +103,7 @@ namespace ConsentManagementProviderLib
                                             pmId: pmId, 
                                             tab: tab);
 
-        public static void CustomConsentGDPR(
+        public void CustomConsentGDPR(
             string[] vendors, 
             string[] categories, 
             string[] legIntCategories, 
@@ -108,7 +113,7 @@ namespace ConsentManagementProviderLib
                                                         legIntCategories: legIntCategories,
                                                         onSuccessDelegate: onSuccessDelegate);
 
-        public static void DeleteCustomConsentGDPR(
+        public void DeleteCustomConsentGDPR(
             string[] vendors, 
             string[] categories, 
             string[] legIntCategories, 
@@ -118,13 +123,14 @@ namespace ConsentManagementProviderLib
                                                         legIntCategories: legIntCategories,
                                                         onSuccessDelegate: onSuccessDelegate);
 
-        public static SpConsents GetSpConsents() => Instance.GetSpConsents();
+        public SpConsents GetSpConsents() => Instance.GetSpConsents();
 
-        public static GdprConsent GetCustomConsent() => Instance.GetCustomConsent();
+        public GdprConsent GetCustomConsent() => Instance.GetCustomConsent();
 
-        public static void Dispose() => Instance.Dispose();
+        public void Dispose() => Instance.Dispose();
         
         #region private methods
+        private CMP() {}
         private static void CreateBroadcastExecutorGO()
         {
             if (mainThreadBroadcastEventsExecutor != null) return;
