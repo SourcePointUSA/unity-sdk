@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class PrivacySettings : MonoBehaviour, IOnConsentReady
 {
+    private CMP cmp = CMP.GetInstance();
     public int accountId = 22;
     public int propertyId = 16893;    
     public string propertyName = "mobile.multicampaign.demo";
@@ -65,7 +66,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         spCampaigns.Add(usnat);
         campaignTypes.Add(CAMPAIGN_TYPE.USNAT);
 
-        CMP.Initialize(
+        cmp.Initialize(
             spCampaigns: spCampaigns,
             accountId: accountId,
             propertyId: propertyId,
@@ -86,19 +87,19 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     void Start()
     {
         updateUI();
-        CMP.LoadMessage(authId: authId);
+        cmp.LoadMessage(authId: authId);
     }
 
     public void OnLoadMessagePress()
     {
         storedConsentString = null;
         updateUI();
-        CMP.LoadMessage(authId: authId);
+        cmp.LoadMessage(authId: authId);
     }
 
     public void OnGDPRPrivacyManagerButtonClick()
     {
-        CMP.LoadPrivacyManager(
+        cmp.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
             pmId: gdprPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
@@ -107,7 +108,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnCCPAPrivacyManagerButtonClick()
     {
-        CMP.LoadPrivacyManager(
+        cmp.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.CCPA,
             pmId: ccpaPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
@@ -116,7 +117,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnUSNATPrivacyManagerButtonClick()
     {
-        CMP.LoadPrivacyManager(
+        cmp.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.USNAT,
             pmId: usnatPmId,
             tab: PRIVACY_MANAGER_TAB.DEFAULT
@@ -132,7 +133,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnCustomConsentButtonClick()
     {
-        CMP.CustomConsentGDPR(vendors: this.vendors,
+        cmp.CustomConsentGDPR(vendors: this.vendors,
             categories: this.categories,
             legIntCategories: this.legIntCategories,
             onSuccessDelegate: SuccessDelegate);
@@ -140,7 +141,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnClearCustomConsentDataPress()
     {
-        CMP.DeleteCustomConsentGDPR(
+        cmp.DeleteCustomConsentGDPR(
             vendors: this.vendors,
             categories: this.categories,
             legIntCategories: this.legIntCategories,
@@ -151,7 +152,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnClearDataPress()
     {
-        CMP.ClearAllData();
+        cmp.ClearAllData();
         storedConsentString = null;
         updateUI();
     }
@@ -197,6 +198,6 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     private void OnDestroy()
     {
         ConsentMessenger.RemoveListener<IOnConsentReady>(gameObject);
-        CMP.Dispose();
+        cmp.Dispose();
     }
 }
