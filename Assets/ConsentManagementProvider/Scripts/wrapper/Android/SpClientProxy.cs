@@ -18,7 +18,7 @@ namespace ConsentManagementProviderLib.Android
         void onUIReady(AndroidJavaObject view)
         {
             CmpDebugUtil.Log("I've reached the C# onUIReady");
-            ISpSdkAndroid instance = (ISpSdkAndroid)CMP.Instance;
+            ISpSdkAndroid instance = (ISpSdkAndroid)CMP.ConcreteInstance;
             instance.CallShowView(view);
             ConsentMessenger.Broadcast<IOnConsentUIReady>();
         }
@@ -29,7 +29,7 @@ namespace ConsentManagementProviderLib.Android
         void onUIFinished(AndroidJavaObject view)
         {
             CmpDebugUtil.Log("I've reached the C# onUIFinished");
-            ISpSdkAndroid instance = (ISpSdkAndroid)CMP.Instance;
+            ISpSdkAndroid instance = (ISpSdkAndroid)CMP.ConcreteInstance;
             instance.CallRemoveView(view);
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
         }

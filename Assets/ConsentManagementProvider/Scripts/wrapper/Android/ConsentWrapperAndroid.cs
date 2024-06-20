@@ -52,41 +52,41 @@ namespace ConsentManagementProviderLib.Android
             long messageTimeoutMilliSeconds = messageTimeoutInSeconds * 1000;
 #if UNITY_ANDROID
             try
+            {
+                AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
+                AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
+                foreach (SpCampaign sp in spCampaigns)
                 {
-                    AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
-                    AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
-                    foreach (SpCampaign sp in spCampaigns)
+                    AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.CampaignType);
+                    AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count];
+                    foreach (TargetingParam tp in sp.TargetingParams)
                     {
-                        AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.CampaignType);
-                        AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count];
-                        foreach (TargetingParam tp in sp.TargetingParams)
-                        {
-                            AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);
-                            paramsArray[sp.TargetingParams.IndexOf(tp)] = param;
-                        }
-                        AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
-                        AndroidJavaObject campaign;
-                        if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (transitionCCPAAuth.HasValue || supportLegacyUSPString.HasValue))
-                            campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, transitionCCPAAuth, supportLegacyUSPString);
-                        else
-                            campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
-                        campaigns[spCampaigns.IndexOf(sp)] = campaign;
+                        AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);
+                        paramsArray[sp.TargetingParams.IndexOf(tp)] = param;
                     }
-                    AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
-                                                                               propertyId: propertyId,
-                                                                               propertyName: propertyName,
-                                                                               messageTimeout: messageTimeoutMilliSeconds,
-                                                                               language: msgLang,
-                                                                               campaignsEnvironment: campaignsEnvironment,
-                                                                               spCampaigns: campaigns);
-                    consentLib = constructor.ConstructLib(spConfig: spConfig,
-                                                          activity: this.activity,
-                                                          spClient: this.spClient);
+                    AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
+                    AndroidJavaObject campaign;
+                    if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (transitionCCPAAuth.HasValue || supportLegacyUSPString.HasValue))
+                        campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, transitionCCPAAuth, supportLegacyUSPString);
+                    else
+                        campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
+                    campaigns[spCampaigns.IndexOf(sp)] = campaign;
                 }
-                catch (Exception e)
-                {
-                    CmpDebugUtil.LogError(e.Message);
-                }
+                AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
+                    propertyId: propertyId,
+                    propertyName: propertyName,
+                    messageTimeout: messageTimeoutMilliSeconds,
+                    language: msgLang,
+                    campaignsEnvironment: campaignsEnvironment,
+                    spCampaigns: campaigns);
+                consentLib = constructor.ConstructLib(spConfig: spConfig,
+                    activity: this.activity,
+                    spClient: this.spClient);
+            }
+            catch (Exception e)
+            {
+                CmpDebugUtil.LogError(e.Message);
+            }
 #endif
         }
 
@@ -239,7 +239,7 @@ namespace ConsentManagementProviderLib.Android
             finally { CmpDebugUtil.Log("loadMessage(authId: String) DONE"); }
         }
 
-        private static bool ValidateSpCampaigns(ref List<SpCampaign> spCampaigns)
+        private bool ValidateSpCampaigns(ref List<SpCampaign> spCampaigns)
         {
             List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
             if (ios14 != null && ios14.Count > 0)

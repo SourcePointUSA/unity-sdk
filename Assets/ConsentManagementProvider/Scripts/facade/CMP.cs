@@ -8,38 +8,35 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib
 {
-    public class CMP: ISpSdk
+    public class CMP: ICmpSdk
     {
-        private static GameObject mainThreadBroadcastEventsExecutor;
-        private static ISpSdk instance;
-        internal static ISpSdk Instance
+        public static ICmpSdk Instance => instance ??= new CMP();
+
+        public bool UseGDPR { get; private set; }
+        public bool UseCCPA { get; private set; }
+        public bool UseUSNAT { get; private set; }
+        public bool UseIOS14 { get; private set; }
+
+        private GameObject mainThreadBroadcastEventsExecutor;
+        private static ISpSdk concreteInstance;
+        private static ICmpSdk instance;
+        
+        internal static ISpSdk ConcreteInstance
         {
             get
             {
-                if (instance == null)
+                if (concreteInstance == null)
 #if UNITY_ANDROID
-                    instance = new ConsentWrapperAndroid();
+                    concreteInstance = new ConsentWrapperAndroid();
 #elif UNITY_IOS && !UNITY_EDITOR_OSX
-                    instance = new ConsentWrapperIOS();
+                    concreteInstance = new ConsentWrapperIOS();
 #else
-                    instance = new ConsentWrapperUnityEditor();
+                    concreteInstance = new ConsentWrapperUnityEditor();
 #endif
-                return instance;
+                return concreteInstance;
             }
         }
 
-        private static CMP self;
-        public static CMP GetInstance()
-        {
-            if (self == null)
-                self = new CMP();
-            return self;
-        }
-
-        internal static bool useGDPR = false;
-        internal static bool useCCPA = false;
-        internal static bool useUSNAT = false;
-        
         public void Initialize(
             int accountId,
             int propertyId,
@@ -63,9 +60,10 @@ namespace ConsentManagementProviderLib
             {
                 switch (sp.CampaignType)
                 {
-                    case CAMPAIGN_TYPE.GDPR: useGDPR = true; break;
-                    case CAMPAIGN_TYPE.CCPA: useCCPA = true; break;
-                    case CAMPAIGN_TYPE.USNAT: useUSNAT = true; break;
+                    case CAMPAIGN_TYPE.GDPR: UseGDPR = true; break;
+                    case CAMPAIGN_TYPE.CCPA: UseCCPA = true; break;
+                    case CAMPAIGN_TYPE.USNAT: UseUSNAT = true; break;
+                    case CAMPAIGN_TYPE.IOS14: UseIOS14 = true; break;
                 }
             }
 
@@ -74,9 +72,9 @@ namespace ConsentManagementProviderLib
             ccpaPmId = ccpaPmId.Trim();
             usnatPmId = usnatPmId.Trim();
 
-            CreateBroadcastExecutorGO();
+            CreateBroadcastExecutorGameObject();
 
-            Instance.Initialize(
+            ConcreteInstance.Initialize(
                 accountId: accountId, 
                 propertyId: propertyId, 
                 propertyName: propertyName, 
@@ -90,15 +88,15 @@ namespace ConsentManagementProviderLib
                 transitionCCPAAuth: transitionCCPAAuth,
                 supportLegacyUSPString: supportLegacyUSPString);
         }
+        
+        public void LoadMessage(string authId = null) => ConcreteInstance.LoadMessage(authId: authId);
 
-        public void LoadMessage(string authId = null) => Instance.LoadMessage(authId: authId);
-
-        public void ClearAllData() => Instance.ClearAllData();
+        public void ClearAllData() => ConcreteInstance.ClearAllData();
 
         public void LoadPrivacyManager(
             CAMPAIGN_TYPE campaignType, 
             string pmId, 
-            PRIVACY_MANAGER_TAB tab) => Instance.LoadPrivacyManager(
+            PRIVACY_MANAGER_TAB tab) => ConcreteInstance.LoadPrivacyManager(
                                             campaignType: campaignType, 
                                             pmId: pmId, 
                                             tab: tab);
@@ -107,7 +105,7 @@ namespace ConsentManagementProviderLib
             string[] vendors, 
             string[] categories, 
             string[] legIntCategories, 
-            Action<GdprConsent> onSuccessDelegate) => Instance.CustomConsentGDPR(
+            Action<GdprConsent> onSuccessDelegate) => ConcreteInstance.CustomConsentGDPR(
                                                         vendors: vendors,
                                                         categories: categories,
                                                         legIntCategories: legIntCategories,
@@ -117,28 +115,27 @@ namespace ConsentManagementProviderLib
             string[] vendors, 
             string[] categories, 
             string[] legIntCategories, 
-            Action<GdprConsent> onSuccessDelegate) => Instance.DeleteCustomConsentGDPR(
+            Action<GdprConsent> onSuccessDelegate) => ConcreteInstance.DeleteCustomConsentGDPR(
                                                         vendors: vendors,
                                                         categories: categories,
                                                         legIntCategories: legIntCategories,
                                                         onSuccessDelegate: onSuccessDelegate);
 
-        public SpConsents GetSpConsents() => Instance.GetSpConsents();
+        public SpConsents GetSpConsents() => ConcreteInstance.GetSpConsents();
 
-        public GdprConsent GetCustomConsent() => Instance.GetCustomConsent();
+        public GdprConsent GetCustomConsent() => ConcreteInstance.GetCustomConsent();
 
-        public void Dispose() => Instance.Dispose();
+        public void Dispose() => ConcreteInstance.Dispose();
         
         #region private methods
-        private CMP() {}
-        private static void CreateBroadcastExecutorGO()
+        private void CreateBroadcastExecutorGameObject()
         {
             if (mainThreadBroadcastEventsExecutor != null) return;
             mainThreadBroadcastEventsExecutor = new GameObject();
             mainThreadBroadcastEventsExecutor.AddComponent<BroadcastEventsExecutor>();
         }
 
-        private static bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
+        private bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
         {
             //check if there more than 0 campaign
             if (spCampaigns.Count == 0)

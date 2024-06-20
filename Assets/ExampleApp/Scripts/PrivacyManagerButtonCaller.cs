@@ -10,11 +10,10 @@ public class PrivacyManagerButtonCaller : MonoBehaviour
     PRIVACY_MANAGER_TAB privacyManagerTab = PRIVACY_MANAGER_TAB.DEFAULT;
     [SerializeField]
     string pmId;
-    private CMP cmp = CMP.GetInstance();
 
     public void OnPrivacyManagerButtonClick()
     {
-        cmp.LoadPrivacyManager(campaignType: this.campaignType,
+        CMP.Instance.LoadPrivacyManager(campaignType: this.campaignType,
                                pmId: this.pmId,
                                tab: this.privacyManagerTab);
     }

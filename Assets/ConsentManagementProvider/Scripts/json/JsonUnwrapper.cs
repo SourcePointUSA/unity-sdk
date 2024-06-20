@@ -23,9 +23,9 @@ namespace ConsentManagementProviderLib.Json
                 if (wrapped == null)
                     throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
 
-                SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
-                SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
-                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? UnwrapSpUsnatConsentAndroid(wrapped.usnat) : null;
+                SpGdprConsent unwrappedGdpr = CMP.Instance.UseGDPR ? UnwrapSpGdprConsentAndroid(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = CMP.Instance.UseCCPA ? UnwrapSpCcpaConsentAndroid(wrapped.ccpa) : null;
+                SpUsnatConsent unwrappedUsnat = CMP.Instance.UseUSNAT ? UnwrapSpUsnatConsentAndroid(wrapped.usnat) : null;
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
@@ -217,9 +217,9 @@ namespace ConsentManagementProviderLib.Json
                 if (wrapped == null)
                     throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
 
-                SpGdprConsent unwrappedGdpr = CMP.useGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
-                SpCcpaConsent unwrappedCcpa = CMP.useCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
-                SpUsnatConsent unwrappedUsnat = CMP.useUSNAT ? UnwrapSpUsnatConsent(wrapped.usnat) : null;
+                SpGdprConsent unwrappedGdpr = CMP.Instance.UseGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = CMP.Instance.UseCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
+                SpUsnatConsent unwrappedUsnat = CMP.Instance.UseUSNAT ? UnwrapSpUsnatConsent(wrapped.usnat) : null;
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
