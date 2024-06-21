@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.Android
 {
-    internal class ConsentWrapperAndroid: ISpSdkAndroid
+    internal class ConsentWrapperAndroid: ISpSdk
     {
-        private AndroidJavaObject consentLib;
+        internal static AndroidJavaObject consentLib;
         private AndroidJavaObject activity;
         private SpClientProxy spClient;
 
@@ -168,18 +168,6 @@ namespace ConsentManagementProviderLib.Android
                 consentLib.Call("dispose");
                 CmpDebugUtil.Log("Disposing consentLib successfully done");
             }
-        }
-
-        public void CallShowView(AndroidJavaObject view)
-        {
-            consentLib.Call("showView", view);
-            CmpDebugUtil.Log("C# : View showing passed to Android's consent lib");
-        }
-
-        public void CallRemoveView(AndroidJavaObject view)
-        {
-            consentLib.Call("removeView", view);
-            CmpDebugUtil.Log("C# : View removal passed to Android's consent lib");
         }
 
         #region private methods
