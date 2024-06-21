@@ -99,8 +99,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
-            pmId: gdprPmId,
-            tab: PRIVACY_MANAGER_TAB.DEFAULT
+            pmId: gdprPmId
         );
     }
 
@@ -108,8 +107,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.CCPA,
-            pmId: ccpaPmId,
-            tab: PRIVACY_MANAGER_TAB.DEFAULT
+            pmId: ccpaPmId
         );
     }
 
@@ -117,8 +115,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     {
         CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.USNAT,
-            pmId: usnatPmId,
-            tab: PRIVACY_MANAGER_TAB.DEFAULT
+            pmId: usnatPmId
         );
     }
 

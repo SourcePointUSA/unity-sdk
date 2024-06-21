@@ -19,7 +19,7 @@ namespace ConsentManagementProviderLib
             bool? transitionCCPAAuth = null,
             bool? supportLegacyUSPString = null);
         void LoadMessage(string authId = null);
-        void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab);
+        void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab = PRIVACY_MANAGER_TAB.DEFAULT);
         void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate);
         void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate);
         SpConsents GetSpConsents();
