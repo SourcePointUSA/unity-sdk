@@ -18,17 +18,12 @@ namespace ConsentManagementProviderLib.Android
 
         public ConsentWrapperAndroid()
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                activity = AndroidJavaConstruct.GetActivity();
-                CmpDebugUtil.Log("Activity is OK");
-                spClient = new SpClientProxy();
-                CmpDebugUtil.Log("spClient is OK");
-                this.constructor = new AndroidJavaConstruct();
-                CmpDebugUtil.Log("AndroidJavaConstruct obj is OK");
-            }
-#endif
+            activity = AndroidJavaConstruct.GetActivity();
+            CmpDebugUtil.Log("Activity is OK");
+            spClient = new SpClientProxy();
+            CmpDebugUtil.Log("spClient is OK");
+            this.constructor = new AndroidJavaConstruct();
+            CmpDebugUtil.Log("AndroidJavaConstruct obj is OK");
         }
 
         public void Initialize(
@@ -49,8 +44,6 @@ namespace ConsentManagementProviderLib.Android
             {
                 return;
             }
-            long messageTimeoutMilliSeconds = messageTimeoutInSeconds * 1000;
-#if UNITY_ANDROID
             try
             {
                 AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
@@ -75,7 +68,7 @@ namespace ConsentManagementProviderLib.Android
                 AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
                     propertyId: propertyId,
                     propertyName: propertyName,
-                    messageTimeout: messageTimeoutMilliSeconds,
+                    messageTimeout: messageTimeoutInSeconds * 1000,
                     language: msgLang,
                     campaignsEnvironment: campaignsEnvironment,
                     spCampaigns: campaigns);
@@ -87,12 +80,10 @@ namespace ConsentManagementProviderLib.Android
             {
                 CmpDebugUtil.LogError(e.Message);
             }
-#endif
         }
 
         public void LoadMessage(string authId = null)
         {
-#if UNITY_ANDROID
             if (Application.platform == RuntimePlatform.Android)
             {
                 try
@@ -111,26 +102,20 @@ namespace ConsentManagementProviderLib.Android
                     CmpDebugUtil.LogError(e.Message);
                 }
             }
-#endif
         }
 
         public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            try
             {
-                try
-                {
-                    AndroidJavaObject type = constructor.ConstructCampaignType(campaignType);
-                    AndroidJavaObject privacyManagerTab = constructor.ConstructPrivacyManagerTab(tab);
-                    RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
-                }
-                catch (Exception e)
-                {
-                    CmpDebugUtil.LogError(e.Message);
-                }
+                AndroidJavaObject type = constructor.ConstructCampaignType(campaignType);
+                AndroidJavaObject privacyManagerTab = constructor.ConstructPrivacyManagerTab(tab);
+                RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
             }
-#endif
+            catch (Exception e)
+            {
+                CmpDebugUtil.LogError(e.Message);
+            }
         }
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)

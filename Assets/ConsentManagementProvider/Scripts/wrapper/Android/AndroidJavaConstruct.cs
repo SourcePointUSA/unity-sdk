@@ -15,13 +15,8 @@ namespace ConsentManagementProviderLib.Android
 
         public AndroidJavaConstruct()
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                this.pluginFactoryClass = new AndroidJavaClass(androidPluginName);
-                CmpDebugUtil.Log("plugin class is OK");
-            }
-#endif
+            this.pluginFactoryClass = new AndroidJavaClass(androidPluginName);
+            CmpDebugUtil.Log("plugin class is OK");
         }
 
         internal static AndroidJavaObject GetActivity()
