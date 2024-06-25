@@ -3,13 +3,14 @@ using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib.Json
 {
-    internal static class JsonUnwrapperIOS
+    internal class JsonUnwrapperIOS
     {
         public static SpConsents UnwrapSpConsents(string json)
         {
             try
             {
                 SpConsentsWrapperIOS wrapped = JsonUnwrapperHelper.Deserialize<SpConsentsWrapperIOS>(json);
+                
                 if (wrapped == null)
                     throw new Newtonsoft.Json.JsonException("JSON deserialization returned null.");
 
@@ -21,11 +22,11 @@ namespace ConsentManagementProviderLib.Json
             }
             catch (Newtonsoft.Json.JsonException ex)
             {
-                throw new ApplicationException("Error deserializing JSON.", ex);
+                throw new Newtonsoft.Json.JsonException("Error deserializing JSON.", ex);
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred during JSON unwrapping.", ex);
+                throw new Exception("An error occurred during JSON unwrapping.", ex);
             }
         }
 
@@ -44,16 +45,15 @@ namespace ConsentManagementProviderLib.Json
         {
             GdprConsent unwrapped = JsonUnwrapperHelper.UnwrapBaseSpGdprConsent<SpGdprConsentWrapperIOS>(wrapped);
             unwrapped.applies = wrapped.applies;
+            
             if (wrapped.grants == null)
                 CmpDebugUtil.LogError("The grants dictionary is null.");
             else
                 JsonUnwrapperHelper.UnwrapGrantsGdpr(wrapped.grants, ref unwrapped, "vendorGrant");
 
             if (wrapped.consentStatus != null)
-            {
                 unwrapped.consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrapped.consentStatus);
-            }
-            
+
             if (wrapped.gcmStatus != null)
             {
                 unwrapped.googleConsentMode = new SPGCMData(
@@ -80,18 +80,18 @@ namespace ConsentManagementProviderLib.Json
 
         private static CcpaConsent UnwrapCcpaConsent(SpCcpaConsentWrapperIOS wrapped)
         {
-            ConsentStatus _consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrapped.consentStatus);
+            ConsentStatus consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrapped.consentStatus);
 
             return new CcpaConsent(uuid: wrapped.uuid,
                                     status: wrapped.status,
                                     uspstring: wrapped.uspstring,
                                     rejectedVendors: wrapped.rejectedVendors,
                                     rejectedCategories: wrapped.rejectedCategories,
-                                    childPmId: "",
+                                    childPmId: "", //TO-DO
                                     applies: wrapped.applies,
-                                    signedLspa: null,
+                                    signedLspa: null, //TO-DO
                                     webConsentPayload: wrapped.webConsentPayload,
-                                    consentStatus: _consentStatus);
+                                    consentStatus: consentStatus);
         }
 
         private static SpUsnatConsent UnwrapSpUsnatConsent(SpUsnatConsentWrapper wrappedUsnat)
@@ -107,24 +107,22 @@ namespace ConsentManagementProviderLib.Json
 
         private static UsnatConsent UnwrapUsnatConsent(UsnatConsentWrapper wrapped)
         {
-            ConsentStatus _consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrapped.consentStatus);
+            ConsentStatus consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrapped.consentStatus);
 
-            List<ConsentString> _consentStrings;
-            List<Consentable> _vendors, _categories;
             JsonUnwrapperHelper.UnwrapUsnatConsents(
                                         wrapped.consentStrings, 
                                         wrapped.vendors, 
                                         wrapped.categories, 
-                                        out _consentStrings, 
-                                        out _vendors, 
-                                        out _categories);
+                                        out List<ConsentString> consentStrings, 
+                                        out List<Consentable> vendors, 
+                                        out List<Consentable> categories);
 
             return new UsnatConsent(uuid: wrapped.uuid,
                                     applies: wrapped.applies,
-                                    consentStrings: _consentStrings,
-                                    vendors: _vendors,
-                                    categories: _categories,
-                                    consentStatus: _consentStatus);
+                                    consentStrings: consentStrings,
+                                    vendors: vendors,
+                                    categories: categories,
+                                    consentStatus: consentStatus);
         }
 
         public static GdprConsent UnwrapGdprConsent(string json)

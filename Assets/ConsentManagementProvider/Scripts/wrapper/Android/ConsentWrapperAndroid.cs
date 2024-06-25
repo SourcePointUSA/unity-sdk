@@ -22,7 +22,7 @@ namespace ConsentManagementProviderLib.Android
             CmpDebugUtil.Log("Activity is OK");
             spClient = new SpClientProxy();
             CmpDebugUtil.Log("spClient is OK");
-            this.constructor = new AndroidJavaConstruct();
+            constructor = new AndroidJavaConstruct();
             CmpDebugUtil.Log("AndroidJavaConstruct obj is OK");
         }
 
@@ -68,13 +68,13 @@ namespace ConsentManagementProviderLib.Android
                 AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
                     propertyId: propertyId,
                     propertyName: propertyName,
-                    messageTimeout: messageTimeoutInSeconds * 1000,
+                    messageTimeout: messageTimeoutInSeconds * 1000, // in milliseconds
                     language: msgLang,
                     campaignsEnvironment: campaignsEnvironment,
                     spCampaigns: campaigns);
                 consentLib = constructor.ConstructLib(spConfig: spConfig,
-                    activity: this.activity,
-                    spClient: this.spClient);
+                    activity: activity,
+                    spClient: spClient);
             }
             catch (Exception e)
             {
@@ -120,38 +120,30 @@ namespace ConsentManagementProviderLib.Android
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
-            this.customConsentClient = new CustomConsentClient(onSuccessDelegate);
+            customConsentClient = new CustomConsentClient(onSuccessDelegate);
             consentLib.Call("customConsentGDPR", vendors, categories, legIntCategories, customConsentClient);
         }
 
         public void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
-            this.customConsentClient = new CustomConsentClient(onSuccessDelegate);
+            customConsentClient = new CustomConsentClient(onSuccessDelegate);
             consentLib.Call("deleteCustomConsentTo", vendors, categories, legIntCategories, customConsentClient);
         }
 
         public SpConsents GetSpConsents()
         {
             if (spClient != null)
-            {
                 return spClient._spConsents;
-            }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public GdprConsent GetCustomConsent()
         {
-            if (this.customConsentClient != null)
-            {
+            if (customConsentClient != null)
                 return customConsentClient.customGdprConsent;
-            }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public void ClearAllData()

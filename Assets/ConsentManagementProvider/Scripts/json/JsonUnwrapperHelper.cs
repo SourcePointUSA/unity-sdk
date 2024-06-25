@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using NewtonsoftJson = Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Collections;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -12,9 +8,9 @@ namespace ConsentManagementProviderLib.Json
     {
         internal static T Deserialize<T>(string json)
         {
-            using StringReader stringReader = new StringReader(json);
-            using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
-            NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+            StringReader stringReader = new StringReader(json);
+            Newtonsoft.Json.JsonTextReader reader = new Newtonsoft.Json.JsonTextReader(stringReader);
+            Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
             return serializer.Deserialize<T>(reader);
         }
 
@@ -50,16 +46,18 @@ namespace ConsentManagementProviderLib.Json
                     foreach (var purposeGrant in purposeGrantsElement)
                         purposeGrants.Add(purposeGrant.Key, purposeGrant.Value.ToObject<bool>());
                 }
+                
                 unwrapped.grants[vendorGrantWrapper.Key] = new SpVendorGrant(isGranted, purposeGrants);
             }
         }
 
         internal static ConsentStatus UnwrapConsentStatus(ConsentStatusWrapper wrappedconsentStatus)
         {
-            GranularStatus _granularStatus = null;
+            GranularStatus granularStatus = null;
+            
             if (wrappedconsentStatus.granularStatus != null)
             {
-                _granularStatus = new GranularStatus(
+                granularStatus = new GranularStatus(
                     wrappedconsentStatus.granularStatus.vendorConsent,
                     wrappedconsentStatus.granularStatus.vendorLegInt,
                     wrappedconsentStatus.granularStatus.purposeConsent,
@@ -72,6 +70,7 @@ namespace ConsentManagementProviderLib.Json
                     wrappedconsentStatus.granularStatus.gpcStatus
                 );
             }
+            
             ConsentStatus consentStatus = new ConsentStatus{
                 rejectedAny = wrappedconsentStatus.rejectedAny,
                 rejectedLI = wrappedconsentStatus.rejectedLI,
@@ -81,45 +80,46 @@ namespace ConsentManagementProviderLib.Json
                 rejectedAll = wrappedconsentStatus.rejectedAll,
                 vendorListAdditions = wrappedconsentStatus.vendorListAdditions,
                 legalBasisChanges = wrappedconsentStatus.legalBasisChanges,
-                granularStatus = _granularStatus,
+                granularStatus = granularStatus,
                 hasConsentData = wrappedconsentStatus.hasConsentData,
                 rejectedVendors = wrappedconsentStatus.rejectedVendors,
                 rejectedCategories = wrappedconsentStatus.rejectedCategories
             };
+            
             return consentStatus;
         }
 
         internal static void UnwrapUsnatConsents(
-            List<ConsentStringWrapper> _consentStringsWrapped, 
-            List<ConsentableWrapper> _vendorsWrapped, 
-            List<ConsentableWrapper> _categoriesWrapped, 
-            out List<ConsentString> _consentStrings, 
-            out List<Consentable> _vendors, 
-            out List<Consentable> _categories)
+            List<ConsentStringWrapper> consentStringsWrapped, 
+            List<ConsentableWrapper> vendorsWrapped, 
+            List<ConsentableWrapper> categoriesWrapped, 
+            out List<ConsentString> consentStrings, 
+            out List<Consentable> vendors, 
+            out List<Consentable> categories)
         {
-            _consentStrings = UnwrapConsentStrings(_consentStringsWrapped);
-            _vendors = UnwrapConsentable(_vendorsWrapped);
-            _categories = UnwrapConsentable(_categoriesWrapped);
+            consentStrings = UnwrapConsentStrings(consentStringsWrapped);
+            vendors = UnwrapConsentable(vendorsWrapped);
+            categories = UnwrapConsentable(categoriesWrapped);
         }
 
-        internal static List<Consentable> UnwrapConsentable(List<ConsentableWrapper> _wrapped)
+        private static List<Consentable> UnwrapConsentable(List<ConsentableWrapper> wrapped)
         {
-            List<Consentable> _consentableList= new List<Consentable>();
-            foreach (ConsentableWrapper _consentable in _wrapped)
-            {
-                _consentableList.Add(new Consentable { id = _consentable.id, consented = _consentable.consented });
-            }
-            return _consentableList;
+            List<Consentable> consentableList = new List<Consentable>();
+            
+            foreach (ConsentableWrapper consentable in wrapped)
+                consentableList.Add(new Consentable { id = consentable.id, consented = consentable.consented });
+            
+            return consentableList;
         }
 
-        internal static List<ConsentString> UnwrapConsentStrings(List<ConsentStringWrapper> _consentStringsWrapped)
+        private static List<ConsentString> UnwrapConsentStrings(List<ConsentStringWrapper> consentStringsWrapped)
         {
-            List<ConsentString> _consentStrings = new List<ConsentString>();
-            foreach (ConsentStringWrapper _string in _consentStringsWrapped)
-            {
-                _consentStrings.Add(new ConsentString(_string.consentString, _string.sectionId, _string.sectionName));
-            }
-            return _consentStrings;
+            List<ConsentString> consentStrings = new List<ConsentString>();
+            
+            foreach (ConsentStringWrapper str in consentStringsWrapped)
+                consentStrings.Add(new ConsentString(str.consentString, str.sectionId, str.sectionName));
+            
+            return consentStrings;
         }
     }
 }
