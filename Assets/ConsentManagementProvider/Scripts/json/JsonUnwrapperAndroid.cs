@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using NewtonsoftJson = Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Linq;
+using System.Collections;
+
+namespace ConsentManagementProviderLib.Json
+{
+    internal class JsonUnwrapperAndroid
+    {
+        public static SpConsents UnwrapSpConsents(string json)
+        {
+            try
+            {
+                SpConsentsWrapperAndroid wrapped = JsonUnwrapperHelper.Deserialize<SpConsentsWrapperAndroid>(json);
+                if (wrapped == null)
+                    throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
+
+                SpGdprConsent unwrappedGdpr = CMP.Instance.UseGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
+                SpCcpaConsent unwrappedCcpa = CMP.Instance.UseCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
+                SpUsnatConsent unwrappedUsnat = CMP.Instance.UseUSNAT ? UnwrapSpUsnatConsent(wrapped.usnat) : null;
+
+                return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
+            }
+            catch (NewtonsoftJson.JsonException ex)
+            {
+                CmpDebugUtil.LogError(ex.Message);
+                throw new ApplicationException("Error deserializing JSON.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred during JSON unwrapping." + ex.Message, ex);
+            }
+        }
+
+        public static SpGdprConsent UnwrapSpGdprConsent(SpGdprConsentWrapperAndroid wrappedGdpr)
+        {
+            if (wrappedGdpr == null)
+            {
+                CmpDebugUtil.LogError("The GDPR consent wrapper cannot be null.");
+                return null;
+            }
+            
+            GdprConsent unwrapped = JsonUnwrapperHelper.UnwrapBaseSpGdprConsent<SpGdprConsentWrapperAndroid>(wrappedGdpr);
+            unwrapped.applies = wrappedGdpr.applies;
+            if (wrappedGdpr.grants == null)
+                CmpDebugUtil.LogError("The grants dictionary is null.");
+            else
+                JsonUnwrapperHelper.UnwrapGrantsGdpr(wrappedGdpr.grants, ref unwrapped, "granted");
+
+            if (wrappedGdpr.gcmStatus != null)
+            {
+                unwrapped.googleConsentMode = new SPGCMData(
+                    wrappedGdpr.gcmStatus.ad_storage,
+                    wrappedGdpr.gcmStatus.analytics_storage,
+                    wrappedGdpr.gcmStatus.ad_user_data,
+                    wrappedGdpr.gcmStatus.ad_personalization
+                );
+            }
+
+            return new SpGdprConsent(unwrapped);
+        }
+
+        private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapperAndroid wrappedCcpa)
+        {
+            if (wrappedCcpa == null)
+            {
+                CmpDebugUtil.LogError("The CCPA consent wrapper cannot be null.");
+                return null;
+            }
+            CcpaConsent unwrapped = new CcpaConsent(
+                uuid: wrappedCcpa.uuid,
+                status: wrappedCcpa.status,
+                uspstring: wrappedCcpa.uspstring,
+                rejectedVendors: wrappedCcpa.rejectedVendors,
+                rejectedCategories: wrappedCcpa.rejectedCategories,
+                childPmId: wrappedCcpa.childPmId,
+                applies: wrappedCcpa.applies,
+                signedLspa: wrappedCcpa.signedLspa,
+                webConsentPayload: wrappedCcpa.webConsentPayload,
+                consentStatus: null);
+
+            return new SpCcpaConsent(unwrapped);
+        }
+
+        private static SpUsnatConsent UnwrapSpUsnatConsent(SpUsnatConsentWrapperAndroid wrapped)
+        {
+            StatusesUsnat _statuses = new StatusesUsnat
+            {
+                hasConsentData = wrapped.statuses.hasConsentData,
+                rejectedAny = wrapped.statuses.rejectedAny,
+                consentedToAll = wrapped.statuses.consentedToAll,
+                consentedToAny = wrapped.statuses.consentedToAny,
+                sellStatus = wrapped.statuses.sellStatus,
+                shareStatus = wrapped.statuses.shareStatus,
+                sensitiveDataStatus = wrapped.statuses.sensitiveDataStatus,
+                gpcStatus = wrapped.statuses.gpcStatus
+            };
+            List<ConsentStringWrapper> _consentStringsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentStringWrapper>>(wrapped.consentStrings);
+            List<ConsentableWrapper> _vendorsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.vendors);
+            List<ConsentableWrapper> _categoriesWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.categories);
+
+            List<ConsentString> _consentStrings;
+            List<Consentable> _vendors, _categories;
+            JsonUnwrapperHelper.UnwrapUsnatConsents(
+                                        _consentStringsWrapped, 
+                                        _vendorsWrapped, 
+                                        _categoriesWrapped, 
+                                        out _consentStrings, 
+                                        out _vendors, 
+                                        out _categories);
+
+            return new SpUsnatConsent(new UsnatConsent(uuid: wrapped.uuid,
+                                    applies: wrapped.applies,
+                                    consentStrings: _consentStrings,
+                                    vendors: _vendors,
+                                    categories: _categories,
+                                    statuses: _statuses));
+        }
+
+        public static SpCustomConsentAndroid UnwrapSpCustomConsent(string spConsentsJson)
+        {
+            try
+            {
+                SpCustomConsentAndroid customConsent;
+
+                using (StringReader stringReader = new StringReader(spConsentsJson))
+                using (NewtonsoftJson.JsonTextReader jsonReader = new NewtonsoftJson.JsonTextReader(stringReader))
+                {
+                    NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+                    customConsent = serializer.Deserialize<SpCustomConsentAndroid>(jsonReader);
+
+                    if (customConsent == null)
+                    {
+                        throw new InvalidOperationException("Deserialized custom consent is null.");
+                    }
+                }
+
+                return customConsent;
+            }
+            catch (NewtonsoftJson.JsonException ex)
+            {
+                throw new ApplicationException("Error deserializing custom consent JSON.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred during custom consent JSON unwrapping.", ex);
+            }
+        }
+    }
+}

@@ -79,7 +79,7 @@ namespace ConsentManagementProviderLib.iOS
             SpConsents spConsents = null;
             try
             { 
-                spConsents = JsonUnwrapper.UnwrapSpConsents(message);
+                spConsents = JsonUnwrapperIOS.UnwrapSpConsents(message);
             }
             catch (Exception ex)
             {
@@ -144,7 +144,7 @@ namespace ConsentManagementProviderLib.iOS
             GdprConsent unwrapped = null;
             try
             {
-                unwrapped = JsonUnwrapper.UnwrapGdprConsent(jsonSPGDPRConsent);
+                unwrapped = JsonUnwrapperIOS.UnwrapGdprConsent(jsonSPGDPRConsent);
             }
             catch (Exception ex)
             {

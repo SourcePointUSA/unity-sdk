@@ -66,7 +66,7 @@ namespace ConsentManagementProviderLib.Android
             {
                 try
                 {
-                    SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                    SpConsents consents = JsonUnwrapperAndroid.UnwrapSpConsents(spConsents);
                     _spConsents = consents;
                     ConsentMessenger.Broadcast<IOnConsentReady>(consents);
                 }
@@ -90,7 +90,7 @@ namespace ConsentManagementProviderLib.Android
             {
                 try
                 {
-                    SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                    SpConsents consents = JsonUnwrapperAndroid.UnwrapSpConsents(spConsents);
                     _spConsents = consents;
                     ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
                 }
