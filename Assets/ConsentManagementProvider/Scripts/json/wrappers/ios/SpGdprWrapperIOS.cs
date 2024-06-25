@@ -1,8 +1,8 @@
 namespace ConsentManagementProviderLib.Json
 {
-    internal class SpGdprConsentWrapper
+    internal class SpGdprWrapperIOS
     {
         public bool applies;
-        public GdprConsentWrapper consents;
+        public SpGdprConsentWrapperIOS consents;
     }
 }
