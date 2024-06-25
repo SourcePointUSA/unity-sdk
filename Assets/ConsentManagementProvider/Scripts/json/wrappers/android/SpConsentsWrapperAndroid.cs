@@ -3,7 +3,7 @@
     internal class SpConsentsWrapperAndroid
     {
 #nullable enable
-        public CcpaConsentWrapper? ccpa;
+        public SpCcpaConsentWrapperAndroid? ccpa;
         public SpGdprConsentWrapperAndroid? gdpr;
         public SpUsnatConsentWrapperAndroid? usnat;
 #nullable disable

@@ -9,11 +9,6 @@ namespace ConsentManagementProviderLib.Json
         public Dictionary<string, object> TCData;
         public Dictionary<string, SpVendorGrantWrapper> grants;
         public List<string> acceptedCategories;
-        public bool applies;
         public string webConsentPayload;
-        public ConsentStatusWrapper consentStatus;
-#nullable enable
-        public GCMDataWrapper? gcmStatus;
-#nullable disable
     }
 }

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib.Json
 {
-    internal class SpGdprConsentWrapperAndroid
+    internal class SpGdprConsentWrapperAndroid: GdprConsentWrapper
     {
-        public string uuid;
-        public string euconsent;
-        public Dictionary<string, object> tcData;
-        public Dictionary<string, Dictionary<string, object>> grants;
+        [JsonProperty("apply")]
+        public bool applies;
         [JsonProperty("googleConsentMode")]
         public GCMDataWrapper gcmStatus;
     }
