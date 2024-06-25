@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using NewtonsoftJson = Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Collections;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -16,7 +11,7 @@ namespace ConsentManagementProviderLib.Json
             {
                 SpConsentsWrapperIOS wrapped = JsonUnwrapperHelper.Deserialize<SpConsentsWrapperIOS>(json);
                 if (wrapped == null)
-                    throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
+                    throw new Newtonsoft.Json.JsonException("JSON deserialization returned null.");
 
                 SpGdprConsent unwrappedGdpr = CMP.Instance.UseGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
                 SpCcpaConsent unwrappedCcpa = CMP.Instance.UseCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
@@ -24,7 +19,7 @@ namespace ConsentManagementProviderLib.Json
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
-            catch (NewtonsoftJson.JsonException ex)
+            catch (Newtonsoft.Json.JsonException ex)
             {
                 throw new ApplicationException("Error deserializing JSON.", ex);
             }

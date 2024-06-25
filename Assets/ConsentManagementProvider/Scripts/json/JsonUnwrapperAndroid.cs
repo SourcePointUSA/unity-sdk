@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NewtonsoftJson = Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Collections;
 
 namespace ConsentManagementProviderLib.Json
 {
@@ -16,7 +12,7 @@ namespace ConsentManagementProviderLib.Json
             {
                 SpConsentsWrapperAndroid wrapped = JsonUnwrapperHelper.Deserialize<SpConsentsWrapperAndroid>(json);
                 if (wrapped == null)
-                    throw new NewtonsoftJson.JsonException("JSON deserialization returned null.");
+                    throw new Newtonsoft.Json.JsonException("JSON deserialization returned null.");
 
                 SpGdprConsent unwrappedGdpr = CMP.Instance.UseGDPR ? UnwrapSpGdprConsent(wrapped.gdpr) : null;
                 SpCcpaConsent unwrappedCcpa = CMP.Instance.UseCCPA ? UnwrapSpCcpaConsent(wrapped.ccpa) : null;
@@ -24,7 +20,7 @@ namespace ConsentManagementProviderLib.Json
 
                 return new SpConsents(unwrappedGdpr, unwrappedCcpa, unwrappedUsnat);
             }
-            catch (NewtonsoftJson.JsonException ex)
+            catch (Newtonsoft.Json.JsonException ex)
             {
                 CmpDebugUtil.LogError(ex.Message);
                 throw new ApplicationException("Error deserializing JSON.", ex);
@@ -98,9 +94,9 @@ namespace ConsentManagementProviderLib.Json
                 sensitiveDataStatus = wrapped.statuses.sensitiveDataStatus,
                 gpcStatus = wrapped.statuses.gpcStatus
             };
-            List<ConsentStringWrapper> _consentStringsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentStringWrapper>>(wrapped.consentStrings);
-            List<ConsentableWrapper> _vendorsWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.vendors);
-            List<ConsentableWrapper> _categoriesWrapped = NewtonsoftJson.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.categories);
+            List<ConsentStringWrapper> _consentStringsWrapped = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ConsentStringWrapper>>(wrapped.consentStrings);
+            List<ConsentableWrapper> _vendorsWrapped = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.vendors);
+            List<ConsentableWrapper> _categoriesWrapped = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ConsentableWrapper>>(wrapped.categories);
 
             List<ConsentString> _consentStrings;
             List<Consentable> _vendors, _categories;
@@ -127,9 +123,9 @@ namespace ConsentManagementProviderLib.Json
                 SpCustomConsentAndroid customConsent;
 
                 using (StringReader stringReader = new StringReader(spConsentsJson))
-                using (NewtonsoftJson.JsonTextReader jsonReader = new NewtonsoftJson.JsonTextReader(stringReader))
+                using (Newtonsoft.Json.JsonTextReader jsonReader = new Newtonsoft.Json.JsonTextReader(stringReader))
                 {
-                    NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+                    Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
                     customConsent = serializer.Deserialize<SpCustomConsentAndroid>(jsonReader);
 
                     if (customConsent == null)
@@ -140,7 +136,7 @@ namespace ConsentManagementProviderLib.Json
 
                 return customConsent;
             }
-            catch (NewtonsoftJson.JsonException ex)
+            catch (Newtonsoft.Json.JsonException ex)
             {
                 throw new ApplicationException("Error deserializing custom consent JSON.", ex);
             }
