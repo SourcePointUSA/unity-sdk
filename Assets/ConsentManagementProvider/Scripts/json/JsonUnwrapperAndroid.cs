@@ -28,7 +28,7 @@ namespace ConsentManagementProviderLib.Json
             }
             catch (Exception ex)
             {
-                throw new Newtonsoft.Json.JsonException("An error occurred during JSON unwrapping." + ex.Message, ex);
+                throw new Exception("An error occurred during JSON unwrapping." + ex.Message, ex);
             }
         }
 
@@ -142,7 +142,7 @@ namespace ConsentManagementProviderLib.Json
             }
             catch (Exception ex)
             {
-                throw new Newtonsoft.Json.JsonException("An error occurred during custom consent JSON unwrapping.", ex);
+                throw new Exception("An error occurred during custom consent JSON unwrapping.", ex);
             }
         }
     }
