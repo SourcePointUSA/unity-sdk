@@ -41,10 +41,7 @@ namespace ConsentManagementProviderLib
             int accountId,
             int propertyId,
             string propertyName,
-            MESSAGE_LANGUAGE language,  
-            string gdprPmId, 
-            string ccpaPmId,
-            string usnatPmId,
+            MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns, 
             CAMPAIGN_ENV campaignsEnvironment,
             long messageTimeoutInSeconds = 3,
@@ -68,9 +65,6 @@ namespace ConsentManagementProviderLib
             }
 
             propertyName = propertyName.Trim();
-            gdprPmId = gdprPmId.Trim();
-            ccpaPmId = ccpaPmId.Trim();
-            usnatPmId = usnatPmId.Trim();
 
             CreateBroadcastExecutorGameObject();
 
@@ -78,10 +72,7 @@ namespace ConsentManagementProviderLib
                 accountId: accountId, 
                 propertyId: propertyId, 
                 propertyName: propertyName, 
-                language: language, 
-                gdprPmId: gdprPmId, 
-                ccpaPmId: ccpaPmId,
-                usnatPmId: usnatPmId,
+                language: language,
                 spCampaigns: spCampaigns,
                 campaignsEnvironment: campaignsEnvironment,
                 messageTimeoutInSeconds: messageTimeoutInSeconds,
