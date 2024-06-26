@@ -5,6 +5,8 @@ namespace ConsentManagementProviderLib.Json
 {
     internal class SpGdprConsentWrapperAndroid
     {
+        [JsonProperty("apply")]
+        public bool applies;
         public string uuid;
         public string euconsent;
         public Dictionary<string, object> tcData;
