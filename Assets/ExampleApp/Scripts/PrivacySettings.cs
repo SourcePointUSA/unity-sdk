@@ -60,7 +60,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         campaignTypes.Add(CAMPAIGN_TYPE.CCPA);
 
         List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-        SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
+        SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams, transitionCCPAAuth: false, supportLegacyUSPString: false);
         spCampaigns.Add(usnat);
         campaignTypes.Add(CAMPAIGN_TYPE.USNAT);
 
@@ -72,13 +72,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
                                          // it's unlikely you voluntarily use them in property name, but if you do
                                          // please note that we Trim them down in the call tree.
             language: language,
-            gdprPmId: gdprPmId,
-            ccpaPmId: ccpaPmId,
-            usnatPmId: usnatPmId,
             campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
-            messageTimeoutInSeconds: 30,
-            transitionCCPAAuth: false,
-            supportLegacyUSPString: false
+            messageTimeoutInSeconds: 30
         );
     }
 
