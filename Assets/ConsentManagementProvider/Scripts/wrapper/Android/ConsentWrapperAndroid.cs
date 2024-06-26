@@ -33,9 +33,7 @@ namespace ConsentManagementProviderLib.Android
             MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns, 
             CAMPAIGN_ENV campaignsEnvironment, 
-            long messageTimeoutInSeconds = 3, 
-            bool? transitionCCPAAuth = null, 
-            bool? supportLegacyUSPString = null)
+            long messageTimeoutInSeconds = 3)
         {
             if (!ValidateSpCampaigns(ref spCampaigns))
             {
@@ -56,8 +54,8 @@ namespace ConsentManagementProviderLib.Android
                     }
                     AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
                     AndroidJavaObject campaign;
-                    if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (transitionCCPAAuth.HasValue || supportLegacyUSPString.HasValue))
-                        campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, transitionCCPAAuth, supportLegacyUSPString);
+                    if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (sp.TransitionCCPAAuth || sp.SupportLegacyUSPString))
+                        campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, sp.TransitionCCPAAuth, sp.SupportLegacyUSPString);
                     else
                         campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
                     campaigns[spCampaigns.IndexOf(sp)] = campaign;

@@ -44,9 +44,7 @@ namespace ConsentManagementProviderLib
             MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns, 
             CAMPAIGN_ENV campaignsEnvironment,
-            long messageTimeoutInSeconds = 3,
-            bool? transitionCCPAAuth = null,
-            bool? supportLegacyUSPString = null)
+            long messageTimeoutInSeconds = 3)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
@@ -75,9 +73,7 @@ namespace ConsentManagementProviderLib
                 language: language,
                 spCampaigns: spCampaigns,
                 campaignsEnvironment: campaignsEnvironment,
-                messageTimeoutInSeconds: messageTimeoutInSeconds,
-                transitionCCPAAuth: transitionCCPAAuth,
-                supportLegacyUSPString: supportLegacyUSPString);
+                messageTimeoutInSeconds: messageTimeoutInSeconds);
         }
         
         public void LoadMessage(string authId = null) => ConcreteInstance.LoadMessage(authId: authId);
