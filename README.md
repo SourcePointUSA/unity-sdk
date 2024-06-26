@@ -1,13 +1,13 @@
 # Unity-SDK
 
-In Unity SDK version 2.3.3, the native Android SDK dependency was updated to version 7.8.3, so CMP SDK is now supported on Unity version 2022.3.0 and higher. This was done due to Java version upgrade as well as Gradle upgrade to version 7.5 in native Android SDK 7.8.2 which is a dependency of Unity SDK. However, we are able to build with Gradle v7.2 which is built-in in Unity 2022.3
-Please also note that in order to build a project:
-* You need to use a custom template for Gradle, please refer to "Plugins\Android\mainTemplate.gradle", lines 41-43.
-
 Sourcepoint's plug and play Unity SDK can be integrated with both Android and iOS.
 
 > **Note**: The Unity SDK can not be demoed using Unity's Editor since it embeds native SDKs and those only work in their respective platforms.
 > <br><br>Additionally, this SDK utilizes [ExternalDependencyManager by Google](https://github.com/googlesamples/unity-jar-resolver) in order to fetch native SDKs and their dependencies. Ensure all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` are resolved before building your application.
+
+In Unity SDK version 2.3.3, the native Android SDK dependency was updated to version 7.8.3, so CMP SDK is now supported on Unity version 2022.3.0 and higher. This was done due to Java version upgrade as well as Gradle upgrade to version 7.5 in native Android SDK 7.8.2 which is a dependency of Unity SDK. However, we are able to build with Gradle v7.2 which is built-in in Unity 2022.3
+Please also note that in order to build a project:
+* You need to use a custom template for Gradle, please refer to "Plugins\Android\mainTemplate.gradle", lines 41-43.
 
 ---
 

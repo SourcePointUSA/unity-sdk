@@ -16,7 +16,7 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'com.sourcepoint.cmplibrary:cmplibrary:7.8.3' // Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml:42
+    implementation 'com.sourcepoint.cmplibrary:cmplibrary:7.8.4' // Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml:42
 // Android Resolver Dependencies End
 **DEPS**}
 
