@@ -114,6 +114,7 @@ namespace ConsentManagementProviderLib.Json
 
             GdprConsent unwrapped = new GdprConsent
             {
+                applies = wrappedGdpr.applies,
                 uuid = wrappedGdpr.uuid,
                 euconsent = wrappedGdpr.euconsent,
                 TCData = wrappedGdpr.tcData,

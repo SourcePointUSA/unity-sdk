@@ -1,3 +1,7 @@
+# 2.3.4
+* Unity SDK brought up to v7.8.4 of Native Android SDK [#62](https://github.com/SourcePointUSA/unity-sdk/pull/62) which fixes the following:
+* [DIA-4112](https://sourcepoint.atlassian.net/browse/DIA-4112) Fixed: Links to vendors' privacy policy pages now working on Android devices
+
 # 2.3.3
 * Unity SDK brought up to v7.8.3 of Native Android SDK [#58](https://github.com/SourcePointUSA/unity-sdk/pull/58) which fixes the following:
 * [DIA-4087](https://sourcepoint.atlassian.net/browse/DIA-4087) Fixed: Empty consent when GDPR/CCPA applies is false
