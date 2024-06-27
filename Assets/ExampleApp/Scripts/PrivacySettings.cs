@@ -116,7 +116,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     private void SuccessDelegate(GdprConsent customConsent)
     {
-        Debug.Log($"I am your success callback!"); // TODO print customConsent
+        Debug.Log($"I am your success callback!");
+        CmpDebugUtil.Log(customConsent.ToFullString());
         storedConsentString = customConsent.euconsent;
         UpdateUI();
     }

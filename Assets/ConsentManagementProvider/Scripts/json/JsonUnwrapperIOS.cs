@@ -30,6 +30,13 @@ namespace ConsentManagementProviderLib.Json
             }
         }
 
+        public static GdprConsent UnwrapGdprConsent(string json)
+        {
+            SpGdprConsentWrapperIOS wrapped = JsonUnwrapperHelper.Deserialize<SpGdprConsentWrapperIOS>(json); 
+            GdprConsent unwrapped = UnwrapGdprConsent(wrapped);
+            return unwrapped;
+        }
+
         private static SpGdprConsent UnwrapSpGdprConsent(SpGdprWrapperIOS wrappedGdpr)
         {
             if (wrappedGdpr == null)
@@ -123,13 +130,6 @@ namespace ConsentManagementProviderLib.Json
                                     vendors: vendors,
                                     categories: categories,
                                     consentStatus: consentStatus);
-        }
-
-        public static GdprConsent UnwrapGdprConsent(string json)
-        {
-            SpGdprConsentWrapperIOS wrapped = JsonUnwrapperHelper.Deserialize<SpGdprConsentWrapperIOS>(json); 
-            GdprConsent unwrapped = UnwrapGdprConsent(wrapped);
-            return unwrapped;
         }
     }
 }

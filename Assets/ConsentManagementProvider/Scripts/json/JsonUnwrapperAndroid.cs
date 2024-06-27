@@ -64,6 +64,34 @@ namespace ConsentManagementProviderLib.Json
             return new SpGdprConsent(unwrapped);
         }
 
+        public static SpCustomConsentAndroid UnwrapSpCustomConsent(string spConsentsJson)
+        {
+            try
+            {
+                SpCustomConsentAndroid customConsent;
+
+                using (StringReader stringReader = new StringReader(spConsentsJson))
+                using (Newtonsoft.Json.JsonTextReader jsonReader = new Newtonsoft.Json.JsonTextReader(stringReader))
+                {
+                    Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                    customConsent = serializer.Deserialize<SpCustomConsentAndroid>(jsonReader);
+
+                    if (customConsent == null)
+                        throw new InvalidOperationException("Deserialized custom consent is null.");
+                }
+
+                return customConsent;
+            }
+            catch (Newtonsoft.Json.JsonException ex)
+            {
+                throw new Newtonsoft.Json.JsonException("Error deserializing custom consent JSON.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred during custom consent JSON unwrapping.", ex);
+            }
+        }
+
         private static SpCcpaConsent UnwrapSpCcpaConsent(SpCcpaConsentWrapperAndroid wrappedCcpa)
         {
             if (wrappedCcpa == null)
@@ -123,34 +151,6 @@ namespace ConsentManagementProviderLib.Json
                                     vendors: vendors,
                                     categories: categories,
                                     statuses: statuses));
-        }
-
-        public static SpCustomConsentAndroid UnwrapSpCustomConsent(string spConsentsJson)
-        {
-            try
-            {
-                SpCustomConsentAndroid customConsent;
-
-                using (StringReader stringReader = new StringReader(spConsentsJson))
-                using (Newtonsoft.Json.JsonTextReader jsonReader = new Newtonsoft.Json.JsonTextReader(stringReader))
-                {
-                    Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
-                    customConsent = serializer.Deserialize<SpCustomConsentAndroid>(jsonReader);
-
-                    if (customConsent == null)
-                        throw new InvalidOperationException("Deserialized custom consent is null.");
-                }
-
-                return customConsent;
-            }
-            catch (Newtonsoft.Json.JsonException ex)
-            {
-                throw new Newtonsoft.Json.JsonException("Error deserializing custom consent JSON.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred during custom consent JSON unwrapping.", ex);
-            }
         }
     }
 }

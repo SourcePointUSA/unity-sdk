@@ -58,12 +58,6 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        private static void CreateHelperIOSListener()
-        {
-            IOSListenerGO = new GameObject();
-            iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
-        }
-
         public void Initialize(
             int accountId, 
             int propertyId, 
@@ -212,6 +206,12 @@ namespace ConsentManagementProviderLib.iOS
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _loadUSNATPrivacyManager();
 #endif
+        }
+
+        private static void CreateHelperIOSListener()
+        {
+            IOSListenerGO = new GameObject();
+            iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
     }
 }
