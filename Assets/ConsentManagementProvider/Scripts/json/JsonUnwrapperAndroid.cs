@@ -48,6 +48,9 @@ namespace ConsentManagementProviderLib.Json
             else
                 JsonUnwrapperHelper.UnwrapGrantsGdpr(wrappedGdpr.grants, ref unwrapped, "granted");
 
+            if (wrappedGdpr.consentStatus != null)
+                unwrapped.consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrappedGdpr.consentStatus);
+
             if (wrappedGdpr.gcmStatus != null)
             {
                 unwrapped.googleConsentMode = new SPGCMData(
@@ -68,7 +71,11 @@ namespace ConsentManagementProviderLib.Json
                 CmpDebugUtil.LogError("The CCPA consent wrapper cannot be null.");
                 return null;
             }
-            
+
+            ConsentStatus consentStatus = null;
+            if (wrappedCcpa.consentStatus != null)
+                consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrappedCcpa.consentStatus);
+
             CcpaConsent unwrapped = new CcpaConsent(
                 uuid: wrappedCcpa.uuid,
                 status: wrappedCcpa.status,
@@ -79,7 +86,7 @@ namespace ConsentManagementProviderLib.Json
                 applies: wrappedCcpa.applies,
                 signedLspa: wrappedCcpa.signedLspa,
                 webConsentPayload: wrappedCcpa.webConsentPayload,
-                consentStatus: null); //TO-DO
+                consentStatus: consentStatus);
 
             return new SpCcpaConsent(unwrapped);
         }

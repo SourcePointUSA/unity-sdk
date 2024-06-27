@@ -10,5 +10,6 @@ namespace ConsentManagementProviderLib.Json
         public Dictionary<string, SpVendorGrantWrapper> grants;
         public List<string> acceptedCategories;
         public string webConsentPayload;
+        public ConsentStatusWrapper consentStatus;
     }
 }

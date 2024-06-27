@@ -87,14 +87,14 @@ namespace ConsentManagementProviderLib.Json
                                     uspstring: wrapped.uspstring,
                                     rejectedVendors: wrapped.rejectedVendors,
                                     rejectedCategories: wrapped.rejectedCategories,
-                                    childPmId: "", //TO-DO
+                                    childPmId: wrapped.childPmId,
                                     applies: wrapped.applies,
-                                    signedLspa: null, //TO-DO
+                                    signedLspa: wrapped.signedLspa,
                                     webConsentPayload: wrapped.webConsentPayload,
                                     consentStatus: consentStatus);
         }
 
-        private static SpUsnatConsent UnwrapSpUsnatConsent(SpUsnatConsentWrapper wrappedUsnat)
+        private static SpUsnatConsent UnwrapSpUsnatConsent(SpUsnatWrapperIOS wrappedUsnat)
         {
             if (wrappedUsnat == null)
             {
@@ -105,7 +105,7 @@ namespace ConsentManagementProviderLib.Json
             return new SpUsnatConsent(consent);
         }
 
-        private static UsnatConsent UnwrapUsnatConsent(UsnatConsentWrapper wrapped)
+        private static UsnatConsent UnwrapUsnatConsent(SpUsnatConsentWrapperIOS wrapped)
         {
             ConsentStatus consentStatus = JsonUnwrapperHelper.UnwrapConsentStatus(wrapped.consentStatus);
 

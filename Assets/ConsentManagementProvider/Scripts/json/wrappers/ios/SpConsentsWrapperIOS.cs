@@ -4,6 +4,6 @@ namespace ConsentManagementProviderLib.Json
     {
         public SpGdprWrapperIOS gdpr;
         public SpCcpaWrapperIOS ccpa;
-        public SpUsnatConsentWrapper usnat;
+        public SpUsnatWrapperIOS usnat;
     }
 }
