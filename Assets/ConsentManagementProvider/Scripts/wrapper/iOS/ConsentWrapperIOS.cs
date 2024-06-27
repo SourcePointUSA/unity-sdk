@@ -65,7 +65,7 @@ namespace ConsentManagementProviderLib.iOS
             MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns,
             CAMPAIGN_ENV campaignsEnvironment, 
-            long messageTimeoutInSeconds = 3)
+            long messageTimeoutInSeconds = 3) //TO-DO add transitionCCPAAuth, supportLegacyUSPString
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();

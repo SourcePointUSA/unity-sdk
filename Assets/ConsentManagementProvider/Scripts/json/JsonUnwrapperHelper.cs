@@ -21,7 +21,7 @@ namespace ConsentManagementProviderLib.Json
                 uuid = wrapped.uuid,
                 webConsentPayload = wrapped.webConsentPayload,
                 euconsent = wrapped.euconsent,
-                TCData = wrapped.TCData,
+                TCData = wrapped.tcData,
                 grants = new Dictionary<string, SpVendorGrant>()
             };
             return unwrapped;

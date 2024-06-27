@@ -29,7 +29,7 @@ namespace ConsentManagementProviderLib
                     concreteInstance = Application.platform switch
                     {
                         RuntimePlatform.Android => new ConsentWrapperAndroid(),
-                        RuntimePlatform.IPhonePlayer => new ConsentWrapperAndroid(),
+                        RuntimePlatform.IPhonePlayer => new ConsentWrapperIOS(),
                         _ => new ConsentWrapperUnityEditor(),
                     };
                 return concreteInstance;

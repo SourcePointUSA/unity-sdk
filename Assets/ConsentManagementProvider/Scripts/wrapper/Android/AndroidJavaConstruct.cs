@@ -56,12 +56,12 @@ namespace ConsentManagementProviderLib.Android
         {
             AndroidJavaObject[] configOptions = new AndroidJavaObject[2];
             AndroidJavaClass enumConfigOption = new AndroidJavaClass("com.sourcepoint.cmplibrary.creation.ConfigOption");
-            if (transitionCCPAAuth==true)
+            if (transitionCCPAAuth)
             {
                 AndroidJavaObject option = enumConfigOption.GetStatic<AndroidJavaObject>(CONFIG_OPTION_FULL_KEY.TRANSITION_CCPA_AUTH);
                 configOptions.Append(option);
             }
-            if (supportLegacyUSPString==true)
+            if (supportLegacyUSPString)
             {
                 AndroidJavaObject option = enumConfigOption.GetStatic<AndroidJavaObject>(CONFIG_OPTION_FULL_KEY.SUPPORT_LEGACY_USPSTRING);
                 configOptions.Append(option);

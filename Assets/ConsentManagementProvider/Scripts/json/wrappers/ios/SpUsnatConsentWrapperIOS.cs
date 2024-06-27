@@ -6,7 +6,7 @@ namespace ConsentManagementProviderLib.Json
 {
     internal class SpUsnatConsentWrapperIOS: UsnatConsentWrapper
     {
-		public ConsentStatusWrapper consentStatus;
+        public ConsentStatusWrapper consentStatus;
         public List<ConsentStringWrapper> consentStrings;
         public UserConsentsWrapper userConsents;
 
