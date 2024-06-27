@@ -26,13 +26,12 @@ namespace ConsentManagementProviderLib
             get
             {
                 if (concreteInstance == null)
-#if UNITY_ANDROID
-                    concreteInstance = new ConsentWrapperAndroid();
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-                    concreteInstance = new ConsentWrapperIOS();
-#else
-                    concreteInstance = new ConsentWrapperUnityEditor();
-#endif
+                    concreteInstance = Application.platform switch
+                    {
+                        RuntimePlatform.Android => new ConsentWrapperAndroid(),
+                        RuntimePlatform.IPhonePlayer => new ConsentWrapperAndroid(),
+                        _ => new ConsentWrapperUnityEditor(),
+                    };
                 return concreteInstance;
             }
         }

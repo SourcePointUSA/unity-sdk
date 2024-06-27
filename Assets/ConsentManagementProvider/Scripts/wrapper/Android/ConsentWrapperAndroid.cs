@@ -79,23 +79,20 @@ namespace ConsentManagementProviderLib.Android
 
         public void LoadMessage(string authId = null)
         {
-            if (Application.platform == RuntimePlatform.Android)
+            try
             {
-                try
+                if (string.IsNullOrEmpty(authId))
                 {
-                    if (string.IsNullOrEmpty(authId))
-                    {
-                        RunOnUiThread(delegate { InvokeLoadMessage(); });
-                    }
-                    else
-                    {
-                        RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authId); });
-                    }
+                    RunOnUiThread(delegate { InvokeLoadMessage(); });
                 }
-                catch (Exception e)
+                else
                 {
-                    CmpDebugUtil.LogError(e.Message);
+                    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authId); });
                 }
+            }
+            catch (Exception e)
+            {
+                CmpDebugUtil.LogError(e.Message);
             }
         }
 
