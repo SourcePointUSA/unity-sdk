@@ -13,7 +13,7 @@ public class PrivacyManagerButtonCaller : MonoBehaviour
 
     public void OnPrivacyManagerButtonClick()
     {
-        CMP.LoadPrivacyManager(campaignType: this.campaignType,
+        CMP.Instance.LoadPrivacyManager(campaignType: this.campaignType,
                                pmId: this.pmId,
                                tab: this.privacyManagerTab);
     }

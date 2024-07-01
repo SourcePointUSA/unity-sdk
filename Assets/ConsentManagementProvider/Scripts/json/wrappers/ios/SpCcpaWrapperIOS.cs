@@ -1,8 +1,8 @@
 namespace ConsentManagementProviderLib.Json
 {
-    internal class SpUsnatConsentWrapper
+    internal class SpCcpaWrapperIOS
     {
         public bool applies;
-        public UsnatConsentWrapper consents;
+        public SpCcpaConsentWrapperIOS consents;
     }
 }

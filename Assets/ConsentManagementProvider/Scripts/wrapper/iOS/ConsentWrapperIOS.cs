@@ -7,23 +7,8 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.iOS
 {
-    internal class ConsentWrapperIOS 
+    internal class ConsentWrapperIOS: ISpSdk
     {
-        private static ConsentWrapperIOS instance;
-        public static ConsentWrapperIOS Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new ConsentWrapperIOS();
-                return instance;
-            }
-            private set
-            {
-                instance = value;
-            }
-        }
-
         private static GameObject IOSListenerGO;
         private static CMPiOSListenerHelper iOSListener;
 
@@ -36,17 +21,17 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _setTransitionCCPAAuth(bool value);
         [DllImport("__Internal")]
         private static extern void _setSupportLegacyUSPString(bool value);
-        [DllImport("__Internal")]
-        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, MESSAGE_LANGUAGE language, string gdprPmId, string ccpaPmId, string usnatPmId);
+        [DllImport("__Internal")] //TO-DO: add messageTimeoutInSeconds to call, remove pmId
+        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, int language, string gdprPmId, string ccpaPmId, string usnatPmId);
         [DllImport("__Internal")]
         private static extern void _loadMessage();
         [DllImport("__Internal")]
         private static extern void _loadMessageWithAuthId(string authId);
-        [DllImport("__Internal")]
+        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
         private static extern void _loadGDPRPrivacyManager();
-        [DllImport("__Internal")]
+        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
         private static extern void _loadCCPAPrivacyManager();
-        [DllImport("__Internal")]
+        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
         private static extern void _loadUSNATPrivacyManager();
         [DllImport("__Internal")]
         private static extern void _cleanConsent();
@@ -73,28 +58,14 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        private static void CreateHelperIOSListener()
-        {
-            IOSListenerGO = new GameObject();
-            iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
-        }
-
-        public void InitializeLib(
+        public void Initialize(
             int accountId, 
             int propertyId, 
             string propertyName, 
-            bool gdpr,
-            bool ccpa,
-            bool usnat,
-            MESSAGE_LANGUAGE language, 
-            string gdprPmId, 
-            string ccpaPmId,
-            string usnatPmId,
+            MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns,
             CAMPAIGN_ENV campaignsEnvironment, 
-            long messageTimeoutInSeconds = 3,
-            bool? transitionCCPAAuth = null,
-            bool? supportLegacyUSPString = null)
+            long messageTimeoutInSeconds = 3) //TO-DO add transitionCCPAAuth, supportLegacyUSPString
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();
@@ -118,10 +89,10 @@ namespace ConsentManagementProviderLib.iOS
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
             }
             if(transitionCCPAAuth != null)
-                _setTransitionCCPAAuth((bool)transitionCCPAAuth);
+                _setTransitionCCPAAuth((bool)transitionCCPAAuth); //TO-DO add usnat check
             if(supportLegacyUSPString != null)
                 _setSupportLegacyUSPString((bool)supportLegacyUSPString);
-            _configLib(accountId, propertyId, propertyName, gdpr, ccpa, usnat, language, gdprPmId, ccpaPmId, usnatPmId);
+            _configLib(accountId, propertyId, propertyName, CMP.useGDPR, CMP.useCCPA, CMP.useUSNAT, (int)language, gdprPmId, ccpaPmId, usnatPmId); //TO-DO: add messageTimeoutInSeconds to call, remove pmId
 #endif
         }
 
@@ -141,25 +112,14 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        public void LoadGDPRPrivacyManager()
+        public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadGDPRPrivacyManager();
-#endif
-        }
-
-        public void LoadCCPAPrivacyManager()
-        {
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadCCPAPrivacyManager();
-#endif
-        }
-
-        public void LoadUSNATPrivacyManager()
-        {
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadUSNATPrivacyManager();
-#endif
+            //TO-DO: add pmId, tab to call
+            switch (campaignType){
+                case CAMPAIGN_TYPE.GDPR: LoadGDPRPrivacyManager(); break;
+                case CAMPAIGN_TYPE.CCPA: LoadCCPAPrivacyManager(); break;
+                case CAMPAIGN_TYPE.USNAT: LoadUSNATPrivacyManager(); break;
+            }
         }
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
@@ -204,15 +164,9 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        public GdprConsent GetCustomGdprConsent()
-        {
-            return iOSListener.customGdprConsent;
-        }
+        public SpConsents GetSpConsents() => iOSListener._spConsents;
 
-        public SpConsents GetSpConsents()
-        {
-            return iOSListener._spConsents;
-        }
+        public GdprConsent GetCustomConsent() => iOSListener.customGdprConsent;
         
         public void ClearAllData()
         {
@@ -228,6 +182,36 @@ namespace ConsentManagementProviderLib.iOS
             _dispose();
             iOSListener.Dispose();
 #endif
+        }
+
+        public void LoadGDPRPrivacyManager()
+        {
+            //TO-DO: add pmId, tab to call
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _loadGDPRPrivacyManager();
+#endif
+        }
+
+        public void LoadCCPAPrivacyManager()
+        {
+            //TO-DO: add pmId, tab to call
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _loadCCPAPrivacyManager();
+#endif
+        }
+
+        public void LoadUSNATPrivacyManager()
+        {
+            //TO-DO: add pmId, tab to call
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _loadUSNATPrivacyManager();
+#endif
+        }
+
+        private static void CreateHelperIOSListener()
+        {
+            IOSListenerGO = new GameObject();
+            iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
     }
 }

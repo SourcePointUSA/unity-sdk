@@ -15,13 +15,8 @@ namespace ConsentManagementProviderLib.Android
 
         public AndroidJavaConstruct()
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                this.pluginFactoryClass = new AndroidJavaClass(androidPluginName);
-                CmpDebugUtil.Log("plugin class is OK");
-            }
-#endif
+            this.pluginFactoryClass = new AndroidJavaClass(androidPluginName);
+            CmpDebugUtil.Log("plugin class is OK");
         }
 
         internal static AndroidJavaObject GetActivity()
@@ -57,16 +52,16 @@ namespace ConsentManagementProviderLib.Android
             return campaign;
         }
 
-        internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, AndroidJavaObject targetingParams, CAMPAIGN_TYPE campaignTypeForLog, bool? transitionCCPAAuth = null, bool? supportLegacyUSPString = null)
+        internal AndroidJavaObject ConstructCampaign(AndroidJavaObject campaignType, AndroidJavaObject targetingParams, CAMPAIGN_TYPE campaignTypeForLog, bool transitionCCPAAuth = false, bool supportLegacyUSPString = false)
         {
             AndroidJavaObject[] configOptions = new AndroidJavaObject[2];
             AndroidJavaClass enumConfigOption = new AndroidJavaClass("com.sourcepoint.cmplibrary.creation.ConfigOption");
-            if (transitionCCPAAuth.HasValue && transitionCCPAAuth==true)
+            if (transitionCCPAAuth)
             {
                 AndroidJavaObject option = enumConfigOption.GetStatic<AndroidJavaObject>(CONFIG_OPTION_FULL_KEY.TRANSITION_CCPA_AUTH);
                 configOptions.Append(option);
             }
-            if (supportLegacyUSPString.HasValue && supportLegacyUSPString==true)
+            if (supportLegacyUSPString)
             {
                 AndroidJavaObject option = enumConfigOption.GetStatic<AndroidJavaObject>(CONFIG_OPTION_FULL_KEY.SUPPORT_LEGACY_USPSTRING);
                 configOptions.Append(option);
