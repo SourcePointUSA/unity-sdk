@@ -21,7 +21,7 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _setTransitionCCPAAuth(bool value);
         [DllImport("__Internal")]
         private static extern void _setSupportLegacyUSPString(bool value);
-        [DllImport("__Internal")] //TO-DO: add messageTimeoutInSeconds to call
+        [DllImport("__Internal")] //TO-DO: add messageTimeoutInSeconds to call, remove pmId
         private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, int language, string gdprPmId, string ccpaPmId, string usnatPmId);
         [DllImport("__Internal")]
         private static extern void _loadMessage();
@@ -58,25 +58,14 @@ namespace ConsentManagementProviderLib.iOS
 #endif
         }
 
-        private static void CreateHelperIOSListener()
-        {
-            IOSListenerGO = new GameObject();
-            iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
-        }
-
         public void Initialize(
             int accountId, 
             int propertyId, 
             string propertyName, 
-            MESSAGE_LANGUAGE language, 
-            string gdprPmId, 
-            string ccpaPmId,
-            string usnatPmId,
+            MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns,
             CAMPAIGN_ENV campaignsEnvironment, 
-            long messageTimeoutInSeconds = 3,
-            bool? transitionCCPAAuth = null,
-            bool? supportLegacyUSPString = null)
+            long messageTimeoutInSeconds = 3) //TO-DO add transitionCCPAAuth, supportLegacyUSPString
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();
@@ -100,10 +89,10 @@ namespace ConsentManagementProviderLib.iOS
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
             }
             if(transitionCCPAAuth != null)
-                _setTransitionCCPAAuth((bool)transitionCCPAAuth);
+                _setTransitionCCPAAuth((bool)transitionCCPAAuth); //TO-DO add usnat check
             if(supportLegacyUSPString != null)
                 _setSupportLegacyUSPString((bool)supportLegacyUSPString);
-            _configLib(accountId, propertyId, propertyName, CMP.useGDPR, CMP.useCCPA, CMP.useUSNAT, (int)language, gdprPmId, ccpaPmId, usnatPmId); //TO-DO: add messageTimeoutInSeconds to call
+            _configLib(accountId, propertyId, propertyName, CMP.useGDPR, CMP.useCCPA, CMP.useUSNAT, (int)language, gdprPmId, ccpaPmId, usnatPmId); //TO-DO: add messageTimeoutInSeconds to call, remove pmId
 #endif
         }
 
@@ -217,6 +206,12 @@ namespace ConsentManagementProviderLib.iOS
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _loadUSNATPrivacyManager();
 #endif
+        }
+
+        private static void CreateHelperIOSListener()
+        {
+            IOSListenerGO = new GameObject();
+            iOSListener = IOSListenerGO.AddComponent<CMPiOSListenerHelper>();
         }
     }
 }

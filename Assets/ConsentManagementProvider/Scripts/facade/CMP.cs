@@ -26,13 +26,12 @@ namespace ConsentManagementProviderLib
             get
             {
                 if (concreteInstance == null)
-#if UNITY_ANDROID
-                    concreteInstance = new ConsentWrapperAndroid();
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-                    concreteInstance = new ConsentWrapperIOS();
-#else
-                    concreteInstance = new ConsentWrapperUnityEditor();
-#endif
+                    concreteInstance = Application.platform switch
+                    {
+                        RuntimePlatform.Android => new ConsentWrapperAndroid(),
+                        RuntimePlatform.IPhonePlayer => new ConsentWrapperIOS(),
+                        _ => new ConsentWrapperUnityEditor(),
+                    };
                 return concreteInstance;
             }
         }
@@ -41,15 +40,10 @@ namespace ConsentManagementProviderLib
             int accountId,
             int propertyId,
             string propertyName,
-            MESSAGE_LANGUAGE language,  
-            string gdprPmId, 
-            string ccpaPmId,
-            string usnatPmId,
+            MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns, 
             CAMPAIGN_ENV campaignsEnvironment,
-            long messageTimeoutInSeconds = 3,
-            bool? transitionCCPAAuth = null,
-            bool? supportLegacyUSPString = null)
+            long messageTimeoutInSeconds = 3)
         {
             if(!IsSpCampaignsValid(spCampaigns))
             { 
@@ -68,9 +62,6 @@ namespace ConsentManagementProviderLib
             }
 
             propertyName = propertyName.Trim();
-            gdprPmId = gdprPmId.Trim();
-            ccpaPmId = ccpaPmId.Trim();
-            usnatPmId = usnatPmId.Trim();
 
             CreateBroadcastExecutorGameObject();
 
@@ -78,15 +69,10 @@ namespace ConsentManagementProviderLib
                 accountId: accountId, 
                 propertyId: propertyId, 
                 propertyName: propertyName, 
-                language: language, 
-                gdprPmId: gdprPmId, 
-                ccpaPmId: ccpaPmId,
-                usnatPmId: usnatPmId,
+                language: language,
                 spCampaigns: spCampaigns,
                 campaignsEnvironment: campaignsEnvironment,
-                messageTimeoutInSeconds: messageTimeoutInSeconds,
-                transitionCCPAAuth: transitionCCPAAuth,
-                supportLegacyUSPString: supportLegacyUSPString);
+                messageTimeoutInSeconds: messageTimeoutInSeconds);
         }
         
         public void LoadMessage(string authId = null) => ConcreteInstance.LoadMessage(authId: authId);

@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
 using System.IO;
-using NewtonsoftJson = Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ConsentManagementProviderLib.Json;
 using System.Collections;
@@ -79,7 +78,7 @@ namespace ConsentManagementProviderLib.iOS
             SpConsents spConsents = null;
             try
             { 
-                spConsents = JsonUnwrapper.UnwrapSpConsents(message);
+                spConsents = JsonUnwrapperIOS.UnwrapSpConsents(message);
             }
             catch (Exception ex)
             {
@@ -111,9 +110,9 @@ namespace ConsentManagementProviderLib.iOS
         {
             CmpDebugUtil.Log("OnConsentAction IOS_CALLBACK_RECEIVED: " + message);
             using StringReader stringReader = new StringReader(message);
-            using NewtonsoftJson.JsonTextReader reader = new NewtonsoftJson.JsonTextReader(stringReader);
+            using Newtonsoft.Json.JsonTextReader reader = new Newtonsoft.Json.JsonTextReader(stringReader);
 
-            NewtonsoftJson.JsonSerializer serializer = new NewtonsoftJson.JsonSerializer();
+            Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
             SpActionWrapper wrapped = serializer.Deserialize<SpActionWrapper>(reader);
 
             CONSENT_ACTION_TYPE unwrappedType = (CONSENT_ACTION_TYPE) Convert.ToInt32(wrapped.type);
@@ -144,7 +143,7 @@ namespace ConsentManagementProviderLib.iOS
             GdprConsent unwrapped = null;
             try
             {
-                unwrapped = JsonUnwrapper.UnwrapGdprConsent(jsonSPGDPRConsent);
+                unwrapped = JsonUnwrapperIOS.UnwrapGdprConsent(jsonSPGDPRConsent);
             }
             catch (Exception ex)
             {
