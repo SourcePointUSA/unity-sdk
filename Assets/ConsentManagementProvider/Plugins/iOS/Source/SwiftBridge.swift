@@ -11,9 +11,6 @@ import UIKit
 @objc public class SwiftBridge: NSObject {
     public override init() {
         config = Config(
-            gdprPmId: nil,
-            ccpaPmId: nil,
-            usnatPmId: nil,
             transitionCCPAAuth: nil,
             supportLegacyUSPString: nil,
             vendors: [],
@@ -45,7 +42,6 @@ import UIKit
     }
     
     struct Config {
-        var gdprPmId, ccpaPmId, usnatPmId: String?
         var transitionCCPAAuth, supportLegacyUSPString: Bool?
         var vendors: [String] = []
         var categories: [String] = []
@@ -107,13 +103,8 @@ import UIKit
         gdpr: Bool,
         ccpa: Bool,
         usnat: Bool,
-        language: SPMessageLanguage,
-        gdprPmId: String,
-        ccpaPmId: String,
-        usnatPmId: String) {
-            self.config.gdprPmId = gdprPmId
-            self.config.ccpaPmId = ccpaPmId
-            self.config.usnatPmId = usnatPmId
+        language: String,
+        messageTimeoutInSeconds: Double) {
             guard let propName = try? SPPropertyName(propertyName) else {
                 self.runCallback(callback: self.callbackOnErrorCallback, arg: "`propertyName` invalid!")
                 return
@@ -128,9 +119,10 @@ import UIKit
                     usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, transitionCCPAAuth: config.transitionCCPAAuth, supportLegacyUSPString: config.supportLegacyUSPString) : nil,
                     ios14: SPCampaign()
                 ),
-                language: language,
+                language: SPMessageLanguage.init(rawValue: language) ?? SPMessageLanguage.BrowserDefault,
                 delegate: self
             )}()
+            self.consentManager?.messageTimeoutInSeconds = messageTimeoutInSeconds
         }
     
     @objc public func addCustomVendor(vendor: String) {
