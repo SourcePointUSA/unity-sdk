@@ -27,12 +27,8 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _loadMessage();
         [DllImport("__Internal")]
         private static extern void _loadMessageWithAuthId(string authId);
-        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
-        private static extern void _loadGDPRPrivacyManager();
-        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
-        private static extern void _loadCCPAPrivacyManager();
-        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
-        private static extern void _loadUSNATPrivacyManager();
+        [DllImport("__Internal")]
+        private static extern void _loadPrivacyManager(int campaignType, string pmId, int tab);
         [DllImport("__Internal")]
         private static extern void _cleanConsent();
         [DllImport("__Internal")]
@@ -114,12 +110,9 @@ namespace ConsentManagementProviderLib.iOS
 
         public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
-            //TO-DO: add pmId, tab to call
-            switch (campaignType){
-                case CAMPAIGN_TYPE.GDPR: LoadGDPRPrivacyManager(); break;
-                case CAMPAIGN_TYPE.CCPA: LoadCCPAPrivacyManager(); break;
-                case CAMPAIGN_TYPE.USNAT: LoadUSNATPrivacyManager(); break;
-            }
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _loadPrivacyManager((int)campaignType, pmId, (int)tab);
+#endif
         }
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
@@ -181,30 +174,6 @@ namespace ConsentManagementProviderLib.iOS
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _dispose();
             iOSListener.Dispose();
-#endif
-        }
-
-        public void LoadGDPRPrivacyManager()
-        {
-            //TO-DO: add pmId, tab to call
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadGDPRPrivacyManager();
-#endif
-        }
-
-        public void LoadCCPAPrivacyManager()
-        {
-            //TO-DO: add pmId, tab to call
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadCCPAPrivacyManager();
-#endif
-        }
-
-        public void LoadUSNATPrivacyManager()
-        {
-            //TO-DO: add pmId, tab to call
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadUSNATPrivacyManager();
 #endif
         }
 

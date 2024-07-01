@@ -95,22 +95,11 @@ extern "C"
     {
         [swiftBridge loadMessageWithAuthId:[NSString stringWithFormat:@"%s", authId]];
     }
-
-    void _loadGDPRPrivacyManager()
+    
+    void _loadPrivacyManager(int campaignType, char* pmId, int tab)
     {
-        [swiftBridge onGDPRPrivacyManagerTap];
+        [swiftBridge loadPrivacyManagerWithCampaignType:campaignType pmId:[NSString stringWithFormat:@"%s", pmId] tab:(SPPrivacyManagerTab)tab];
     }
-
-    void _loadCCPAPrivacyManager()
-    {
-        [swiftBridge onCCPAPrivacyManagerTap];
-    }
-
-    void _loadUSNATPrivacyManager()
-    {
-        [swiftBridge onUSNATPrivacyManagerTap];
-    }
-
 
     void _cleanConsent()
     {

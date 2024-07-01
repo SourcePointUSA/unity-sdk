@@ -177,33 +177,17 @@ import UIKit
         myVendorAccepted = .Unknown
     }
     
-    @objc public func onGDPRPrivacyManagerTap() {
-        if config.gdprPmId != nil {
-            (consentManager != nil) ? 
-                consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) :
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+    @objc public func loadPrivacyManager(campaignType: Int, pmId: String, tab: SPPrivacyManagerTab) {
+        if (consentManager != nil) {
+            switch CAMPAIGN_TYPE(rawValue: campaignType) {
+            case .GDPR: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
+            case .CCPA: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
+            case .USNAT: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
+            case .IOS14: break
+            case .none: print("Incorrect campaignType on loadPrivacyManager")
+            }
         } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load GDPR pm without gdpr pm id")
-        }
-    }
-    
-    @objc public func onCCPAPrivacyManagerTap() {
-        if config.ccpaPmId != nil {
-            (consentManager != nil) ? 
-                consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) :
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
-        } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load CCPA pm without ccpa pm id")
-        }
-    }
-    
-    @objc public func onUSNATPrivacyManagerTap() {
-        if config.usnatPmId != nil {
-            (consentManager != nil) ?
-                consentManager?.loadUSNatPrivacyManager(withId: config.usnatPmId!) :
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
-        } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load USNAT pm without usnat pm id")
+            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
         }
     }
 
