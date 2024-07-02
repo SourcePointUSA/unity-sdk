@@ -98,8 +98,8 @@ namespace ConsentManagementProviderLib.iOS
             if(supportLegacyUSPString)
                 _setSupportLegacyUSPString(supportLegacyUSPString);
 
-            string langName = CSharp2JavaStringEnumMapper.GetMessageLanguageKey(language);
-            _configLib(accountId, propertyId, propertyName, CMP.Instance.UseGDPR, CMP.Instance.UseCCPA, CMP.Instance.UseUSNAT, langName, messageTimeoutInSeconds); //TO-DO: add messageTimeoutInSeconds to call, remove pmId
+            string langName = CMPEnumMapper.GetMessageLanguageKey(language);
+            _configLib(accountId, propertyId, propertyName, CMP.Instance.UseGDPR, CMP.Instance.UseCCPA, CMP.Instance.UseUSNAT, langName, messageTimeoutInSeconds);
 #endif
         }
 
