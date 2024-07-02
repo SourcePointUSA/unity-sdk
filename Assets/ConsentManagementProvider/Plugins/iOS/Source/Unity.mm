@@ -12,52 +12,10 @@ typedef void (*СallbackCharMessage) (const char*);
 
 extern "C"
 {
-    void _setCallbackDefault (СallbackCharMessage callback){
+    void _setCallback (СallbackCharMessage callback, char* typeCallback){
         if (swiftBridge == nil)
             swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackDefaultWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentReady (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentReadyWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentUIReady (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentUIReadyWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentAction (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentActionWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentUIFinished (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentUIFinishedWithCallback:callback];
-    }
-
-    void _setCallbackOnErrorCallback (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnErrorCallbackWithCallback:callback];
-    }
-
-    void _setCallbackOnSPFinished (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnSPFinishedWithCallback:callback];
-    }
-
-    void _setCallbackOnCustomConsent (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnCustomConsentWithCallback:callback];
+        [swiftBridge setCallbackWithCallback:callback typeCallback:[NSString stringWithFormat:@"%s", typeCallback]];
     }
 
     void _initLib()
