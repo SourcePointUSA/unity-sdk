@@ -31,8 +31,8 @@ namespace ConsentManagementProviderLib
             if(TCData != null)
             {
                 sb.AppendLine("TCData:");
-//                 foreach (var kvp in TCData)
-//                     sb.AppendLine($"    {kvp.Key}: {kvp.Value}");
+                 foreach (var kvp in TCData)
+                     sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
             }
 
             if(grants != null)

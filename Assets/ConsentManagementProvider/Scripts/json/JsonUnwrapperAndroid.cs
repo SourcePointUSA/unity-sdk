@@ -114,7 +114,8 @@ namespace ConsentManagementProviderLib.Json
                 applies: wrappedCcpa.applies,
                 signedLspa: wrappedCcpa.signedLspa,
                 webConsentPayload: wrappedCcpa.webConsentPayload,
-                consentStatus: consentStatus);
+                consentStatus: consentStatus,
+                GPPData: wrappedCcpa.GPPData);
 
             return new SpCcpaConsent(unwrapped);
         }
@@ -150,7 +151,8 @@ namespace ConsentManagementProviderLib.Json
                                     consentStrings: consentStrings,
                                     vendors: vendors,
                                     categories: categories,
-                                    statuses: statuses));
+                                    statuses: statuses,
+                                    GPPData: wrapped.GPPData));
         }
     }
 }

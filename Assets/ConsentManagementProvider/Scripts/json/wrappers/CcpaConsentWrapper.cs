@@ -1,9 +1,12 @@
-using System;
+using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib.Json
 {
     internal class CcpaConsentWrapper
     {
+#nullable enable
+        public Dictionary<string, object>? GPPData;
+#nullable disable
         public string uuid;
         public string status;
         public string uspstring;
