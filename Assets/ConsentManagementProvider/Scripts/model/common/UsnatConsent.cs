@@ -23,7 +23,7 @@ namespace ConsentManagementProviderLib
                         List<ConsentString> consentStrings,
                         List<Consentable> vendors,
                         List<Consentable> categories,
-						ConsentStatus consentStatus,
+                        ConsentStatus consentStatus,
                         Dictionary<string, object>? GPPData
 #nullable disable
         ) {
@@ -87,8 +87,8 @@ namespace ConsentManagementProviderLib
             if(GPPData != null)
             {
                 sb.AppendLine("GPPData:");
-                 foreach (var kvp in GPPData)
-                     sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
+                foreach (var kvp in GPPData)
+                    sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
             }
 
             return sb.ToString();

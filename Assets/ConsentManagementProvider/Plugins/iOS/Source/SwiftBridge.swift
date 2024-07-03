@@ -166,8 +166,8 @@ import UIKit
         if (consentManager != nil) {
             switch CAMPAIGN_TYPE(rawValue: campaignType) {
             case .GDPR: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
-            case .CCPA: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
-            case .USNAT: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
+            case .CCPA: consentManager!.loadCCPAPrivacyManager(withId: pmId, tab: tab)
+            case .USNAT: consentManager!.loadUSNatPrivacyManager(withId: pmId, tab: tab)
             case .IOS14: break
             case .none: print("Incorrect campaignType on loadPrivacyManager")
             }

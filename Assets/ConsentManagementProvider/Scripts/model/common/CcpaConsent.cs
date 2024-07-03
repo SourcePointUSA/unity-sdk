@@ -31,7 +31,7 @@ namespace ConsentManagementProviderLib
                         bool applies,
                         bool? signedLspa,
                         string webConsentPayload,
-						ConsentStatus? consentStatus,
+                        ConsentStatus? consentStatus,
                         Dictionary<string, object>? GPPData
 #nullable disable
         ) {
@@ -81,7 +81,7 @@ namespace ConsentManagementProviderLib
             this.applies = applies;
             this.signedLspa = signedLspa;
             this.webConsentPayload = webConsentPayload;
-			this.consentStatus = consentStatus;
+            this.consentStatus = consentStatus;
             this.GPPData = GPPData;
         }
         
@@ -120,8 +120,8 @@ namespace ConsentManagementProviderLib
             if(GPPData != null)
             {
                 sb.AppendLine("GPPData:");
-                 foreach (var kvp in GPPData)
-                     sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
+                foreach (var kvp in GPPData)
+                    sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
             }
 
             return sb.ToString();
