@@ -163,16 +163,16 @@ import UIKit
     }
     
     @objc public func loadPrivacyManager(campaignType: Int, pmId: String, tab: SPPrivacyManagerTab) {
-        if (consentManager != nil) {
-            switch CAMPAIGN_TYPE(rawValue: campaignType) {
-            case .GDPR: consentManager!.loadGDPRPrivacyManager(withId: pmId, tab: tab)
-            case .CCPA: consentManager!.loadCCPAPrivacyManager(withId: pmId, tab: tab)
-            case .USNAT: consentManager!.loadUSNatPrivacyManager(withId: pmId, tab: tab)
-            case .IOS14: break
-            case .none: print("Incorrect campaignType on loadPrivacyManager")
-            }
-        } else {
+        guard let consentManager = consentManager else {
             self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
+            return
+        }
+        switch CAMPAIGN_TYPE(rawValue: campaignType) {
+        case .GDPR: consentManager.loadGDPRPrivacyManager(withId: pmId, tab: tab)
+        case .CCPA: consentManager.loadCCPAPrivacyManager(withId: pmId, tab: tab)
+        case .USNAT: consentManager.loadUSNatPrivacyManager(withId: pmId, tab: tab)
+        case .IOS14: break
+        case .none: print("Incorrect campaignType on loadPrivacyManager")
         }
     }
 
