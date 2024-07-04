@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ConsentManagementProviderLib.Enum;
+
 #if UNITY_IOS && !UNITY_EDITOR_OSX
 using System.Runtime.InteropServices;
 #endif
@@ -21,18 +23,14 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _setTransitionCCPAAuth(bool value);
         [DllImport("__Internal")]
         private static extern void _setSupportLegacyUSPString(bool value);
-        [DllImport("__Internal")] //TO-DO: add messageTimeoutInSeconds to call, remove pmId
-        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, int language, string gdprPmId, string ccpaPmId, string usnatPmId);
+        [DllImport("__Internal")]
+        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, string language, long messageTimeoutInSeconds);
         [DllImport("__Internal")]
         private static extern void _loadMessage();
         [DllImport("__Internal")]
         private static extern void _loadMessageWithAuthId(string authId);
-        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
-        private static extern void _loadGDPRPrivacyManager();
-        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
-        private static extern void _loadCCPAPrivacyManager();
-        [DllImport("__Internal")] //TO-DO: add pmId, tab to call
-        private static extern void _loadUSNATPrivacyManager();
+        [DllImport("__Internal")]
+        private static extern void _loadPrivacyManager(int campaignType, string pmId, int tab);
         [DllImport("__Internal")]
         private static extern void _cleanConsent();
         [DllImport("__Internal")]
@@ -65,7 +63,7 @@ namespace ConsentManagementProviderLib.iOS
             MESSAGE_LANGUAGE language,
             List<SpCampaign> spCampaigns,
             CAMPAIGN_ENV campaignsEnvironment, 
-            long messageTimeoutInSeconds = 3) //TO-DO add transitionCCPAAuth, supportLegacyUSPString
+            long messageTimeoutInSeconds)
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _initLib();
@@ -74,7 +72,9 @@ namespace ConsentManagementProviderLib.iOS
                 CmpDebugUtil.Log("Creating iosListener");
                 CreateHelperIOSListener();
             }
-
+            
+            bool transitionCCPAAuth = false;
+            bool supportLegacyUSPString = false;
             int campaignsAmount = spCampaigns.Count;
             int[] campaignTypes = new int[campaignsAmount];
             foreach(SpCampaign sp in spCampaigns)
@@ -83,16 +83,23 @@ namespace ConsentManagementProviderLib.iOS
                 {
                     _addTargetingParamForCampaignType((int)sp.CampaignType, tp.Key, tp.Value);
                 }
+                if (sp.CampaignType == CAMPAIGN_TYPE.USNAT)
+                {
+                    transitionCCPAAuth = sp.TransitionCCPAAuth;
+                    supportLegacyUSPString = sp.SupportLegacyUSPString;
+                }
             }
             for (int i=0; i<campaignsAmount; i++)
             {
                 campaignTypes[i] = (int)spCampaigns[i].CampaignType;
             }
-            if(transitionCCPAAuth != null)
-                _setTransitionCCPAAuth((bool)transitionCCPAAuth); //TO-DO add usnat check
-            if(supportLegacyUSPString != null)
-                _setSupportLegacyUSPString((bool)supportLegacyUSPString);
-            _configLib(accountId, propertyId, propertyName, CMP.useGDPR, CMP.useCCPA, CMP.useUSNAT, (int)language, gdprPmId, ccpaPmId, usnatPmId); //TO-DO: add messageTimeoutInSeconds to call, remove pmId
+            if(transitionCCPAAuth)
+                _setTransitionCCPAAuth(transitionCCPAAuth);
+            if(supportLegacyUSPString)
+                _setSupportLegacyUSPString(supportLegacyUSPString);
+
+            string langName = CMPEnumMapper.GetMessageLanguageKey(language);
+            _configLib(accountId, propertyId, propertyName, CMP.Instance.UseGDPR, CMP.Instance.UseCCPA, CMP.Instance.UseUSNAT, langName, messageTimeoutInSeconds);
 #endif
         }
 
@@ -114,12 +121,9 @@ namespace ConsentManagementProviderLib.iOS
 
         public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
-            //TO-DO: add pmId, tab to call
-            switch (campaignType){
-                case CAMPAIGN_TYPE.GDPR: LoadGDPRPrivacyManager(); break;
-                case CAMPAIGN_TYPE.CCPA: LoadCCPAPrivacyManager(); break;
-                case CAMPAIGN_TYPE.USNAT: LoadUSNATPrivacyManager(); break;
-            }
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _loadPrivacyManager((int)campaignType, pmId, (int)tab);
+#endif
         }
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
@@ -181,30 +185,6 @@ namespace ConsentManagementProviderLib.iOS
 #if UNITY_IOS && !UNITY_EDITOR_OSX
             _dispose();
             iOSListener.Dispose();
-#endif
-        }
-
-        public void LoadGDPRPrivacyManager()
-        {
-            //TO-DO: add pmId, tab to call
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadGDPRPrivacyManager();
-#endif
-        }
-
-        public void LoadCCPAPrivacyManager()
-        {
-            //TO-DO: add pmId, tab to call
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadCCPAPrivacyManager();
-#endif
-        }
-
-        public void LoadUSNATPrivacyManager()
-        {
-            //TO-DO: add pmId, tab to call
-#if UNITY_IOS && !UNITY_EDITOR_OSX
-            _loadUSNATPrivacyManager();
 #endif
         }
 

@@ -8,6 +8,7 @@ namespace ConsentManagementProviderLib.Json
     {
 #nullable enable
         public string? uuid;
+        public Dictionary<string, object>? GPPData;
 #nullable disable
         public bool applies;
     }

@@ -98,7 +98,8 @@ namespace ConsentManagementProviderLib.Json
                                     applies: wrapped.applies,
                                     signedLspa: wrapped.signedLspa,
                                     webConsentPayload: wrapped.webConsentPayload,
-                                    consentStatus: consentStatus);
+                                    consentStatus: consentStatus,
+                                    GPPData: wrapped.GPPData);
         }
 
         private static SpUsnatConsent UnwrapSpUsnatConsent(SpUsnatWrapperIOS wrappedUsnat)
@@ -129,7 +130,8 @@ namespace ConsentManagementProviderLib.Json
                                     consentStrings: consentStrings,
                                     vendors: vendors,
                                     categories: categories,
-                                    consentStatus: consentStatus);
+                                    consentStatus: consentStatus,
+                                    GPPData: wrapped.GPPData);
         }
     }
 }

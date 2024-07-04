@@ -3,7 +3,7 @@ using ConsentMessagePlugin.Android;
 
 namespace ConsentManagementProviderLib.Enum
 {
-    internal static class CSharp2JavaStringEnumMapper
+    internal static class CMPEnumMapper
     {
         static Dictionary<PRIVACY_MANAGER_TAB, string> privacyManagerTabToJavaEnumKey;
         static Dictionary<PRIVACY_MANAGER_TAB, string> privacyManagerTabToJavaEnum;
@@ -11,7 +11,7 @@ namespace ConsentManagementProviderLib.Enum
         static Dictionary<MESSAGE_LANGUAGE, string> messageLanguageToJavaKey;
         static Dictionary<MESSAGE_LANGUAGE, string> messageFullLanguageToJavaKey;
 
-        static CSharp2JavaStringEnumMapper()
+        static CMPEnumMapper()
         {
             InitializeMapping();
         }

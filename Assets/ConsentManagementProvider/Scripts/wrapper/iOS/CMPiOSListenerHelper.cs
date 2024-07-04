@@ -16,19 +16,7 @@ namespace ConsentManagementProviderLib.iOS
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
     [DllImport("__Internal")]
-    private static extern void _setCallbackDefault(Action<string> callback);
-    [DllImport("__Internal")]
-    private static extern void _setCallbackOnConsentReady(Action<string> callback);
-    [DllImport("__Internal")]
-    private static extern void _setCallbackOnConsentUIReady(Action<string> callback);
-    [DllImport("__Internal")]
-    private static extern void _setCallbackOnConsentAction(Action<string> callback);
-    [DllImport("__Internal")]
-    private static extern void _setCallbackOnConsentUIFinished(Action<string> callback);
-    [DllImport("__Internal")]
-    private static extern void _setCallbackOnErrorCallback(Action<string> callback);
-    [DllImport("__Internal")]
-    private static extern void _setCallbackOnCustomConsent(Action<string> callback);
+    private static extern void _setCallback(Action<string> callback, string callbackType);
 #endif
 
         public static CMPiOSListenerHelper self;
@@ -50,13 +38,13 @@ namespace ConsentManagementProviderLib.iOS
         internal void SetBridgeCallbacks()
         {
 #if UNITY_IOS && !UNITY_EDITOR_OSX
-            _setCallbackDefault(Callback);
-            _setCallbackOnConsentReady(OnConsentReady);
-            _setCallbackOnConsentUIReady(OnConsentUIReady);
-            _setCallbackOnConsentAction(OnConsentAction);
-            _setCallbackOnConsentUIFinished(OnConsentUIFinished);
-            _setCallbackOnErrorCallback(OnErrorCallback);
-            _setCallbackOnCustomConsent(OnCustomConsentGDPRCallback);
+            _setCallback(Callback, CALLBACK_TYPE.Default);
+            _setCallback(OnConsentReady, CALLBACK_TYPE.OnConsentReady);
+            _setCallback(OnConsentUIReady, CALLBACK_TYPE.OnConsentUIReady);
+            _setCallback(OnConsentAction, CALLBACK_TYPE.OnConsentAction);
+            _setCallback(OnConsentUIFinished, CALLBACK_TYPE.OnConsentUIFinished);
+            _setCallback(OnErrorCallback, CALLBACK_TYPE.OnErrorCallback);
+            _setCallback(OnCustomConsentGDPRCallback, CALLBACK_TYPE.OnCustomConsent);
 #endif
         }
 
