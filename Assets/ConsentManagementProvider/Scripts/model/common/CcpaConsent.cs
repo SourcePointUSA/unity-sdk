@@ -17,6 +17,7 @@ namespace ConsentManagementProviderLib
         public bool? signedLspa;
         public string webConsentPayload;
 		public ConsentStatus? consentStatus;
+        public Dictionary<string, object>? GPPData;
 #nullable disable
 
         public CcpaConsent(
@@ -30,7 +31,8 @@ namespace ConsentManagementProviderLib
                         bool applies,
                         bool? signedLspa,
                         string webConsentPayload,
-						ConsentStatus? consentStatus
+                        ConsentStatus? consentStatus,
+                        Dictionary<string, object>? GPPData
 #nullable disable
         ) {
             this.uuid = uuid;
@@ -44,6 +46,7 @@ namespace ConsentManagementProviderLib
             this.signedLspa = signedLspa;
             this.webConsentPayload = webConsentPayload;
 			this.consentStatus = consentStatus;
+            this.GPPData = GPPData;
         }
         
         public CcpaConsent(
@@ -57,7 +60,8 @@ namespace ConsentManagementProviderLib
                         bool applies,
                         bool? signedLspa,
                         string webConsentPayload,
-						ConsentStatus consentStatus
+						ConsentStatus consentStatus,
+                        Dictionary<string, object>? GPPData
 #nullable disable
         ) {
             this.uuid = uuid;
@@ -77,7 +81,8 @@ namespace ConsentManagementProviderLib
             this.applies = applies;
             this.signedLspa = signedLspa;
             this.webConsentPayload = webConsentPayload;
-			this.consentStatus = consentStatus;
+            this.consentStatus = consentStatus;
+            this.GPPData = GPPData;
         }
         
            public string ToFullString()
@@ -111,6 +116,13 @@ namespace ConsentManagementProviderLib
 
             if (consentStatus != null)
                 sb = consentStatus.ToFullString(sb);
+
+            if(GPPData != null)
+            {
+                sb.AppendLine("GPPData:");
+                foreach (var kvp in GPPData)
+                    sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
+            }
 
             return sb.ToString();
         }

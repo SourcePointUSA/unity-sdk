@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-
-public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinished
+public class PrivacySettings : MonoBehaviour, IOnConsentReady
 {
     public int accountId = 22;
     public int propertyId = 16893;    
@@ -19,7 +18,17 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     public string[] vendors = { "5fbe6f050d88c7d28d765d47", "5ff4d000a228633ac048be41" };
     public string[] categories = { "60657acc9c97c400122f21f3", "608bad95d08d3112188e0e36", "608bad95d08d3112188e0e2f" };
     public string[] legIntCategories = { };
-    
+
+    [Header("UI")]
+    public Text consentValueText;
+    public Button loadMessageButton;
+    public Button gdprPrivacySettingsButton;
+    public Button ccpaPrivacySettingsButton;
+    public Button usnatPrivacySettingsButton;
+    public Button customConsentButton;
+    public Button deleteCustomConsentButton;
+    public Button clearDataButton;
+
     private MESSAGE_LANGUAGE language
     {
         get
@@ -32,25 +41,12 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
             }
         }
     }
-
-    [Header("UI")]
-    public Text consentValueText;
-    public Text authIdText;
-    public Button loadMessageButton;
-    public Button gdprPrivacySettingsButton;
-    public Button ccpaPrivacySettingsButton;
-    public Button usnatPrivacySettingsButton;
-    public Button customConsentButton;
-    public Button deleteCustomConsentButton;
-    public Button clearDataButton;
-    public Text sdkStatus;
-
+    
     private string storedConsentString = null;
-
+    
     private void Awake()
     {
         ConsentMessenger.AddListener<IOnConsentReady>(gameObject);
-        ConsentMessenger.AddListener<IOnConsentSpFinished>(gameObject);
 
         List<SpCampaign> spCampaigns = new List<SpCampaign>();
         List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
@@ -64,13 +60,11 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
         campaignTypes.Add(CAMPAIGN_TYPE.CCPA);
 
         List<TargetingParam> usnatParams = new List<TargetingParam> { new TargetingParam("location", "US") };
-        SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams);
+        SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams, transitionCCPAAuth: false, supportLegacyUSPString: false);
         spCampaigns.Add(usnat);
         campaignTypes.Add(CAMPAIGN_TYPE.USNAT);
 
-        UpdateSdkStatus("Running");
-
-        CMP.Initialize(
+        CMP.Instance.Initialize(
             spCampaigns: spCampaigns,
             accountId: accountId,
             propertyId: propertyId,
@@ -78,124 +72,107 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
                                          // it's unlikely you voluntarily use them in property name, but if you do
                                          // please note that we Trim them down in the call tree.
             language: language,
-            gdprPmId: gdprPmId,
-            ccpaPmId: ccpaPmId,
-            usnatPmId: usnatPmId,
             campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
-            messageTimeoutInSeconds: 30,
-            transitionCCPAAuth: false,
-            supportLegacyUSPString: false
+            messageTimeoutInSeconds: 30
         );
     }
 
     void Start()
     {
-        updateUI();
-        CMP.LoadMessage(authId: authId);
+        UpdateUI();
+        CMP.Instance.LoadMessage(authId: authId);
     }
 
     public void OnLoadMessagePress()
     {
-        UpdateSdkStatus("Running");
         storedConsentString = null;
-        updateUI();
-        CMP.LoadMessage(authId: authId);
+        UpdateUI();
+        CMP.Instance.LoadMessage(authId: authId);
     }
 
     public void OnGDPRPrivacyManagerButtonClick()
     {
-        UpdateSdkStatus("Running");
-        CMP.LoadPrivacyManager(
+        CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
-            pmId: gdprPmId,
-            tab: PRIVACY_MANAGER_TAB.DEFAULT
+            pmId: gdprPmId
         );
     }
 
     public void OnCCPAPrivacyManagerButtonClick()
     {
-        UpdateSdkStatus("Running");
-        CMP.LoadPrivacyManager(
+        CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.CCPA,
-            pmId: ccpaPmId,
-            tab: PRIVACY_MANAGER_TAB.DEFAULT
+            pmId: ccpaPmId
         );
     }
 
     public void OnUSNATPrivacyManagerButtonClick()
     {
-        UpdateSdkStatus("Running");
-        CMP.LoadPrivacyManager(
+        CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.USNAT,
-            pmId: usnatPmId,
-            tab: PRIVACY_MANAGER_TAB.DEFAULT
+            pmId: usnatPmId
         );
     }
 
     private void SuccessDelegate(GdprConsent customConsent)
     {
-        Debug.Log($"I am your success callback!"); // TODO print customConsent
+        Debug.Log($"I am your success callback!");
+        CmpDebugUtil.ForceEnableNextCmpLog();
+        CmpDebugUtil.Log(customConsent.ToFullString());
         storedConsentString = customConsent.euconsent;
-        updateUI();
+        UpdateUI();
     }
 
     public void OnCustomConsentButtonClick()
     {
-        CMP.CustomConsentGDPR(vendors: this.vendors,
-            categories: this.categories,
-            legIntCategories: this.legIntCategories,
+        CMP.Instance.CustomConsentGDPR(vendors: vendors,
+            categories: categories,
+            legIntCategories: legIntCategories,
             onSuccessDelegate: SuccessDelegate);
     }
 
     public void OnClearCustomConsentDataPress()
     {
-        CMP.DeleteCustomConsentGDPR(
-            vendors: this.vendors,
-            categories: this.categories,
-            legIntCategories: this.legIntCategories,
+        CMP.Instance.DeleteCustomConsentGDPR(
+            vendors: vendors,
+            categories: categories,
+            legIntCategories: legIntCategories,
             onSuccessDelegate: SuccessDelegate
         );
-        updateUI();
+        UpdateUI();
     }
 
     public void OnClearDataPress()
     {
-        UpdateSdkStatus("Not Started");
-        CMP.ClearAllData();
+        CMP.Instance.ClearAllData();
         storedConsentString = null;
-        updateUI();
+        UpdateUI();
     }
 
     public void OnConsentReady(SpConsents consents)
     {
         storedConsentString = consents.gdpr.consents.euconsent ?? "--";
-        if(CMP.useGDPR) 
+        if(CMP.Instance.UseGDPR) 
             CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
-        if(CMP.useCCPA) 
+        if(CMP.Instance.UseCCPA) 
             CmpDebugUtil.Log(consents.ccpa.consents.ToFullString());
-        if(CMP.useUSNAT)
+        if(CMP.Instance.UseUSNAT)
             CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
-        updateUI();
+        UpdateUI();
     }
 
-    public void OnConsentSpFinished()
-    {
-        UpdateSdkStatus("Finished");
-    }
-
-    private void updateUI()
+    private void UpdateUI()
     {
         if (storedConsentString != null)
         {
             loadMessageButton.interactable = false;
-            gdprPrivacySettingsButton.interactable = CMP.useGDPR;
-            ccpaPrivacySettingsButton.interactable = CMP.useCCPA;
-            usnatPrivacySettingsButton.interactable = CMP.useUSNAT;
+            gdprPrivacySettingsButton.interactable = CMP.Instance.UseGDPR;
+            ccpaPrivacySettingsButton.interactable = CMP.Instance.UseCCPA;
+            usnatPrivacySettingsButton.interactable = CMP.Instance.UseUSNAT;
             customConsentButton.interactable = true;
             deleteCustomConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
-            authIdText.text = CMP.GetBridgeString("AuthId:"+authId);
         }
         else
         {
@@ -207,19 +184,12 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
             deleteCustomConsentButton.interactable = false;
             clearDataButton.interactable = false;
             consentValueText.text = "-";
-            authIdText.text = "-";
         }
-    }
-
-    void UpdateSdkStatus(string status)
-    {
-        sdkStatus.text = "SDK:"+status;
     }
 
     private void OnDestroy()
     {
         ConsentMessenger.RemoveListener<IOnConsentReady>(gameObject);
-        ConsentMessenger.RemoveListener<IOnConsentSpFinished>(gameObject);
-        CMP.Dispose();
+        CMP.Instance.Dispose();
     }
 }

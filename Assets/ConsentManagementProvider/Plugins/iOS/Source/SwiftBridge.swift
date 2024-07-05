@@ -11,9 +11,6 @@ import UIKit
 @objc public class SwiftBridge: NSObject {
     public override init() {
         config = Config(
-            gdprPmId: nil,
-            ccpaPmId: nil,
-            usnatPmId: nil,
             transitionCCPAAuth: nil,
             supportLegacyUSPString: nil,
             vendors: [],
@@ -45,7 +42,6 @@ import UIKit
     }
     
     struct Config {
-        var gdprPmId, ccpaPmId, usnatPmId: String?
         var transitionCCPAAuth, supportLegacyUSPString: Bool?
         var vendors: [String] = []
         var categories: [String] = []
@@ -73,6 +69,7 @@ import UIKit
     var callbackOnSPFinished: СallbackCharMessage? = nil
     var callbackOnSPUIFinished: СallbackCharMessage? = nil
     var callbackOnCustomConsent: СallbackCharMessage? = nil
+    let callbacks = Callbacks()
 
 // MARK: - Bridge config
     @objc public func addTargetingParam(campaignType: Int, key: String, value: String){
@@ -107,15 +104,10 @@ import UIKit
         gdpr: Bool,
         ccpa: Bool,
         usnat: Bool,
-        language: SPMessageLanguage,
-        gdprPmId: String,
-        ccpaPmId: String,
-        usnatPmId: String) {
-            self.config.gdprPmId = gdprPmId
-            self.config.ccpaPmId = ccpaPmId
-            self.config.usnatPmId = usnatPmId
+        language: String,
+        messageTimeoutInSeconds: Double) {
             guard let propName = try? SPPropertyName(propertyName) else {
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "`propertyName` invalid!")
+                self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "`propertyName` invalid!")
                 return
             }
             self.consentManager = { SPConsentManager(
@@ -128,9 +120,10 @@ import UIKit
                     usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, transitionCCPAAuth: config.transitionCCPAAuth, supportLegacyUSPString: config.supportLegacyUSPString) : nil,
                     ios14: SPCampaign()
                 ),
-                language: language,
+                language: SPMessageLanguage.init(rawValue: language) ?? SPMessageLanguage.BrowserDefault,
                 delegate: self
             )}()
+            self.consentManager?.messageTimeoutInSeconds = messageTimeoutInSeconds
         }
     
     @objc public func addCustomVendor(vendor: String) {
@@ -152,15 +145,7 @@ import UIKit
     }
     
     @objc public func dispose() {
-        callbackDefault = nil
-        callbackOnConsentReady = nil
-        callbackOnConsentUIReady = nil
-        callbackOnConsentAction = nil
-        callbackOnConsentUIFinished = nil
-        callbackOnErrorCallback = nil
-        callbackOnSPFinished = nil
-        callbackOnSPUIFinished = nil
-        callbackOnCustomConsent = nil
+        callbacks.CleanCallbacks()
     }
 
 // MARK: - Manage lib
@@ -168,7 +153,7 @@ import UIKit
         print("PURE SWIFT loadMessage with authId="+(authId ?? "nil"))
         (consentManager != nil) ?
             consentManager?.loadMessage(forAuthId: authId) :
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+            self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
     }
     
     @objc public func onClearConsentTap() {
@@ -177,33 +162,17 @@ import UIKit
         myVendorAccepted = .Unknown
     }
     
-    @objc public func onGDPRPrivacyManagerTap() {
-        if config.gdprPmId != nil {
-            (consentManager != nil) ? 
-                consentManager?.loadGDPRPrivacyManager(withId: config.gdprPmId!) :
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
-        } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load GDPR pm without gdpr pm id")
+    @objc public func loadPrivacyManager(campaignType: Int, pmId: String, tab: SPPrivacyManagerTab) {
+        guard let consentManager = consentManager else {
+            self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
+            return
         }
-    }
-    
-    @objc public func onCCPAPrivacyManagerTap() {
-        if config.ccpaPmId != nil {
-            (consentManager != nil) ? 
-                consentManager?.loadCCPAPrivacyManager(withId: config.ccpaPmId!) :
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
-        } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load CCPA pm without ccpa pm id")
-        }
-    }
-    
-    @objc public func onUSNATPrivacyManagerTap() {
-        if config.usnatPmId != nil {
-            (consentManager != nil) ?
-                consentManager?.loadUSNatPrivacyManager(withId: config.usnatPmId!) :
-                self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
-        } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Tried to load USNAT pm without usnat pm id")
+        switch CAMPAIGN_TYPE(rawValue: campaignType) {
+        case .GDPR: consentManager.loadGDPRPrivacyManager(withId: pmId, tab: tab)
+        case .CCPA: consentManager.loadCCPAPrivacyManager(withId: pmId, tab: tab)
+        case .USNAT: consentManager.loadUSNatPrivacyManager(withId: pmId, tab: tab)
+        case .IOS14: break
+        case .none: print("Incorrect campaignType on loadPrivacyManager")
         }
     }
 
@@ -214,10 +183,10 @@ import UIKit
                 categories: config.categories,
                 legIntCategories: config.legIntCategories){contents in
                     self.print(contents)
-                    self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
+                    self.callbacks.RunCallback(callbackType: .OnCustomConsent, arg: contents.toJSON())
                 }
         } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+            self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
         }
     }
 
@@ -228,10 +197,10 @@ import UIKit
                 categories: config.categories,
                 legIntCategories: config.legIntCategories){contents in
                     self.print(contents)
-                    self.runCallback(callback: self.callbackOnCustomConsent, arg: contents.toJSON())
+                    self.callbacks.RunCallback(callbackType: .OnCustomConsent, arg: contents.toJSON())
                 }
         } else {
-            self.runCallback(callback: self.callbackOnErrorCallback, arg: "Library was not initialized correctly!")
+            self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
         }
     }
 }
@@ -243,7 +212,7 @@ extension SwiftBridge: SPDelegate {
         controller.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
         top?.present(controller, animated: true)
         logger.log("PURE SWIFT onSPUIReady")
-        runCallback(callback: callbackOnConsentUIReady, arg: "onSPUIReady")
+        callbacks.RunCallback(callbackType: .OnConsentUIReady, arg: "onSPUIReady")
     }
     
     public func onAction(_ action: SPAction, from controller: UIViewController) {
@@ -257,88 +226,91 @@ extension SwiftBridge: SPDelegate {
         if let data = try? JSONEncoder().encode(responce) {
             resp = String(data: data, encoding: .utf8) ?? ""
         }
-        runCallback(callback: callbackOnConsentAction, arg: resp)
+        callbacks.RunCallback(callbackType: .OnConsentAction, arg: resp)
     }
     
     public func onSPUIFinished(_ controller: UIViewController) {
         UIApplication.shared.firstKeyWindow?.rootViewController?.dismiss(animated: true)
         logger.log("PURE SWIFT onSPUIFinished")
-        runCallback(callback: callbackOnSPUIFinished, arg: "onSPUIFinished")
+        callbacks.RunCallback(callbackType: .OnSPUIFinished, arg: "onSPUIFinished")
     }
     
     public func onConsentReady(userData: SPUserData) {
         print("onConsentReady:", userData)
         logger.log("PURE SWIFT onConsentReady")
-        runCallback(callback: callbackOnConsentReady, arg: userData.toJSON())
+        callbacks.RunCallback(callbackType: .OnConsentReady, arg: userData.toJSON())
     }
     
     public func onSPFinished(userData: SPUserData) {
         logger.log("SDK DONE")
         logger.log("PURE SWIFT onSPFinished")
-        runCallback(callback: callbackOnSPFinished, arg: userData.toJSON())
+        callbacks.RunCallback(callbackType: .OnSPFinished, arg: userData.toJSON())
     }
     
     public func onError(error: SPError) {
         printLog("Something went wrong: ", error)
         logger.log("PURE SWIFT onError")
-        runCallback(callback: callbackOnErrorCallback, arg: error.toJSON())
+        callbacks.RunCallback(callbackType: .OnErrorCallback, arg: error.toJSON())
     }
 }
 
 // MARK: - Callback Set Up
 extension SwiftBridge {
-    @objc public func setCallbackDefault(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackDefault")
-        callbackDefault = callback
-    }
-    
-    @objc public func setCallbackOnConsentReady(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnConsentReady")
-        callbackOnConsentReady = callback
-    }
-    
-    @objc public func setCallbackOnConsentUIReady(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnConsentUIReady")
-        callbackOnConsentUIReady = callback
-    }
-
-    @objc public func setCallbackOnConsentAction(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnConsentAction")
-        callbackOnConsentAction = callback
-    }
-    
-    @objc public func setCallbackOnConsentUIFinished(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnConsentUIFinished")
-        callbackOnConsentUIFinished = callback
-    }
-    
-    @objc public func setCallbackOnErrorCallback(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnErrorCallback")
-        callbackOnErrorCallback = callback
-    }
-    
-    @objc public func setCallbackOnSPFinished(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnSPFinished")
-        callbackOnSPFinished = callback
-    }
-    
-    @objc public func setCallbackOnCustomConsent(callback: @escaping СallbackCharMessage) -> Void{
-        print("setCallbackOnCustomConsent")
-        callbackOnCustomConsent = callback
-    }
-
-    func runCallback(callback: СallbackCharMessage?, arg: String?) {
-        if callback != nil {
-            callback!(arg)
-        }else{
-            (callbackDefault ?? callbackSystem)("onError not set:"+(arg ?? ""))
-        }
+    @objc public func setCallback(callback: @escaping СallbackCharMessage, typeCallback: String) -> Void{
+        callbacks.AddCallback(callback: callback, callbackType: Callbacks.CallbackType.init(rawValue: typeCallback) ?? Callbacks.CallbackType.NotSet)
     }
     
     public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
         if OSLogger.defaultLevel == .debug {
             printLog(items)
         }
+    }
+}
+
+// MARK: - callbacks class
+class Callbacks: NSObject {
+    public typealias СallbackCharMessage = @convention(c) (UnsafePointer<CChar>?) -> Void
+
+    enum CallbackType: String {
+        case NotSet = "CallbackNotSet"
+        case System = "System"
+        case Default = "Default"
+        case OnConsentReady = "OnConsentReady"
+        case OnConsentUIReady = "OnConsentUIReady"
+        case OnConsentAction = "OnConsentAction"
+        case OnConsentUIFinished = "OnConsentUIFinished"
+        case OnErrorCallback = "OnErrorCallback"
+        case OnSPFinished = "OnSPFinished"
+        case OnSPUIFinished = "OnSPUIFinished"
+        case OnCustomConsent = "OnCustomConsent"
+    }
+
+    var Callbacks: [CallbackType:CallbackSwift] = [:]
+    
+    func AddCallback(callback: @escaping СallbackCharMessage, callbackType: CallbackType) {
+        printLog("Add callback type: \(callbackType.rawValue)")
+        Callbacks[callbackType] = CallbackSwift.init(callback: callback, callbackType: callbackType)
+    }
+
+    func RunCallback(callbackType: CallbackType, arg: String?) {
+        printLog("Run callback type: \(callbackType.rawValue) Callback set up:\(String(Callbacks[callbackType] != nil))")
+        (Callbacks[callbackType]?.callback ?? printChar)(arg ?? "")
+    }
+    
+    func CleanCallbacks() {
+        Callbacks = [:]
+    }
+}
+
+public class CallbackSwift {
+    var callback: Callbacks.СallbackCharMessage
+    var callbackType: Callbacks.CallbackType
+    
+    init(
+        callback: @escaping Callbacks.СallbackCharMessage = printChar,
+        callbackType: Callbacks.CallbackType = .NotSet) {
+        self.callback = callback
+        self.callbackType = callbackType
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using ConsentManagementProviderLib.Enum;
 using ConsentManagementProviderLib.Observer;
@@ -6,158 +7,143 @@ using UnityEngine;
 
 namespace ConsentManagementProviderLib.Android
 {
-    internal class ConsentWrapperAndroid
+    internal class ConsentWrapperAndroid: ISpSdk
     {
-        private AndroidJavaObject consentLib;
+        internal static AndroidJavaObject consentLib;
         private AndroidJavaObject activity;
         private SpClientProxy spClient;
 
         private AndroidJavaConstruct constructor;
         private CustomConsentClient customConsentClient;
-        
-        private static ConsentWrapperAndroid instance;
-        public static ConsentWrapperAndroid Instance
+
+        public ConsentWrapperAndroid()
         {
-            get
-            {
-                if (instance == null)
-                    instance = new ConsentWrapperAndroid();
-                return instance;
-            }
-            private set
-            {
-                instance = value;
-            }
+            activity = AndroidJavaConstruct.GetActivity();
+            CmpDebugUtil.Log("Activity is OK");
+            spClient = new SpClientProxy();
+            CmpDebugUtil.Log("spClient is OK");
+            constructor = new AndroidJavaConstruct();
+            CmpDebugUtil.Log("AndroidJavaConstruct obj is OK");
         }
 
-        ConsentWrapperAndroid()
+        public void Initialize(
+            int accountId, 
+            int propertyId, 
+            string propertyName, 
+            MESSAGE_LANGUAGE language,
+            List<SpCampaign> spCampaigns, 
+            CAMPAIGN_ENV campaignsEnvironment, 
+            long messageTimeoutInSeconds = 3)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            if (!ValidateSpCampaigns(ref spCampaigns))
             {
-                activity = AndroidJavaConstruct.GetActivity();
-                CmpDebugUtil.Log("Activity is OK");
-                spClient = new SpClientProxy();
-                CmpDebugUtil.Log("spClient is OK");
-                this.constructor = new AndroidJavaConstruct();
-                CmpDebugUtil.Log("AndroidJavaConstruct obj is OK");
+                return;
             }
-#endif
-        }
-
-        public void InitializeLib(List<SpCampaign> spCampaigns, int accountId, int propertyId, string propertyName, MESSAGE_LANGUAGE language, CAMPAIGN_ENV campaignsEnvironment, long messageTimeoutMilliSeconds = 3000, bool? transitionCCPAAuth = null, bool? supportLegacyUSPString = null)
-        {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            try
             {
-                try
+                AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
+                AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
+                foreach (SpCampaign sp in spCampaigns)
                 {
-                    AndroidJavaObject msgLang = constructor.ConstructMessageLanguage(language);
-                    AndroidJavaObject[] campaigns = new AndroidJavaObject[spCampaigns.Count];
-                    foreach (SpCampaign sp in spCampaigns)
+                    AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.CampaignType);
+                    AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count];
+                    foreach (TargetingParam tp in sp.TargetingParams)
                     {
-                        AndroidJavaObject typeAJO = constructor.ConstructCampaignType(sp.CampaignType);
-                        AndroidJavaObject[] paramsArray = new AndroidJavaObject[sp.TargetingParams.Count];
-                        foreach (TargetingParam tp in sp.TargetingParams)
-                        {
-                            AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);
-                            paramsArray[sp.TargetingParams.IndexOf(tp)] = param;
-                        }
-                        AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
-                        AndroidJavaObject campaign;
-                        if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (transitionCCPAAuth.HasValue || supportLegacyUSPString.HasValue))
-                            campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, transitionCCPAAuth, supportLegacyUSPString);
-                        else
-                            campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
-                        campaigns[spCampaigns.IndexOf(sp)] = campaign;
+                        AndroidJavaObject param = constructor.ConstructTargetingParam(tp.Key, tp.Value);
+                        paramsArray[sp.TargetingParams.IndexOf(tp)] = param;
                     }
-                    AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
-                                                                               propertyId: propertyId,
-                                                                               propertyName: propertyName,
-                                                                               messageTimeout: messageTimeoutMilliSeconds,
-                                                                               language: msgLang,
-                                                                               campaignsEnvironment: campaignsEnvironment,
-                                                                               spCampaigns: campaigns);
-                    consentLib = constructor.ConstructLib(spConfig: spConfig,
-                                                          activity: this.activity,
-                                                          spClient: this.spClient);
+                    AndroidJavaObject paramsList = CmpJavaToUnityUtils.ConvertArrayToList(paramsArray);
+                    AndroidJavaObject campaign;
+                    if (sp.CampaignType == CAMPAIGN_TYPE.USNAT && (sp.TransitionCCPAAuth || sp.SupportLegacyUSPString))
+                        campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType, sp.TransitionCCPAAuth, sp.SupportLegacyUSPString);
+                    else
+                        campaign = constructor.ConstructCampaign(typeAJO, paramsList, sp.CampaignType);
+                    campaigns[spCampaigns.IndexOf(sp)] = campaign;
                 }
-                catch (Exception e)
-                {
-                    CmpDebugUtil.LogError(e.Message);
-                }
+                AndroidJavaObject spConfig = constructor.ConstructSpConfig(accountId: accountId,
+                    propertyId: propertyId,
+                    propertyName: propertyName,
+                    messageTimeout: messageTimeoutInSeconds * 1000, // in milliseconds
+                    language: msgLang,
+                    campaignsEnvironment: campaignsEnvironment,
+                    spCampaigns: campaigns);
+                consentLib = constructor.ConstructLib(spConfig: spConfig,
+                    activity: activity,
+                    spClient: spClient);
             }
-#endif
+            catch (Exception e)
+            {
+                CmpDebugUtil.LogError(e.Message);
+            }
         }
 
         public void LoadMessage(string authId = null)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            try
             {
-                try
+                if (string.IsNullOrEmpty(authId))
                 {
-                    if (string.IsNullOrEmpty(authId))
-                    {
-                        RunOnUiThread(delegate { InvokeLoadMessage(); });
-                    }
-                    else
-                    {
-                        RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authId); });
-                    }
+                    RunOnUiThread(delegate { InvokeLoadMessage(); });
                 }
-                catch (Exception e)
+                else
                 {
-                    CmpDebugUtil.LogError(e.Message);
+                    RunOnUiThread(delegate { InvokeLoadMessageWithAuthID(authId); });
                 }
             }
-#endif
+            catch (Exception e)
+            {
+                CmpDebugUtil.LogError(e.Message);
+            }
         }
 
         public void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
         {
-#if UNITY_ANDROID
-            if (Application.platform == RuntimePlatform.Android)
+            try
             {
-                try
-                {
-                    AndroidJavaObject type = constructor.ConstructCampaignType(campaignType);
-                    AndroidJavaObject privacyManagerTab = constructor.ConstructPrivacyManagerTab(tab);
-                    RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
-                }
-                catch (Exception e)
-                {
-                    CmpDebugUtil.LogError(e.Message);
-                }
+                AndroidJavaObject type = constructor.ConstructCampaignType(campaignType);
+                AndroidJavaObject privacyManagerTab = constructor.ConstructPrivacyManagerTab(tab);
+                RunOnUiThread(delegate { InvokeLoadPrivacyManager(pmId, privacyManagerTab, type, campaignType); });
             }
-#endif
+            catch (Exception e)
+            {
+                CmpDebugUtil.LogError(e.Message);
+            }
         }
 
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
-            this.customConsentClient = new CustomConsentClient(onSuccessDelegate);
+            customConsentClient = new CustomConsentClient(onSuccessDelegate);
             consentLib.Call("customConsentGDPR", vendors, categories, legIntCategories, customConsentClient);
         }
 
         public void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
-            this.customConsentClient = new CustomConsentClient(onSuccessDelegate);
+            customConsentClient = new CustomConsentClient(onSuccessDelegate);
             consentLib.Call("deleteCustomConsentTo", vendors, categories, legIntCategories, customConsentClient);
         }
 
-        public GdprConsent GetCustomGdprConsent()
+        public SpConsents GetSpConsents()
         {
-            if (this.customConsentClient != null)
-            {
+            if (spClient != null)
+                return spClient._spConsents;
+
+            return null;
+        }
+
+        public GdprConsent GetCustomConsent()
+        {
+            if (customConsentClient != null)
                 return customConsentClient.customGdprConsent;
-            }
-            else
-            {
-                return null;
-            }
+
+            return null;
+        }
+
+        public void ClearAllData()
+        {
+            SpAndroidNativeUtils.ClearAllData();
         }
         
-        internal void Dispose()
+        public void Dispose()
         {
             if (consentLib != null)
             {
@@ -168,18 +154,7 @@ namespace ConsentManagementProviderLib.Android
             }
         }
 
-        internal void CallShowView(AndroidJavaObject view)
-        {
-            consentLib.Call("showView", view);
-            CmpDebugUtil.Log("C# : View showing passed to Android's consent lib");
-        }
-
-        internal void CallRemoveView(AndroidJavaObject view)
-        {
-            consentLib.Call("removeView", view);
-            CmpDebugUtil.Log("C# : View removal passed to Android's consent lib");
-        }
-
+        #region private methods
         private void RunOnUiThread(Action action)
         {
             CmpDebugUtil.Log(">>>STARTING RUNNABLE ON UI THREAD!");
@@ -221,16 +196,24 @@ namespace ConsentManagementProviderLib.Android
             finally { CmpDebugUtil.Log("loadMessage(authId: String) DONE"); }
         }
 
-        public SpConsents GetSpConsents()
+        private bool ValidateSpCampaigns(ref List<SpCampaign> spCampaigns)
         {
-            if (spClient != null)
+            List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
+            if (ios14 != null && ios14.Count > 0)
             {
-                return spClient._spConsents;
+                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
+                foreach (SpCampaign ios in ios14)
+                {
+                    spCampaigns.Remove(ios);
+                }
             }
-            else
+            if (spCampaigns.Count == 0)
             {
-                return null;
+                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
+                return false;
             }
+            return true;
         }
+        #endregion
     }
 }

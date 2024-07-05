@@ -8,16 +8,9 @@ namespace ConsentManagementProviderLib.Json
     {
 #nullable enable
         public string? uuid;
+        public Dictionary<string, object>? GPPData;
 #nullable disable
-		public ConsentStatusWrapper consentStatus;
         public bool applies;
-        public List<ConsentStringWrapper> consentStrings;
-        public UserConsentsWrapper userConsents;
-
-        [JsonIgnore]
-        public List<ConsentableWrapper> vendors { get => userConsents.vendors; }
-        [JsonIgnore]
-        public List<ConsentableWrapper> categories { get => userConsents.categories; }
     }
 
     internal class UserConsentsWrapper

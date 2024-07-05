@@ -3,13 +3,9 @@ using System.Collections.Generic;
 
 namespace ConsentManagementProviderLib.Json
 {
-    internal class SpUsnatConsentWrapperAndroid
+    internal class SpUsnatConsentWrapperAndroid: UsnatConsentWrapper
     {
-#nullable enable
-        public string? uuid;
-#nullable disable
         public StatusWrapperAndroid statuses;
-        public bool applies;
         public string consentStrings;
         public string vendors;
         public string categories;
