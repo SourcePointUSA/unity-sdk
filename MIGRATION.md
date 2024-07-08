@@ -66,7 +66,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |   |-- consents: CcpaConsent
 +       |       |-- applies: bool
         |       |-- uuid: String?
-	    |       |-- rejectedCategories: List<String>
+        |       |-- rejectedCategories: List<String>
         |       |-- rejectedVendors: List<String>
         |       |-- status: String?
         |       |-- uspstring: String
@@ -79,7 +79,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
             |-- consents: CcpaConsent
                 |-- uuid: String?
                 |-- applies: bool
-	            |-- consentStrings: List<ConsentString>
+                |-- consentStrings: List<ConsentString>
                 |-- vendors: List<Consentable>      //[{id: String, consented: bool }]
                 |-- categories: List<Consentable>   //[{id: String, consented: bool }]
                 |-- statuses: StatusesUsnat
