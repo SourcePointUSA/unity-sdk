@@ -12,6 +12,25 @@ typedef void (*СallbackCharMessage) (const char*);
 
 extern "C"
 {
+    NSString* _getString(char * value)
+    {
+        return [NSString stringWithFormat:@"%s", value];
+    }
+    
+    char* _checkGetString(char * value)
+    {
+        NSLog(@"%s","Check string");
+        if (value == NULL)
+        {
+            NSLog(@"%s","Checked string is NULL");
+            return NULL;
+        }
+        char* res = (char*)malloc(strlen(value)+1);
+        strcpy (res, value);
+        NSLog(@"data = %s", value);
+        return res;
+    }
+
     void _setCallback (СallbackCharMessage callback, char* typeCallback){
         if (swiftBridge == nil)
             swiftBridge = [[SwiftBridge alloc] init];
