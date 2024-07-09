@@ -211,6 +211,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
 
     private void OnDestroy()
     {
+        ConsentMessenger.RemoveListener<IOnConsentSpFinished>(gameObject);
         ConsentMessenger.RemoveListener<IOnConsentReady>(gameObject);
         CMP.Instance.Dispose();
     }
