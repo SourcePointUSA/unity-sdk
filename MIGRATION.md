@@ -9,7 +9,7 @@ using ConsentManagementProvider;
 ```
 
 ## CMP facade
-CMP class moved from using the static methods to using the static instance (singleton pattern). So you must replace `CMP` with `CMP.Instance` before usage of each method.
+CMP class was moved from using the static methods to using the static instance (singleton pattern). Replace `CMP` with `CMP.Instance` before usage of each method.
 
 ### Initialize
 In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Instance.Initialize`.
