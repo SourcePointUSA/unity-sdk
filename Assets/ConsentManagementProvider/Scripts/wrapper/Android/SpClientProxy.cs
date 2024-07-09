@@ -1,9 +1,9 @@
 ﻿using System;
-using ConsentManagementProviderLib.Json;
-using ConsentManagementProviderLib.Observer;
+using ConsentManagementProvider.Json;
+using ConsentManagementProvider.Observer;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class SpClientProxy : AndroidJavaProxy
     {

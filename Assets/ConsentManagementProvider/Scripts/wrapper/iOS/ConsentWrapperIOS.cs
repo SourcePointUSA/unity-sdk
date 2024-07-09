@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConsentManagementProviderLib.Enum;
+using ConsentManagementProvider.Enum;
 
 #if UNITY_IOS && !UNITY_EDITOR_OSX
 using System.Runtime.InteropServices;
 #endif
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.iOS
+namespace ConsentManagementProvider.iOS
 {
     internal class ConsentWrapperIOS: ISpSdk
     {

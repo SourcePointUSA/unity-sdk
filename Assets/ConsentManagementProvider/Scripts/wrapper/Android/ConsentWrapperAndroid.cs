@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using ConsentManagementProviderLib.Enum;
-using ConsentManagementProviderLib.Observer;
+using ConsentManagementProvider.Enum;
+using ConsentManagementProvider.Observer;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class ConsentWrapperAndroid: ISpSdk
     {

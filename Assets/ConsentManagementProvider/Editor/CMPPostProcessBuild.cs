@@ -5,7 +5,7 @@ using UnityEditor.iOS.Xcode;
 using System.IO;
 using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
-using ConsentManagementProviderLib; 
+using ConsentManagementProvider; 
 
 public static class CMPPostProcessBuild
 {    

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ConsentManagementProviderLib.Json
+namespace ConsentManagementProvider.Json
 {
     internal class JsonUnwrapperIOS
     {

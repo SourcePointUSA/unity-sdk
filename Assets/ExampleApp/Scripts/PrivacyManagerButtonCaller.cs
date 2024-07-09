@@ -1,4 +1,4 @@
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 using UnityEngine;
 
 public class PrivacyManagerButtonCaller : MonoBehaviour

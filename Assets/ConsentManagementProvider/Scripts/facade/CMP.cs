@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConsentManagementProviderLib.Android;
-using ConsentManagementProviderLib.iOS;
-using ConsentManagementProviderLib.UnityEditor;
-using ConsentManagementProviderLib.Observer;
+using ConsentManagementProvider.Android;
+using ConsentManagementProvider.iOS;
+using ConsentManagementProvider.Observer;
+using ConsentManagementProvider.UnityEditor;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public class CMP: ICmpSdk
     {

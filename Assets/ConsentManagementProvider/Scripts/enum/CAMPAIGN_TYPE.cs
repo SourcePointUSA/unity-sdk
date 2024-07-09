@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public enum CAMPAIGN_TYPE
     {

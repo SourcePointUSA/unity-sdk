@@ -1,4 +1,4 @@
-namespace ConsentManagementProviderLib.Json
+namespace ConsentManagementProvider.Json
 {
     internal class SpGdprWrapperIOS
     {

@@ -1,10 +1,10 @@
-﻿using ConsentManagementProviderLib.Enum;
-using ConsentMessagePlugin.Android;
+﻿using ConsentMessagePlugin.Android;
 using System.Collections.Generic;
 using System.Linq;
+using ConsentManagementProvider.Enum;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class AndroidJavaConstruct 
     {

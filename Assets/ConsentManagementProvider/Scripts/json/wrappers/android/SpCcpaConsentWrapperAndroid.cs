@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace ConsentManagementProviderLib.Json
+namespace ConsentManagementProvider.Json
 {
     internal class SpCcpaConsentWrapperAndroid: CcpaConsentWrapper
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.UnityEditor
+namespace ConsentManagementProvider.UnityEditor
 {
     public class ConsentWrapperUnityEditor: ISpSdk
     {

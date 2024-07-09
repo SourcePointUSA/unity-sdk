@@ -1,9 +1,9 @@
 ﻿using System;
+using ConsentManagementProvider.Json;
 using UnityEngine;
-using ConsentManagementProviderLib.Json;
 using JetBrains.Annotations;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class CustomConsentClient : AndroidJavaProxy
     {
