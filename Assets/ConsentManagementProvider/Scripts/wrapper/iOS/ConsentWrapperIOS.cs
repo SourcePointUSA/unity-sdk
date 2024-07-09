@@ -47,6 +47,8 @@ namespace ConsentManagementProviderLib.iOS
         private static extern void _clearCustomArrays();
         [DllImport("__Internal")]
         private static extern void _dispose();
+        [DllImport("__Internal")]
+        private static extern string _checkGetString(string value);
 #endif
 
         public ConsentWrapperIOS()
