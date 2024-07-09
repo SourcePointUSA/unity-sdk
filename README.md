@@ -2,6 +2,8 @@
 
 Sourcepoint's plug and play Unity SDK can be integrated with both Android and iOS.
 
+> **Note**: If you have updated from version 2.x.x to 3.0.0, please read [`MIGRATION.md`](MIGRATION.md)
+
 > **Note**: The Unity SDK can not be demoed using Unity's Editor since it embeds native SDKs and those only work in their respective platforms.
 > <br><br>Additionally, this SDK utilizes [ExternalDependencyManager by Google](https://github.com/googlesamples/unity-jar-resolver) in order to fetch native SDKs and their dependencies. Ensure all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` are resolved before building your application.
 
@@ -16,7 +18,7 @@ Please also note that in order to build a project:
 To start, include the following library namepsace in your script:
 
 ```c#
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 ```
 
 Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampaign` object should consist of `CAMPAIGN_TYPE` along with the `TargetingParams` you need.
@@ -168,7 +170,7 @@ The solution is ready. Configure it and deploy!
 Both calling & handling workflows are implemented in the `ConsentMessageProvider` and `ConsentEventHandler` scripts of our example app accordingly. Feel free to use these components.
 
 ```c#
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 using System;
 using UnityEngine;
 

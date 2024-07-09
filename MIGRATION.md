@@ -1,5 +1,13 @@
 # Upgrade from 2.x.x to 3.0.0
 
+## Instantiate consent UI
+
+In version 3.0.0, the namespace of the library was changed to `ConsentManagementProvider`:
+
+```c#
+using ConsentManagementProvider;
+```
+
 ## CMP facade
 CMP class moved from using the static methods to using the static instance (singleton pattern). So you must replace `CMP` with `CMP.Instance` before usage of each method.
 
