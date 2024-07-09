@@ -43,6 +43,7 @@ namespace ConsentManagementProviderLib.iOS
             _setCallback(OnConsentUIReady, CALLBACK_TYPE.OnConsentUIReady);
             _setCallback(OnConsentAction, CALLBACK_TYPE.OnConsentAction);
             _setCallback(OnConsentUIFinished, CALLBACK_TYPE.OnConsentUIFinished);
+            _setCallback(OnConsentSPFinished, CALLBACK_TYPE.OnSPFinished);
             _setCallback(OnErrorCallback, CALLBACK_TYPE.OnErrorCallback);
             _setCallback(OnCustomConsentGDPRCallback, CALLBACK_TYPE.OnCustomConsent);
 #endif
@@ -114,6 +115,13 @@ namespace ConsentManagementProviderLib.iOS
         {
             CmpDebugUtil.Log("OnConsentUIFinished IOS_CALLBACK_RECEIVED: " + message);
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
+        }
+
+        [MonoPInvokeCallback(typeof(Action<string>))]
+        static void OnConsentSPFinished(string message)
+        {
+            CmpDebugUtil.Log("OnConsentSpFinished IOS_CALLBACK_RECEIVED: " + message);
+            ConsentMessenger.Broadcast<IOnConsentSpFinished>();
         }
 
         [MonoPInvokeCallback(typeof(Action<string>))]

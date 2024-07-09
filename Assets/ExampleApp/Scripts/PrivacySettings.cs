@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class PrivacySettings : MonoBehaviour, IOnConsentReady
+public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinished
 {
     public int accountId = 22;
     public int propertyId = 16893;    
@@ -21,6 +21,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     [Header("UI")]
     public Text consentValueText;
+    public Text authIdText;
     public Button loadMessageButton;
     public Button gdprPrivacySettingsButton;
     public Button ccpaPrivacySettingsButton;
@@ -28,6 +29,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     public Button customConsentButton;
     public Button deleteCustomConsentButton;
     public Button clearDataButton;
+    public Text sdkStatus;
 
     private MESSAGE_LANGUAGE language
     {
@@ -47,6 +49,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
     private void Awake()
     {
         ConsentMessenger.AddListener<IOnConsentReady>(gameObject);
+        ConsentMessenger.AddListener<IOnConsentSpFinished>(gameObject);
 
         List<SpCampaign> spCampaigns = new List<SpCampaign>();
         List<TargetingParam> gdprParams = new List<TargetingParam> { new TargetingParam("location", "EU") };
@@ -63,6 +66,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         SpCampaign usnat = new SpCampaign(CAMPAIGN_TYPE.USNAT, usnatParams, transitionCCPAAuth: false, supportLegacyUSPString: false);
         spCampaigns.Add(usnat);
         campaignTypes.Add(CAMPAIGN_TYPE.USNAT);
+
+        UpdateSdkStatus("Running");
 
         CMP.Instance.Initialize(
             spCampaigns: spCampaigns,
@@ -85,6 +90,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnLoadMessagePress()
     {
+        UpdateSdkStatus("Running");
         storedConsentString = null;
         UpdateUI();
         CMP.Instance.LoadMessage(authId: authId);
@@ -92,6 +98,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnGDPRPrivacyManagerButtonClick()
     {
+        UpdateSdkStatus("Running");
         CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.GDPR,
             pmId: gdprPmId
@@ -100,6 +107,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnCCPAPrivacyManagerButtonClick()
     {
+        UpdateSdkStatus("Running");
         CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.CCPA,
             pmId: ccpaPmId
@@ -108,6 +116,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnUSNATPrivacyManagerButtonClick()
     {
+        UpdateSdkStatus("Running");
         CMP.Instance.LoadPrivacyManager(
             campaignType: CAMPAIGN_TYPE.USNAT,
             pmId: usnatPmId
@@ -144,6 +153,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
 
     public void OnClearDataPress()
     {
+        UpdateSdkStatus("Not Started");
         CMP.Instance.ClearAllData();
         storedConsentString = null;
         UpdateUI();
@@ -161,6 +171,11 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
         UpdateUI();
     }
 
+    public void OnConsentSpFinished()
+    {
+        UpdateSdkStatus("Finished");
+        UpdateUI();
+    }
     private void UpdateUI()
     {
         if (storedConsentString != null)
@@ -173,6 +188,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             deleteCustomConsentButton.interactable = true;
             clearDataButton.interactable = true;
             consentValueText.text = storedConsentString;
+            authIdText.text = CMP.GetBridgeString("AuthId:"+authId);
         }
         else
         {
@@ -184,7 +200,13 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady
             deleteCustomConsentButton.interactable = false;
             clearDataButton.interactable = false;
             consentValueText.text = "-";
+            authIdText.text = "-";
         }
+    }
+
+    void UpdateSdkStatus(string status)
+    {
+        sdkStatus.text = "SDK:"+status;
     }
 
     private void OnDestroy()
