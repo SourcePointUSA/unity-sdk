@@ -48,6 +48,7 @@ runTest android.runsettings SaveAndExitUSNATTest
 sleep 5
 runTest android.runsettings ClearAllButtonTest
 sleep 5
+runTest android.runsettings AuthIdTest
 
 #Kill android emulator
 osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''
