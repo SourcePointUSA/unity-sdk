@@ -337,13 +337,17 @@ namespace UnityAppiumTests
 
 			pages.firstLayerGO(true, true, true);
         	var data = pages.nativeAppLayer.getAuthIdText();
-			Console.WriteLine($"AuthIdText: {data}");
-    		Assert.That(data=="AuthId:", Is.True);
+			Console.WriteLine($"AuthIdText: \"{data}\" (\"-\" means no authId was used)");
+    		Assert.That(data=="-", Is.True);
 
-			Console.WriteLine("String send: Test");
-			data = altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "GetBridgeString", "Assembly-CSharp", new[] { "Test" });
-			Console.WriteLine($"Got: {data}");
-    		Assert.That(data=="Test", Is.True);
+            if (platformIOS)
+            {
+	            // this is iOS-specific code which checks that iOS bridge handles conversion of c# string to obj-c string correctly
+	            Console.WriteLine("String send: Test");
+				data = altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "GetBridgeString", "Assembly-CSharp", new[] { "Test" });
+				Console.WriteLine($"Got: {data}");
+    			Assert.That(data=="Test", Is.True);
+            }
 
 			pages.nativeAppLayer.waitForSdkDone();
 			pages.nativeAppLayer.pressClearAll();
@@ -354,6 +358,9 @@ namespace UnityAppiumTests
 			Console.WriteLine($"ConsentValueText: {data}");
 			if(data=="-")
 			{
+				// it means it is the first time this property is called with specified authId
+				// this part of code is meant to be executed only once in a lifetime
+				Console.WriteLine("The very first time using this authId!");
 				pages.firstLayerGO(true, true, true);
 				pages.nativeAppLayer.waitForSdkDone();
 			}
