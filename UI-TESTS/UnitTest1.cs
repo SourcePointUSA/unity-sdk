@@ -348,7 +348,7 @@ namespace UnityAppiumTests
 			pages.nativeAppLayer.waitForSdkDone();
 			pages.nativeAppLayer.pressClearAll();
 			pages.nativeAppLayer.waitForSdkDone("SDK:Not Started");
-			altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "LoadMessage", "Assembly-CSharp", new[] { "AltTesterTest" });
+			altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "ConcreteInstance.LoadMessage", "Assembly-CSharp", new[] { "AltTesterTest" });
 			pages.nativeAppLayer.waitForSdkDone();
         	data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
