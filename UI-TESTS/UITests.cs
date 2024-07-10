@@ -337,8 +337,8 @@ namespace UnityAppiumTests
 
 			pages.firstLayerGO(true, true, true);
         	var data = pages.nativeAppLayer.getAuthIdText();
-			Console.WriteLine($"AuthIdText: \"{data}\" (\"-\" means no authId was used)");
-    		Assert.That(data=="-", Is.True);
+			Console.WriteLine($"AuthIdText: \"{data}\" (\" \" means no authId was used)");
+            Assert.That(data=="AuthId:", Is.True);
 
             if (platformIOS)
             {
