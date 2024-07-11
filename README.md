@@ -2,6 +2,8 @@
 
 Sourcepoint's plug and play Unity SDK can be integrated with both Android and iOS.
 
+> **Note**: If you have updated from version 2.x.x to 3.0.0, please read [`MIGRATION.md`](MIGRATION.md)
+
 > **Note**: The Unity SDK can not be demoed using Unity's Editor since it embeds native SDKs and those only work in their respective platforms.
 > <br><br>Additionally, this SDK utilizes [ExternalDependencyManager by Google](https://github.com/googlesamples/unity-jar-resolver) in order to fetch native SDKs and their dependencies. Ensure all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` are resolved before building your application.
 
@@ -16,7 +18,7 @@ Please also note that in order to build a project:
 To start, include the following library namepsace in your script:
 
 ```c#
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 ```
 
 Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampaign` object should consist of `CAMPAIGN_TYPE` along with the `TargetingParams` you need.
@@ -41,24 +43,16 @@ Construct `List<SpCampaign>` which contains `SpCampaign` objects. Each `SpCampai
     spCampaigns.Add(usnat);
 ```
 
-In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName`, `gdpr`, `ccpa`, `usnat`,`gdprPmId`, `ccpaPmId`, `usnatPmId` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
+In order to instantiate & trigger `Consent Message Web View`, you must call the `CMP.Instance.Initialize` function in `Awake` along with `spCampaigns`, `accountId`, `propertyId`, `propertyName` and `language`.<br/> <br/>Additionally, you can also specify a `messageTimeout` which, by default, is set to **30 seconds**.
 
 ```c#
-    CMP.Initialize(spCampaigns: spCampaigns,
+    CMP.Instance.Initialize(spCampaigns: spCampaigns,
                    accountId: 22,
                    propertyId: 16893,
                    propertyName: "mobile.multicampaign.demo",
-                   gdpr: true,
-                   ccpa: true,
-                   usnat: true,
                    language: MESSAGE_LANGUAGE.ENGLISH,
-                   gdprPmId: "488393",
-                   ccpaPmId: "509688",
-                   usnatPmId: "943886",
                    campaignsEnvironment: CAMPAIGN_ENV.PUBLIC,
-                   messageTimeoutInSeconds: 30,
-                   transitionCCPAAuth: false,
-                   supportLegacyUSPString: false);
+                   messageTimeoutInSeconds: 30);
 ```
 
 | Field          | **Description**                                                                                                                                                           |
@@ -68,11 +62,6 @@ In order to instantiate & trigger `Consent Message Web View`, you must call the 
 | `propertyId`   | ID for property found in the Sourcepoint portal                                                                                                                           |
 | `propertyName` | Name of property found in the Sourcepoint portal                                                                                                                          |
 | `language`     | Force a message to be displayed in a certain language. Look `MESSAGE_LANGUAGE` for all available languages                                                                |
-| `gdprPmId`     | Id of the privacy manager for `gdpr` campaign                                                                                                                             |
-| `ccpaPmId`     | Id of the privacy manager for `ccpa` campaign                                                                                                                             |
-| `usnatPmId`    | Id of the privacy manager for `usnat` campaign                                                                                                                            |
-| `transitionCCPAAuth`     | Transfer opt-in/opt out preferences from U.S. Privacy (Legacy) to U.S. Multi-State Privacy [ios](https://github.com/SourcePointUSA/ios-cmp-app?tab=readme-ov-file#transfer-opt-inopt-out-preferences-from-us-privacy-legacy-to-us-multi-state-privacy), [android](https://github.com/SourcePointUSA/android-cmp-app?tab=readme-ov-file#transfer-opt-inopt-out-preferences-from-us-privacy-legacy-to-us-multi-state-privacy)    |
-| `supportLegacyUSPString` | Support U.S. Privacy (Legacy) with U.S. Multi-State Privacy [ios](https://github.com/SourcePointUSA/ios-cmp-app?tab=readme-ov-file#support-us-privacy-legacy-with-us-multi-state-privacy)                                                                                                                          |
 
 > **Note**: It may take a frame to initialize the CMP library, so we strongly recommend that you `Initialize` in `Awake` separately from `LoadMessage`. We recommend that you `LoadMessage` in `Start` (see example below).
 
@@ -81,7 +70,7 @@ When the SDK receives the `LoadMessage` call, it will instantiate a webview if t
 ```c#
 private void Start()
 {
-     CMP.LoadMessage(authId: null); // or pass it a String if you wish to use authenticated consent
+     CMP.Instance.LoadMessage(authId: null); // or pass it a String if you wish to use authenticated consent
 }
 ```
 
@@ -90,7 +79,7 @@ Utilize the following method if an end-user requests to have their data deleted:
 ```c#
 private void ClearData()
 {
-     CMP.ClearAllData();
+     CMP.Instance.ClearAllData();
 }
 ```
 
@@ -99,7 +88,7 @@ In order to free memory, call `Dispose` as illustrated in the following example 
 ```c#
 private void OnDestroy()
 {
-    CMP.Dispose();
+    CMP.Instance.Dispose();
 }
 ```
 
@@ -181,7 +170,7 @@ The solution is ready. Configure it and deploy!
 Both calling & handling workflows are implemented in the `ConsentMessageProvider` and `ConsentEventHandler` scripts of our example app accordingly. Feel free to use these components.
 
 ```c#
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 using System;
 using UnityEngine;
 
@@ -241,7 +230,7 @@ Once a player has completed the consent flow, you might want to provide a way fo
 ```c#
     public void OnPrivacyManagerButtonClick()
     {
-        CMP.LoadPrivacyManager(campaignType: CAMPAIGN_TYPE.GDPR,
+        CMP.Instance.LoadPrivacyManager(campaignType: CAMPAIGN_TYPE.GDPR,
                                pmId: "488393",
                                tab: PRIVACY_MANAGER_TAB.DEFAULT);
     }
@@ -268,6 +257,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |-- gdpr?
         |   |-- applies: bool
         |   |-- consents: GdprConsent
+        |       |-- applies: bool
         |       |-- uuid: String?
         |       |-- tcData: Map<String, String>
         |       |-- grants: Map<String, GDPRPurposeGrants>
@@ -282,6 +272,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |-- ccpa?
         |   |-- applies: bool
         |   |-- consents: CcpaConsent
+        |       |-- applies: bool
         |       |-- uuid: String?
 	    |       |-- rejectedCategories: List<String>
         |       |-- rejectedVendors: List<String>
@@ -290,6 +281,7 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
         |       |-- childPmId: String
         |       |-- signedLspa: bool
         |       |-- consentStatus: ConsentStatus?
+        |       |-- GPPData: Dictionary<string, object>?
         |-- usnat?
             |-- applies: bool
             |-- consents: CcpaConsent
@@ -307,12 +299,13 @@ This getter is used to retrieve `SpConsents` data. After calling, it checks the 
                     |-- shareStatus: bool?
                     |-- sensitiveDataStatus: bool?
                     |-- gpcStatus: bool?
+                |-- GPPData: Dictionary<string, object>?
 ```
 
 This method may return null. Sample usage:
 
 ```c#
-    CMP.GetSpConsents()
+    CMP.Instance.GetSpConsents()
 ```
 
 ## Verifying end-user consent for a given vendor
@@ -324,7 +317,7 @@ If the vendor you're interested in verifying consent for is part of the IAB grou
 For vendors that are not part of the IAB, you can verify the user consented to the vendor with the following:
      
 ```c#
-     consents = CMP.GetSpConsents();
+     consents = CMP.Instance.GetSpConsents();
      
      // for GDPR
      bool isMyGDPRVendorConsented = consents.gdpr.consents.grants["a_vendor_id"].vendorGrant;
@@ -367,6 +360,22 @@ void DeleteCustomConsentGDPR(
 ```
 
 It's important to notice, this methods are intended to be used for **custom** vendors and purposes only. For IAB vendors and purposes, it's still required to get consent via the consent message or privacy manager.
+
+## Transfer opt-in/opt out preferences from U.S. Privacy (Legacy) to U.S. Multi-State Privacy
+For full information please visit the links: [ios](https://github.com/SourcePointUSA/ios-cmp-app?tab=readme-ov-file#transfer-opt-inopt-out-preferences-from-us-privacy-legacy-to-us-multi-state-privacy), [android](https://github.com/SourcePointUSA/android-cmp-app?tab=readme-ov-file#transfer-opt-inopt-out-preferences-from-us-privacy-legacy-to-us-multi-state-privacy).
+Parameters work only for the usnat campaign. Usage:
+```c#
+SpCampaign usnat = new SpCampaign(campaignType: CAMPAIGN_TYPE.USNAT, targetingParams: usnatParams, transitionCCPAAuth: true);
+spCampaigns.Add(usnat);
+```
+
+## Support U.S. Privacy (Legacy) with U.S. Multi-State Privacy
+For full information please visit the links: [ios](https://github.com/SourcePointUSA/ios-cmp-app?tab=readme-ov-file#support-us-privacy-legacy-with-us-multi-state-privacy), [android](https://github.com/SourcePointUSA/android-cmp-app?tab=readme-ov-file#support-us-privacy-legacy-with-us-multi-state-privacy).
+Parameters work only for the usnat campaign. Usage:
+```c#
+SpCampaign usnat = new SpCampaign(campaignType: CAMPAIGN_TYPE.USNAT, targetingParams: usnatParams, supportLegacyUSPString: true);
+spCampaigns.Add(usnat);
+```
 
 # Build for iOS
 
