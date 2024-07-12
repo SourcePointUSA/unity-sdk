@@ -81,9 +81,9 @@ extern "C"
         [swiftBridge setSupportLegacyUSPStringWithValue:value];
     }
 
-    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, bool usnat, SPMessageLanguage language, char* gdprPmId, char* ccpaPmId, char* usnatPmId)
+    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, bool usnat, char* language, char* gdprPmId, char* ccpaPmId, char* usnatPmId)
     {
-        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:language gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId] usnatPmId:[NSString stringWithFormat:@"%s", usnatPmId]];
+        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:[NSString stringWithFormat:@"%s", language] gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId] usnatPmId:[NSString stringWithFormat:@"%s", usnatPmId]];
     }
 
     void _loadMessage()

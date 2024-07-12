@@ -107,7 +107,7 @@ import UIKit
         gdpr: Bool,
         ccpa: Bool,
         usnat: Bool,
-        language: SPMessageLanguage,
+        language: String,
         gdprPmId: String,
         ccpaPmId: String,
         usnatPmId: String) {
@@ -128,7 +128,7 @@ import UIKit
                     usnat: usnat ? SPCampaign(targetingParams: usnatTargetingParams, transitionCCPAAuth: config.transitionCCPAAuth, supportLegacyUSPString: config.supportLegacyUSPString) : nil,
                     ios14: SPCampaign()
                 ),
-                language: language,
+                language: SPMessageLanguage.init(rawValue: language) ?? SPMessageLanguage.BrowserDefault,
                 delegate: self
             )}()
         }

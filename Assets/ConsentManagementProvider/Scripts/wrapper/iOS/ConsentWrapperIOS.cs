@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ConsentManagementProviderLib.Enum;
 #if UNITY_IOS && !UNITY_EDITOR_OSX
 using System.Runtime.InteropServices;
 #endif
@@ -37,7 +38,7 @@ namespace ConsentManagementProviderLib.iOS
         [DllImport("__Internal")]
         private static extern void _setSupportLegacyUSPString(bool value);
         [DllImport("__Internal")]
-        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, MESSAGE_LANGUAGE language, string gdprPmId, string ccpaPmId, string usnatPmId);
+        private static extern void _configLib(int accountId, int propertyId, string propertyName, bool gdpr, bool ccpa, bool usnat, string language, string gdprPmId, string ccpaPmId, string usnatPmId);
         [DllImport("__Internal")]
         private static extern void _loadMessage();
         [DllImport("__Internal")]
@@ -121,7 +122,9 @@ namespace ConsentManagementProviderLib.iOS
                 _setTransitionCCPAAuth((bool)transitionCCPAAuth);
             if(supportLegacyUSPString != null)
                 _setSupportLegacyUSPString((bool)supportLegacyUSPString);
-            _configLib(accountId, propertyId, propertyName, gdpr, ccpa, usnat, language, gdprPmId, ccpaPmId, usnatPmId);
+
+            string langName = CSharp2JavaStringEnumMapper.GetMessageLanguageKey(language);
+            _configLib(accountId, propertyId, propertyName, gdpr, ccpa, usnat, langName, gdprPmId, ccpaPmId, usnatPmId);
 #endif
         }
 
