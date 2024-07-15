@@ -45,10 +45,11 @@ namespace ConsentManagementProvider
             CAMPAIGN_ENV campaignsEnvironment,
             long messageTimeoutInSeconds = 3)
         {
-            if(!IsSpCampaignsValid(spCampaigns))
-            { 
+            if (!IsSpCampaignsValid(spCampaigns))
                 return;
-            }
+
+            if (!IsPropertyNameValid(ref propertyName))
+                return;
 
             foreach (SpCampaign sp in spCampaigns)
             {
@@ -61,14 +62,12 @@ namespace ConsentManagementProvider
                 }
             }
 
-            propertyName = propertyName.Trim();
-
             CreateBroadcastExecutorGameObject();
 
             ConcreteInstance.Initialize(
-                accountId: accountId, 
-                propertyId: propertyId, 
-                propertyName: propertyName, 
+                accountId: accountId,
+                propertyId: propertyId,
+                propertyName: propertyName,
                 language: language,
                 spCampaigns: spCampaigns,
                 campaignsEnvironment: campaignsEnvironment,
@@ -82,10 +81,25 @@ namespace ConsentManagementProvider
         public void LoadPrivacyManager(
             CAMPAIGN_TYPE campaignType, 
             string pmId, 
-            PRIVACY_MANAGER_TAB tab) => ConcreteInstance.LoadPrivacyManager(
-                                            campaignType: campaignType, 
-                                            pmId: pmId, 
-                                            tab: tab);
+            PRIVACY_MANAGER_TAB tab)
+        {
+            if (!IsCampaignSetUp(campaignType))
+            {
+                CmpDebugUtil.LogError($"Campaign {campaignType} was not setup properly. Aborting...");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(pmId))
+            {
+                CmpDebugUtil.LogError($"pmID is null or empty for campaign {campaignType}. Aborting...");
+                return;
+            }
+
+            ConcreteInstance.LoadPrivacyManager(
+                campaignType: campaignType,
+                pmId: pmId,
+                tab: tab);
+        }
 
         public void CustomConsentGDPR(
             string[] vendors, 
@@ -124,14 +138,37 @@ namespace ConsentManagementProvider
         private bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
         {
             //check if there more than 0 campaign
-            if (spCampaigns.Count == 0)
+            if (spCampaigns is null || spCampaigns.Count == 0)
             {
-                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
+                CmpDebugUtil.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
                 return false;
             }
             
             return true;
         }
+
+        private bool IsPropertyNameValid(ref string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) || string.IsNullOrWhiteSpace(propertyName))
+            {
+                CmpDebugUtil.LogError("Property Name can`t be null or empty! Aborting...");
+                return false;
+            }
+            propertyName = propertyName.Trim();
+            return true;
+        }            
+        
+        private bool IsCampaignSetUp(CAMPAIGN_TYPE campaignType)
+            {
+                switch (campaignType)
+                {
+                    case CAMPAIGN_TYPE.GDPR: return UseGDPR;
+                    case CAMPAIGN_TYPE.CCPA: return UseCCPA;
+                    case CAMPAIGN_TYPE.USNAT: return UseUSNAT;
+                    case CAMPAIGN_TYPE.IOS14: return UseIOS14;
+                    default: return false;
+                }
+            }
         #endregion
     }
 }
