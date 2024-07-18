@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConsentManagementProviderLib.EventHandlerInterface;
+using ConsentManagementProvider.EventHandlerInterface;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.Observer
+namespace ConsentManagementProvider.Observer
 {
     internal static class BroadcastReceivers 
     {

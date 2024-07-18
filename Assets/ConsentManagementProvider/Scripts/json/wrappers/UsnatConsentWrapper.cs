@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace ConsentManagementProviderLib.Json
+namespace ConsentManagementProvider.Json
 {
     internal class UsnatConsentWrapper
     {

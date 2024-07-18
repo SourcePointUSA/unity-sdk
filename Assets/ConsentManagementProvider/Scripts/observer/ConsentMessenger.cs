@@ -1,9 +1,9 @@
 ﻿using System;
-using ConsentManagementProviderLib.EventHandlerInterface;
-using ConsentManagementProviderLib.Observer;
+using ConsentManagementProvider.EventHandlerInterface;
+using ConsentManagementProvider.Observer;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public static class ConsentMessenger
     {

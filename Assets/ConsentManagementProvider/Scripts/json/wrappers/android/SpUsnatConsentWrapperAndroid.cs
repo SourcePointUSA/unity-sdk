@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace ConsentManagementProviderLib.Json
+namespace ConsentManagementProvider.Json
 {
     internal class SpUsnatConsentWrapperAndroid: UsnatConsentWrapper
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     public class CmpAndroidLoggerProxy : AndroidJavaProxy
     {

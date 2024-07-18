@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public class SpCampaign
     {

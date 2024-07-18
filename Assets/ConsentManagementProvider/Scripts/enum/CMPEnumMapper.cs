@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ConsentMessagePlugin.Android;
 
-namespace ConsentManagementProviderLib.Enum
+namespace ConsentManagementProvider.Enum
 {
     internal static class CMPEnumMapper
     {

@@ -1,4 +1,4 @@
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public interface ICmpSdk : ISpSdk
     {

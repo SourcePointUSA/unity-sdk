@@ -1,4 +1,4 @@
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;

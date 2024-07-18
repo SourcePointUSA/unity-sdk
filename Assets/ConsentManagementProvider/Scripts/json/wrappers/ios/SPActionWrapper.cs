@@ -1,4 +1,4 @@
-namespace ConsentManagementProviderLib.Json
+namespace ConsentManagementProvider.Json
 {
     public class SpActionWrapper
     {

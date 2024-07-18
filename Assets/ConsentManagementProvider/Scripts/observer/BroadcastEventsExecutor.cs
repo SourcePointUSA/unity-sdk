@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ConsentManagementProviderLib.Observer
+namespace ConsentManagementProvider.Observer
 {
     internal class BroadcastEventsExecutor : MonoBehaviour
     {

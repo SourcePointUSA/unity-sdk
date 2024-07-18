@@ -5,11 +5,11 @@ using AOT;
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using ConsentManagementProviderLib.Json;
 using System.Collections;
 using System.Collections.Generic;
+using ConsentManagementProvider.Json;
 
-namespace ConsentManagementProviderLib.iOS
+namespace ConsentManagementProvider.iOS
 {
     internal class CMPiOSListenerHelper : MonoBehaviour
     {

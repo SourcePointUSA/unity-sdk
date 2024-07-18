@@ -1,3 +1,6 @@
+# 2.3.5
+* Unity SDK brought to v7.8.5 Android & v7.6.10 iOS native SDK [#65](https://github.com/SourcePointUSA/unity-sdk/pull/65)
+
 # 2.3.4
 * Unity SDK brought up to v7.8.4 of Native Android SDK [#62](https://github.com/SourcePointUSA/unity-sdk/pull/62) which fixes the following:
 * [DIA-4112](https://sourcepoint.atlassian.net/browse/DIA-4112) Fixed: Links to vendors' privacy policy pages now working on Android devices

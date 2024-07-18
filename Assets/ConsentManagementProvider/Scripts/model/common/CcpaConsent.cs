@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public class CcpaConsent
     {

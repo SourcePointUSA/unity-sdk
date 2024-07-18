@@ -1,7 +1,7 @@
-﻿using ConsentManagementProviderLib.EventHandlerInterface;
+﻿using ConsentManagementProvider.EventHandlerInterface;
 using UnityEngine.EventSystems;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public interface IOnConsentAction : IConsentEventHandler
     {
