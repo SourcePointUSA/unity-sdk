@@ -57,7 +57,7 @@ sleep 5
 #Test ios
 runTest ios.runsettings ClickAcceptAllButtonTest
 sleep 5
-runTest ios.runsettings ClickRejecttAllButtonTest
+runTest ios.runsettings ClickRejectAllButtonTest
 sleep 5
 runTest ios.runsettings OpenPmLayersTest
 sleep 5
