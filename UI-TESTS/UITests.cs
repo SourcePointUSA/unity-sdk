@@ -344,7 +344,7 @@ namespace UnityAppiumTests
             {
 	            // this is iOS-specific code which checks that iOS bridge handles conversion of c# string to obj-c string correctly
 	            Console.WriteLine("String send: Test");
-				data = altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "GetBridgeString", "Assembly-CSharp", new[] { "Test" });
+				data = altDriver.CallStaticMethod<string>("ConsentManagementProvider.CMP", "GetBridgeString", "Assembly-CSharp", new[] { "Test" });
 				Console.WriteLine($"Got: {data}");
     			Assert.That(data=="Test", Is.True);
             }
@@ -352,7 +352,7 @@ namespace UnityAppiumTests
 			pages.nativeAppLayer.waitForSdkDone();
 			pages.nativeAppLayer.pressClearAll();
 			pages.nativeAppLayer.waitForSdkDone("SDK:Not Started");
-			altDriver.CallStaticMethod<string>("ConsentManagementProviderLib.CMP", "ConcreteInstance.LoadMessage", "Assembly-CSharp", new[] { "AltTesterTest" });
+			altDriver.CallStaticMethod<string>("ConsentManagementProvider.CMP", "ConcreteInstance.LoadMessage", "Assembly-CSharp", new[] { "AltTesterTest" });
 			pages.nativeAppLayer.waitForSdkDone();
         	data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
