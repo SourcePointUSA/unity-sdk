@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public class TargetingParam
     {

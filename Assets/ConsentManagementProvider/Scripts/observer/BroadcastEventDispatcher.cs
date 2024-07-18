@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using ConsentManagementProviderLib.EventHandlerInterface;
+using ConsentManagementProvider.EventHandlerInterface;
 using UnityEngine.EventSystems;
 
-namespace ConsentManagementProviderLib.Observer
+namespace ConsentManagementProvider.Observer
 {
     internal static class BroadcastEventDispatcher
     {

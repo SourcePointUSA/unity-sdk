@@ -1,4 +1,4 @@
-﻿namespace ConsentManagementProviderLib
+﻿namespace ConsentManagementProvider
 {
     public enum PRIVACY_MANAGER_TAB
     {

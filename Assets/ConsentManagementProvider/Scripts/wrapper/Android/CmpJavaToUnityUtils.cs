@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal static class CmpJavaToUnityUtils
     {

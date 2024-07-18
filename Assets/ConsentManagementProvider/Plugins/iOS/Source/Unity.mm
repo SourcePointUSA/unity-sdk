@@ -12,52 +12,10 @@ typedef void (*СallbackCharMessage) (const char*);
 
 extern "C"
 {
-    void _setCallbackDefault (СallbackCharMessage callback){
+    void _setCallback (СallbackCharMessage callback, char* typeCallback){
         if (swiftBridge == nil)
             swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackDefaultWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentReady (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentReadyWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentUIReady (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentUIReadyWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentAction (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentActionWithCallback:callback];
-    }
-
-    void _setCallbackOnConsentUIFinished (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnConsentUIFinishedWithCallback:callback];
-    }
-
-    void _setCallbackOnErrorCallback (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnErrorCallbackWithCallback:callback];
-    }
-
-    void _setCallbackOnSPFinished (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnSPFinishedWithCallback:callback];
-    }
-
-    void _setCallbackOnCustomConsent (СallbackCharMessage callback){
-        if (swiftBridge == nil)
-            swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackOnCustomConsentWithCallback:callback];
+        [swiftBridge setCallbackWithCallback:callback typeCallback:[NSString stringWithFormat:@"%s", typeCallback]];
     }
 
     void _initLib()
@@ -81,9 +39,9 @@ extern "C"
         [swiftBridge setSupportLegacyUSPStringWithValue:value];
     }
 
-    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, bool usnat, char* language, char* gdprPmId, char* ccpaPmId, char* usnatPmId)
+    void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, bool usnat, char* language, int messageTimeoutInSeconds)
     {
-        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:[NSString stringWithFormat:@"%s", language] gdprPmId:[NSString stringWithFormat:@"%s", gdprPmId] ccpaPmId:[NSString stringWithFormat:@"%s", ccpaPmId] usnatPmId:[NSString stringWithFormat:@"%s", usnatPmId]];
+        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:[NSString stringWithFormat:@"%s", language] messageTimeoutInSeconds:messageTimeoutInSeconds];
     }
 
     void _loadMessage()
@@ -95,22 +53,11 @@ extern "C"
     {
         [swiftBridge loadMessageWithAuthId:[NSString stringWithFormat:@"%s", authId]];
     }
-
-    void _loadGDPRPrivacyManager()
+    
+    void _loadPrivacyManager(int campaignType, char* pmId, int tab)
     {
-        [swiftBridge onGDPRPrivacyManagerTap];
+        [swiftBridge loadPrivacyManagerWithCampaignType:campaignType pmId:[NSString stringWithFormat:@"%s", pmId] tab:(SPPrivacyManagerTab)tab];
     }
-
-    void _loadCCPAPrivacyManager()
-    {
-        [swiftBridge onCCPAPrivacyManagerTap];
-    }
-
-    void _loadUSNATPrivacyManager()
-    {
-        [swiftBridge onUSNATPrivacyManagerTap];
-    }
-
 
     void _cleanConsent()
     {

@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using ConsentManagementProviderLib.Json;
+using ConsentManagementProvider.Json;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class SpAndroidNativeUtils
     {

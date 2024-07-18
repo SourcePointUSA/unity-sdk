@@ -1,260 +1,174 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using ConsentManagementProviderLib.Android;
-using ConsentManagementProviderLib.iOS;
-using ConsentManagementProviderLib.Observer;
+using ConsentManagementProvider.Android;
+using ConsentManagementProvider.iOS;
+using ConsentManagementProvider.Observer;
+using ConsentManagementProvider.UnityEditor;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
-    public static class CMP
+    public class CMP: ICmpSdk
     {
-        private static GameObject mainThreadBroadcastEventsExecutor;
-        private static bool IsEditor => Application.platform == RuntimePlatform.LinuxEditor
-                                        || Application.platform == RuntimePlatform.WindowsEditor
-                                        || Application.platform == RuntimePlatform.OSXEditor;
+        public static ICmpSdk Instance => instance ??= new CMP();
 
-        public static bool useGDPR = false;
-        public static bool useCCPA = false;
-        public static bool useUSNAT = false;
+        public bool UseGDPR { get; private set; }
+        public bool UseCCPA { get; private set; }
+        public bool UseUSNAT { get; private set; }
+        public bool UseIOS14 { get; private set; }
+
+        private GameObject mainThreadBroadcastEventsExecutor;
+        private static ISpSdk concreteInstance;
+        private static ICmpSdk instance;
         
-        public static void Initialize(
-            List<SpCampaign> spCampaigns, 
+        internal static ISpSdk ConcreteInstance
+        {
+            get
+            {
+                if (concreteInstance == null)
+                    concreteInstance = Application.platform switch
+                    {
+                        RuntimePlatform.Android => new ConsentWrapperAndroid(),
+                        RuntimePlatform.IPhonePlayer => new ConsentWrapperIOS(),
+                        _ => new ConsentWrapperUnityEditor(),
+                    };
+                return concreteInstance;
+            }
+        }
+
+        public void Initialize(
             int accountId,
             int propertyId,
             string propertyName,
-            MESSAGE_LANGUAGE language,  
-            string gdprPmId, 
-            string ccpaPmId,
-            string usnatPmId,
+            MESSAGE_LANGUAGE language,
+            List<SpCampaign> spCampaigns, 
             CAMPAIGN_ENV campaignsEnvironment,
-            long messageTimeoutInSeconds = 3,
-            bool? transitionCCPAAuth = null,
-            bool? supportLegacyUSPString = null)
+            long messageTimeoutInSeconds = 3)
         {
-            if(!IsSpCampaignsValid(spCampaigns))
-            { 
+            if (!IsSpCampaignsValid(spCampaigns))
                 return;
-            }
+
+            if (!IsPropertyNameValid(ref propertyName))
+                return;
 
             foreach (SpCampaign sp in spCampaigns)
             {
                 switch (sp.CampaignType)
                 {
-                    case CAMPAIGN_TYPE.GDPR: useGDPR = true; break;
-                    case CAMPAIGN_TYPE.CCPA: useCCPA = true; break;
-                    case CAMPAIGN_TYPE.USNAT: useUSNAT = true; break;
+                    case CAMPAIGN_TYPE.GDPR: UseGDPR = true; break;
+                    case CAMPAIGN_TYPE.CCPA: UseCCPA = true; break;
+                    case CAMPAIGN_TYPE.USNAT: UseUSNAT = true; break;
+                    case CAMPAIGN_TYPE.IOS14: UseIOS14 = true; break;
                 }
             }
 
-            propertyName = propertyName.Trim();
-            gdprPmId = gdprPmId.Trim();
-            ccpaPmId = ccpaPmId.Trim();
-            usnatPmId = usnatPmId.Trim();
+            CreateBroadcastExecutorGameObject();
 
-#if UNITY_ANDROID
-            CreateBroadcastExecutorGO();
-            //excluding ios14 campaign if any
-            RemoveIos14SpCampaign(ref spCampaigns);
-            if (!IsSpCampaignsValid(spCampaigns))
-            {
-                return;
-            }
-            ConsentWrapperAndroid.Instance.InitializeLib(
-                spCampaigns: spCampaigns,
+            ConcreteInstance.Initialize(
                 accountId: accountId,
                 propertyId: propertyId,
                 propertyName: propertyName,
                 language: language,
+                spCampaigns: spCampaigns,
                 campaignsEnvironment: campaignsEnvironment,
-                messageTimeoutMilliSeconds: messageTimeoutInSeconds * 1000,
-                transitionCCPAAuth: transitionCCPAAuth,
-                supportLegacyUSPString: supportLegacyUSPString);
-
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            CreateBroadcastExecutorGO();
-            ConsentWrapperIOS.Instance.InitializeLib(
-                accountId, 
-                propertyId, 
-                propertyName, 
-                useGDPR,
-                useCCPA,
-                useUSNAT,
-                language, 
-                gdprPmId, 
-                ccpaPmId,
-                usnatPmId,
-                spCampaigns,
-                campaignsEnvironment,
-                messageTimeoutInSeconds,
-                transitionCCPAAuth,
-                supportLegacyUSPString);
-#endif
+                messageTimeoutInSeconds: messageTimeoutInSeconds);
         }
         
-        public static void LoadMessage(string authId = null)
-        {
-            if (IsEditor)
-            {
-                Debug.LogWarning("Emulating LoadMessage call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
-                return;
-            }
-            
-#if UNITY_ANDROID
-            ConsentWrapperAndroid.Instance.LoadMessage(authId: authId);
+        public void LoadMessage(string authId = null) => ConcreteInstance.LoadMessage(authId: authId);
 
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            ConsentWrapperIOS.Instance.LoadMessage(authId: authId);
-#endif
-        }
+        public void ClearAllData() => ConcreteInstance.ClearAllData();
 
-        public static void ClearAllData(string authId = null)
+        public void LoadPrivacyManager(
+            CAMPAIGN_TYPE campaignType, 
+            string pmId, 
+            PRIVACY_MANAGER_TAB tab)
         {
-            if (IsEditor)
+            if (!IsCampaignSetUp(campaignType))
             {
-                Debug.LogWarning("Emulating ClearAllData call... Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                CmpDebugUtil.LogError($"Campaign {campaignType} was not setup properly. Aborting...");
                 return;
             }
 
-#if UNITY_ANDROID
-            SpAndroidNativeUtils.ClearAllData();
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            ConsentWrapperIOS.Instance.ClearAllData();
-#endif
-        }
-
-        public static void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab)
-        {
-            if (IsEditor)
+            if (string.IsNullOrEmpty(pmId))
             {
-                Debug.LogWarning($"Emulating LoadPrivacyManager call for {campaignType}... " +
-                                 $"Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                CmpDebugUtil.LogError($"pmID is null or empty for campaign {campaignType}. Aborting...");
                 return;
             }
-            
-#if UNITY_ANDROID
-            ConsentWrapperAndroid.Instance.LoadPrivacyManager(
+
+            ConcreteInstance.LoadPrivacyManager(
                 campaignType: campaignType,
                 pmId: pmId,
                 tab: tab);
-
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            switch (campaignType){
-                case CAMPAIGN_TYPE.GDPR: ConsentWrapperIOS.Instance.LoadGDPRPrivacyManager(); break;
-                case CAMPAIGN_TYPE.CCPA: ConsentWrapperIOS.Instance.LoadCCPAPrivacyManager(); break;
-                case CAMPAIGN_TYPE.USNAT: ConsentWrapperIOS.Instance.LoadUSNATPrivacyManager(); break;
-            }
-#endif
         }
 
-        public static void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
-        {
-#if UNITY_ANDROID
-            ConsentWrapperAndroid.Instance.CustomConsentGDPR(
-                vendors: vendors,
-                categories: categories,
-                legIntCategories: legIntCategories,
-                onSuccessDelegate: onSuccessDelegate);
+        public void CustomConsentGDPR(
+            string[] vendors, 
+            string[] categories, 
+            string[] legIntCategories, 
+            Action<GdprConsent> onSuccessDelegate) => ConcreteInstance.CustomConsentGDPR(
+                                                        vendors: vendors,
+                                                        categories: categories,
+                                                        legIntCategories: legIntCategories,
+                                                        onSuccessDelegate: onSuccessDelegate);
 
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            ConsentWrapperIOS.Instance.CustomConsentGDPR(
-                vendors: vendors,
-                categories: categories,
-                legIntCategories: legIntCategories,
-                onSuccessDelegate: onSuccessDelegate);
-#endif
-        }
+        public void DeleteCustomConsentGDPR(
+            string[] vendors, 
+            string[] categories, 
+            string[] legIntCategories, 
+            Action<GdprConsent> onSuccessDelegate) => ConcreteInstance.DeleteCustomConsentGDPR(
+                                                        vendors: vendors,
+                                                        categories: categories,
+                                                        legIntCategories: legIntCategories,
+                                                        onSuccessDelegate: onSuccessDelegate);
 
-        public static void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
-        {
-#if UNITY_ANDROID
-            ConsentWrapperAndroid.Instance.DeleteCustomConsentGDPR(
-                vendors: vendors,
-                categories: categories,
-                legIntCategories: legIntCategories,
-                onSuccessDelegate: onSuccessDelegate);
+        public SpConsents GetSpConsents() => ConcreteInstance.GetSpConsents();
 
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            ConsentWrapperIOS.Instance.DeleteCustomConsentGDPR(
-                vendors: vendors,
-                categories: categories,
-                legIntCategories: legIntCategories,
-                onSuccessDelegate: onSuccessDelegate);
-#endif
-        }
+        public GdprConsent GetCustomConsent() => ConcreteInstance.GetCustomConsent();
 
-        public static SpConsents GetSpConsents()
-        {
-            SpConsents result = null;
-#if UNITY_ANDROID
-            result = ConsentWrapperAndroid.Instance.GetSpConsents();
-
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            result = ConsentWrapperIOS.Instance.GetSpConsents();
-#endif
-            return result;
-        }
-
-        public static GdprConsent GetCustomConsent()
-        {
-            GdprConsent result = null;
-#if UNITY_ANDROID
-            result = ConsentWrapperAndroid.Instance.GetCustomGdprConsent();
-
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            result = ConsentWrapperIOS.Instance.GetCustomGdprConsent();
-#endif
-            return result;
-        }
-
-        public static void Dispose()
-        {
-#if UNITY_ANDROID
-            ConsentWrapperAndroid.Instance.Dispose();
-
-#elif UNITY_IOS && !UNITY_EDITOR_OSX
-            ConsentWrapperIOS.Instance.Dispose();
-#endif
-        }
+        public void Dispose() => ConcreteInstance.Dispose();
         
         #region private methods
-        private static void CreateBroadcastExecutorGO()
+        private void CreateBroadcastExecutorGameObject()
         {
             if (mainThreadBroadcastEventsExecutor != null) return;
             mainThreadBroadcastEventsExecutor = new GameObject();
             mainThreadBroadcastEventsExecutor.AddComponent<BroadcastEventsExecutor>();
         }
 
-        private static void RemoveIos14SpCampaign(ref List<SpCampaign> spCampaigns)
-        {
-            List<SpCampaign> ios14 = spCampaigns.Where(campaign => campaign.CampaignType == CAMPAIGN_TYPE.IOS14).ToList();
-            if (ios14 != null && ios14.Count > 0)
-            {
-                Debug.LogWarning("ios14 campaign is not allowed in non-ios device! Skipping it...");
-                foreach (SpCampaign ios in ios14)
-                {
-                    spCampaigns.Remove(ios);
-                }
-            }
-        }
-
-        private static bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
+        private bool IsSpCampaignsValid(List<SpCampaign> spCampaigns)
         {
             //check if there more than 0 campaign
-            if (spCampaigns.Count == 0)
+            if (spCampaigns is null || spCampaigns.Count == 0)
             {
-                Debug.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
-                return false;
-            }
-            if (IsEditor)
-            {
-                Debug.LogWarning("ATTENTION! Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+                CmpDebugUtil.LogError("You should add at least one SpCampaign to use CMP! Aborting...");
                 return false;
             }
             
             return true;
         }
+
+        private bool IsPropertyNameValid(ref string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName) || string.IsNullOrWhiteSpace(propertyName))
+            {
+                CmpDebugUtil.LogError("Property Name can`t be null or empty! Aborting...");
+                return false;
+            }
+            propertyName = propertyName.Trim();
+            return true;
+        }            
+        
+        private bool IsCampaignSetUp(CAMPAIGN_TYPE campaignType)
+            {
+                switch (campaignType)
+                {
+                    case CAMPAIGN_TYPE.GDPR: return UseGDPR;
+                    case CAMPAIGN_TYPE.CCPA: return UseCCPA;
+                    case CAMPAIGN_TYPE.USNAT: return UseUSNAT;
+                    case CAMPAIGN_TYPE.IOS14: return UseIOS14;
+                    default: return false;
+                }
+            }
         #endregion
     }
 }

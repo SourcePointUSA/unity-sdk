@@ -1,9 +1,9 @@
 ﻿using System;
-using ConsentManagementProviderLib.Json;
-using ConsentManagementProviderLib.Observer;
+using ConsentManagementProvider.Json;
+using ConsentManagementProvider.Observer;
 using UnityEngine;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class SpClientProxy : AndroidJavaProxy
     {
@@ -18,7 +18,8 @@ namespace ConsentManagementProviderLib.Android
         void onUIReady(AndroidJavaObject view)
         {
             CmpDebugUtil.Log("I've reached the C# onUIReady");
-            ConsentWrapperAndroid.Instance.CallShowView(view);
+            ConsentWrapperAndroid.consentLib.Call("showView", view);
+            CmpDebugUtil.Log("C# : View showing passed to Android's consent lib");
             ConsentMessenger.Broadcast<IOnConsentUIReady>();
         }
 
@@ -28,7 +29,8 @@ namespace ConsentManagementProviderLib.Android
         void onUIFinished(AndroidJavaObject view)
         {
             CmpDebugUtil.Log("I've reached the C# onUIFinished");
-            ConsentWrapperAndroid.Instance.CallRemoveView(view);
+            ConsentWrapperAndroid.consentLib.Call("removeView", view);
+            CmpDebugUtil.Log("C# : View removal passed to Android's consent lib");
             ConsentMessenger.Broadcast<IOnConsentUIFinished>();
         }
 
@@ -64,7 +66,7 @@ namespace ConsentManagementProviderLib.Android
             {
                 try
                 {
-                    SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                    SpConsents consents = JsonUnwrapperAndroid.UnwrapSpConsents(spConsents);
                     _spConsents = consents;
                     ConsentMessenger.Broadcast<IOnConsentReady>(consents);
                 }
@@ -88,7 +90,7 @@ namespace ConsentManagementProviderLib.Android
             {
                 try
                 {
-                    SpConsents consents = JsonUnwrapper.UnwrapSpConsentsAndroid(spConsents);
+                    SpConsents consents = JsonUnwrapperAndroid.UnwrapSpConsents(spConsents);
                     _spConsents = consents;
                     ConsentMessenger.Broadcast<IOnConsentSpFinished>(consents);
                 }
@@ -123,7 +125,7 @@ namespace ConsentManagementProviderLib.Android
          */
         void onMessageReady(AndroidJavaObject spMessage)//(message: SPMessage)
         {
-            //TODO
+            //TO-DO
             CmpDebugUtil.Log("I've reached the C# onMessageReady");
             //ConsentMessenger.Broadcast<IOnConsentMessageReady>(unwrappedspMessage);
         }

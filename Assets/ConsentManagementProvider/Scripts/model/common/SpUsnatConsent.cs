@@ -1,4 +1,4 @@
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public class SpUsnatConsent
     {

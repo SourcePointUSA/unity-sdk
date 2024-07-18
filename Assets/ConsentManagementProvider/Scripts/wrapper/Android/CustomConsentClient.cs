@@ -1,9 +1,9 @@
 ﻿using System;
+using ConsentManagementProvider.Json;
 using UnityEngine;
-using ConsentManagementProviderLib.Json;
 using JetBrains.Annotations;
 
-namespace ConsentManagementProviderLib.Android
+namespace ConsentManagementProvider.Android
 {
     internal class CustomConsentClient : AndroidJavaProxy
     {
@@ -22,7 +22,7 @@ namespace ConsentManagementProviderLib.Android
             SpCustomConsentAndroid parsed = null;
             try
             {
-                parsed = JsonUnwrapper.UnwrapSpCustomConsentAndroid(spConsentsJson);
+                parsed = JsonUnwrapperAndroid.UnwrapSpCustomConsent(spConsentsJson);
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ namespace ConsentManagementProviderLib.Android
                 }
                 else
                 {
-                    var spGdpr = JsonUnwrapper.UnwrapSpGdprConsentAndroid(parsed.gdpr);
+                    var spGdpr = JsonUnwrapperAndroid.UnwrapSpGdprConsent(parsed.gdpr);
                     customGdprConsent = spGdpr.consents;
                     callback?.Invoke(customGdprConsent);
                 }

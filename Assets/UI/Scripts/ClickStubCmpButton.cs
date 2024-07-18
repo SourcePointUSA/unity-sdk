@@ -1,5 +1,5 @@
 using UnityEngine;
-using ConsentManagementProviderLib;
+using ConsentManagementProvider;
 
 public class ClickStubCmpButton : MonoBehaviour
 {

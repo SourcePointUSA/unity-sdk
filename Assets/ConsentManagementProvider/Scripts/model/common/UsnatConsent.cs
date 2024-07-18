@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public class UsnatConsent
     {
 #nullable enable
         public string? uuid;
+        public Dictionary<string, object>? GPPData;
 #nullable disable
         public bool applies;
         public List<ConsentString> consentStrings;
@@ -22,7 +23,8 @@ namespace ConsentManagementProviderLib
                         List<ConsentString> consentStrings,
                         List<Consentable> vendors,
                         List<Consentable> categories,
-						ConsentStatus consentStatus
+                        ConsentStatus consentStatus,
+                        Dictionary<string, object>? GPPData
 #nullable disable
         ) {
             this.uuid = uuid;
@@ -30,7 +32,8 @@ namespace ConsentManagementProviderLib
             this.consentStrings = consentStrings;
             this.vendors = vendors;
             this.categories = categories;
-            this.statuses = StatusesUsnat.collectData(consentStatus);
+            statuses = StatusesUsnat.collectData(consentStatus);
+            this.GPPData = GPPData;
         }
 
         public UsnatConsent(
@@ -40,7 +43,8 @@ namespace ConsentManagementProviderLib
                 List<ConsentString> consentStrings,
                 List<Consentable> vendors,
                 List<Consentable> categories,
-                StatusesUsnat statuses
+                StatusesUsnat statuses,
+                Dictionary<string, object>? GPPData
 #nullable disable
 )
         {
@@ -50,6 +54,7 @@ namespace ConsentManagementProviderLib
             this.vendors = vendors;
             this.categories = categories;
             this.statuses = statuses;
+            this.GPPData = GPPData;
         }
 
         public string ToFullString()
@@ -78,6 +83,14 @@ namespace ConsentManagementProviderLib
                 sb.AppendLine($"    id:{_consentable.id}, consented:{_consentable.consented}");
             }
             sb = statuses.ToFullString(sb);
+
+            if(GPPData != null)
+            {
+                sb.AppendLine("GPPData:");
+                foreach (var kvp in GPPData)
+                    sb.AppendLine($"    {kvp.Key}: {kvp.Value.ToString()}");
+            }
+
             return sb.ToString();
         }
     }
@@ -86,7 +99,7 @@ namespace ConsentManagementProviderLib
     {        
         public bool? rejectedAny, consentedToAll, consentedToAny,
             hasConsentData, sellStatus, shareStatus,
-            sensitiveDataStatus, gpcStatus;
+            sensitiveDataStatus, gpcStatus, previousOptInAll;
 
         internal static StatusesUsnat collectData(ConsentStatus status)
         {
@@ -99,7 +112,8 @@ namespace ConsentManagementProviderLib
                 sellStatus = status.granularStatus?.sellStatus,
                 shareStatus = status.granularStatus?.shareStatus,
                 sensitiveDataStatus = status.granularStatus?.sensitiveDataStatus,
-                gpcStatus = status.granularStatus?.gpcStatus
+                gpcStatus = status.granularStatus?.gpcStatus,
+                previousOptInAll = status.granularStatus?.previousOptInAll
             };
         }
 
@@ -118,6 +132,12 @@ namespace ConsentManagementProviderLib
                 sb.AppendLine($"    sellStatus: {sellStatus}");
             if(shareStatus != null)
                 sb.AppendLine($"    shareStatus: {shareStatus}");
+            if(sensitiveDataStatus != null)
+                sb.AppendLine($"    sensitiveDataStatus: {sensitiveDataStatus}");
+            if(gpcStatus != null)
+                sb.AppendLine($"    gpcStatus: {gpcStatus}");
+            if(previousOptInAll != null)
+                sb.AppendLine($"    previousOptInAll: {previousOptInAll}");
 
             return sb;
         }

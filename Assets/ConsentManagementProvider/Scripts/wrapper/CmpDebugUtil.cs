@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ConsentManagementProviderLib
+namespace ConsentManagementProvider
 {
     public static class CmpDebugUtil 
     {
@@ -67,7 +67,7 @@ namespace ConsentManagementProviderLib
                 start = i * maxLogSize;
                 end = (i+1) * maxLogSize;
                 end = end > message.Length ? message.Length : end;
-                Debug.Log(message.Substring(start, maxLogSize));
+                Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, "{0}", message.Substring(start, maxLogSize));
             }
             Debug.Log(message.Substring(end));
         }
