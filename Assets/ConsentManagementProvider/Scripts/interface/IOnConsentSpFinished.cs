@@ -6,6 +6,6 @@ namespace ConsentManagementProvider
 {
     public interface IOnConsentSpFinished : IConsentEventHandler
     {
-        void OnConsentSpFinished(SpConsents spConsent);
+        void OnConsentSpFinished();
     }
 }

@@ -34,7 +34,7 @@ public class ConsentEventHandler : MonoBehaviour, IOnConsentUIReady, IOnConsentA
         Debug.LogWarning("User has interacted with the web view consent message and it is disappeared!");
     }
 
-    public void OnConsentSpFinished(SpConsents spConsents)
+    public void OnConsentSpFinished()
     {
         Debug.LogWarning("OnSpFinished() called!");
     }

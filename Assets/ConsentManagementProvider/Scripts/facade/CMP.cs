@@ -147,6 +147,14 @@ namespace ConsentManagementProvider
             return true;
         }
 
+        public static string GetBridgeString(string value)
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            return ConsentWrapperIOS.GetBridgeString(value);
+#endif
+            return value;
+        }
+
         private bool IsPropertyNameValid(ref string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName) || string.IsNullOrWhiteSpace(propertyName))

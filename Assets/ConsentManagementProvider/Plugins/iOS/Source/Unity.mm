@@ -12,10 +12,29 @@ typedef void (*СallbackCharMessage) (const char*);
 
 extern "C"
 {
+    NSString* _getString(char * value)
+    {
+        return [NSString stringWithFormat:@"%s", value];
+    }
+    
+    char* _checkGetString(char * value)
+    {
+        NSLog(@"%s","Check string");
+        if (value == NULL)
+        {
+            NSLog(@"%s","Checked string is NULL");
+            return NULL;
+        }
+        char* res = (char*)malloc(strlen(value)+1);
+        strcpy (res, value);
+        NSLog(@"data = %s", value);
+        return res;
+    }
+
     void _setCallback (СallbackCharMessage callback, char* typeCallback){
         if (swiftBridge == nil)
             swiftBridge = [[SwiftBridge alloc] init];
-        [swiftBridge setCallbackWithCallback:callback typeCallback:[NSString stringWithFormat:@"%s", typeCallback]];
+        [swiftBridge setCallbackWithCallback:callback typeCallback:_getString(typeCallback)];
     }
 
     void _initLib()
@@ -26,7 +45,7 @@ extern "C"
 
     void _addTargetingParamForCampaignType(int campaignType, char* key, char* value)
     {
-        [swiftBridge addTargetingParamWithCampaignType:campaignType key:[NSString stringWithFormat:@"%s", key] value:[NSString stringWithFormat:@"%s", value]];
+        [swiftBridge addTargetingParamWithCampaignType:campaignType key:_getString(key) value:_getString(value)];
     }
 
     void _setTransitionCCPAAuth(bool value)
@@ -41,7 +60,7 @@ extern "C"
 
     void _configLib(int accountId, int propertyId, char* propertyName, bool gdpr, bool ccpa, bool usnat, char* language, int messageTimeoutInSeconds)
     {
-        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:[NSString stringWithFormat:@"%s", propertyName] gdpr:gdpr ccpa:ccpa usnat:usnat language:[NSString stringWithFormat:@"%s", language] messageTimeoutInSeconds:messageTimeoutInSeconds];
+        [swiftBridge configLibWithAccountId:accountId propertyId:propertyId propertyName:_getString(propertyName) gdpr:gdpr ccpa:ccpa usnat:usnat language:_getString(language) messageTimeoutInSeconds:messageTimeoutInSeconds];
     }
 
     void _loadMessage()
@@ -51,12 +70,12 @@ extern "C"
 
     void _loadMessageWithAuthId(char * authId)
     {
-        [swiftBridge loadMessageWithAuthId:[NSString stringWithFormat:@"%s", authId]];
+        [swiftBridge loadMessageWithAuthId:_getString(authId)];
     }
     
     void _loadPrivacyManager(int campaignType, char* pmId, int tab)
     {
-        [swiftBridge loadPrivacyManagerWithCampaignType:campaignType pmId:[NSString stringWithFormat:@"%s", pmId] tab:(SPPrivacyManagerTab)tab];
+        [swiftBridge loadPrivacyManagerWithCampaignType:campaignType pmId:_getString(pmId) tab:(SPPrivacyManagerTab)tab];
     }
 
     void _cleanConsent()
@@ -76,17 +95,17 @@ extern "C"
 
     void _addVendor(char* vendor)
     {
-        [swiftBridge addCustomVendorWithVendor:[NSString stringWithFormat:@"%s", vendor]];
+        [swiftBridge addCustomVendorWithVendor:_getString(vendor)];
     }
 
     void _addCategory(char* category)
     {
-        [swiftBridge addCustomCategoryWithCategory:[NSString stringWithFormat:@"%s", category]];
+        [swiftBridge addCustomCategoryWithCategory:_getString(category)];
     }
 
     void _addLegIntCategory(char* legIntCategory)
     {
-        [swiftBridge addCustomLegIntCategoryWithLegIntCategory:[NSString stringWithFormat:@"%s", legIntCategory]];
+        [swiftBridge addCustomLegIntCategoryWithLegIntCategory:_getString(legIntCategory)];
     }
 
     void _clearCustomArrays()
