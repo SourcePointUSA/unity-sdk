@@ -1,3 +1,11 @@
+# 3.0.0
+* [DIA-4057](https://sourcepoint.atlassian.net/browse/DIA-4057) Refactor of the `CMP` class [#60](https://github.com/SourcePointUSA/unity-sdk/pull/60)
+* [DIA-4058](https://sourcepoint.atlassian.net/browse/DIA-4058) Refactor of the ios interface [#63](https://github.com/SourcePointUSA/unity-sdk/pull/63)
+* [DIA-4059](https://sourcepoint.atlassian.net/browse/DIA-4059) Refactor of the android interface [#61](https://github.com/SourcePointUSA/unity-sdk/pull/61)
+* [DIA-4246](https://sourcepoint.atlassian.net/browse/DIA-4246) `MIGRATION.md` guide added to help in migration from 2.x.x to 3.0.0 [#64](https://github.com/SourcePointUSA/unity-sdk/pull/64)
+* [DIA-3170](https://sourcepoint.atlassian.net/browse/DIA-3170) UI tests for Unity SDK [#52](https://github.com/SourcePointUSA/unity-sdk/pull/52)
+* Various minor improvements.
+
 # 2.3.5
 * Unity SDK brought to v7.8.5 Android & v7.6.10 iOS native SDK [#65](https://github.com/SourcePointUSA/unity-sdk/pull/65)
 
