@@ -1,6 +1,6 @@
 <dependencies>
   <packages>
-    <package>com.sourcepoint.cmplibrary:cmplibrary:7.8.5</package>
+    <package>com.sourcepoint.cmplibrary:cmplibrary:7.10.0</package>
   </packages>
   <files />
   <settings>
