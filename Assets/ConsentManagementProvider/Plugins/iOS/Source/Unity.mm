@@ -93,6 +93,11 @@ extern "C"
         [swiftBridge deleteCustomConsentGDPR];
     }
 
+    void _rejectAll(int campaignType)
+    {
+        [swiftBridge rejectAllWithCampaignType:campaignType];
+    }
+
     void _addVendor(char* vendor)
     {
         [swiftBridge addCustomVendorWithVendor:_getString(vendor)];

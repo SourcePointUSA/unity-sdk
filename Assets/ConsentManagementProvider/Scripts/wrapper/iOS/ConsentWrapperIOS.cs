@@ -38,6 +38,8 @@ namespace ConsentManagementProvider.iOS
         [DllImport("__Internal")]
         private static extern void _deleteCustomConsentGDPR();
         [DllImport("__Internal")]
+        private static extern void _rejectAll(int campaignType);
+        [DllImport("__Internal")]
         private static extern void _addVendor(string vendor);
         [DllImport("__Internal")]
         private static extern void _addCategory(string category);
@@ -167,6 +169,13 @@ namespace ConsentManagementProvider.iOS
             }
             iOSListener.SetCustomConsentsGDPRSuccessAction(onSuccessDelegate);
             _deleteCustomConsentGDPR();
+#endif
+        }
+
+        public void RejectAll(CAMPAIGN_TYPE campaignType)
+        {
+#if UNITY_IOS && !UNITY_EDITOR_OSX
+            _rejectAll((int)campaignType);
 #endif
         }
 
