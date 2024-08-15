@@ -2,12 +2,8 @@ namespace UnityAppiumTests
 {
     public abstract class PmLayerCCPA: PmLayer
     {
-        public abstract string rejectAllPath { get; }
-        public abstract string acceptAllPath { get; }
         public abstract string switchValueOn { get; }
 
-        public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
-        public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
         public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true, switchValueOn, driverHelper.platform == "iOS");
         public int getCheckedSwitchesNum() 
         {

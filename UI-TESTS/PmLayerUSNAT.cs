@@ -2,11 +2,6 @@ namespace UnityAppiumTests
 {
     public abstract class PmLayerUSNAT: PmLayer
     {
-        public abstract string rejectAllPath { get; }
-        public abstract string acceptAllPath { get; }
-
-        public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
-        public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
         public void pressSaveAndExit() => driverHelper.pressButton(saveAndExitPath, textViewPath, true, true);
         public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath, true, true);
         public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true);

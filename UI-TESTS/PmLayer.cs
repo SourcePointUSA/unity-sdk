@@ -2,6 +2,8 @@ namespace UnityAppiumTests
 {
     public abstract class PmLayer
     {
+        public abstract string rejectAllPath { get; }
+        public abstract string acceptAllPath { get; }
         public abstract string textViewPath { get; }
         public abstract string saveAndExitPath { get; }
         public abstract string exitButtonPath { get; }
@@ -11,6 +13,8 @@ namespace UnityAppiumTests
         public abstract WebDriverWait wait { get; }
         public DriverHelper driverHelper;
 
+        public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
+        public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
         public void pressSaveAndExit() => driverHelper.pressButton(saveAndExitPath, textViewPath);
         public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath);
         public bool webViewIsOpen() => driverHelper.webViewIsOpen(textViewPath);
