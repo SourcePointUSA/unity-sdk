@@ -368,9 +368,9 @@ namespace UnityAppiumTests
 		}
 
 		[Test]
-		public void AcceptRejectAllUsnatTest()
+		public void AcceptRejectAllUsnatInPMTest()
 		{
-			Console.WriteLine(">>>AuthIdTest");
+			Console.WriteLine(">>>AcceptRejectAllUsnatInPMTest");
 			if (driver == null)
 			{
 				Assert.Fail("Driver has not been initialized.");
@@ -383,24 +383,28 @@ namespace UnityAppiumTests
 			pages.nativeAppLayer.waitForSdkDone();
 			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
-        	pages.pmLayerUSNAT.pressAcceptAll();
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressAcceptAll");
+			pages.pmLayerUSNAT.pressAcceptAll();
 			System.Threading.Thread.Sleep(2000);
 
 			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
-        	data = pages.pmLayerUSNAT.getAcceptRejectState();
-            if (platformAndroid)
-    			Assert.That(data=="accepted", Is.True);
-        	pages.pmLayerUSNAT.pressRejectAll();
+			Console.WriteLine($"Try to get: pmLayerUSNAT.getAcceptRejectState");
+			data = pages.pmLayerUSNAT.getAcceptRejectState();
+			if (platformAndroid)
+				Assert.That(data=="accepted", Is.True);
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressRejectAll");
+			pages.pmLayerUSNAT.pressRejectAll();
 			System.Threading.Thread.Sleep(2000);
 
 			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
-        	data = pages.pmLayerUSNAT.getAcceptRejectState();
-            if (platformAndroid)
-    			Assert.That(data=="rejected", Is.True);
+			Console.WriteLine($"Try to get: pmLayerUSNAT.getAcceptRejectState");
+			data = pages.pmLayerUSNAT.getAcceptRejectState();
+			if (platformAndroid)
+				Assert.That(data=="rejected", Is.True);
 			System.Threading.Thread.Sleep(2000);	
-    		Assert.That(true, Is.True);
+			Assert.That(true, Is.True);
 		}
 
         [TearDown]
