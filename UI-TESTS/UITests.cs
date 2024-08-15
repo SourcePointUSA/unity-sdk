@@ -422,7 +422,7 @@ namespace UnityAppiumTests
 			pages.nativeAppLayer.waitForSdkDone();
 
 			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
-        	var data = pages.nativeAppLayer.getConsentValueText();
+			var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
 			
 			Console.WriteLine("Call 'rejectAll' with campaign GDPR");
@@ -430,10 +430,10 @@ namespace UnityAppiumTests
 			System.Threading.Thread.Sleep(2000);
 		
 			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
-        	var dataNew = pages.nativeAppLayer.getConsentValueText();
+			var dataNew = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {dataNew}");
 
-    		Assert.That(data!=dataNew, Is.True);	
+			Assert.That(data!=dataNew, Is.True);	
 		}
 
         [TearDown]
