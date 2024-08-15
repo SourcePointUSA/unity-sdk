@@ -407,6 +407,35 @@ namespace UnityAppiumTests
 			Assert.That(true, Is.True);
 		}
 
+		[Test]
+		public void ProgramaticRejectAllGDPRTest()
+		{
+			Console.WriteLine(">>>ProgramaticRejectAllGDPRTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var data = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {data}");
+			
+			Console.WriteLine("Call 'rejectAll' with campaign GDPR");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMP", "ConcreteInstance.RejectAll", "Assembly-CSharp", new object[] { 0 });
+			System.Threading.Thread.Sleep(2000);
+		
+			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
+        	var dataNew = pages.nativeAppLayer.getConsentValueText();
+			Console.WriteLine($"ConsentValueText: {dataNew}");
+
+    		Assert.That(data!=dataNew, Is.True);	
+		}
+
         [TearDown]
         public void Teardown()
         {
