@@ -367,6 +367,42 @@ namespace UnityAppiumTests
     		Assert.That(data!="-", Is.True);	
 		}
 
+		[Test]
+		public void AcceptRejectAllUsnatTest()
+		{
+			Console.WriteLine(">>>AuthIdTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string data = "";
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+        	pages.pmLayerUSNAT.pressAcceptAll();
+			System.Threading.Thread.Sleep(2000);
+
+			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+        	data = pages.pmLayerUSNAT.getAcceptRejectState();
+            if (platformAndroid)
+    			Assert.That(data=="accepted", Is.True);
+        	pages.pmLayerUSNAT.pressRejectAll();
+			System.Threading.Thread.Sleep(2000);
+
+			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+        	data = pages.pmLayerUSNAT.getAcceptRejectState();
+            if (platformAndroid)
+    			Assert.That(data=="rejected", Is.True);
+			System.Threading.Thread.Sleep(2000);	
+    		Assert.That(true, Is.True);
+		}
+
         [TearDown]
         public void Teardown()
         {
