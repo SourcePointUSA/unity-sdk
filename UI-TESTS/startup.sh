@@ -74,6 +74,10 @@ sleep 5
 runTest ios.runsettings ClearAllButtonTest
 sleep 5
 runTest ios.runsettings AuthIdTest
+sleep 5
+runTest ios.runsettings AcceptRejectAllUsnatInPMTest
+sleep 5
+runTest ios.runsettings ProgramaticRejectAllGDPRTest
 
 #Kill ios emulator
 osascript -e 'tell app "Terminal" to close window id '${iosEmulator_window_id}''
