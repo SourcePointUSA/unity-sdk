@@ -421,6 +421,12 @@ namespace UnityAppiumTests
 			pages.firstLayerGO(true, true, true);
 			pages.nativeAppLayer.waitForSdkDone();
 
+			var altElement = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+
+			Console.WriteLine($"Try to get: statusCampaignGDPR");
+			string status = altElement.GetComponentProperty<string>("PrivacySettings", "statusCampaignGDPR", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignGDPR: {status}");
+			Assert.That(status=="accepted", Is.True);
 			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
 			var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
@@ -428,12 +434,78 @@ namespace UnityAppiumTests
 			Console.WriteLine("Call 'rejectAll' with campaign GDPR");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMP", "ConcreteInstance.RejectAll", "Assembly-CSharp", new object[] { 0 });
 			System.Threading.Thread.Sleep(2000);
-		
+
+			Console.WriteLine($"Try to get: statusCampaignGDPR");
+			status = altElement.GetComponentProperty<string>("PrivacySettings", "statusCampaignGDPR", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignGDPR: {status}");	
+			Assert.That(status=="rejected", Is.True);	
 			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
 			var dataNew = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {dataNew}");
 
 			Assert.That(data!=dataNew, Is.True);	
+		}
+
+		[Test]
+		public void ProgramaticRejectAllCCPATest()
+		{
+			Console.WriteLine(">>>ProgramaticRejectAllCCPATest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+
+			var altElement = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+
+			Console.WriteLine($"Try to get: statusCampaignCCPA");
+			string status = altElement.GetComponentProperty<string>("PrivacySettings", "statusCampaignCCPA", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignCCPA: {status}");
+			Assert.That(status=="accepted", Is.True);
+			
+			Console.WriteLine("Call 'rejectAll' with campaign CCPA");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMP", "ConcreteInstance.RejectAll", "Assembly-CSharp", new object[] { 2 });
+			System.Threading.Thread.Sleep(2000);
+
+			Console.WriteLine($"Try to get: statusCampaignCCPA");
+			status = altElement.GetComponentProperty<string>("PrivacySettings", "statusCampaignCCPA", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignCCPA: {status}");	
+			Assert.That(status=="rejected", Is.True);	
+		}
+
+		[Test]
+		public void ProgramaticRejectAllUSNATTest()
+		{
+			Console.WriteLine(">>>ProgramaticRejectAllUSNATTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+
+			var altElement = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+
+			Console.WriteLine($"Try to get: statusCampaignUSNAT");
+			string status = altElement.GetComponentProperty<string>("PrivacySettings", "statusCampaignUSNAT", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignUSNAT: {status}");
+			Assert.That(status=="accepted", Is.True);
+			
+			Console.WriteLine("Call 'rejectAll' with campaign USNAT");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMP", "ConcreteInstance.RejectAll", "Assembly-CSharp", new object[] { 3 });
+			System.Threading.Thread.Sleep(2000);
+
+			Console.WriteLine($"Try to get: statusCampaignUSNAT");
+			status = altElement.GetComponentProperty<string>("PrivacySettings", "statusCampaignUSNAT", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignUSNAT: {status}");	
+			Assert.That(status=="rejected", Is.True);	
 		}
 
         [TearDown]
