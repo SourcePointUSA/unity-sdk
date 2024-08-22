@@ -203,6 +203,18 @@ import UIKit
             self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
         }
     }
+
+    @objc public func rejectAll(campaignType: Int) {
+        guard let campaign = CAMPAIGN_TYPE(rawValue: campaignType) else {
+            self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Wrong `campaignType` on `rejectAll` call!")
+            return
+        }
+        if let consentManager = consentManager {
+            consentManager.rejectAll(campaignType: convertBridgeCampaignToNative(campaign: campaign))
+        } else {
+            self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "Library was not initialized correctly!")
+        }
+    }
 }
     
 // MARK: - SPDelegate implementation
@@ -315,6 +327,15 @@ public class CallbackSwift {
 }
 
 // MARK: - Util
+internal func convertBridgeCampaignToNative(campaign: SwiftBridge.CAMPAIGN_TYPE) -> SPCampaignType {
+    switch campaign {
+    case .GDPR: return SPCampaignType.gdpr
+    case .IOS14: return SPCampaignType.ios14
+    case .CCPA: return SPCampaignType.ccpa
+    case .USNAT: return SPCampaignType.usnat
+    }
+}
+
 public func printLog(_ items: Any..., separator: String = " ", terminator: String = "\n") {
     Swift.print("CMP SWIFT LOG:",items)
 }

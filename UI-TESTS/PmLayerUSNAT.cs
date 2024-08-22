@@ -17,12 +17,36 @@ namespace UnityAppiumTests
                 num = base.getCheckedSwitchesNum(true);
             return num;
         }
+
+        public string getAcceptRejectState()
+        {
+            if (driverHelper.platform == "iOS") //While 'platformIOS' we can`t get state of usnat
+                return "custom";
+            
+            IWebElement _switchFirst = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+switches.First()+switchPostfix)));
+            bool _switchFirstVal = false;
+            if(_switchFirst.GetAttribute("checked") != null && _switchFirst.GetAttribute("checked").Equals("true"))
+                _switchFirstVal = true;
+            
+            IWebElement _switchSecond = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+switches.Last()+switchPostfix)));
+            bool _switchSecondVal = false;
+            if(_switchSecond.GetAttribute("checked") != null && _switchSecond.GetAttribute("checked").Equals("true"))
+                _switchSecondVal = true;
+
+            if (_switchFirstVal && !_switchSecondVal)
+                return "accepted";
+            if (!_switchFirstVal && _switchSecondVal)
+                return "rejected";
+            return "custom";
+        }
     } 
 
     public class PmLayerUSNATAndroid: PmLayerUSNAT
     {            
         public override string textViewPath => "//android.widget.TextView[@text='USNat Privacy Manager']";
         public override string saveAndExitPath => "//android.widget.Button[@text='Save & Exit']";
+        public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
+        public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
         public override string exitButtonPath => "//android.widget.Button[@text='Cancel']";
         public override string switchPrefix => "(//android.widget.ToggleButton[@text='Off On'])[";
         public override string switchPostfix => "]";
@@ -37,6 +61,8 @@ namespace UnityAppiumTests
     {
         public override string textViewPath => "//XCUIElementTypeStaticText[@name='USNat Privacy Manager']";
         public override string saveAndExitPath => "//XCUIElementTypeButton[@name='Save & Exit']";
+        public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
+        public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";
         public override string exitButtonPath => "//XCUIElementTypeButton[@name='Cancel']";
         public override string switchPrefix => "//XCUIElementTypeSwitch[@name='Off On";
         public override string switchPostfix => "']";

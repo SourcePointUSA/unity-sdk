@@ -2,6 +2,7 @@ using ConsentManagementProvider;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinished
 {
@@ -30,6 +31,10 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     public Button deleteCustomConsentButton;
     public Button clearDataButton;
     public Text sdkStatus;
+
+    public static string statusCampaignGDPR = "custom";
+    public static string statusCampaignCCPA = "custom";
+    public static string statusCampaignUSNAT = "custom";
 
     private MESSAGE_LANGUAGE language
     {
@@ -169,6 +174,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
         if(CMP.Instance.UseUSNAT)
             CmpDebugUtil.Log(consents.usnat.consents.ToFullString());
         UpdateUI();
+        statusCampaignGDPR =  UpdateStatuses(consents, CAMPAIGN_TYPE.GDPR);
+        statusCampaignCCPA =  UpdateStatuses(consents, CAMPAIGN_TYPE.CCPA);
+        statusCampaignUSNAT =  UpdateStatuses(consents, CAMPAIGN_TYPE.USNAT);
     }
 
     public void OnConsentSpFinished()
@@ -207,6 +215,41 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     void UpdateSdkStatus(string status)
     {
         sdkStatus.text = "SDK:"+status;
+    }
+
+    string UpdateStatuses(SpConsents consents, CAMPAIGN_TYPE campaign)
+    {
+        if (campaign == CAMPAIGN_TYPE.GDPR)
+        {
+            bool rejectedAny = (bool)consents.gdpr.consents.consentStatus.rejectedAny;
+            bool rejectedLI = (bool)consents.gdpr.consents.consentStatus.rejectedLI;
+            bool consentedAll = (bool)consents.gdpr.consents.consentStatus.consentedAll;
+            bool consentedToAny = (bool)consents.gdpr.consents.consentStatus.consentedToAny;
+
+            if (consentedAll && consentedToAny)
+                return "accepted";
+            else if (rejectedAny && rejectedLI)
+                return "rejected";
+        }
+        if (campaign == CAMPAIGN_TYPE.CCPA)
+        {
+            if (consents.ccpa.consents.status == "consentedAll")
+                return "accepted";
+            else if (consents.ccpa.consents.status == "rejectedAll")
+                return "rejected";
+        }
+        if (campaign == CAMPAIGN_TYPE.USNAT)
+        {
+            bool rejectedAny = (bool)consents.usnat.consents.statuses.rejectedAny;
+            bool consentedToAll = (bool)consents.usnat.consents.statuses.consentedToAll;
+            bool consentedToAny = (bool)consents.usnat.consents.statuses.consentedToAny;
+
+            if (consentedToAll && consentedToAny)
+                return "accepted";
+            else if (rejectedAny)
+                return "rejected";            
+        }
+        return "custom";
     }
 
     private void OnDestroy()

@@ -121,6 +121,8 @@ namespace ConsentManagementProvider
                                                         legIntCategories: legIntCategories,
                                                         onSuccessDelegate: onSuccessDelegate);
 
+        public void RejectAll(CAMPAIGN_TYPE campaignType) => ConcreteInstance.RejectAll(campaignType);
+
         public SpConsents GetSpConsents() => ConcreteInstance.GetSpConsents();
 
         public GdprConsent GetCustomConsent() => ConcreteInstance.GetCustomConsent();

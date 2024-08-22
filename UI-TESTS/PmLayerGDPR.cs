@@ -2,13 +2,9 @@ namespace UnityAppiumTests
 {
     public abstract class PmLayerGDPR: PmLayer
     {
-        public abstract string rejectAllPath { get; }
-        public abstract string acceptAllPath { get; }
         public abstract string attributeName { get; }
         public abstract string attributeValue { get; }
 
-        public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
-        public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);
         public int getCheckedSwitchesNum() => base.getCheckedSwitchesNum(false, attributeName, attributeValue);
     } 
 

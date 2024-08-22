@@ -49,6 +49,14 @@ sleep 5
 runTest android.runsettings ClearAllButtonTest
 sleep 5
 runTest android.runsettings AuthIdTest
+sleep 5
+runTest android.runsettings AcceptRejectAllUsnatInPMTest
+sleep 5
+runTest android.runsettings ProgramaticRejectAllGDPRTest
+sleep 5
+runTest android.runsettings ProgramaticRejectAllCCPATest
+sleep 5
+runTest android.runsettings ProgramaticRejectAllUSNATTest
 
 #Kill android emulator
 osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''
@@ -70,6 +78,14 @@ sleep 5
 runTest ios.runsettings ClearAllButtonTest
 sleep 5
 runTest ios.runsettings AuthIdTest
+sleep 5
+runTest ios.runsettings AcceptRejectAllUsnatInPMTest
+sleep 5
+runTest ios.runsettings ProgramaticRejectAllGDPRTest
+sleep 5
+runTest ios.runsettings ProgramaticRejectAllCCPATest
+sleep 5
+runTest ios.runsettings ProgramaticRejectAllUSNATTest
 
 #Kill ios emulator
 osascript -e 'tell app "Terminal" to close window id '${iosEmulator_window_id}''

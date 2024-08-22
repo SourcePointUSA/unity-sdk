@@ -25,6 +25,10 @@ namespace ConsentManagementProvider.UnityEditor
         public void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate) =>
             Debug.LogWarning("Emulating DeleteCustomConsentGDPR call.. Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
 
+        public void RejectAll(CAMPAIGN_TYPE campaignType) =>
+            Debug.LogWarning($"Emulating RejectAll call for {campaignType}... " +
+                             $"Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");
+
         public SpConsents GetSpConsents()
         {
             Debug.LogWarning("Emulating GetSpConsents call.. Sourcepoint CMP works only for real Android/iOS devices, not the Unity Editor.");

@@ -122,6 +122,8 @@ namespace ConsentManagementProvider.Android
             consentLib.Call("deleteCustomConsentTo", vendors, categories, legIntCategories, customConsentClient);
         }
 
+        public void RejectAll(CAMPAIGN_TYPE campaignType) => consentLib.Call("rejectAll", constructor.ConstructCampaignType(campaignType));
+
         public SpConsents GetSpConsents()
         {
             if (spClient != null)

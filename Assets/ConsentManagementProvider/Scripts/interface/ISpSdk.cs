@@ -17,6 +17,7 @@ namespace ConsentManagementProvider
         void LoadPrivacyManager(CAMPAIGN_TYPE campaignType, string pmId, PRIVACY_MANAGER_TAB tab = PRIVACY_MANAGER_TAB.DEFAULT);
         void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate);
         void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate);
+        void RejectAll(CAMPAIGN_TYPE campaignType);
         SpConsents GetSpConsents();
         GdprConsent GetCustomConsent();
         void ClearAllData();
