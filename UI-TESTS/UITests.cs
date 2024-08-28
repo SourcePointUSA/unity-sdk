@@ -508,6 +508,40 @@ namespace UnityAppiumTests
 			Assert.That(status=="rejected", Is.True);	
 		}
 
+		[Test]
+		public void ProgramaticCustomConsentGDPRTest()
+		{
+			Console.WriteLine(">>>ProgramaticCustomConsentGDPRTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+
+			Console.WriteLine("Call 'CustomConsentGDPR'");
+			altDriver.CallStaticMethod<object>("ConsentManagementProvider.CMPTestUtils", "CustomConsentGDPR", "Assembly-CSharp", new[] { "" });
+			System.Threading.Thread.Sleep(2000);
+			Console.WriteLine($"Try to get: delegateCalled");
+			bool delegateCalled = altDriver.GetStaticProperty<bool>("ConsentManagementProvider.CMPTestUtils", "delegateCalled", "Assembly-CSharp");
+			Console.WriteLine($"delegateCalled: {delegateCalled}");
+
+			Assert.That(delegateCalled, Is.True);
+
+			Console.WriteLine("Call 'DeleteCustomConsentGDPR'");
+			altDriver.CallStaticMethod<object>("ConsentManagementProvider.CMPTestUtils", "DeleteCustomConsentGDPR", "Assembly-CSharp", new[] { "" });
+			System.Threading.Thread.Sleep(2000);
+			Console.WriteLine($"Try to get: delegateCalled");
+			delegateCalled = altDriver.GetStaticProperty<bool>("ConsentManagementProvider.CMPTestUtils", "delegateCalled", "Assembly-CSharp");
+			Console.WriteLine($"delegateCalled: {delegateCalled}");
+
+			Assert.That(delegateCalled, Is.True);
+		}
+
+
         [TearDown]
         public void Teardown()
         {
