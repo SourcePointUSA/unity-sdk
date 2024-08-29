@@ -8,6 +8,7 @@ namespace UnityAppiumTests
     public class FirstLayerCCPAAndroid: FirstLayerCCPA
     {            
         public override string textViewPath => "//android.widget.TextView[@text='CCPA Message']";
+        public override string textViewPathES => "//android.widget.TextView[@text='Mensaje CCPA']";
         public override string showOptionsPath => "//android.widget.Button[@text='Show Options']";
         public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
         public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
@@ -21,6 +22,7 @@ namespace UnityAppiumTests
     public class FirstLayerCCPAIOS: FirstLayerCCPA
     {
         public override string textViewPath => "//XCUIElementTypeStaticText[@name='CCPA Message']";
+        public override string textViewPathES => "//XCUIElementTypeStaticText[@name='Mensaje CCPA']";
         public override string showOptionsPath => "//XCUIElementTypeButton[@name='Show Options']";
         public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
         public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";
