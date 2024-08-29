@@ -59,6 +59,8 @@ sleep 5
 runTest android.runsettings ProgramaticRejectAllUSNATTest
 sleep 5
 runTest android.runsettings ProgramaticCustomConsentGDPRTest
+sleep 5
+runTest android.runsettings MessageLanguageTest
 
 #Kill android emulator
 osascript -e 'tell app "Terminal" to close window id '${androidEmulator_window_id}''
@@ -90,6 +92,8 @@ sleep 5
 runTest ios.runsettings ProgramaticRejectAllUSNATTest
 sleep 5
 runTest ios.runsettings ProgramaticCustomConsentGDPRTest
+sleep 5
+runTest ios.runsettings MessageLanguageTest
 
 #Kill ios emulator
 osascript -e 'tell app "Terminal" to close window id '${iosEmulator_window_id}''
