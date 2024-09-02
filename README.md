@@ -8,7 +8,8 @@ Sourcepoint's plug and play Unity SDK can be integrated with both Android and iO
 > <br><br>Additionally, this SDK utilizes [ExternalDependencyManager by Google](https://github.com/googlesamples/unity-jar-resolver) in order to fetch native SDKs and their dependencies. Ensure all the dependencies mentioned in `Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` are resolved before building your application.
 
 In Unity SDK version 2.3.3, the native Android SDK dependency was updated to version 7.8.3, so CMP SDK is now supported on Unity version 2022.3.0 and higher. This was done due to Java version upgrade as well as Gradle upgrade to version 7.5 in native Android SDK 7.8.2 which is a dependency of Unity SDK. However, we are able to build with Gradle v7.2 which is built-in in Unity 2022.3
-Please also note that in order to build a project:
+
+**_NOTE:_** If you use 2.3.3-3.0.0 versions of Unity SDK to build a project:
 * You need to use a custom template for Gradle, please refer to "Plugins\Android\mainTemplate.gradle", lines 41-43.
 
 ---
@@ -375,6 +376,15 @@ Parameters work only for the usnat campaign. Usage:
 ```c#
 SpCampaign usnat = new SpCampaign(campaignType: CAMPAIGN_TYPE.USNAT, targetingParams: usnatParams, supportLegacyUSPString: true);
 spCampaigns.Add(usnat);
+```
+
+## Programmatically rejecting all for a user
+
+It's possible to programmatically issue a "reject all" action in behalf of the current user by calling the `rejectAll(campaignType)` function. The `rejectAll` function behaves exactly the same way as if a user would have pressed the "reject all" button on the 1st layer or privacy manager.
+Upon completion, the sdk will call either `onConsentReady` in case of success or `onError` in case of failure.
+
+```C#
+    CMP.Instance.rejectAll(campaignType: CAMPAIGN_TYPE.gdpr)
 ```
 
 # Build for iOS
