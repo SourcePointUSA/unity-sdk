@@ -9,9 +9,6 @@ Sourcepoint's plug and play Unity SDK can be integrated with both Android and iO
 
 In Unity SDK version 2.3.3, the native Android SDK dependency was updated to version 7.8.3, so CMP SDK is now supported on Unity version 2022.3.0 and higher. This was done due to Java version upgrade as well as Gradle upgrade to version 7.5 in native Android SDK 7.8.2 which is a dependency of Unity SDK. However, we are able to build with Gradle v7.2 which is built-in in Unity 2022.3
 
-**_NOTE:_** If you use 2.3.3-3.0.0 versions of Unity SDK to build a project:
-* You need to use a custom template for Gradle, please refer to "Plugins\Android\mainTemplate.gradle", lines 41-43.
-
 ---
 
 # Instantiate consent UI
@@ -394,6 +391,10 @@ Since Unity Editor exports the pre-built project to Xcode on iOS build, there ar
 You also need to check lines `33`, `55` and `90` of the `CMPPostProcessBuild` script, the paths may differ. Check that the path of the file `SwiftBridge.swift` in the Unity project matches that specified in the `33` line and the `55` line in the exported Xcode project. You also need to check the path of the file `UnityPlugin-Bridging-Header.h` in the project exported to xcode with path on line `90`.
 
 ## Troubleshooting
+
+### If you use 2.3.3-3.0.0 versions of Unity SDK
+You might to use a custom template for Gradle, please refer to ["Plugins\Android\mainTemplate.gradle"](https://github.com/SourcePointUSA/unity-sdk/pull/59/commits/160302338c2f99de0f0b744fd9db4777931d96bf), lines 41-43.
+
 ### `ConsentViewController-Swift.h` file not found (IOS)
 Every time you update the Unity SDK from an older to a newer version, you are likely to encounter the absence of the newer version of the native iOS SDK in your build machine's cocoapods cache.
 The fix is:
