@@ -1,3 +1,10 @@
+# 3.1.0
+* [DIA-4326](https://sourcepoint.atlassian.net/browse/DIA-4326) Unity SDK is bumped to v7.10.1 Android & v7.7.1 iOS native SDK
+* Programmatic rejectAll feature added [#67](https://github.com/SourcePointUSA/unity-sdk/pull/67)
+* [DIA-4030](https://sourcepoint.atlassian.net/browse/DIA-4030) Added new message languages: `Hebrew`, `Indonesian`, `Korean`, `Macedonian`, `Malay`, `Tagalog` [#69](https://github.com/SourcePointUSA/unity-sdk/pull/69)
+* UI tests for Unity SDK: `ProgramaticRejectAll`for `GDPR, CCPA, USNAT`, `AcceptRejectAllUsnatInPM`,  `ProgramaticCustomConsentGDPR` & `deleteCustomConsentGDPR`, `MessageLanguage`
+* Disable custom `mainTemplate.gradle` file
+
 # 3.0.0
 * [DIA-4057](https://sourcepoint.atlassian.net/browse/DIA-4057) Refactor of the `CMP` class [#60](https://github.com/SourcePointUSA/unity-sdk/pull/60)
 * [DIA-4058](https://sourcepoint.atlassian.net/browse/DIA-4058) Refactor of the ios interface [#63](https://github.com/SourcePointUSA/unity-sdk/pull/63)
