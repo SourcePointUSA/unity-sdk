@@ -2,6 +2,8 @@ namespace UnityAppiumTests
 {
     public abstract class PmLayerGDPR: PmLayer
     {
+        public abstract string textViewPathES { get; }
+        public abstract string textViewPathTL { get; }
         public abstract string attributeName { get; }
         public abstract string attributeValue { get; }
 
@@ -11,6 +13,8 @@ namespace UnityAppiumTests
     public class PmLayerGDPRAndroid: PmLayerGDPR
     {            
         public override string textViewPath => "//android.widget.TextView[@text='GDPR Privacy Manager']";
+        public override string textViewPathES => "//android.widget.TextView[@text='Centro de Privacidad GDPR']";
+        public override string textViewPathTL => "//android.widget.TextView[@text='Tagalog']";
         public override string saveAndExitPath => "//android.widget.Button[@text='Save & Exit']";
         public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
         public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
@@ -35,6 +39,8 @@ namespace UnityAppiumTests
     public class PmLayerGDPRIOS: PmLayerGDPR
     {
         public override string textViewPath => "//XCUIElementTypeStaticText[@name='GDPR Privacy Manager']";
+        public override string textViewPathES => "//XCUIElementTypeStaticText[@name='Centro de Privacidad GDPR']";
+        public override string textViewPathTL => "//XCUIElementTypeStaticText[@name='Tagalog']";
         public override string saveAndExitPath => "//XCUIElementTypeButton[@name='Save & Exit']";
         public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
         public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";

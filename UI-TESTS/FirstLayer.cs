@@ -3,6 +3,7 @@ namespace UnityAppiumTests
     public abstract class FirstLayer
     {
         public abstract string textViewPath { get; }
+        public abstract string textViewPathES { get; }
         public abstract string showOptionsPath { get; }
         public abstract string rejectAllPath { get; }
         public abstract string acceptAllPath { get; }

@@ -17,12 +17,17 @@ namespace ConsentMessagePlugin.Android
             GAELIC="GD",
             GERMAN="DE",
             GREEK="EL",
+            HEBREW="HE",
             HUNGARIAN="HU",
             ICELANDIC="IS",
+            INDONESIAN="ID",
             ITALIAN="IT",
             JAPANESE="JA",
+            KOREAN="KO",
             LATVIAN="LV",
             LITHUANIAN="LT",
+            MACEDONIAN="MK",
+            MALAY="MS",
             NORWEGIAN="NO",
             POLISH="PL",
             PORTUGUESE="PT",
@@ -34,6 +39,7 @@ namespace ConsentMessagePlugin.Android
             SLOVENIAN="SL",
             SPANISH="ES",
             SWEDISH="SV",
+            TAGALOG="TL",
             TURKISH="TR";
     }
 
@@ -54,12 +60,17 @@ namespace ConsentMessagePlugin.Android
             GAELIC="GAELIC",
             GERMAN="GERMAN",
             GREEK="GREEK",
+            HEBREW="HEBREW",
             HUNGARIAN="HUNGARIAN",
             ICELANDIC="ICELANDIC",
+            INDONESIAN="INDONESIAN",
             ITALIAN="ITALIAN",
             JAPANESE="JAPANESE",
+            KOREAN="KOREAN",
             LATVIAN="LATVIAN",
             LITHUANIAN="LITHUANIAN",
+            MACEDONIAN="MACEDONIAN",
+            MALAY="MALAY",
             NORWEGIAN="NORWEGIAN",
             POLISH="POLISH",
             PORTUGUESE="PORTUGUESE",
@@ -71,6 +82,7 @@ namespace ConsentMessagePlugin.Android
             SLOVENIAN="SLOVENIAN",
             SPANISH="SPANISH",
             SWEDISH="SWEDISH",
+            TAGALOG="TAGALOG",
             TURKISH="TURKISH";
     }
 }
