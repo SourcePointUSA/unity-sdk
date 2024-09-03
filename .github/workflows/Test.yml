@@ -1,0 +1,38 @@
+name: UI tests
+on: [workflow_dispatch]
+
+jobs:
+  Test:
+    runs-on: macos-latest
+    name: ClickAcceptAllButtonTest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Appium Server
+      run: |
+        npm i --location=global appium
+        appium driver install uiautomator2
+        appium driver install xcuitest
+        appium plugin install --source=npm appium-altunity-plugin
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0'
+    - name: Install AltTester Server
+      run: |
+        cwd=$(pwd)
+        pushd "$cwd"
+        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip
+        unzip AltTesterDesktopPackageMac__v2.1.2.zip
+        cd AltTesterDesktopPackageMac__v2.1.2
+        hdiutil attach AltTesterDesktop__v2.1.2.dmg
+        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app /Applications
+        cd /Applications
+        popd
+    - name: Run test
+      run: |
+        ls
+        chmod -R 777 UI-TESTS
+        cd UI-TESTS
+        dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
+        
