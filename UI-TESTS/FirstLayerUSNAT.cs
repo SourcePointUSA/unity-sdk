@@ -9,6 +9,7 @@ namespace UnityAppiumTests
     public class FirstLayerUSNATAndroid: FirstLayerUSNAT
     {            
         public override string textViewPath => "//android.widget.TextView[@text='USNat Message']";
+        public override string textViewPathES => "//android.widget.TextView[@text='USNat Message']";
         public override string showOptionsPath => "//android.widget.Button[@text='Show Options']";
         public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
         public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
@@ -21,6 +22,7 @@ namespace UnityAppiumTests
     public class FirstLayerUSNATIOS: FirstLayerUSNAT
     {
         public override string textViewPath => "//XCUIElementTypeStaticText[@name='USNat Message']";
+        public override string textViewPathES => "//XCUIElementTypeStaticText[@name='USNat Message']";
         public override string showOptionsPath => "//XCUIElementTypeButton[@name='Show Options']";
         public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
         public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";

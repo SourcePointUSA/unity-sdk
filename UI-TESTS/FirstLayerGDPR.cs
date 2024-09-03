@@ -17,6 +17,7 @@ namespace UnityAppiumTests
     public class FirstLayerGDPRAndroid: FirstLayerGDPR
     {            
         public override string textViewPath => "//android.widget.TextView[@text='GDPR Message']";
+        public override string textViewPathES => "//android.widget.TextView[@text='GDPR Message']";
         public override string showOptionsPath => "//android.widget.Button[@text='Show Options']";
         public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
         public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
@@ -31,6 +32,7 @@ namespace UnityAppiumTests
     public class FirstLayerGDPRIOS: FirstLayerGDPR
     {
         public override string textViewPath => "//XCUIElementTypeStaticText[@name='GDPR Message']";
+        public override string textViewPathES => "//XCUIElementTypeStaticText[@name='GDPR Message']";
         public override string showOptionsPath => "//XCUIElementTypeButton[@name='Show Options']";
         public override string rejectAllPath => "//XCUIElementTypeButton[@name='Reject All']";
         public override string acceptAllPath => "//XCUIElementTypeButton[@name='Accept All']";

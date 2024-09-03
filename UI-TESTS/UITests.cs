@@ -541,6 +541,59 @@ namespace UnityAppiumTests
 			Assert.That(delegateCalled, Is.True);
 		}
 
+		[Test]
+		public void MessageLanguageTest()
+		{
+			Console.WriteLine(">>>MessageLanguageTest");
+			if (driver == null)
+			{
+				Assert.Fail("Driver has not been initialized.");
+			}
+
+			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
+
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressClearAll");
+			pages.nativeAppLayer.pressClearAll();
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine("Call 'InitializeWithLanguage' with SPANISH language");
+			altDriver.CallStaticMethod<object>("ConsentManagementProvider.CMPTestUtils", "InitializeWithLanguage", "Assembly-CSharp", new[] { "35" }); //SPANISH
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressLoadMessage");
+			pages.nativeAppLayer.pressLoadMessage();
+			Console.WriteLine($"Current button for tap: pages.firstLayerGDPR.acceptAllPath with SPANISH language");
+			pages.firstLayerGDPR.driverHelper.pressButton(pages.firstLayerGDPR.acceptAllPath, pages.firstLayerGDPR.textViewPathES, true, true);
+			Console.WriteLine($"Current button for tap: pages.firstLayerCCPA.acceptAllPath with SPANISH language");
+			pages.firstLayerCCPA.driverHelper.pressButton(pages.firstLayerCCPA.acceptAllPath, pages.firstLayerCCPA.textViewPathES, false, true);
+			Console.WriteLine($"Current button for tap: pages.firstLayerUSNAT.acceptAllPath with SPANISH language");
+			pages.firstLayerUSNAT.driverHelper.pressButton(pages.firstLayerUSNAT.acceptAllPath, pages.firstLayerUSNAT.textViewPathES, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressGDPRPmLayer");
+        	pages.nativeAppLayer.pressGDPRPmLayer();
+			Console.WriteLine($"Check for webView open: pmLayerGDPR.webViewIsOpen with SPANISH language");
+        	bool isOpen = pages.pmLayerGDPR.driverHelper.webViewIsOpen(pages.pmLayerGDPR.textViewPathES);
+			Assert.That(isOpen, Is.True);
+			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressExit");
+			pages.pmLayerGDPR.driverHelper.pressButton(pages.pmLayerGDPR.exitButtonPath, pages.pmLayerGDPR.textViewPathES, true, true);
+
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressClearAll");
+			pages.nativeAppLayer.pressClearAll();
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine("Call 'InitializeWithLanguage' with TAGALOG language");
+			altDriver.CallStaticMethod<object>("ConsentManagementProvider.CMPTestUtils", "InitializeWithLanguage", "Assembly-CSharp", new[] { "37" }); //TAGALOG
+			System.Threading.Thread.Sleep(1000);
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressLoadMessage");
+			pages.nativeAppLayer.pressLoadMessage();
+			pages.firstLayerGO(true, true, true);
+			pages.nativeAppLayer.waitForSdkDone();
+			Console.WriteLine($"Current button for tap: nativeAppLayer.pressGDPRPmLayer");
+        	pages.nativeAppLayer.pressGDPRPmLayer();
+			Console.WriteLine($"Check for webView open: pmLayerGDPR.webViewIsOpen with TAGALOG language");
+        	isOpen = pages.pmLayerGDPR.driverHelper.webViewIsOpen(pages.pmLayerGDPR.textViewPathTL);
+			Assert.That(isOpen, Is.True);
+		}
 
         [TearDown]
         public void Teardown()
