@@ -44,6 +44,41 @@ jobs:
         chmod -R 777 UI-TESTS
         cd UI-TESTS
         dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
+    - name: Gradle cache
+      uses: gradle/actions/setup-gradle@v3
+    - name: AVD cache
+      uses: actions/cache@v4
+      id: avd-cache
+      with:
+        path: |
+          ~/.android/avd/*
+          ~/.android/adb*
+        key: avd-33
+    - name: create AVD and generate snapshot for caching
+      if: steps.avd-cache.outputs.cache-hit != 'true'
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        target: google_apis
+        force-avd-creation: false
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: false
+        arch: x86
+        script: echo "Generated AVD snapshot for caching."
+    - name: Run test
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        target: google_apis
+        force-avd-creation: false
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: true
+        arch: x86
+        script: |
+          ls
+          chmod -R 777 UI-TESTS
+          cd UI-TESTS
+          dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
