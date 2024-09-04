@@ -8,12 +8,21 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Install Appium Server
+    - name: Install and run Appium Server
       run: |
         npm i --location=global appium
         appium driver install uiautomator2
         appium driver install xcuitest
         appium plugin install --source=npm appium-altunity-plugin
+        cwd=$(pwd)
+        pushd "$cwd"
+        mkdir logs
+        cd logs
+        echo "appium" > appiumLog.txt
+        echo "alttester" > altTesterLog.txt
+        echo "alttester" > altTesterComLog.txt
+        popd
+        appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -35,4 +44,11 @@ jobs:
         chmod -R 777 UI-TESTS
         cd UI-TESTS
         dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
+    - name: Archive logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs
+        path: logs/
+        compression-level: 0
         
