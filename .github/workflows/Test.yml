@@ -15,8 +15,9 @@ jobs:
         java-version: 17
     - name: Install and run Appium Server
       run: |
-        cd .android/avd
-        ls
+        cd .android
+        brew install tree
+        tree
         # : npm i --location=global appium
         # : appium driver install uiautomator2
         # : appium driver install xcuitest
