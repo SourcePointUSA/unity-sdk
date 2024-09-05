@@ -83,7 +83,7 @@ jobs:
           ls
           chmod -R 777 UI-TESTS
           cd UI-TESTS
-          echo "tested"
+          echo "tested2"
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
