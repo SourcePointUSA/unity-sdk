@@ -10,6 +10,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Install and run Appium Server
       run: |
+        sdkmanager --list
         npm i --location=global appium
         appium driver install uiautomator2
         appium driver install xcuitest
