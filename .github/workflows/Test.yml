@@ -15,29 +15,24 @@ jobs:
         java-version: 17
     - name: Install and run Appium Server
       run: |
-        cd "$ANDROID_AVD_HOME"
-        brew install tree
-        tree
-        # : npm i --location=global appium
-        # : appium driver install uiautomator2
-        # : appium driver install xcuitest
-        # : appium plugin install --source=npm appium-altunity-plugin
-        # : cwd=$(pwd)
-        # : pushd "$cwd"
-        # : mkdir logs
-        # : cd logs
-        # : echo "appium" > appiumLog.txt
-        # : echo "alttester" > altTesterLog.txt
-        # : echo "alttester" > altTesterComLog.txt
-        # : popd
-        # : appium --use-plugins=altunity &>logs/appiumLog.txt &
+        npm i --location=global appium
+        appium driver install uiautomator2
+        appium driver install xcuitest
+        appium plugin install --source=npm appium-altunity-plugin
+        cwd=$(pwd)
+        pushd "$cwd"
+        mkdir logs
+        cd logs
+        echo "appium" > appiumLog.txt
+        echo "alttester" > altTesterLog.txt
+        echo "alttester" > altTesterComLog.txt
+        popd
+        appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Setup .NET
-      if: false
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
     - name: Install AltTester Server
-      if: false
       run: |
         cwd=$(pwd)
         pushd "$cwd"
