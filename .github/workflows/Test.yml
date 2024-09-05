@@ -17,7 +17,7 @@ jobs:
       run: |
         cd "$ANDROID_HOME"/cmdline-tools/latest/bin
         ls
-        sdkmanager --list
+        ./sdkmanager --list
         npm i --location=global appium
         appium driver install uiautomator2
         appium driver install xcuitest
