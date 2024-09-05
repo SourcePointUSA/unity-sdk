@@ -15,7 +15,7 @@ jobs:
         java-version: 17
     - name: Install and run Appium Server
       run: |
-        cd "$ANDROID_HOME"/cmdline-tools/latest
+        cd "$ANDROID_HOME"/cmdline-tools/latest/bin
         ls
         sdkmanager --list
         npm i --location=global appium
