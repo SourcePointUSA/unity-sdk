@@ -15,7 +15,7 @@ jobs:
         java-version: 17
     - name: Install and run Appium Server
       run: |
-        cd .android
+        cd "$ANDROID_AVD_HOME"
         brew install tree
         tree
         # : npm i --location=global appium
