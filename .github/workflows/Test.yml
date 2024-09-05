@@ -15,7 +15,9 @@ jobs:
         java-version: 17
     - name: Install and run Appium Server
       run: |
-        cd "$ANDROID_HOME"/cmdline-tools
+        cd "$ANDROID_HOME"
+        brew install tree
+        tree
         sdkmanager --list
         npm i --location=global appium
         appium driver install uiautomator2
