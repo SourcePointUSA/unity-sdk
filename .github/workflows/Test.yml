@@ -14,10 +14,8 @@ jobs:
         distribution: zulu
         java-version: 17
     - name: Install and run Appium Server
+      if: false
       run: |
-        cd "$ANDROID_HOME"/cmdline-tools/latest/bin
-        ls
-        ./sdkmanager --list
         npm i --location=global appium
         appium driver install uiautomator2
         appium driver install xcuitest
@@ -32,10 +30,12 @@ jobs:
         popd
         appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Setup .NET
+      if: false
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
     - name: Install AltTester Server
+      if: false
       run: |
         cwd=$(pwd)
         pushd "$cwd"
@@ -55,27 +55,27 @@ jobs:
         path: |
           ~/.android/avd/*
           ~/.android/adb*
-        key: avd-33
+        key: avd-34
     - name: create AVD and generate snapshot for caching
       if: steps.avd-cache.outputs.cache-hit != 'true'
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 33
+        api-level: 34
         target: google_apis
         force-avd-creation: false
         emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: false
-        arch: x86
+        arch: x86_64
         script: echo "Generated AVD snapshot for caching."
     - name: Run test
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 33
+        api-level: 34
         target: google_apis
         force-avd-creation: false
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: true
-        arch: x86
+        arch: x86_64
         script: |
           ls
           chmod -R 777 UI-TESTS
