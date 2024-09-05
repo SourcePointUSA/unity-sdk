@@ -3,13 +3,14 @@ on: [pull_request]
 
 jobs:
   Test:
-    runs-on: macos-latest
+    runs-on: macos-13
     name: ClickAcceptAllButtonTest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Install and run Appium Server
       run: |
+        cd "$ANDROID_HOME"/cmdline-tools
         sdkmanager --list
         npm i --location=global appium
         appium driver install uiautomator2
