@@ -1,36 +1,84 @@
-name: Android Emulator CI
-
+name: UI tests
 on: [pull_request]
 
 jobs:
-  build:
+  Test:
     runs-on: macos-latest
-
+    name: ClickAcceptAllButtonTest
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+    - name: Install and run Appium Server
+      run: |
+        sdkmanager --list
+        npm i --location=global appium
+        appium driver install uiautomator2
+        appium driver install xcuitest
+        appium plugin install --source=npm appium-altunity-plugin
+        cwd=$(pwd)
+        pushd "$cwd"
+        mkdir logs
+        cd logs
+        echo "appium" > appiumLog.txt
+        echo "alttester" > altTesterLog.txt
+        echo "alttester" > altTesterComLog.txt
+        popd
+        appium --use-plugins=altunity &>logs/appiumLog.txt &
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
       with:
-        distribution: 'zulu'
-        java-version: '11'
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
+        dotnet-version: '8.0'
+    - name: Install AltTester Server
+      run: |
+        cwd=$(pwd)
+        pushd "$cwd"
+        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip
+        unzip AltTesterDesktopPackageMac__v2.1.2.zip
+        cd AltTesterDesktopPackageMac__v2.1.2
+        hdiutil attach AltTesterDesktop__v2.1.2.dmg
+        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app /Applications
+        cd /Applications
+        popd
+    - name: Gradle cache
+      uses: gradle/actions/setup-gradle@v3
+    - name: AVD cache
+      uses: actions/cache@v4
+      id: avd-cache
       with:
-        api-level: 30
-        target: default
-        arch: x86_64
-        profile: default
-        ndk: 21.4.7075529
-    - name: Start Android Emulator
-      run: |
-        sudo $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim -accel auto &
-        adb wait-for-device
-        adb shell input keyevent 82
-    - name: Wait for Android emulator to boot
-      run: |
-        sleep 60
-        adb shell getprop init.svc.bootanim | grep stopped
-    - name: Run tests
-      run: |
-        ./gradlew test
+        path: |
+          ~/.android/avd/*
+          ~/.android/adb*
+        key: avd-33
+    - name: create AVD and generate snapshot for caching
+      if: steps.avd-cache.outputs.cache-hit != 'true'
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        target: google_apis
+        force-avd-creation: false
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: false
+        arch: x86
+        script: echo "Generated AVD snapshot for caching."
+    - name: Run test
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        target: google_apis
+        force-avd-creation: false
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: true
+        arch: x86
+        script: |
+          ls
+          chmod -R 777 UI-TESTS
+          cd UI-TESTS
+          dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
+    - name: Archive logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs
+        path: logs/
+        compression-level: 0
+        
