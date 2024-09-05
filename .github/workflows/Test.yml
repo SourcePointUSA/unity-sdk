@@ -1,5 +1,5 @@
 name: UI tests
-on: [workflow_dispatch]
+on: [pull_request]
 
 jobs:
   Test:
