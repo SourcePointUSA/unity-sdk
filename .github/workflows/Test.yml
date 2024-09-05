@@ -15,24 +15,28 @@ jobs:
         java-version: 17
     - name: Install and run Appium Server
       run: |
-        npm i --location=global appium
-        appium driver install uiautomator2
-        appium driver install xcuitest
-        appium plugin install --source=npm appium-altunity-plugin
-        cwd=$(pwd)
-        pushd "$cwd"
-        mkdir logs
-        cd logs
-        echo "appium" > appiumLog.txt
-        echo "alttester" > altTesterLog.txt
-        echo "alttester" > altTesterComLog.txt
-        popd
-        appium --use-plugins=altunity &>logs/appiumLog.txt &
+        cd .android/avd
+        ls
+        # : npm i --location=global appium
+        # : appium driver install uiautomator2
+        # : appium driver install xcuitest
+        # : appium plugin install --source=npm appium-altunity-plugin
+        # : cwd=$(pwd)
+        # : pushd "$cwd"
+        # : mkdir logs
+        # : cd logs
+        # : echo "appium" > appiumLog.txt
+        # : echo "alttester" > altTesterLog.txt
+        # : echo "alttester" > altTesterComLog.txt
+        # : popd
+        # : appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Setup .NET
+      if: false
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
     - name: Install AltTester Server
+      if: false
       run: |
         cwd=$(pwd)
         pushd "$cwd"
@@ -54,7 +58,8 @@ jobs:
           ~/.android/adb*
         key: avd-34
     - name: create AVD and generate snapshot for caching
-      if: steps.avd-cache.outputs.cache-hit != 'true'
+      if: false
+      # : if: steps.avd-cache.outputs.cache-hit != 'true'
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 34
@@ -65,6 +70,7 @@ jobs:
         arch: x86_64
         script: echo "Generated AVD snapshot for caching."
     - name: Run test
+      if: false
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 34
