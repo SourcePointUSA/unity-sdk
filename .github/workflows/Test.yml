@@ -14,7 +14,6 @@ jobs:
         distribution: zulu
         java-version: 17
     - name: Install and run Appium Server
-      if: false
       run: |
         npm i --location=global appium
         appium driver install uiautomator2
@@ -30,12 +29,10 @@ jobs:
         popd
         appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Setup .NET
-      if: false
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
     - name: Install AltTester Server
-      if: false
       run: |
         cwd=$(pwd)
         pushd "$cwd"
