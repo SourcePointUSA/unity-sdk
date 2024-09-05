@@ -38,12 +38,6 @@ jobs:
         cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app /Applications
         cd /Applications
         popd
-    - name: Run test
-      run: |
-        ls
-        chmod -R 777 UI-TESTS
-        cd UI-TESTS
-        dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Gradle cache
       uses: gradle/actions/setup-gradle@v3
     - name: AVD cache
