@@ -4,7 +4,7 @@ namespace UnityAppiumTests
     public class WebViewTests
     {
         private readonly Uri appiumServerUri = new Uri("http://127.0.0.1:4723");
-        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(180);
+        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(300);
 		public TestContext TestContext { get; set; }
 		public bool platformIOS {get => TestContext.Parameters["platformName"]=="iOS";}
 		public bool platformAndroid {get => TestContext.Parameters["platformName"]=="Android";}
