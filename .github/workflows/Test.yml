@@ -1,6 +1,9 @@
 name: UI tests
 on: [pull_request]
 
+env:
+  LOGS_DIR: ~/logs
+
 jobs:
   Test:
     runs-on: macos-13
@@ -42,6 +45,7 @@ jobs:
         hdiutil attach AltTesterDesktop__v2.1.2.dmg
         cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app /Applications
         cd /Applications
+        AltTesterDesktop.app/Contents/MacOS/AltTester\ Desktop -port 13000 -logfile $LOGS_DIR/altTesterLog.txt &>/dev/null &
         popd
     - name: Gradle cache
       uses: gradle/actions/setup-gradle@v3
@@ -65,6 +69,7 @@ jobs:
         arch: x86_64
         script: echo "Generated AVD snapshot for caching."
     - name: Run test
+      if: false
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 34
@@ -74,10 +79,8 @@ jobs:
         disable-animations: true
         arch: x86_64
         script: |
-          ls
           chmod -R 777 UI-TESTS
-          cd UI-TESTS
-          echo "tested2"
+          cd UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
