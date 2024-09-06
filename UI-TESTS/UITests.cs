@@ -30,6 +30,7 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalCapability("platformName", TestContext.Parameters["platformName"]);
 			desiredCaps.AddAdditionalCapability("deviceName", TestContext.Parameters["deviceName"]);
 			desiredCaps.AddAdditionalCapability("appium:uiautomator2ServerInstallTimeout", 120000);
+			desiredCaps.AddAdditionalCapability("appium:uiautomator2ServerLaunchTimeout", 60000);
 			desiredCaps.AddAdditionalCapability("appium:app", (string)rootDir+TestContext.Parameters["appium:app"]);
 			desiredCaps.AddAdditionalCapability("appium:automationName", TestContext.Parameters["appium:automationName"]);
 			desiredCaps.AddAdditionalCapability("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
