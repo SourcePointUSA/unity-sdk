@@ -42,7 +42,6 @@ jobs:
         hdiutil attach AltTesterDesktop__v2.1.2.dmg
         cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app /Applications
         cd /Applications
-        AltTesterDesktop.app/Contents/MacOS/AltTester\ Desktop -port 13000 -logfile ~/logs/altTesterLog.txt &>/dev/null &
         popd
     - name: Gradle cache
       uses: gradle/actions/setup-gradle@v3
