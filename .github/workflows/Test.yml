@@ -42,7 +42,7 @@ jobs:
         hdiutil attach AltTesterDesktop__v2.1.2.dmg
         cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
         cd ~
-        AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -port 13000 -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt -termsAndConditionsAccepted &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
+        AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
         popd
     - name: Gradle cache
       uses: gradle/actions/setup-gradle@v3
