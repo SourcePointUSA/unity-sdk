@@ -40,9 +40,9 @@ jobs:
         unzip AltTesterDesktopPackageMac__v2.1.2.zip
         cd AltTesterDesktopPackageMac__v2.1.2
         hdiutil attach AltTesterDesktop__v2.1.2.dmg
-        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app /Applications
-        cd /Applications
-        AltTesterDesktop.app/Contents/MacOS/AltTester\ Desktop -port 13000 -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
+        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
+        cd ~
+        AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -port 13000 -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
         popd
     - name: Gradle cache
       uses: gradle/actions/setup-gradle@v3
