@@ -23,8 +23,8 @@ namespace UnityAppiumTests
 			string testDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory;
 			var rootDir = testDir.Substring(0,testDir.IndexOf("UI-TESTS"))+"UI-TESTS";
 			shellHelper = new ShellHelper(rootDir);
-			shellHelper.StartAppium();
-			shellHelper.StartAltTester();
+			//shellHelper.StartAppium();
+			//shellHelper.StartAltTester();
 			System.Threading.Thread.Sleep(10000);
 			var desiredCaps = new AppiumOptions();
 			desiredCaps.AddAdditionalCapability("platformName", TestContext.Parameters["platformName"]);
@@ -605,8 +605,8 @@ namespace UnityAppiumTests
         	altDriver.Stop();
 			if (platformAndroid)
         		AltReversePortForwarding.RemoveReversePortForwardingAndroid();
-			shellHelper.StopAltTester();
-			shellHelper.StopAppium();
+			//shellHelper.StopAltTester();
+			//shellHelper.StopAppium();
         }
     }
 }
