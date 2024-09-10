@@ -30,7 +30,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
-    - name: Install AltTester Server
+    - name: Install and run AltTester Server
       run: |
         cwd=$(pwd)
         pushd "$cwd"
@@ -42,6 +42,7 @@ jobs:
         cd AltTesterDesktopPackageMac__v2.1.2
         hdiutil attach AltTesterDesktop__v2.1.2.dmg
         cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
+        cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
         popd
     - name: Gradle cache
       uses: gradle/actions/setup-gradle@v3
@@ -75,7 +76,6 @@ jobs:
         arch: x86_64
         script: |
           chmod -R 777 UI-TESTS
-          cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
           cd UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Archive logs
       if: always()
