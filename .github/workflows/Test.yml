@@ -55,7 +55,7 @@ jobs:
           appium driver install uiautomator2
           appium driver install xcuitest
           appium plugin install --source=npm appium-altunity-plugin
-          cd ~ && mkdir logs && cd logs && echo "appium" > appiumLog.txt
+          pwd && cd ~ && mkdir logs && cd logs && echo "appium" > appiumLog.txt
           appium --use-plugins=altunity &>logs/appiumLog.txt &
           # : - name: Install and run AltTester Server
           # :   run: |
