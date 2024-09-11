@@ -55,17 +55,17 @@ jobs:
           appium driver install uiautomator2
           appium driver install xcuitest
           appium plugin install --source=npm appium-altunity-plugin
-          pwd && cd ~ && pwd && mkdir logs && cd logs && echo "appium" > appiumLog.txt && pwd && ls
-          appium --use-plugins=altunity &>logs/appiumLog.txt &
+          pwd && cd ~/work/unity-sdk/unity-sdk && pwd && mkdir logs && cd logs && echo "appium" > appiumLog.txt && pwd && ls
+          appium --use-plugins=altunity &>~/work/unity-sdk/unity-sdk/logs/appiumLog.txt &
           # : - name: Install and run AltTester Server
           # :   run: |
-          cd ~/logs && echo "alttester" > altTesterLog.txt && echo "alttester" > altTesterComLog.txt && pwd && ls
-          cd ~ && wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip && unzip AltTesterDesktopPackageMac__v2.1.2.zip && cd AltTesterDesktopPackageMac__v2.1.2 && hdiutil attach AltTesterDesktop__v2.1.2.dmg && cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
-          cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
+          cd ~/work/unity-sdk/unity-sdk/logs && echo "alttester" > altTesterLog.txt && echo "alttester" > altTesterComLog.txt && pwd && ls
+          cd ~/work/unity-sdk/unity-sdk && wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip && unzip AltTesterDesktopPackageMac__v2.1.2.zip && cd AltTesterDesktopPackageMac__v2.1.2 && hdiutil attach AltTesterDesktop__v2.1.2.dmg && cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~/work/unity-sdk/unity-sdk
+          cd ~/work/unity-sdk/unity-sdk && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
           # : - name: Install and run Appium Server
           # :  run: |
-          cd ~ && chmod -R 777 UI-TESTS
-          cd UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
+          cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
+          cd ~/work/unity-sdk/unity-sdk/UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
