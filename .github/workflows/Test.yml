@@ -55,11 +55,11 @@ jobs:
           appium driver install uiautomator2
           appium driver install xcuitest
           appium plugin install --source=npm appium-altunity-plugin
-          pwd && cd ~ && mkdir logs && cd logs && echo "appium" > appiumLog.txt
+          pwd && cd ~ && pwd && mkdir logs && cd logs && echo "appium" > appiumLog.txt && pwd && ls
           appium --use-plugins=altunity &>logs/appiumLog.txt &
           # : - name: Install and run AltTester Server
           # :   run: |
-          cd ~/logs && echo "alttester" > altTesterLog.txt && echo "alttester" > altTesterComLog.txt
+          cd ~/logs && echo "alttester" > altTesterLog.txt && echo "alttester" > altTesterComLog.txt && pwd && ls
           cd ~ && wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip && unzip AltTesterDesktopPackageMac__v2.1.2.zip && cd AltTesterDesktopPackageMac__v2.1.2 && hdiutil attach AltTesterDesktop__v2.1.2.dmg && cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
           cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
           # : - name: Install and run Appium Server
