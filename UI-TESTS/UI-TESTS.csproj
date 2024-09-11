@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="AltTester-Driver" Version="2.0.3" />
-    <PackageReference Include="Appium.WebDriver" Version="4.4.5" />
+    <PackageReference Include="Appium.WebDriver" Version="5.1.0" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="NUnit" Version="4.1.0" />
