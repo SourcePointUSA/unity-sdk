@@ -76,6 +76,7 @@ jobs:
         arch: x86_64
         script: |
           chmod -R 777 UI-TESTS
+          adb shell dumpsys package com.google.android.webview
           cd UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Archive logs
       if: always()
