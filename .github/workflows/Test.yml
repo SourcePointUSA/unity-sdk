@@ -49,21 +49,21 @@ jobs:
         arch: x86_64
         script: |
           echo "Emulator working"
-    # : - name: Install and run Appium Server
-    # :   run: |
+          # : - name: Install and run Appium Server
+          # :   run: |
           npm i --location=global appium
           appium driver install uiautomator2
           appium driver install xcuitest
           appium plugin install --source=npm appium-altunity-plugin
           cd ~ && mkdir logs && cd logs && echo "appium" > appiumLog.txt
           appium --use-plugins=altunity &>logs/appiumLog.txt &
-    # : - name: Install and run AltTester Server
-    # :   run: |
+          # : - name: Install and run AltTester Server
+          # :   run: |
           cd ~/logs && echo "alttester" > altTesterLog.txt && echo "alttester" > altTesterComLog.txt
           cd ~ && wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip && unzip AltTesterDesktopPackageMac__v2.1.2.zip && cd AltTesterDesktopPackageMac__v2.1.2 && hdiutil attach AltTesterDesktop__v2.1.2.dmg && cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
           cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
-    # : - name: Install and run Appium Server
-    # :  run: |
+          # : - name: Install and run Appium Server
+          # :  run: |
           cd ~ && chmod -R 777 UI-TESTS
           cd UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
     - name: Archive logs
