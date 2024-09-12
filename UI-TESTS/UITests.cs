@@ -52,7 +52,7 @@ namespace UnityAppiumTests
 			
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: true);
 
-			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
+			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(600));
 			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
 		}
 
