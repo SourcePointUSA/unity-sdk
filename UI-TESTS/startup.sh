@@ -7,7 +7,7 @@ runTest()
     local max=4
     while [ $i -lt $max ]
     do
-        if dotnet test -s $1 --filter Name=$2; then
+        if dotnet test -s $1 --filter Name=$2 -l "console;verbosity=detailed"; then
             break
         else
             true $(( i++ ))
