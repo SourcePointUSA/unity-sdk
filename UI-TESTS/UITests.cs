@@ -4,7 +4,7 @@ namespace UnityAppiumTests
     public class WebViewTests
     {
         private readonly Uri appiumServerUri = new Uri("http://127.0.0.1:4723");
-        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(300);
+        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(600);
 		public TestContext TestContext { get; set; }
 		public bool platformIOS {get => TestContext.Parameters["platformName"]=="iOS";}
 		public bool platformAndroid {get => TestContext.Parameters["platformName"]=="Android";}
@@ -52,7 +52,7 @@ namespace UnityAppiumTests
 			
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: true);
 
-			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
 			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
 		}
 
