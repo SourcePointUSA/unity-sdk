@@ -73,7 +73,7 @@ jobs:
         api-level: 34
         target: google_apis
         force-avd-creation: false
-        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: true
         arch: x86_64
         script: |
