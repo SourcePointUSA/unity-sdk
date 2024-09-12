@@ -3,11 +3,11 @@ namespace UnityAppiumTests
     public class DriverHelper
     {
         public string platform;
-        public AndroidDriver<AndroidElement> driverAndroid;
-        public IOSDriver<IOSElement> driverIOS;
+        public AndroidDriver driverAndroid;
+        public IOSDriver driverIOS;
         public WebDriverWait webDriverWait;
 
-        public DriverHelper(string platform, AndroidDriver<AndroidElement> driverAndroid, IOSDriver<IOSElement> driverIOS, WebDriverWait webDriverWait)
+        public DriverHelper(string platform, AndroidDriver driverAndroid, IOSDriver driverIOS, WebDriverWait webDriverWait)
         {
             this.platform = platform;
             this.driverAndroid = driverAndroid;

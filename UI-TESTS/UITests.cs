@@ -8,8 +8,8 @@ namespace UnityAppiumTests
 		public TestContext TestContext { get; set; }
 		public bool platformIOS {get => TestContext.Parameters["platformName"]=="iOS";}
 		public bool platformAndroid {get => TestContext.Parameters["platformName"]=="Android";}
-        private IOSDriver<IOSElement> driverIOS;
-        private AndroidDriver<AndroidElement> driverAndroid;
+        private IOSDriver driverIOS;
+        private AndroidDriver driverAndroid;
 		private IWebDriver driver { get { if(platformIOS) return driverIOS; else return driverAndroid;} }
     	private AltDriver altDriver;
 		WebDriverWait webDriverWait;
@@ -27,27 +27,27 @@ namespace UnityAppiumTests
 			//shellHelper.StartAltTester();
 			System.Threading.Thread.Sleep(10000);
 			var desiredCaps = new AppiumOptions();
-			desiredCaps.AddAdditionalCapability("platformName", TestContext.Parameters["platformName"]);
-			desiredCaps.AddAdditionalCapability("deviceName", TestContext.Parameters["deviceName"]);
-			desiredCaps.AddAdditionalCapability("appium:uiautomator2ServerInstallTimeout", 120000);
-			desiredCaps.AddAdditionalCapability("appium:uiautomator2ServerLaunchTimeout", 120000);
-			desiredCaps.AddAdditionalCapability("appium:androidInstallTimeout", 180000);
-			desiredCaps.AddAdditionalCapability("appium:newCommandTimeout", 180000);
-			desiredCaps.AddAdditionalCapability("appium:app", (string)rootDir+TestContext.Parameters["appium:app"]);
-			desiredCaps.AddAdditionalCapability("appium:automationName", TestContext.Parameters["appium:automationName"]);
-			desiredCaps.AddAdditionalCapability("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
-			desiredCaps.AddAdditionalCapability("appium:altUnityPort", 13000);
-			desiredCaps.AddAdditionalCapability("appium:sendKeyStrategy", "setValue");
+			desiredCaps.DeviceName = TestContext.Parameters["deviceName"];
+			desiredCaps.App = (string)rootDir+TestContext.Parameters["appium:app"];
+			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
+			desiredCaps.AddAdditionalAppiumOption("platformName", TestContext.Parameters["platformName"]);
+			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerInstallTimeout", 120000);
+			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerLaunchTimeout", 120000);
+			desiredCaps.AddAdditionalAppiumOption("appium:androidInstallTimeout", 180000);
+			desiredCaps.AddAdditionalAppiumOption("appium:newCommandTimeout", 180000);
+			desiredCaps.AddAdditionalAppiumOption("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
+			desiredCaps.AddAdditionalAppiumOption("appium:altUnityPort", 13000);
+			desiredCaps.AddAdditionalAppiumOption("appium:sendKeyStrategy", "setValue");
 			if (platformAndroid)
 			{
-				// desiredCaps.AddAdditionalCapability("appium:chromedriverAutodownload", true);
-				desiredCaps.AddAdditionalCapability("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
-				driverAndroid = new AndroidDriver<AndroidElement>(appiumServerUri, desiredCaps, initTimeoutSec);
+				// desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
+				desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
+				driverAndroid = new AndroidDriver(appiumServerUri, desiredCaps, initTimeoutSec);
 
 				AltReversePortForwarding.ReversePortForwardingAndroid();
 			}
 			if (platformIOS)
-				driverIOS = new IOSDriver<IOSElement>(appiumServerUri, desiredCaps, initTimeoutSec);
+				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
 			
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: true);
 
@@ -602,8 +602,12 @@ namespace UnityAppiumTests
         [TearDown]
         public void Teardown()
         {
-            driver.Quit();
         	altDriver.Stop();
+			if(platformIOS)
+        		driverIOS.Dispose();
+			if(platformAndroid)
+				driverAndroid.Dispose();
+            //driver.Quit();
 			if (platformAndroid)
         		AltReversePortForwarding.RemoveReversePortForwardingAndroid();
 			//shellHelper.StopAltTester();

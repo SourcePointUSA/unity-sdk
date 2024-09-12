@@ -36,17 +36,17 @@ namespace UnityAppiumTests
         public override string contextNameToRun { get { return "WEBVIEW"; } }
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
-        public AndroidDriver<AndroidElement> driver;
+        public AndroidDriver driver;
         
-        public PreFirstLayerAndroid(WebDriverWait wait, AndroidDriver<AndroidElement> driverAndroid)
+        public PreFirstLayerAndroid(WebDriverWait wait, AndroidDriver driverAndroid)
         {
             webDriverWait = wait;
             driver = driverAndroid;
         }
 
-        public override string SelectFirstLayer() => SelectFirstLayerGen<AndroidDriver<AndroidElement>>(driver, x => driver.Contexts);
-        public override void SetContex(string contex) => ((AndroidDriver<AndroidElement>)driver).Context = contex;
-        public override int GetContexNum() => ((AndroidDriver<AndroidElement>)driver).Context.Count();
+        public override string SelectFirstLayer() => SelectFirstLayerGen<AndroidDriver>(driver, x => driver.Contexts);
+        public override void SetContex(string contex) => ((AndroidDriver)driver).Context = contex;
+        public override int GetContexNum() => ((AndroidDriver)driver).Context.Count();
     }
     
     public class PreFirstLayerIOS: PreFirstLayer
@@ -55,9 +55,9 @@ namespace UnityAppiumTests
         public override string contextNameToRun { get { return "NATIVE_APP"; } }
         public override WebDriverWait wait {get { return webDriverWait; } }
         public WebDriverWait webDriverWait;
-        public IOSDriver<IOSElement> driver;
+        public IOSDriver driver;
         
-        public PreFirstLayerIOS(WebDriverWait wait, IOSDriver<IOSElement> driverIOS)
+        public PreFirstLayerIOS(WebDriverWait wait, IOSDriver driverIOS)
         {
             webDriverWait = wait;
             driver = driverIOS;
@@ -65,14 +65,14 @@ namespace UnityAppiumTests
 
         public override string SelectFirstLayer()
         {
-            string layer = SelectFirstLayerGen<IOSDriver<IOSElement>>(driver, x => driver.Contexts);
+            string layer = SelectFirstLayerGen<IOSDriver>(driver, x => driver.Contexts);
 			IWebElement bringItOn = webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath("//XCUIElementTypeButton[@name='Bring it on']"))); 
 			bringItOn.Click();
             driver.SwitchTo().Alert().Accept();
             return layer;
         }
         
-        public override void SetContex(string contex) => ((IOSDriver<IOSElement>)driver).Context = contex;
-        public override int GetContexNum() => ((IOSDriver<IOSElement>)driver).Context.Count();
+        public override void SetContex(string contex) => ((IOSDriver)driver).Context = contex;
+        public override int GetContexNum() => ((IOSDriver)driver).Context.Count();
     }
 }
