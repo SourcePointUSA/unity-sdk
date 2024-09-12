@@ -608,7 +608,6 @@ namespace UnityAppiumTests
         		driverIOS.Dispose();
 			if(platformAndroid)
 				driverAndroid.Dispose();
-            //driver.Quit();
 			if (platformAndroid)
         		AltReversePortForwarding.RemoveReversePortForwardingAndroid();
 			//shellHelper.StopAltTester();
