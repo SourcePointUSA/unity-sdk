@@ -66,12 +66,11 @@ jobs:
         echo "alttester" > altTesterLog.txt
         echo "alttester" > altTesterComLog.txt
         popd
-        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip
-        unzip AltTesterDesktopPackageMac__v2.1.2.zip
-        cd AltTesterDesktopPackageMac__v2.1.2
-        hdiutil attach AltTesterDesktop__v2.1.2.dmg
-        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
-        cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
+        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopLinuxBatchmode.zip
+        unzip AltTesterDesktopLinuxBatchmode.zip
+        cd AltTesterDesktopLinux
+        chmod +x AltTesterDesktop.x86_64
+        ./AltTesterDesktop.x86_64 -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
     - name: Start emulator
       uses: reactivecircus/android-emulator-runner@v2
       with:
