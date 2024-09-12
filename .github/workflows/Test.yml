@@ -66,6 +66,7 @@ jobs:
           # :  run: |
           cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
           cd ~/work/unity-sdk/unity-sdk/UI-TESTS && dotnet test -s android.runsettings --filter Name=ClickAcceptAllButtonTest
+          echo "done"
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
