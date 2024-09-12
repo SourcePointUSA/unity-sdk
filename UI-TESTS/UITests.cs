@@ -50,7 +50,7 @@ namespace UnityAppiumTests
 			if (platformIOS)
 				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
 			
-        	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: true);
+        	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
 
 			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(1200));
 			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
