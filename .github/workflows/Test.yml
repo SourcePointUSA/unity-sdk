@@ -73,7 +73,7 @@ jobs:
         unzip AltTesterDesktopLinuxBatchmode.zip
         cd AltTesterDesktopLinux
         chmod +x AltTesterDesktop.x86_64
-        # : ./AltTesterDesktop.x86_64 -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
+        ./AltTesterDesktop.x86_64 -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
     - name: Start emulator
       uses: reactivecircus/android-emulator-runner@v2
       with:
