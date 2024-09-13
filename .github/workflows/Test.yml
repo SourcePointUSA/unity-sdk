@@ -73,7 +73,7 @@ jobs:
         unzip AltTesterDesktopLinuxBatchmode.zip
         cd AltTesterDesktopLinux
         chmod +x AltTesterDesktop.x86_64
-        ./AltTesterDesktop.x86_64 -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
+        # : ./AltTesterDesktop.x86_64 -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/altTesterComLog.txt &
     - name: Start emulator
       uses: reactivecircus/android-emulator-runner@v2
       with:
@@ -87,6 +87,7 @@ jobs:
           adb logcat > ~/work/unity-sdk/unity-sdk/logs/logcat.txt & echo $! > ~/work/unity-sdk/unity-sdk/logs/logcatPID.txt
           cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
           test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickAcceptAllButtonTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickRejectAllButtonTest
           lsof -P | cat ~/work/unity-sdk/unity-sdk/logs/logcatPID.txt | xargs kill
     - name: Archive logs
       if: always()
