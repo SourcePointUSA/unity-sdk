@@ -43,6 +43,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
+    - name: Setup dotnet-test-rerun
+      run: |
+        dotnet tool install --global dotnet-test-rerun
     - name: Install and run Appium Server
       run: |
         npm i --location=global appium
@@ -84,7 +87,6 @@ jobs:
           adb logcat > ~/work/unity-sdk/unity-sdk/logs/logcat.txt & echo $! > ~/work/unity-sdk/unity-sdk/logs/logcatPID.txt
           cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
           cd ~/work/unity-sdk/unity-sdk/UI-TESTS && ./startup.sh
-          echo "done"
           lsof -P | cat ~/work/unity-sdk/unity-sdk/logs/logcatPID.txt | xargs kill
     - name: Archive logs
       if: always()
