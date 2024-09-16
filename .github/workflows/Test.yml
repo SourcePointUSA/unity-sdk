@@ -35,6 +35,9 @@ jobs:
         api-level: 34
         target: google_apis
         force-avd-creation: true
+        disk-size: 6000M
+        heap-size: 2048M
+        ram-size: 2048M
         emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: false
         arch: x86_64
@@ -83,6 +86,9 @@ jobs:
         api-level: 34
         target: google_apis
         force-avd-creation: false
+        disk-size: 6000M
+        heap-size: 2048M
+        ram-size: 2048M
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: true
         arch: x86_64
