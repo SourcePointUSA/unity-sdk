@@ -4,8 +4,8 @@ namespace ConsentManagementProvider
 {
     public static class CmpDebugUtil 
     {
-        private static bool enableLogging = false;
-        private static bool enableDebugging = false;
+        private static bool enableLogging = true;
+        private static bool enableDebugging = true;
         private static bool forceEnableSingleLog;
 
         public static bool IsLogging => enableLogging;
