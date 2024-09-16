@@ -77,7 +77,7 @@ jobs:
         cd AltTesterDesktopLinux
         chmod +x AltTesterDesktop.x86_64
         ./AltTesterDesktop.x86_64 -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/runAltTesterLog.txt &
-    - name: Start emulator
+    - name: Start emulator and run tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 34
@@ -93,6 +93,16 @@ jobs:
           test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickRejectAllButtonTest
           test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=OpenPmLayersTest
           test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitGDPRTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitCCPATest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitUSNATTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClearAllButtonTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=AuthIdTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllGDPRTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllCCPATest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllUSNATTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
+          test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=MessageLanguageTest
           lsof -P | cat ~/work/unity-sdk/unity-sdk/logs/logcatPID.txt | xargs kill
     - name: Archive logs
       if: always()
