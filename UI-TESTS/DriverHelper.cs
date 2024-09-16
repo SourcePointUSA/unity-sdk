@@ -17,8 +17,8 @@ namespace UnityAppiumTests
         public void SwipeUp()
         {
             var finger = new PointerInputDevice(PointerKind.Touch);
-            var start = new Point(15, 450);
-            var end = new Point(15, 50);
+            var start = new Point(15, 380);
+            var end = new Point(15, 120);
             if (platform == "iOS")
             {
                 start = new Point(14, 580);
