@@ -19,7 +19,6 @@ namespace UnityAppiumTests
 				if (context.StartsWith(contextNameToRun))
 				{
 				    return context;
-				    break;
 				}
 			}
 			return string.Empty;

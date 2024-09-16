@@ -5,12 +5,14 @@ namespace UnityAppiumTests
     {
         private readonly Uri appiumServerUri = new Uri("http://127.0.0.1:4723");
         private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(600);
+		#pragma warning disable CS8618
 		public TestContext TestContext { get; set; }
+		#pragma warning restore CS8618
 		public bool platformIOS {get => TestContext.Parameters["platformName"]=="iOS";}
 		public bool platformAndroid {get => TestContext.Parameters["platformName"]=="Android";}
-        private IOSDriver driverIOS;
-        private AndroidDriver driverAndroid;
-		private IWebDriver driver { get { if(platformIOS) return driverIOS; else return driverAndroid;} }
+        private IOSDriver? driverIOS;
+        private AndroidDriver? driverAndroid;
+		private IWebDriver? driver { get { if(platformIOS) return driverIOS; else return driverAndroid;} }
     	private AltDriver altDriver;
 		WebDriverWait webDriverWait;
 
@@ -52,8 +54,8 @@ namespace UnityAppiumTests
 			
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
 
-			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(1200));
-			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
+			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(120));
+			pages = new Pages(TestContext.Parameters["platformName"] ?? "android", webDriverWait, driverAndroid, driverIOS, altDriver);
 		}
 
 		[Test]
@@ -409,7 +411,6 @@ namespace UnityAppiumTests
 			if (platformAndroid)
 				Assert.That(data=="rejected", Is.True);
 			System.Threading.Thread.Sleep(2000);	
-			Assert.That(true, Is.True);
 		}
 
 		[Test]
@@ -603,13 +604,13 @@ namespace UnityAppiumTests
         [TearDown]
         public void Teardown()
         {
-        	altDriver.Stop();
-			if(platformIOS)
+			if(platformIOS && driverIOS != null)
         		driverIOS.Dispose();
-			if(platformAndroid)
+			if(platformAndroid && driverAndroid != null)
 				driverAndroid.Dispose();
 			if (platformAndroid)
         		AltReversePortForwarding.RemoveReversePortForwardingAndroid();
+        	altDriver.Stop();
 			//shellHelper.StopAltTester();
 			//shellHelper.StopAppium();
         }

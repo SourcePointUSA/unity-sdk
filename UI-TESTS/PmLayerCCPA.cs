@@ -11,7 +11,7 @@ namespace UnityAppiumTests
             if (driverHelper.platform == "iOS")
             {
 			    System.Threading.Thread.Sleep(1000);
-                num = driverHelper.driverIOS.FindElements(MobileBy.IosClassChain(switchPrefix+switchValueOn)).Count;
+                num = driverHelper.driverIOS!.FindElements(MobileBy.IosClassChain(switchPrefix+switchValueOn)).Count;
             }
             else
                 num = base.getCheckedSwitchesNum();

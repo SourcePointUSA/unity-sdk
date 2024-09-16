@@ -3,11 +3,11 @@ namespace UnityAppiumTests
     public class DriverHelper
     {
         public string platform;
-        public AndroidDriver driverAndroid;
-        public IOSDriver driverIOS;
+        public AndroidDriver? driverAndroid;
+        public IOSDriver? driverIOS;
         public WebDriverWait webDriverWait;
 
-        public DriverHelper(string platform, AndroidDriver driverAndroid, IOSDriver driverIOS, WebDriverWait webDriverWait)
+        public DriverHelper(string platform, AndroidDriver? driverAndroid, IOSDriver? driverIOS, WebDriverWait webDriverWait)
         {
             this.platform = platform;
             this.driverAndroid = driverAndroid;
@@ -30,12 +30,12 @@ namespace UnityAppiumTests
             swipe.AddAction(finger.CreatePointerMove(CoordinateOrigin.Viewport, end.X, end.Y, TimeSpan.FromMilliseconds(1000)));
             swipe.AddAction(finger.CreatePointerUp(MouseButton.Left));
             if(platform == "Android")
-                driverAndroid.PerformActions(new List<ActionSequence> { swipe });
+                driverAndroid!.PerformActions(new List<ActionSequence> { swipe });
             else
-                driverIOS.PerformActions(new List<ActionSequence> { swipe });
+                driverIOS!.PerformActions(new List<ActionSequence> { swipe });
         }
 
-        public void pressButton(string buttonPath, string expectedWebViewName = null, bool needSwipe = false, bool needWait = false)
+        public void pressButton(string buttonPath, string? expectedWebViewName = null, bool needSwipe = false, bool needWait = false)
         {
             if (expectedWebViewName != null)
                 webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(expectedWebViewName)));

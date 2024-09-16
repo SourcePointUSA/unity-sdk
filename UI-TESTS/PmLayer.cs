@@ -11,7 +11,9 @@ namespace UnityAppiumTests
         public abstract string switchPostfix { get; }
         public abstract string[] switches { get; }
         public abstract WebDriverWait wait { get; }
+		#pragma warning disable CS8618
         public DriverHelper driverHelper;
+		#pragma warning restore CS8618
 
         public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath);
         public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath);

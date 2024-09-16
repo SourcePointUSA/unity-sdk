@@ -13,9 +13,13 @@ namespace UnityAppiumTests
         public PmLayerUSNAT pmLayerUSNAT;
         public DriverHelper driverHelper;
 
-        public Pages(string platformName, WebDriverWait webDriverWait, AndroidDriver driverAndroid, IOSDriver driverIOS, AltDriver altDriver)
+        public Pages(string platformName, WebDriverWait webDriverWait, AndroidDriver? driverAndroid, IOSDriver? driverIOS, AltDriver altDriver)
         {
-            preFirstLayer = platformName == "Android" ? new PreFirstLayerAndroid(webDriverWait, driverAndroid) : new PreFirstLayerIOS(webDriverWait, driverIOS);
+            if (platformName == "Android" && driverAndroid == null)
+				Assert.Fail("Driver has not been initialized.");
+            if (platformName != "Android" && driverIOS == null)
+				Assert.Fail("Driver has not been initialized.");
+            preFirstLayer = platformName == "Android" ? new PreFirstLayerAndroid(webDriverWait, driverAndroid!) : new PreFirstLayerIOS(webDriverWait, driverIOS!);
             firstLayerGDPR = platformName == "Android" ? new FirstLayerGDPRAndroid(webDriverWait) : new FirstLayerGDPRIOS(webDriverWait);
             firstLayerCCPA = platformName == "Android" ? new FirstLayerCCPAAndroid(webDriverWait) : new FirstLayerCCPAIOS(webDriverWait);
             firstLayerUSNAT = platformName == "Android" ? new FirstLayerUSNATAndroid(webDriverWait) : new FirstLayerUSNATIOS(webDriverWait);
