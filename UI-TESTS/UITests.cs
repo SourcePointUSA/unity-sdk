@@ -396,12 +396,14 @@ namespace UnityAppiumTests
 
 			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+			System.Threading.Thread.Sleep(2000);
 			Console.WriteLine($"Try to get: pmLayerUSNAT.getAcceptRejectState");
 			data = pages.pmLayerUSNAT.getAcceptRejectState();
 			Console.WriteLine($"pmLayerUSNAT.getAcceptRejectState: {data}");
 			if (platformAndroid)
 				Assert.That(data=="accepted", Is.True);
 			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressRejectAll");
+			System.Threading.Thread.Sleep(2000);
 			pages.pmLayerUSNAT.pressRejectAll();
 			System.Threading.Thread.Sleep(2000);
 
