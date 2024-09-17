@@ -382,6 +382,7 @@ namespace UnityAppiumTests
 			{
 				Assert.Fail("Driver has not been initialized.");
 			}
+			//pmId 988851 on USNAT have AcceptAll and RejectAll buttons
 
 			string data = "";
 			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
@@ -402,8 +403,14 @@ namespace UnityAppiumTests
 			Console.WriteLine($"pmLayerUSNAT.getAcceptRejectState: {data}");
 			if (platformAndroid)
 				Assert.That(data=="accepted", Is.True);
-			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressRejectAll");
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressExit");
+			pages.pmLayerUSNAT.pressExit();
 			System.Threading.Thread.Sleep(2000);
+
+			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+			System.Threading.Thread.Sleep(2000);
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressRejectAll");
 			pages.pmLayerUSNAT.pressRejectAll();
 			System.Threading.Thread.Sleep(2000);
 
