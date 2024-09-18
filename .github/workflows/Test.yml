@@ -8,10 +8,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Start Simulator
-      uses: futureware-tech/simulator-action@v3
-      with:
-        model: 'iPhone 15 Pro'
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -126,7 +122,6 @@ jobs:
       run: |
         npm i --location=global appium
         appium driver install uiautomator2
-        appium driver install xcuitest
         appium plugin install --source=npm appium-altunity-plugin
         CurWorkDir=$(pwd)
         pushd "$CurWorkDir"
