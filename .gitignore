@@ -60,7 +60,8 @@ Thumbs.db.meta
 #UI-TESTS related
 /UI-TESTS/bin/Debug/
 /UI-TESTS/obj/Debug/
-/UI-TESTS/BUILDS/iOS/
+/UI-TESTS/BUILDS/IOS/*
+!/UI-TESTS/BUILDS/IOS/ConsentMessagePlugin.app
 /UI-TESTS/obj/project.nuget.cache
 /UI-TESTS/obj/
 !/UI-TESTS/UI-TESTS.csproj

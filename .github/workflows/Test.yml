@@ -4,7 +4,7 @@ on: [pull_request]
 jobs:
   IOSUITests:
     runs-on: macos-13
-    name: AndroidUITests
+    name: IOSUITests
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -49,20 +49,20 @@ jobs:
     - name: Run tests
       run: |
         cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickAcceptAllButtonTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickRejectAllButtonTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=OpenPmLayersTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitGDPRTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitCCPATest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitUSNATTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClearAllButtonTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=AuthIdTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllGDPRTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllCCPATest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllUSNATTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=MessageLanguageTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
