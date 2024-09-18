@@ -2,7 +2,80 @@ name: UI tests
 on: [pull_request]
 
 jobs:
+  IOSUITests:
+    runs-on: macos-13
+    name: AndroidUITests
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Start Simulator
+      uses: futureware-tech/simulator-action@v3
+      with:
+        model: 'iPhone 15 Pro'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0'
+    - name: Setup dotnet-test-rerun
+      run: |
+        dotnet tool install --global dotnet-test-rerun
+    - name: Install and run Appium Server
+      run: |
+        npm i --location=global appium
+        appium driver install xcuitest
+        appium plugin install --source=npm appium-altunity-plugin
+        CurWorkDir=$(pwd)
+        pushd "$CurWorkDir"
+        mkdir logs
+        cd logs
+        echo "appium" > appiumLog.txt
+        popd
+        appium --use-plugins=altunity &>logs/appiumLog.txt &
+    - name: Create log files for logcat
+      run: |
+        cd logs
+        echo "logcat" > logcat.txt
+        echo "logcat" > logcatPID.txt
+    - name: Install and run AltTester Server
+      run: |
+        CurWorkDir=$(pwd)
+        pushd "$CurWorkDir"
+        cd logs
+        echo "alttester" > altTesterLog.txt
+        echo "alttester" > runAltTesterLog.txt
+        popd
+        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip
+        unzip AltTesterDesktopPackageMac__v2.1.2.zip
+        cd AltTesterDesktopPackageMac__v2.1.2
+        hdiutil attach AltTesterDesktop__v2.1.2.dmg
+        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
+        cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/runAltTesterLog.txt &
+    - name: Run tests
+      run: |
+        cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickAcceptAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClickRejectAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=OpenPmLayersTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitGDPRTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitCCPATest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=SaveAndExitUSNATTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ClearAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=AuthIdTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllGDPRTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllCCPATest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticRejectAllUSNATTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=MessageLanguageTest
+    - name: Archive logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs
+        path: logs/
+        compression-level: 0
   AndroidUITests:
+    if: false
     runs-on: ubuntu-latest
     name: AndroidUITests
     steps:
