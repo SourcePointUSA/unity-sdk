@@ -37,6 +37,7 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerLaunchTimeout", 120000);
 			desiredCaps.AddAdditionalAppiumOption("appium:androidInstallTimeout", 180000);
 			desiredCaps.AddAdditionalAppiumOption("appium:newCommandTimeout", 180000);
+			desiredCaps.AddAdditionalAppiumOption("appium:wdaLaunchTimeout", 180000);
 			desiredCaps.AddAdditionalAppiumOption("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
 			desiredCaps.AddAdditionalAppiumOption("appium:altUnityPort", 13000);
 			desiredCaps.AddAdditionalAppiumOption("appium:sendKeyStrategy", "setValue");
