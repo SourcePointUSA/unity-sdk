@@ -21,7 +21,7 @@ namespace UnityAppiumTests
             var end = new Point(15, 120);
             if (platform == "iOS")
             {
-                start = new Point(14, 580);
+                start = new Point(18, 580);
                 end = new Point(18, 50);
             }
             var swipe = new ActionSequence(finger);
