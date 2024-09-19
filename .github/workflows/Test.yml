@@ -29,7 +29,7 @@ jobs:
         cd logs
         echo "appium" > appiumLog.txt
         popd
-        appium --use-plugins=altunity &>logs/appiumLog.txt &
+        # :appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Create log files for logcat
       run: |
         cd logs
