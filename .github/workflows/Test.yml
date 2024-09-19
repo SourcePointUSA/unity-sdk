@@ -11,6 +11,9 @@ jobs:
     - name: Boot simulator
       run: |
         xcrun simctl boot $(xcrun simctl list devices | grep -m 1 'iPhone 15 Pro' |grep -E -o -i '([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})')
+        sleep 60
+        open -a simulator
+        sleep 60
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -29,7 +32,7 @@ jobs:
         cd logs
         echo "appium" > appiumLog.txt
         popd
-        # :appium --use-plugins=altunity &>logs/appiumLog.txt &
+        appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Create log files for logcat
       run: |
         cd logs
@@ -53,10 +56,10 @@ jobs:
       run: |
         cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
         cd UI-TESTS
-        ./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickAcceptAllButtonTest
-        ./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickRejectAllButtonTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
+        # :./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickAcceptAllButtonTest
+        # :./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickRejectAllButtonTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
         # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
         # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
         # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
