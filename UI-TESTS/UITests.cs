@@ -4,7 +4,7 @@ namespace UnityAppiumTests
     public class WebViewTests
     {
         private readonly Uri appiumServerUri = new Uri("http://127.0.0.1:4723");
-        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(180);
+        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(300);
 		#pragma warning disable CS8618
 		public TestContext TestContext { get; set; }
 		#pragma warning restore CS8618
@@ -39,7 +39,7 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerLaunchTimeout", 120000);
 			desiredCaps.AddAdditionalAppiumOption("appium:androidInstallTimeout", 180000);
 			desiredCaps.AddAdditionalAppiumOption("appium:newCommandTimeout", 180000);
-			desiredCaps.AddAdditionalAppiumOption("appium:wdaLaunchTimeout", 180000);
+			desiredCaps.AddAdditionalAppiumOption("appium:wdaLaunchTimeout", 300000);
 			desiredCaps.AddAdditionalAppiumOption("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
 			desiredCaps.AddAdditionalAppiumOption("appium:altUnityPort", 13000);
 			desiredCaps.AddAdditionalAppiumOption("appium:sendKeyStrategy", "setValue");
