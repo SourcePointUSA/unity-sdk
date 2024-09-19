@@ -53,10 +53,10 @@ jobs:
       run: |
         cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
         cd UI-TESTS
-        # :./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickAcceptAllButtonTest
-        # :./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickRejectAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
+        ./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickAcceptAllButtonTest
+        ./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickRejectAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
         # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
         # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
         # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
