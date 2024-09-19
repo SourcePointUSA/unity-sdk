@@ -33,6 +33,8 @@ namespace UnityAppiumTests
 			desiredCaps.App = (string)rootDir+TestContext.Parameters["appium:app"];
 			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
 			desiredCaps.AddAdditionalAppiumOption("platformName", TestContext.Parameters["platformName"]);
+			if (platformIOS)
+				desiredCaps.AddAdditionalAppiumOption("platformVersion", "17.0");
 			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerInstallTimeout", 120000);
 			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerLaunchTimeout", 120000);
 			desiredCaps.AddAdditionalAppiumOption("appium:androidInstallTimeout", 180000);

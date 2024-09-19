@@ -34,11 +34,6 @@ jobs:
         echo "appium" > appiumLog.txt
         popd
         appium --use-plugins=altunity &>logs/appiumLog.txt &
-    - name: Create log files for logcat
-      run: |
-        cd logs
-        echo "logcat" > logcat.txt
-        echo "logcat" > logcatPID.txt
     - name: Install and run AltTester Server
       run: |
         CurWorkDir=$(pwd)
