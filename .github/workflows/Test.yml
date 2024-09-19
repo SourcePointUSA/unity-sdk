@@ -8,6 +8,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Boot simulator
+      run: |
+        xcrun simctl boot $(xcrun simctl list devices | grep -m 1 'iPhone 15 Pro' |grep -E -o -i '([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})')
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:

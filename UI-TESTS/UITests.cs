@@ -4,7 +4,7 @@ namespace UnityAppiumTests
     public class WebViewTests
     {
         private readonly Uri appiumServerUri = new Uri("http://127.0.0.1:4723");
-        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(600);
+        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(180);
 		#pragma warning disable CS8618
 		public TestContext TestContext { get; set; }
 		#pragma warning restore CS8618
