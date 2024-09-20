@@ -10,8 +10,8 @@ jobs:
       uses: actions/checkout@v4
       with:
           lfs: 'true'
-    - name: checkoutLFS
-      uses: actions/checkout@v4
+    - name: Checkout LFS objects
+      run: git lfs pull
     - name: Setup XCode
       run: sudo xcode-select -s '/Applications/Xcode_14.1.app/Contents/Developer'
     - name: Boot simulator
