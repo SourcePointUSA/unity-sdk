@@ -40,11 +40,11 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalAppiumOption("appium:androidInstallTimeout", 180000);
 			desiredCaps.AddAdditionalAppiumOption("appium:newCommandTimeout", 180000);
 			desiredCaps.AddAdditionalAppiumOption("appium:wdaLaunchTimeout", 300000);
-			desiredCaps.AddAdditionalAppiumOption("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
-			desiredCaps.AddAdditionalAppiumOption("appium:altUnityPort", 13000);
 			desiredCaps.AddAdditionalAppiumOption("appium:sendKeyStrategy", "setValue");
 			if (platformAndroid)
 			{
+				desiredCaps.AddAdditionalAppiumOption("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
+				desiredCaps.AddAdditionalAppiumOption("appium:altUnityPort", 13000);
 				desiredCaps.AddAdditionalAppiumOption("appium:ignoreHiddenApiPolicyError" , true);
 				// desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
 				desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
@@ -54,7 +54,7 @@ namespace UnityAppiumTests
 			}
 			if (platformIOS)
 				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
-			
+
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
 
 			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(120));

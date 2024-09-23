@@ -39,7 +39,7 @@ jobs:
         cd logs
         echo "appium" > appiumLog.txt
         popd
-        appium --use-plugins=altunity &>logs/appiumLog.txt &
+        appium &>logs/appiumLog.txt &
     - name: Install and run AltTester Server
       run: |
         CurWorkDir=$(pwd)
