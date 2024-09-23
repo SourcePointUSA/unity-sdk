@@ -13,7 +13,7 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs pull
     - name: Setup XCode
-      run: sudo xcode-select -s '/Applications/Xcode_14.1.app/Contents/Developer'
+      run: sudo xcode-select -s '/Applications/Xcode_15.0.1.app/Contents/Developer'
     - name: Boot simulator
       run: |
         xcrun simctl boot $(xcrun simctl list devices | grep -m 1 'iPhone 15 Pro' |grep -E -o -i '([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})')
