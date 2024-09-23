@@ -17,7 +17,7 @@ jobs:
     - name: Boot simulator
       run: |
         xcrun simctl boot $(xcrun simctl list devices | grep -m 1 'iPhone 14' |grep -E -o -i '([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})')
-        sleep 60
+        sleep 30
         open -a simulator
         sleep 60
         xcrun simctl list devices
@@ -32,7 +32,6 @@ jobs:
       run: |
         npm i --location=global appium
         appium driver install xcuitest
-        appium plugin install --source=npm appium-altunity-plugin
         CurWorkDir=$(pwd)
         pushd "$CurWorkDir"
         mkdir logs
@@ -58,24 +57,20 @@ jobs:
       run: |
         cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
         cd UI-TESTS
-        # :./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickAcceptAllButtonTest
-        # :./actionsTestIOS.sh ${{ secrets.ALTTESTERLICENSEKEY }} ClickRejectAllButtonTest
         test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
-        sleep 15
         test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
-        sleep 15
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
