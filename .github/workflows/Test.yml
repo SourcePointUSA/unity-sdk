@@ -83,7 +83,6 @@ jobs:
         path: logs/
         compression-level: 0
   AndroidUITests:
-    if: false
     runs-on: ubuntu-latest
     name: AndroidUITests
     steps:
@@ -134,14 +133,13 @@ jobs:
       run: |
         npm i --location=global appium
         appium driver install uiautomator2
-        appium plugin install --source=npm appium-altunity-plugin
         CurWorkDir=$(pwd)
         pushd "$CurWorkDir"
         mkdir logs
         cd logs
         echo "appium" > appiumLog.txt
         popd
-        appium --use-plugins=altunity &>logs/appiumLog.txt &
+        appium &>logs/appiumLog.txt &
     - name: Create log files for logcat
       run: |
         cd logs
