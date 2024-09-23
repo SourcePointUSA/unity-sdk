@@ -71,6 +71,10 @@ jobs:
         test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
         test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
         test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
+    - name: Move dotnet logs
+      run: |
+        cd ~/work/unity-sdk/unity-sdk/UI-TESTS
+        find . -name '*.trx' -exec mv {} ~/work/unity-sdk/unity-sdk/logs \;
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
