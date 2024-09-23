@@ -33,7 +33,7 @@ namespace UnityAppiumTests
 			desiredCaps.App = (string)rootDir+TestContext.Parameters["appium:app"];
 			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
 			if (platformIOS)
-				desiredCaps.PlatformVersion = "17.0";
+				desiredCaps.PlatformVersion = "16.1";
 			desiredCaps.AddAdditionalAppiumOption("platformName", TestContext.Parameters["platformName"]);
 			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerInstallTimeout", 120000);
 			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerLaunchTimeout", 120000);
@@ -57,7 +57,7 @@ namespace UnityAppiumTests
 
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
 
-			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(120));
+			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(180));
 			pages = new Pages(TestContext.Parameters["platformName"] ?? "android", webDriverWait, driverAndroid, driverIOS, altDriver);
 		}
 
