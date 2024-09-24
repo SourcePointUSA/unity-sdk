@@ -2,86 +2,6 @@ name: UI tests
 on: [pull_request]
 
 jobs:
-  IOSUITests:
-    runs-on: macos-13
-    name: IOSUITests
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-          lfs: 'true'
-    - name: Checkout LFS objects
-      run: git lfs pull
-    - name: Setup XCode
-      run: sudo xcode-select -s '/Applications/Xcode_14.1.app/Contents/Developer'
-    - name: Boot simulator
-      run: |
-        xcrun simctl boot $(xcrun simctl list devices | grep -m 1 'iPhone 14' |grep -E -o -i '([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})')
-        sleep 30
-        open -a simulator
-        sleep 60
-        xcrun simctl list devices
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.0'
-    - name: Setup dotnet-test-rerun
-      run: |
-        dotnet tool install --global dotnet-test-rerun
-    - name: Install and run Appium Server
-      run: |
-        npm i --location=global appium
-        appium driver install xcuitest
-        CurWorkDir=$(pwd)
-        pushd "$CurWorkDir"
-        mkdir logs
-        cd logs
-        echo "appium" > appiumLog.txt
-        popd
-        appium &>logs/appiumLog.txt &
-    - name: Install and run AltTester Server
-      run: |
-        CurWorkDir=$(pwd)
-        pushd "$CurWorkDir"
-        cd logs
-        echo "alttester" > altTesterLog.txt
-        echo "alttester" > runAltTesterLog.txt
-        popd
-        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip
-        unzip AltTesterDesktopPackageMac__v2.1.2.zip
-        cd AltTesterDesktopPackageMac__v2.1.2
-        hdiutil attach AltTesterDesktop__v2.1.2.dmg
-        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
-        cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/runAltTesterLog.txt &
-    - name: Run tests
-      run: |
-        cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
-        cd UI-TESTS
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
-    - name: Move dotnet logs
-      run: |
-        cd ~/work/unity-sdk/unity-sdk/UI-TESTS
-        find . -name '*.trx' -exec mv {} ~/work/unity-sdk/unity-sdk/logs \;
-    - name: Archive logs
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: logs
-        path: logs/
-        compression-level: 0
   AndroidUITests:
     runs-on: ubuntu-latest
     name: AndroidUITests
@@ -192,7 +112,88 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: logs
+        name: androidLogs
         path: logs/
         compression-level: 0
-        
+  IOSUITests:
+    needs: AndroidUITests
+    if: always()
+    runs-on: macos-13
+    name: IOSUITests
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+          lfs: 'true'
+    - name: Checkout LFS objects
+      run: git lfs pull
+    - name: Setup XCode
+      run: sudo xcode-select -s '/Applications/Xcode_14.1.app/Contents/Developer'
+    - name: Boot simulator
+      run: |
+        xcrun simctl boot $(xcrun simctl list devices | grep -m 1 'iPhone 14' |grep -E -o -i '([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})')
+        sleep 30
+        open -a simulator
+        sleep 60
+        xcrun simctl list devices
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0'
+    - name: Setup dotnet-test-rerun
+      run: |
+        dotnet tool install --global dotnet-test-rerun
+    - name: Install and run Appium Server
+      run: |
+        npm i --location=global appium
+        appium driver install xcuitest
+        CurWorkDir=$(pwd)
+        pushd "$CurWorkDir"
+        mkdir logs
+        cd logs
+        echo "appium" > appiumLog.txt
+        popd
+        appium &>logs/appiumLog.txt &
+    - name: Install and run AltTester Server
+      run: |
+        CurWorkDir=$(pwd)
+        pushd "$CurWorkDir"
+        cd logs
+        echo "alttester" > altTesterLog.txt
+        echo "alttester" > runAltTesterLog.txt
+        popd
+        wget https://alttester.com/app/uploads/AltTester/desktop/AltTesterDesktopPackageMac__v2.1.2.zip
+        unzip AltTesterDesktopPackageMac__v2.1.2.zip
+        cd AltTesterDesktopPackageMac__v2.1.2
+        hdiutil attach AltTesterDesktop__v2.1.2.dmg
+        cp -R /Volumes/AltTesterDesktop/AltTesterDesktop.app ~
+        cd ~ && AltTesterDesktop.app/Contents/MacOS/AltTesterDesktop -batchmode -nographics -port 13000 -license ${{ secrets.ALTTESTERLICENSEKEY }} -termsAndConditionsAccepted -logfile ~/work/unity-sdk/unity-sdk/logs/altTesterLog.txt &>~/work/unity-sdk/unity-sdk/logs/runAltTesterLog.txt &
+    - name: Run tests
+      run: |
+        cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
+        cd UI-TESTS
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
+    - name: Move dotnet logs
+      run: |
+        cd ~/work/unity-sdk/unity-sdk/UI-TESTS
+        find . -name '*.trx' -exec mv {} ~/work/unity-sdk/unity-sdk/logs \;
+    - name: Archive logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: iosLogs
+        path: logs/
+        compression-level: 0
