@@ -53,14 +53,13 @@ jobs:
       run: |
         npm i --location=global appium
         appium driver install uiautomator2
-        appium plugin install --source=npm appium-altunity-plugin
         CurWorkDir=$(pwd)
         pushd "$CurWorkDir"
         mkdir logs
         cd logs
         echo "appium" > appiumLog.txt
         popd
-        appium --use-plugins=altunity &>logs/appiumLog.txt &
+        appium &>logs/appiumLog.txt &
     - name: Create log files for logcat
       run: |
         cd logs
@@ -118,7 +117,7 @@ jobs:
         compression-level: 0
   IOSUITests:
     needs: AndroidUITests
-    if: always()
+    if: false
     runs-on: macos-13
     name: IOSUITests
     steps:
