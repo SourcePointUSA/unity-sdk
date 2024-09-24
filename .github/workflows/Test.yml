@@ -117,7 +117,7 @@ jobs:
         compression-level: 0
   IOSUITests:
     needs: AndroidUITests
-    if: false
+    if: always()
     runs-on: macos-13
     name: IOSUITests
     steps:
