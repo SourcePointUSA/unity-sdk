@@ -110,6 +110,11 @@ jobs:
           test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
           test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/android.runsettings --filter Name=MessageLanguageTest
           lsof -P | cat ~/work/unity-sdk/unity-sdk/logs/logcatPID.txt | xargs kill
+    - name: Move dotnet logs
+      if: always()
+      run: |
+        cd ~/work/unity-sdk/unity-sdk/UI-TESTS
+        find . -name '*.trx' -exec mv {} ~/work/unity-sdk/unity-sdk/logs \;
     - name: Archive logs
       if: always()
       uses: actions/upload-artifact@v4
