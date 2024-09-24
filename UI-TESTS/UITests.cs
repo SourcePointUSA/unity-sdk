@@ -43,6 +43,8 @@ namespace UnityAppiumTests
 			desiredCaps.AddAdditionalAppiumOption("appium:sendKeyStrategy", "setValue");
 			if (platformAndroid)
 			{
+				desiredCaps.AddAdditionalAppiumOption("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
+				desiredCaps.AddAdditionalAppiumOption("appium:altUnityPort", 13000);
 				desiredCaps.AddAdditionalAppiumOption("appium:ignoreHiddenApiPolicyError" , true);
 				// desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
 				desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);

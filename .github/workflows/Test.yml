@@ -53,13 +53,14 @@ jobs:
       run: |
         npm i --location=global appium
         appium driver install uiautomator2
+        appium plugin install --source=npm appium-altunity-plugin
         CurWorkDir=$(pwd)
         pushd "$CurWorkDir"
         mkdir logs
         cd logs
         echo "appium" > appiumLog.txt
         popd
-        appium &>logs/appiumLog.txt &
+        appium --use-plugins=altunity &>logs/appiumLog.txt &
     - name: Create log files for logcat
       run: |
         cd logs
