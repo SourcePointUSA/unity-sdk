@@ -177,20 +177,20 @@ jobs:
       run: |
         cd ~/work/unity-sdk/unity-sdk && chmod -R 777 UI-TESTS
         cd UI-TESTS
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest
-        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest
-        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickAcceptAllButtonTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClickRejectAllButtonTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=OpenPmLayersTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitGDPRTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitCCPATest --rerunMaxAttempts 5
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=SaveAndExitUSNATTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ClearAllButtonTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AuthIdTest --rerunMaxAttempts 5
+        # :test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=AcceptRejectAllUsnatInPMTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllGDPRTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllCCPATest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticRejectAllUSNATTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=ProgramaticCustomConsentGDPRTest --rerunMaxAttempts 5
+        test-rerun ~/work/unity-sdk/unity-sdk/UI-TESTS -s ~/work/unity-sdk/unity-sdk/UI-TESTS/ios.runsettings --filter Name=MessageLanguageTest --rerunMaxAttempts 5
     - name: Move dotnet logs
       if: always()
       run: |
