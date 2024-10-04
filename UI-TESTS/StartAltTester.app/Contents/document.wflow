@@ -63,7 +63,7 @@
 osascript -e 'tell app "Terminal"
 activate
 do script "cd /Applications &amp;&amp;
-AltTesterDesktop.app/Contents/MacOS/AltTester\\ Desktop -port 13000"
+AltTesterDesktop.app/Contents/MacOS/AltTester\\ Desktop -port 13000 -logfile ~/logs/altTesterLog.txt  &amp;&gt;~/logs/altTesterComLog.txt &amp;"
 set input to "\"\\033]0;AltTester\\007\""
 do script "echo -n -e " &amp; input in front window
 end tell'</string>

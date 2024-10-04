@@ -3,11 +3,11 @@ namespace UnityAppiumTests
     public class DriverHelper
     {
         public string platform;
-        public AndroidDriver<AndroidElement> driverAndroid;
-        public IOSDriver<IOSElement> driverIOS;
+        public AndroidDriver? driverAndroid;
+        public IOSDriver? driverIOS;
         public WebDriverWait webDriverWait;
 
-        public DriverHelper(string platform, AndroidDriver<AndroidElement> driverAndroid, IOSDriver<IOSElement> driverIOS, WebDriverWait webDriverWait)
+        public DriverHelper(string platform, AndroidDriver? driverAndroid, IOSDriver? driverIOS, WebDriverWait webDriverWait)
         {
             this.platform = platform;
             this.driverAndroid = driverAndroid;
@@ -17,11 +17,11 @@ namespace UnityAppiumTests
         public void SwipeUp()
         {
             var finger = new PointerInputDevice(PointerKind.Touch);
-            var start = new Point(5, 2106);
-            var end = new Point(3, 305);
+            var start = new Point(15, 380);
+            var end = new Point(15, 120);
             if (platform == "iOS")
             {
-                start = new Point(14, 580);
+                start = new Point(18, 580);
                 end = new Point(18, 50);
             }
             var swipe = new ActionSequence(finger);
@@ -30,12 +30,12 @@ namespace UnityAppiumTests
             swipe.AddAction(finger.CreatePointerMove(CoordinateOrigin.Viewport, end.X, end.Y, TimeSpan.FromMilliseconds(1000)));
             swipe.AddAction(finger.CreatePointerUp(MouseButton.Left));
             if(platform == "Android")
-                driverAndroid.PerformActions(new List<ActionSequence> { swipe });
+                driverAndroid!.PerformActions(new List<ActionSequence> { swipe });
             else
-                driverIOS.PerformActions(new List<ActionSequence> { swipe });
+                driverIOS!.PerformActions(new List<ActionSequence> { swipe });
         }
 
-        public void pressButton(string buttonPath, string expectedWebViewName = null, bool needSwipe = false, bool needWait = false)
+        public void pressButton(string buttonPath, string? expectedWebViewName = null, bool needSwipe = false, bool needWait = false)
         {
             if (expectedWebViewName != null)
                 webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(OpenQA.Selenium.By.XPath(expectedWebViewName)));

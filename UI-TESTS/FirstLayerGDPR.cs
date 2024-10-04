@@ -5,7 +5,7 @@ namespace UnityAppiumTests
         public abstract string exitButtonPath { get; }
         public abstract bool needSwipe { get; }
 
-        public void pressAcceptAll() 
+        public new void pressAcceptAll() 
         {
             if (needSwipe)
                 driverHelper.pressButton(acceptAllPath, textViewPath, true, true);
