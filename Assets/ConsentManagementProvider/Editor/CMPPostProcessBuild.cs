@@ -2,6 +2,8 @@
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
+using System;
+using System.Diagnostics;
 using System.IO;
 using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
@@ -31,10 +33,12 @@ public static class CMPPostProcessBuild
             EnableBitcode(pbxProject, unityProjectGuid, false);
 
             string bridgePath="Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
+            string newBridgePath="Pods/ConsentViewController/ConsentViewController/Classes/SwiftBridge.swift";
             RemoveBridge(pbxProject,bridgePath);
+            ExecuteProcessTerminal("mv "+buildPath+"/"+bridgePath+" "+buildPath+"/"+newBridgePath);
             pbxProject.WriteToFile(projPath);
 
-            AddBridgeToPods(buildPath, bridgePath);
+            AddBridgeToPods(buildPath, newBridgePath);
 
             string plistPath = buildPath + "/Info.plist";
             AddParameterToInfoPlist(plistPath);
@@ -119,6 +123,35 @@ public static class CMPPostProcessBuild
         pbxProject.AddBuildProperty(targetGuid, "SWIFT_VERSION", "4.0");
         pbxProject.AddBuildProperty(targetGuid, "COREML_CODEGEN_LANGUAGE", "Swift");
         pbxProject.AddBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+    }
+
+    private static void ExecuteProcessTerminal(string argument)
+    {
+        try
+        {
+            UnityEngine.Debug.Log("============== Start Executing [" + argument + "] ===============");
+            ProcessStartInfo startInfo = new ProcessStartInfo()
+            {
+                FileName = "/bin/bash",
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                Arguments = " -c \"" + argument + " \""
+            };
+            Process myProcess = new Process
+            {
+                StartInfo = startInfo
+            };
+            myProcess.Start();
+            myProcess.WaitForExit();
+            UnityEngine.Debug.Log("============== End ===============");
+        }
+        catch (Exception e)
+        {
+            UnityEngine.Debug.Log("Excetion on CMPPostProcessBuild");
+        }
     }
 }
 #endif
