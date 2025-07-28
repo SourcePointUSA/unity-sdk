@@ -2,8 +2,8 @@ namespace UnityAppiumTests
 {
     public abstract class FirstLayerUSNAT: FirstLayer
     {
-        public void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath, true, true);
-        public void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath, true, true);
+        public new void pressAcceptAll() => driverHelper.pressButton(acceptAllPath, textViewPath, true, true);
+        public new void pressRejectAll() => driverHelper.pressButton(rejectAllPath, textViewPath, true, true);
     } 
 
     public class FirstLayerUSNATAndroid: FirstLayerUSNAT

@@ -4,13 +4,15 @@ namespace UnityAppiumTests
     public class WebViewTests
     {
         private readonly Uri appiumServerUri = new Uri("http://127.0.0.1:4723");
-        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(180);
+        private readonly TimeSpan initTimeoutSec = TimeSpan.FromSeconds(300);
+		#pragma warning disable CS8618
 		public TestContext TestContext { get; set; }
+		#pragma warning restore CS8618
 		public bool platformIOS {get => TestContext.Parameters["platformName"]=="iOS";}
 		public bool platformAndroid {get => TestContext.Parameters["platformName"]=="Android";}
-        private IOSDriver<IOSElement> driverIOS;
-        private AndroidDriver<AndroidElement> driverAndroid;
-		private IWebDriver driver { get { if(platformIOS) return driverIOS; else return driverAndroid;} }
+        private IOSDriver? driverIOS;
+        private AndroidDriver? driverAndroid;
+		private IWebDriver? driver { get { if(platformIOS) return driverIOS; else return driverAndroid;} }
     	private AltDriver altDriver;
 		WebDriverWait webDriverWait;
 
@@ -23,32 +25,38 @@ namespace UnityAppiumTests
 			string testDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory;
 			var rootDir = testDir.Substring(0,testDir.IndexOf("UI-TESTS"))+"UI-TESTS";
 			shellHelper = new ShellHelper(rootDir);
-			shellHelper.StartAppium();
-			shellHelper.StartAltTester();
+			//shellHelper.StartAppium();
+			//shellHelper.StartAltTester();
 			System.Threading.Thread.Sleep(10000);
 			var desiredCaps = new AppiumOptions();
-			desiredCaps.AddAdditionalCapability("platformName", TestContext.Parameters["platformName"]);
-			desiredCaps.AddAdditionalCapability("deviceName", TestContext.Parameters["deviceName"]);
-			desiredCaps.AddAdditionalCapability("appium:app", (string)rootDir+TestContext.Parameters["appium:app"]);
-			desiredCaps.AddAdditionalCapability("appium:automationName", TestContext.Parameters["appium:automationName"]);
-			desiredCaps.AddAdditionalCapability("appium:altUnityHost", TestContext.Parameters["altTesterIP"]);
-			desiredCaps.AddAdditionalCapability("appium:altUnityPort", 13000);
-			desiredCaps.AddAdditionalCapability("appium:sendKeyStrategy", "setValue");
+			desiredCaps.DeviceName = TestContext.Parameters["deviceName"];
+			desiredCaps.App = (string)rootDir+TestContext.Parameters["appium:app"];
+			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
+			if (platformIOS)
+				desiredCaps.PlatformVersion = "16.1";
+			desiredCaps.AddAdditionalAppiumOption("platformName", TestContext.Parameters["platformName"]);
+			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerInstallTimeout", 120000);
+			desiredCaps.AddAdditionalAppiumOption("appium:uiautomator2ServerLaunchTimeout", 120000);
+			desiredCaps.AddAdditionalAppiumOption("appium:androidInstallTimeout", 180000);
+			desiredCaps.AddAdditionalAppiumOption("appium:newCommandTimeout", 180000);
+			desiredCaps.AddAdditionalAppiumOption("appium:wdaLaunchTimeout", 300000);
+			desiredCaps.AddAdditionalAppiumOption("appium:sendKeyStrategy", "setValue");
 			if (platformAndroid)
 			{
-				// desiredCaps.AddAdditionalCapability("appium:chromedriverAutodownload", true);
-				desiredCaps.AddAdditionalCapability("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
-				driverAndroid = new AndroidDriver<AndroidElement>(appiumServerUri, desiredCaps, initTimeoutSec);
+				desiredCaps.AddAdditionalAppiumOption("appium:ignoreHiddenApiPolicyError" , true);
+				// desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
+				desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
+				driverAndroid = new AndroidDriver(appiumServerUri, desiredCaps, initTimeoutSec);
 
 				AltReversePortForwarding.ReversePortForwardingAndroid();
 			}
 			if (platformIOS)
-				driverIOS = new IOSDriver<IOSElement>(appiumServerUri, desiredCaps, initTimeoutSec);
-			
+				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
+
         	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
 
-			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
-			pages = new Pages(TestContext.Parameters["platformName"], webDriverWait, driverAndroid, driverIOS, altDriver);
+			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(240));
+			pages = new Pages(TestContext.Parameters["platformName"] ?? "android", webDriverWait, driverAndroid, driverIOS, altDriver);
 		}
 
 		[Test]
@@ -375,6 +383,7 @@ namespace UnityAppiumTests
 			{
 				Assert.Fail("Driver has not been initialized.");
 			}
+			//pmId 988851 on USNAT have AcceptAll and RejectAll buttons
 
 			string data = "";
 			string firstLayerContext = pages.preFirstLayer.SelectFirstLayer();
@@ -389,22 +398,32 @@ namespace UnityAppiumTests
 
 			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+			System.Threading.Thread.Sleep(2000);
 			Console.WriteLine($"Try to get: pmLayerUSNAT.getAcceptRejectState");
 			data = pages.pmLayerUSNAT.getAcceptRejectState();
+			Console.WriteLine($"pmLayerUSNAT.getAcceptRejectState: {data}");
 			if (platformAndroid)
 				Assert.That(data=="accepted", Is.True);
+			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressExit");
+			pages.pmLayerUSNAT.pressExit();
+			System.Threading.Thread.Sleep(2000);
+
+			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
+			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+			System.Threading.Thread.Sleep(2000);
 			Console.WriteLine($"Current button for tap: pmLayerUSNAT.pressRejectAll");
 			pages.pmLayerUSNAT.pressRejectAll();
 			System.Threading.Thread.Sleep(2000);
 
 			Console.WriteLine("Call 'LoadPrivacyManager' with pmId 988851");
 			altDriver.CallStaticMethod<int>("ConsentManagementProvider.CMPTestUtils", "LoadPrivacyManager", "Assembly-CSharp", new[] { "3", "988851" });
+			System.Threading.Thread.Sleep(2000);
 			Console.WriteLine($"Try to get: pmLayerUSNAT.getAcceptRejectState");
 			data = pages.pmLayerUSNAT.getAcceptRejectState();
+			Console.WriteLine($"pmLayerUSNAT.getAcceptRejectState: {data}");
 			if (platformAndroid)
 				Assert.That(data=="rejected", Is.True);
 			System.Threading.Thread.Sleep(2000);	
-			Assert.That(true, Is.True);
 		}
 
 		[Test]
@@ -598,12 +617,15 @@ namespace UnityAppiumTests
         [TearDown]
         public void Teardown()
         {
-            driver.Quit();
-        	altDriver.Stop();
+			if(platformIOS && driverIOS != null)
+        		driverIOS.Dispose();
+			if(platformAndroid && driverAndroid != null)
+				driverAndroid.Dispose();
 			if (platformAndroid)
         		AltReversePortForwarding.RemoveReversePortForwardingAndroid();
-			shellHelper.StopAltTester();
-			shellHelper.StopAppium();
+        	altDriver.Stop();
+			//shellHelper.StopAltTester();
+			//shellHelper.StopAppium();
         }
     }
 }

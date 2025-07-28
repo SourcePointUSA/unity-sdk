@@ -2,8 +2,8 @@ namespace UnityAppiumTests
 {
     public abstract class PmLayerUSNAT: PmLayer
     {
-        public void pressSaveAndExit() => driverHelper.pressButton(saveAndExitPath, textViewPath, true, true);
-        public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath, true, true);
+        public new void pressSaveAndExit() => driverHelper.pressButton(saveAndExitPath, textViewPath, true, true);
+        public new void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath, true, true);
         public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true);
         public int getCheckedSwitchesNum() 
         {
@@ -11,7 +11,7 @@ namespace UnityAppiumTests
             if (driverHelper.platform == "iOS")
             {
 			    System.Threading.Thread.Sleep(1000);
-                num = driverHelper.driverIOS.FindElements(OpenQA.Selenium.By.XPath(switchPrefix+switches.First()+switchPostfix)).Count;
+                num = driverHelper.driverIOS!.FindElements(OpenQA.Selenium.By.XPath(switchPrefix+switches.First()+switchPostfix)).Count;
             }
             else
                 num = base.getCheckedSwitchesNum(true);
