@@ -32,9 +32,9 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     public Button clearDataButton;
     public Text sdkStatus;
 
-    public static string statusCampaignGDPR = "custom";
-    public static string statusCampaignCCPA = "custom";
-    public static string statusCampaignUSNAT = "custom";
+    public static string statusCampaignGDPR = "default";
+    public static string statusCampaignCCPA = "default";
+    public static string statusCampaignUSNAT = "default";
 
     private MESSAGE_LANGUAGE language
     {
@@ -221,6 +221,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     {
         if (campaign == CAMPAIGN_TYPE.GDPR)
         {
+            if (consents.gdpr.consents.consentStatus == null)
+                return "default";
             bool rejectedAny = (bool)consents.gdpr.consents.consentStatus.rejectedAny;
             bool rejectedLI = (bool)consents.gdpr.consents.consentStatus.rejectedLI;
             bool consentedAll = (bool)consents.gdpr.consents.consentStatus.consentedAll;
@@ -233,6 +235,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
         }
         if (campaign == CAMPAIGN_TYPE.CCPA)
         {
+            if (consents.ccpa.consents.status == null)
+                return "default";
             if (consents.ccpa.consents.status == "consentedAll")
                 return "accepted";
             else if (consents.ccpa.consents.status == "rejectedAll")
@@ -240,6 +244,8 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
         }
         if (campaign == CAMPAIGN_TYPE.USNAT)
         {
+            if (consents.usnat.consents.statuses == null)
+                return "default";
             bool rejectedAny = (bool)consents.usnat.consents.statuses.rejectedAny;
             bool consentedToAll = (bool)consents.usnat.consents.statuses.consentedToAll;
             bool consentedToAny = (bool)consents.usnat.consents.statuses.consentedToAny;
@@ -249,7 +255,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
             else if (rejectedAny)
                 return "rejected";            
         }
-        return "custom";
+        return "default";
     }
 
     private void OnDestroy()
