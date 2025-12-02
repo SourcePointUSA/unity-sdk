@@ -14,24 +14,24 @@ namespace ConsentManagementProvider
         public List<ConsentString> consentStrings;
         public List<Consentable> vendors;
         public List<Consentable> categories;
-		public StatusesUsnat statuses;
+		public StatusesUsnat? statuses;
 
         public UsnatConsent(
 #nullable enable
-                        string? uuid,
-                        bool applies,
-                        List<ConsentString> consentStrings,
-                        List<Consentable> vendors,
-                        List<Consentable> categories,
-                        ConsentStatus consentStatus,
-                        Dictionary<string, object>? GPPData
+                        string? uuid = null,
+                        bool applies = false,
+                        List<ConsentString>? consentStrings = null,
+                        List<Consentable>? vendors = null,
+                        List<Consentable>? categories = null,
+                        ConsentStatus? consentStatus = null,
+                        Dictionary<string, object>? GPPData = null
 #nullable disable
         ) {
             this.uuid = uuid;
             this.applies = applies;
-            this.consentStrings = consentStrings;
-            this.vendors = vendors;
-            this.categories = categories;
+            this.consentStrings = consentStrings ?? new List<ConsentString>();
+            this.vendors = vendors ?? new List<Consentable>();
+            this.categories = categories ?? new List<Consentable>();
             statuses = StatusesUsnat.collectData(consentStatus);
             this.GPPData = GPPData;
         }
@@ -101,8 +101,10 @@ namespace ConsentManagementProvider
             hasConsentData, sellStatus, shareStatus,
             sensitiveDataStatus, gpcStatus, previousOptInAll;
 
-        internal static StatusesUsnat collectData(ConsentStatus status)
+        internal static StatusesUsnat? collectData(ConsentStatus? status)
         {
+            if (status == null)
+                return null;
             return new StatusesUsnat
             {
                 rejectedAny = status.rejectedAny,

@@ -22,31 +22,31 @@ namespace ConsentManagementProvider
 
         public CcpaConsent(
 #nullable enable
-                        string uuid,
-                        string status,
-                        string uspstring,
-                        List<string> rejectedVendors,
-                        List<string> rejectedCategories,
-                        string childPmId,
-                        bool applies,
-                        bool? signedLspa,
-                        string webConsentPayload,
-                        ConsentStatus? consentStatus,
-                        Dictionary<string, object>? GPPData
+                        string? uuid = null,
+                        string? status = null,
+                        string? uspstring = null,
+                        List<string>? rejectedVendors = null,
+                        List<string>? rejectedCategories = null,
+                        string? childPmId = null,
+                        bool applies = false,
+                        bool? signedLspa = null,
+                        string? webConsentPayload = null,
+                        ConsentStatus? consentStatus = null,
+                        Dictionary<string, object>? GPPData = null
 #nullable disable
         ) {
             this.uuid = uuid;
             this.webConsentPayload = webConsentPayload;
             this.status = status;
-            this.uspstring = uspstring;
-            this.rejectedVendors = rejectedVendors;
-            this.rejectedCategories = rejectedCategories;
+            this.uspstring = uspstring ?? "1YNN";
+            this.rejectedVendors = rejectedVendors ?? new List<string>();
+            this.rejectedCategories = rejectedCategories ?? new List<string>();
             this.childPmId = childPmId;
             this.applies = applies;
             this.signedLspa = signedLspa;
             this.webConsentPayload = webConsentPayload;
 			this.consentStatus = consentStatus;
-            this.GPPData = GPPData;
+            this.GPPData = GPPData ?? new Dictionary<string, object>();
         }
         
         public CcpaConsent(
