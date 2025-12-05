@@ -166,7 +166,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
 
     public void OnConsentReady(SpConsents consents)
     {
-        storedConsentString = consents.gdpr.consents.euconsent ?? "--";
+        storedConsentString = consents.gdpr?.consents.euconsent ?? "--";
         if(CMP.Instance.UseGDPR) 
             CmpDebugUtil.Log(consents.gdpr.consents.ToFullString());
         if(CMP.Instance.UseCCPA) 
@@ -221,34 +221,28 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     {
         if (campaign == CAMPAIGN_TYPE.GDPR)
         {
-            if (consents.gdpr.consents.consentStatus == null)
-                return "default";
-            bool rejectedAny = (bool)consents.gdpr.consents.consentStatus.rejectedAny;
-            bool rejectedLI = (bool)consents.gdpr.consents.consentStatus.rejectedLI;
-            bool consentedAll = (bool)consents.gdpr.consents.consentStatus.consentedAll;
-            bool consentedToAny = (bool)consents.gdpr.consents.consentStatus.consentedToAny;
+            bool rejectedAny = consents.gdpr?.consents.consentStatus.rejectedAny ?? false;
+            bool rejectedLI = consents.gdpr?.consents.consentStatus.rejectedLI ?? false;
+            bool consentedAll = consents.gdpr?.consents.consentStatus.consentedAll ?? false;
+            bool consentedToAny = consents.gdpr?.consents.consentStatus.consentedToAny ?? false;
 
             if (consentedAll && consentedToAny)
                 return "accepted";
-            else if (rejectedAny && rejectedLI)
+            else if (rejectedAny && rejectedLI && !consentedAll && !consentedToAny)
                 return "rejected";
         }
         if (campaign == CAMPAIGN_TYPE.CCPA)
         {
-            if (consents.ccpa.consents.status == null)
-                return "default";
-            if (consents.ccpa.consents.status == "consentedAll")
+            if (consents.ccpa?.consents.status == "consentedAll")
                 return "accepted";
-            else if (consents.ccpa.consents.status == "rejectedAll")
+            else if (consents.ccpa?.consents.status == "rejectedAll")
                 return "rejected";
         }
         if (campaign == CAMPAIGN_TYPE.USNAT)
         {
-            if (consents.usnat.consents.statuses == null)
-                return "default";
-            bool rejectedAny = (bool)consents.usnat.consents.statuses.rejectedAny;
-            bool consentedToAll = (bool)consents.usnat.consents.statuses.consentedToAll;
-            bool consentedToAny = (bool)consents.usnat.consents.statuses.consentedToAny;
+            bool rejectedAny = consents.usnat?.consents.statuses.rejectedAny ?? false;
+            bool consentedToAll = consents.usnat?.consents.statuses.consentedToAll ?? false;
+            bool consentedToAny = consents.usnat?.consents.statuses.consentedToAny ?? false;
 
             if (consentedToAll && consentedToAny)
                 return "accepted";
