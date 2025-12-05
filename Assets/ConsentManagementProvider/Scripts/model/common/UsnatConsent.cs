@@ -6,15 +6,15 @@ namespace ConsentManagementProvider
 {
     public class UsnatConsent
     {
-#nullable enable
-        public string? uuid;
-        public Dictionary<string, object>? GPPData;
-#nullable disable
         public bool applies;
         public List<ConsentString> consentStrings;
         public List<Consentable> vendors;
         public List<Consentable> categories;
-		public StatusesUsnat statuses;
+#nullable enable
+        public string? uuid;
+        public Dictionary<string, object>? GPPData;
+		public StatusesUsnat? statuses;
+#nullable disable
 
         public UsnatConsent(
 #nullable enable
@@ -97,9 +97,11 @@ namespace ConsentManagementProvider
 
     public class StatusesUsnat
     {        
+#nullable enable
         public bool? rejectedAny, consentedToAll, consentedToAny,
             hasConsentData, sellStatus, shareStatus,
             sensitiveDataStatus, gpcStatus, previousOptInAll;
+#nullable disable
 
         internal static StatusesUsnat collectData(ConsentStatus status)
         {

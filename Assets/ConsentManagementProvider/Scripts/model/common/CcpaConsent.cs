@@ -7,32 +7,32 @@ namespace ConsentManagementProvider
     public class CcpaConsent
     {
         public string uuid;
-        public string status;
         public string uspstring;
         public List<string> rejectedVendors;
         public List<string> rejectedCategories;
-        public string childPmId;
         public bool applies;
+        public Dictionary<string, object> GPPData;
 #nullable enable
+        public string? status;
+        public string? childPmId;
         public bool? signedLspa;
         public string webConsentPayload;
 		public ConsentStatus? consentStatus;
-        public Dictionary<string, object>? GPPData;
 #nullable disable
 
         public CcpaConsent(
 #nullable enable
                         string uuid,
-                        string status,
+                        string? status,
                         string uspstring,
                         List<string> rejectedVendors,
                         List<string> rejectedCategories,
-                        string childPmId,
+                        string? childPmId,
                         bool applies,
                         bool? signedLspa,
-                        string webConsentPayload,
+                        string? webConsentPayload,
                         ConsentStatus? consentStatus,
-                        Dictionary<string, object>? GPPData
+                        Dictionary<string, object> GPPData
 #nullable disable
         ) {
             this.uuid = uuid;
@@ -52,16 +52,16 @@ namespace ConsentManagementProvider
         public CcpaConsent(
 #nullable enable
                         string uuid,
-                        string status,
+                        string? status,
                         string uspstring,
                         string[] rejectedVendors,
                         string[] rejectedCategories,
-                        string childPmId,
+                        string? childPmId,
                         bool applies,
                         bool? signedLspa,
-                        string webConsentPayload,
-						ConsentStatus consentStatus,
-                        Dictionary<string, object>? GPPData
+                        string? webConsentPayload,
+						ConsentStatus? consentStatus,
+                        Dictionary<string, object> GPPData
 #nullable disable
         ) {
             this.uuid = uuid;
