@@ -6,14 +6,14 @@ namespace ConsentManagementProvider
     public class GdprConsent
     {
         public bool applies;
+        public string uuid;
+        public string webConsentPayload;
+        public string euconsent;
+        public Dictionary<string, object> TCData;
+        public Dictionary<string, SpVendorGrant> grants;
+		public List<string> acceptedCategories;
+        public ConsentStatus consentStatus;
 #nullable enable
-        public string? uuid = null;
-        public string? webConsentPayload = null;
-        public string euconsent = "";
-        public Dictionary<string, object> TCData = new Dictionary<string, object>();
-        public Dictionary<string, SpVendorGrant> grants = new Dictionary<string, SpVendorGrant>();
-		public List<string>? acceptedCategories = null;
-        public ConsentStatus? consentStatus = null;
         public SPGCMData? googleConsentMode;
 #nullable disable
 
