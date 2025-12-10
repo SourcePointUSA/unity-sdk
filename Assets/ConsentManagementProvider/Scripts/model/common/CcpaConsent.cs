@@ -16,7 +16,7 @@ namespace ConsentManagementProvider
         public string? status;
         public string? childPmId;
         public bool? signedLspa;
-        public string webConsentPayload;
+        public string? webConsentPayload;
 		public ConsentStatus? consentStatus;
 #nullable disable
 
