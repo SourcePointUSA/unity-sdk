@@ -1,3 +1,10 @@
+# 3.2.0
+* [DIA-5501](https://sourcepoint.atlassian.net/browse/DIA-5501) Update consent classes according to native SDK class structure. Several things were made nullable.
+
+# 3.1.1 
+* [DIA-5912](https://sourcepoint.atlassian.net/browse/DIA-5912) In `CMPPostProcessBuild.cs`, during `OnPostProcessBuild`, move `SwiftBridge.swift` to the `Pod/ConsentViewController` folder.
+* [DIA-3802](https://sourcepoint.atlassian.net/browse/DIA-3802) Alt-Tester UI tests pipeline added
+
 # 3.1.0
 * [DIA-4326](https://sourcepoint.atlassian.net/browse/DIA-4326) Unity SDK is bumped to v7.10.1 Android & v7.7.1 iOS native SDK
 * Programmatic rejectAll feature added [#67](https://github.com/SourcePointUSA/unity-sdk/pull/67)

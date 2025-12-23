@@ -2,9 +2,11 @@
 {
     public class SpConsents
     {
-        public SpGdprConsent gdpr;
-        public SpCcpaConsent ccpa;
-        public SpUsnatConsent usnat;
+#nullable enable
+        public SpGdprConsent? gdpr;
+        public SpCcpaConsent? ccpa;
+        public SpUsnatConsent? usnat;
+#nullable disable
 
         public SpConsents(SpGdprConsent gdpr, SpCcpaConsent ccpa, SpUsnatConsent usnat)
         {
