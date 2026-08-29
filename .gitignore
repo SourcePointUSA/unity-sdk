@@ -57,6 +57,9 @@ Thumbs.db.meta
 
 *.keystore
 
+# Local AltTester runner state
+/Assets/Plugins/AltTester/AltTesterEditorSettings.asset
+
 #UI-TESTS related
 /UI-TESTS/bin/Debug/
 /UI-TESTS/obj/Debug/
