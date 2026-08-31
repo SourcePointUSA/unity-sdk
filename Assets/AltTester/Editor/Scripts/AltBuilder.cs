@@ -27,6 +27,7 @@ using UnityEditor.AddressableAssets.Settings;
 
 using UnityEditor.Compilation;
 using UnityEditor.SceneManagement;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 namespace AltTester.AltTesterUnitySDK.Editor
@@ -70,45 +71,56 @@ namespace AltTester.AltTesterUnitySDK.Editor
         {
             try
             {
+                BuildGame(buildTarget, buildTargetGroup, autoRun);
+            }
+            catch (System.Exception e)
+            {
+                logger.Error(e);
+            }
+        }
+
+        public static BuildReport BuildGame(UnityEditor.BuildTarget buildTarget, UnityEditor.BuildTargetGroup buildTargetGroup, bool autoRun = false, string outputPath = null)
+        {
 #if UNITY_2021_3_OR_NEWER && ADDRESSABLES
-                AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-                AddressableAssetSettings.PlayerBuildOption currentValue = AddressableAssetSettings.PlayerBuildOption.PreferencesValue;
-                if (settings != null)
+            AddressableAssetSettings settings = null;
+            AddressableAssetSettings.PlayerBuildOption currentValue = AddressableAssetSettings.PlayerBuildOption.PreferencesValue;
+#endif
+            try
+            {
+#if UNITY_2021_3_OR_NEWER && ADDRESSABLES
+            settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (settings != null)
+            {
+                currentValue = settings.BuildAddressablesWithPlayerBuild;
+                if (!(settings.BuildAddressablesWithPlayerBuild == AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer))
                 {
-                    currentValue = settings.BuildAddressablesWithPlayerBuild;
-                    if (!(settings.BuildAddressablesWithPlayerBuild == AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer))
-                    {
-                        AddressableAssetSettings.CleanPlayerContent();
-                        AddressableAssetSettings.BuildPlayerContent(out _);
-                    }
-                    settings.BuildAddressablesWithPlayerBuild = AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer;
+                    AddressableAssetSettings.CleanPlayerContent();
+                    AddressableAssetSettings.BuildPlayerContent(out _);
                 }
+                settings.BuildAddressablesWithPlayerBuild = AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer;
+            }
 #endif
                 InitBuildSetup(buildTargetGroup);
                 logger.Debug($"Starting {buildTarget} build...{UnityEditor.PlayerSettings.productName}:{UnityEditor.PlayerSettings.bundleVersion}");
 
                 var buildPlayerOptions = new UnityEditor.BuildPlayerOptions
                 {
-                    locationPathName = getOutputPath(buildTarget),
+                    locationPathName = string.IsNullOrEmpty(outputPath) ? getOutputPath(buildTarget) : outputPath,
                     scenes = getScenesForBuild(),
                     target = buildTarget,
                     targetGroup = buildTargetGroup
                 };
 
-                buildGame(autoRun, buildPlayerOptions);
+                return buildGame(autoRun, buildPlayerOptions);
+            }
+            finally
+            {
 #if UNITY_2021_3_OR_NEWER && ADDRESSABLES
                 if (settings != null)
                 {
                     settings.BuildAddressablesWithPlayerBuild = currentValue;
                 }
 #endif
-            }
-            catch (System.Exception e)
-            {
-                logger.Error(e);
-            }
-            finally
-            {
                 Built = true;
                 resetBuildSetup(buildTargetGroup);
             }
@@ -335,7 +347,7 @@ namespace AltTester.AltTesterUnitySDK.Editor
             RemoveAltTesterFromScriptingDefineSymbols(buildTargetGroup);
         }
 
-        private static void buildGame(bool autoRun, UnityEditor.BuildPlayerOptions buildPlayerOptions)
+        private static BuildReport buildGame(bool autoRun, UnityEditor.BuildPlayerOptions buildPlayerOptions)
         {
             UnityEditor.PlayerSettings.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
             UnityEditor.PlayerSettings.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
@@ -364,7 +376,7 @@ namespace AltTester.AltTesterUnitySDK.Editor
             }
 
 #else
-            if (results.summary.totalErrors == 0 || results.summary.result == UnityEditor.Build.Reporting.BuildResult.Succeeded)
+            if (results.summary.totalErrors == 0 && results.summary.result == UnityEditor.Build.Reporting.BuildResult.Succeeded)
             {
                 logger.Info($"Build path: {buildPlayerOptions.locationPathName}");
                 logger.Info($"Build {UnityEditor.PlayerSettings.productName}:{UnityEditor.PlayerSettings.bundleVersion} Succeeded");
@@ -374,7 +386,7 @@ namespace AltTester.AltTesterUnitySDK.Editor
                 logger.Error($"Build Error! {results.steps}\n Result: {results.summary.result}\n Stripping info: {results.strippingInfo}");
             }
 #endif
-
+            return results;
         }
 
         private static void modifyTestAssembliesToOnlyWorkInEditor()
