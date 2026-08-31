@@ -1,8 +1,10 @@
 using System;
 using System.Reflection;
+#if !UNITY_2017
 using AltTester.AltTesterUnitySDK.Editor;
-using NUnit.Framework;
 using UnityEngine;
+#endif
+using NUnit.Framework;
 
 public class AndroidUiTestBuildTests
 {
@@ -40,6 +42,7 @@ public class AndroidUiTestBuildTests
         Assert.That(exception.Message, Does.Contain(".apk"));
     }
 
+#if !UNITY_2017
     [Test]
     public void CreateInMemoryConfigurationCopyLeavesSourceConfigurationUntouched()
     {
@@ -69,6 +72,7 @@ public class AndroidUiTestBuildTests
             UnityEngine.Object.DestroyImmediate(source);
         }
     }
+#endif
 
     private static string ParseOutputPath(params string[] arguments)
     {
@@ -88,6 +92,7 @@ public class AndroidUiTestBuildTests
         }
     }
 
+#if !UNITY_2017
     private static AltEditorConfiguration CreateInMemoryConfigurationCopy(AltEditorConfiguration source)
     {
         var type = typeof(AndroidUiTestBuildTests).Assembly.GetType("AndroidUiTestBuild");
@@ -98,4 +103,5 @@ public class AndroidUiTestBuildTests
 
         return (AltEditorConfiguration)copyMethod.Invoke(null, new object[] { source });
     }
+#endif
 }
