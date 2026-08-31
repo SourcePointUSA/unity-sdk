@@ -88,10 +88,13 @@ The command must:
 
 ### Dependency source of truth
 
-`Assets/ExternalDependencyManager/Editor/SourcepointDependencies.xml` is the
-declarative Android dependency source. Resolver output under
-`Assets/Plugins/Android` and `ProjectSettings/AndroidResolverDependencies.xml`
-must describe exactly the graph for the selected CMP version.
+`Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml` is the
+declarative Android dependency source. External Dependency Manager resolves it
+into the Android Resolver blocks in `Assets/Plugins/Android/mainTemplate.gradle`,
+`Assets/Plugins/Android/settingsTemplate.gradle`,
+`Assets/Plugins/Android/gradleTemplate.properties`, and its recorded state in
+`ProjectSettings/AndroidResolverDependencies.xml`. Those generated/template
+outputs must describe exactly the graph for the selected CMP version.
 
 After each upgrade, resolve dependencies afresh and inspect the generated
 output. No old `7.10.1` AAR or manually retained Ktor 2 JAR may coexist with
