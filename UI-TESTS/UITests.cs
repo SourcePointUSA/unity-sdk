@@ -27,10 +27,9 @@ namespace UnityAppiumTests
 			shellHelper = new ShellHelper(rootDir);
 			//shellHelper.StartAppium();
 			//shellHelper.StartAltTester();
-			System.Threading.Thread.Sleep(10000);
 			var desiredCaps = new AppiumOptions();
 			desiredCaps.DeviceName = TestContext.Parameters["deviceName"];
-			desiredCaps.App = (string)rootDir+TestContext.Parameters["appium:app"];
+			desiredCaps.App = TestRunParameterResolver.ResolveAppPath(TestContext.Parameters["appium:app"], rootDir);
 			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
 			if (platformIOS)
 				desiredCaps.PlatformVersion = "16.1";
@@ -44,8 +43,15 @@ namespace UnityAppiumTests
 			if (platformAndroid)
 			{
 				desiredCaps.AddAdditionalAppiumOption("appium:ignoreHiddenApiPolicyError" , true);
-				// desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
-				desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
+				var chromeDriverExecutable = TestContext.Parameters["appium:chromedriverExecutable"];
+				if (TestRunParameterResolver.UseChromeDriverAutodownload(chromeDriverExecutable))
+				{
+					desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
+				}
+				else
+				{
+					desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", TestRunParameterResolver.ResolveAppPath(chromeDriverExecutable, rootDir));
+				}
 				driverAndroid = new AndroidDriver(appiumServerUri, desiredCaps, initTimeoutSec);
 
 				AltReversePortForwarding.ReversePortForwardingAndroid();
