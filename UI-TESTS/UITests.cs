@@ -81,7 +81,7 @@ namespace UnityAppiumTests
         	var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
 			
-    		Assert.That(data!="-", Is.True);	
+			Assert.That(data!="-", Is.True);
 		}
 
 		[Test]
@@ -366,19 +366,23 @@ namespace UnityAppiumTests
 			pages.nativeAppLayer.waitForSdkDone();
 			pages.nativeAppLayer.pressClearAll();
 			pages.nativeAppLayer.waitForSdkDone("SDK:Not Started");
-			altDriver.CallStaticMethod<string>("ConsentManagementProvider.CMP", "ConcreteInstance.LoadMessage", "Assembly-CSharp", new[] { "AltTesterTest" });
+			var privacySettings = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+			privacySettings.SetComponentProperty("PrivacySettings", "authId", "AltTesterTest", "Assembly-CSharp");
+			privacySettings.CallComponentMethod<object>("PrivacySettings", "OnLoadMessagePress", "Assembly-CSharp", new object[] { });
 			pages.nativeAppLayer.waitForSdkDone();
         	data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
 			if(data=="-")
 			{
-				// it means it is the first time this property is called with specified authId
-				// this part of code is meant to be executed only once in a lifetime
-				Console.WriteLine("The very first time using this authId!");
-				pages.firstLayerGO(true, true, true);
+				Console.WriteLine("The first AuthID load shows the USNAT message.");
+				pages.firstLayerUSNAT.pressAcceptAll();
 				pages.nativeAppLayer.waitForSdkDone();
+				data = pages.nativeAppLayer.getConsentValueText();
 			}
-    		Assert.That(data!="-", Is.True);	
+			Assert.That(data!="-", Is.True);
+			data = pages.nativeAppLayer.getAuthIdText();
+			Console.WriteLine($"AuthIdText: {data}");
+			Assert.That(data, Is.EqualTo("AuthId:AltTesterTest"));
 		}
 
 		[Test]

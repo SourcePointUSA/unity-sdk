@@ -43,12 +43,12 @@ namespace UnityAppiumTests
 
     public class PmLayerUSNATAndroid: PmLayerUSNAT
     {            
-        public override string textViewPath => "//android.widget.TextView[@text='USNat Privacy Manager']";
-        public override string saveAndExitPath => "//android.widget.Button[@text='Save & Exit']";
-        public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
-        public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
-        public override string exitButtonPath => "//android.widget.Button[@text='Cancel']";
-        public override string switchPrefix => "(//android.widget.ToggleButton[@text='Off On'])[";
+        public override string textViewPath => AndroidLocator.ElementWithText("USNat Privacy Manager");
+        public override string saveAndExitPath => AndroidLocator.ButtonWithLabel("Save & Exit");
+        public override string rejectAllPath => AndroidLocator.ButtonWithLabel("Reject All");
+        public override string acceptAllPath => AndroidLocator.ButtonWithLabel("Accept All");
+        public override string exitButtonPath => AndroidLocator.ButtonWithLabel("Cancel");
+        public override string switchPrefix => "(//android.widget.Switch)[";
         public override string switchPostfix => "]";
         public override string[] switches => new[] {"1", "2"};
         public override WebDriverWait wait => webDriverWait;

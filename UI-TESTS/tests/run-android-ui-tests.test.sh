@@ -14,6 +14,7 @@ grep -F 'CMP_ANDROID_AVD' "$output_file" >/dev/null
 grep -F 'UNITY_ANDROID_PLAYER_PATH' "$output_file" >/dev/null
 grep -F 'CMP_UI_ARTIFACTS_DIR' "$output_file" >/dev/null
 grep -F 'DOTNET_BIN' "$output_file" >/dev/null
+grep -F 'immersive_mode_confirmations confirmed' "$runner" >/dev/null
 
 mkdir -p "$fixture_root/android-player/SDK" "$fixture_root/android-player/NDK" \
     "$fixture_root/android-player/OpenJDK" "$fixture_root/alt-tester"

@@ -137,6 +137,10 @@ start_appium_if_needed() {
     wait_for "Appium status endpoint" appium_is_ready
 }
 
+dismiss_immersive_mode_confirmation() {
+    "$adb_bin" -s "$ANDROID_SERIAL" shell settings put secure immersive_mode_confirmations confirmed >/dev/null 2>&1 || true
+}
+
 run_tests() {
     mkdir -p "$CMP_UI_ARTIFACTS_DIR"
     artifact_dir="$CMP_UI_ARTIFACTS_DIR/$(date +%Y%m%d-%H%M%S)"
@@ -165,6 +169,7 @@ run_tests() {
     echo "Discovered $test_count UI tests."
 
     start_emulator_if_needed
+    dismiss_immersive_mode_confirmation
     "$adb_bin" -s "$ANDROID_SERIAL" logcat -c
     "$adb_bin" -s "$ANDROID_SERIAL" logcat -v threadtime >"$artifact_dir/logcat.txt" 2>&1 &
     logcat_pid=$!

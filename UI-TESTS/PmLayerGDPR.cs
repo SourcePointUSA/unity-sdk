@@ -12,21 +12,21 @@ namespace UnityAppiumTests
 
     public class PmLayerGDPRAndroid: PmLayerGDPR
     {            
-        public override string textViewPath => "//android.widget.TextView[@text='GDPR Privacy Manager']";
-        public override string textViewPathES => "//android.widget.TextView[@text='Centro de Privacidad GDPR']";
-        public override string textViewPathTL => "//android.widget.TextView[@text='Tagalog']";
-        public override string saveAndExitPath => "//android.widget.Button[@text='Save & Exit']";
-        public override string rejectAllPath => "//android.widget.Button[@text='Reject All']";
-        public override string acceptAllPath => "//android.widget.Button[@text='Accept All']";
-        public override string exitButtonPath => "//android.widget.Button[@text='Cancel']";
-        public override string switchPrefix => "//android.widget.ToggleButton[@text='";
-        public override string switchPostfix => "']";
+        public override string textViewPath => AndroidLocator.ElementWithText("GDPR Privacy Manager");
+        public override string textViewPathES => AndroidLocator.ElementWithText("Centro de Privacidad GDPR");
+        public override string textViewPathTL => AndroidLocator.ElementWithText("Tagalog");
+        public override string saveAndExitPath => AndroidLocator.ButtonWithLabel("Save & Exit");
+        public override string rejectAllPath => AndroidLocator.ButtonWithLabel("Reject All");
+        public override string acceptAllPath => AndroidLocator.ButtonWithLabel("Accept All");
+        public override string exitButtonPath => AndroidLocator.ButtonWithLabel("Cancel");
+        public override string switchPrefix => "(//android.widget.Switch)[";
+        public override string switchPostfix => "]";
         public override string[] switches => new[]
         {
-            "Store and/or access information on a device",
-            "Use limited data to select advertising",
-            "Create profiles for personalised advertising",
-            "Use profiles to select personalised advertising"
+            "1",
+            "2",
+            "3",
+            "4"
         };
         public override string attributeName => "checked";
         public override string attributeValue => "true";

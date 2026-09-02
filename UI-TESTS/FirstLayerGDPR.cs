@@ -16,8 +16,8 @@ namespace UnityAppiumTests
 
     public class FirstLayerGDPRAndroid: FirstLayerGDPR
     {            
-        public override string textViewPath => "//android.widget.TextView[@text='GDPR Message']";
-        public override string textViewPathES => "//android.widget.TextView[@text='GDPR Message']";
+        public override string textViewPath => AndroidLocator.ElementWithText("GDPR Message");
+        public override string textViewPathES => AndroidLocator.ElementWithText("GDPR Message");
         public override string showOptionsPath => AndroidLocator.ButtonWithLabel("Show Options");
         public override string rejectAllPath => AndroidLocator.ButtonWithLabel("Reject All");
         public override string acceptAllPath => AndroidLocator.ButtonWithLabel("Accept All");
