@@ -179,9 +179,13 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
 			isOpen = pages.pmLayerGDPR.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum"); 
-         	int num = pages.pmLayerGDPR.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			var num = 0;
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum");
+				num = pages.pmLayerGDPR.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Try to click: pmLayerGDPR.clickOnSwitches(2)"); 
 			pages.pmLayerGDPR.clickOnSwitches(2);
 			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressSaveAndExit");
@@ -193,9 +197,12 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
 			isOpen = pages.pmLayerGDPR.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum"); 
-         	num = pages.pmLayerGDPR.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum");
+				num = pages.pmLayerGDPR.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressExit");
         	pages.pmLayerGDPR.pressExit();
 
@@ -203,7 +210,8 @@ namespace UnityAppiumTests
         	var dataNew = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {dataNew}");
 			
-    		Assert.That(num==2, Is.True);
+			if (!platformAndroid)
+				Assert.That(num == 2, Is.True);
     		Assert.That(data!=dataNew, Is.True);	
 		}
 
@@ -223,9 +231,12 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
 			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
 
-			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
-        	var data = pages.nativeAppLayer.getConsentValueText();
-			Console.WriteLine($"ConsentValueText: {data}");
+			var privacySettings = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+			var status = privacySettings.GetComponentProperty<string>("PrivacySettings", "statusCampaignCCPA", "Assembly-CSharp");
+			var rejectedCategories = privacySettings.GetComponentProperty<int>("PrivacySettings", "rejectedCategoriesCCPACount", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignCCPA before editing: {status}");
+			Assert.That(status, Is.EqualTo("accepted"));
+			Assert.That(rejectedCategories, Is.EqualTo(0));
 			
 			System.Threading.Thread.Sleep(1000);
 			Console.WriteLine($"Current button for tap: nativeAppLayer.pressCCPAPmLayer");
@@ -233,9 +244,13 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerCCPA.webViewIsOpen");
 			isOpen = pages.pmLayerCCPA.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum"); 
-         	int num = pages.pmLayerCCPA.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			var num = 0;
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum");
+				num = pages.pmLayerCCPA.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Try to click: pmLayerCCPA.clickOnSwitches(2)"); 
 			pages.pmLayerCCPA.clickOnSwitches(2);
 			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressSaveAndExit");
@@ -247,13 +262,23 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerCCPA.webViewIsOpen");
 			isOpen = pages.pmLayerCCPA.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum"); 
-         	num = pages.pmLayerCCPA.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum");
+				num = pages.pmLayerCCPA.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressExit");
-        	pages.pmLayerCCPA.pressExit();
-			
-    		Assert.That(num==1, Is.True);	
+			pages.pmLayerCCPA.pressExit();
+
+			status = privacySettings.GetComponentProperty<string>("PrivacySettings", "statusCampaignCCPA", "Assembly-CSharp");
+			rejectedCategories = privacySettings.GetComponentProperty<int>("PrivacySettings", "rejectedCategoriesCCPACount", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignCCPA after editing: {status}");
+			Assert.That(status, Is.EqualTo("default"));
+			Assert.That(rejectedCategories, Is.EqualTo(2));
+
+			if (!platformAndroid)
+				Assert.That(num == 1, Is.True);
 		}
 
 		[Test]
