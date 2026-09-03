@@ -15,6 +15,7 @@ APPIUM_BIN=${APPIUM_BIN:-appium}
 DOTNET_BIN=${DOTNET_BIN:-dotnet}
 CMP_UI_ARTIFACTS_DIR=${CMP_UI_ARTIFACTS_DIR:-$script_dir/artifacts}
 ALTTESTER_PORT=${ALTTESTER_PORT:-13000}
+retry_policy_runner="$script_dir/run-dotnet-ui-tests-with-retries.sh"
 
 adb_bin=${ADB_BIN:-}
 emulator_bin=${EMULATOR_BIN:-}
@@ -28,6 +29,8 @@ usage() {
 Usage: UI-TESTS/run-android-ui-tests.sh [--preflight]
 
 Builds a fresh AltTester-instrumented Android APK and runs the full UI-TESTS suite.
+Each initially failed test is retried individually up to three times. Every
+attempt has dedicated TRX, console, Appium, logcat, and effective-config artifacts.
 
 Environment overrides:
   UNITY_PATH                 Unity executable.
@@ -159,6 +162,8 @@ start_emulator_if_needed() {
 
 start_appium_if_needed() {
     if appium_is_ready; then
+        printf '%s\n' 'External Appium server was already ready at http://127.0.0.1:4723.' \
+            >"$artifact_dir/appium.log"
         return
     fi
     "$APPIUM_BIN" --allow-insecure chromedriver_autodownload >"$artifact_dir/appium.log" 2>&1 &
@@ -177,6 +182,8 @@ run_tests() {
     trap cleanup EXIT INT TERM
 
     cp "$script_dir/android.runsettings" "$artifact_dir/android.runsettings"
+    start_emulator_if_needed
+
     {
         printf 'UNITY_PATH=%s\n' "$UNITY_PATH"
         printf 'UNITY_ANDROID_PLAYER_PATH=%s\n' "$UNITY_ANDROID_PLAYER_PATH"
@@ -185,6 +192,7 @@ run_tests() {
         printf 'ANDROID_SERIAL=%s\n' "$ANDROID_SERIAL"
         printf 'ALTTESTER_DESKTOP_PATH=%s\n' "$ALTTESTER_DESKTOP_PATH"
         printf 'APPIUM_BIN=%s\n' "$APPIUM_BIN"
+        printf 'DOTNET_BIN=%s\n' "$DOTNET_BIN"
         printf 'ALTTESTER_PORT=%s\n' "$ALTTESTER_PORT"
     } >"$artifact_dir/effective-test-config.txt"
     "$DOTNET_BIN" restore "$script_dir/UI-TESTS.csproj"
@@ -197,7 +205,6 @@ run_tests() {
     [ "$test_count" -gt 0 ] || fail "No UI tests were discovered after restore; see $artifact_dir/test-discovery.txt"
     echo "Discovered $test_count UI tests."
 
-    start_emulator_if_needed
     dismiss_immersive_mode_confirmation
     "$adb_bin" -s "$ANDROID_SERIAL" logcat -c
     "$adb_bin" -s "$ANDROID_SERIAL" logcat -v threadtime >"$artifact_dir/logcat.txt" 2>&1 &
@@ -216,10 +223,14 @@ run_tests() {
     "$adb_bin" -s "$ANDROID_SERIAL" shell monkey -p com.DefaultCompany.ConsentMessagePlugin 1 >"$artifact_dir/adb-launch.log" 2>&1 || true
     wait_for "AltTester server port $ALTTESTER_PORT" nc -z 127.0.0.1 "$ALTTESTER_PORT"
 
-    "$DOTNET_BIN" test "$script_dir/UI-TESTS.csproj" --no-restore --settings "$script_dir/android.runsettings" \
-        --logger "trx;LogFileName=results.trx" --results-directory "$artifact_dir" -- \
-        "TestRunParameters.Parameter(name=\"deviceName\",value=\"$ANDROID_SERIAL\")" \
-        "TestRunParameters.Parameter(name=\"appium:app\",value=\"$artifact_dir/ConsentMessagePlugin.apk\")"
+    DOTNET_BIN="$DOTNET_BIN" ADB_BIN="$adb_bin" ANDROID_SERIAL="$ANDROID_SERIAL" \
+        CMP_UI_APPIUM_LOG="$artifact_dir/appium.log" \
+        sh "$retry_policy_runner" \
+            "$script_dir/UI-TESTS.csproj" \
+            "$script_dir/android.runsettings" \
+            "$artifact_dir/ConsentMessagePlugin.apk" \
+            "$artifact_dir" \
+            "$artifact_dir/effective-test-config.txt"
 }
 
 case "${1:-}" in
