@@ -88,19 +88,18 @@ preflight() {
 find_unity_gradle_project() {
     gradle_project=
     for candidate in "$project_root"/Library/Bee/Android/Prj/*/Gradle; do
-        [ -f "$candidate/gradlew" ] && [ -d "$candidate/unityLibrary" ] || continue
+        [ -d "$candidate/unityLibrary" ] || continue
         gradle_project=$candidate
         break
     done
-    [ -n "$gradle_project" ] || fail "Unity generated Gradle project was not found beneath Library/Bee/Android/Prj/*/Gradle with gradlew and unityLibrary."
+    [ -n "$gradle_project" ] || fail "Unity generated Gradle project was not found beneath Library/Bee/Android/Prj/*/Gradle with unityLibrary."
 }
 
 capture_and_assert_cmp_graph() {
     find_unity_gradle_project
-    (
-        cd "$gradle_project"
-        ./gradlew :unityLibrary:dependencies --configuration releaseRuntimeClasspath
-    ) >"$artifact_dir/gradle-dependencies.txt" 2>&1
+    sh "$script_dir/run-unity-gradle.sh" "$UNITY_ANDROID_PLAYER_PATH" "$gradle_project" \
+        :unityLibrary:dependencies --configuration releaseRuntimeClasspath \
+        >"$artifact_dir/gradle-dependencies.txt" 2>&1
 
     cmp_version=$(sed -n 's/.*com\.sourcepoint\.cmplibrary:cmplibrary:\([0-9][0-9.]*\).*/\1/p' \
         "$project_root/Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml" | head -n 1)
