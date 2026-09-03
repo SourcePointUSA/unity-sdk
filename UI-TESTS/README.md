@@ -28,3 +28,18 @@ Each run writes a timestamped folder beneath `UI-TESTS/artifacts` containing
 the fresh APK, Unity/Appium/logcat logs, test discovery, TRX results, copied
 runsettings, and `effective-test-config.txt`. These files are intentionally
 ignored by Git and are the first place to inspect a failing run.
+
+## 7.10.1 baseline acceptance
+
+Stage 1 was accepted on 2026-09-03 using Unity `6000.5.10f1` and the
+`CMP_Unity_API_37` AVD. The full command used was:
+
+```sh
+EMULATOR_BIN=/Users/wombatmbp17/Library/Android/sdk/emulator/emulator UI-TESTS/run-android-ui-tests.sh
+```
+
+It discovered 22 tests and produced a fresh APK in
+`UI-TESTS/artifacts/20260903-144811`. The suite result was 21/22 passed;
+`OpenPmLayersTest` timed out only while opening USNAT PM. An immediate isolated
+retry passed 1/1 (`/private/tmp/open-pm-retry/results.trx`), so the remaining
+failure was accepted as a sequential flaky result for the baseline checkpoint.
