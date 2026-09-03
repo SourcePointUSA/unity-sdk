@@ -17,10 +17,19 @@ fail_forbidden() {
     exit 1
 }
 
-require_coordinate() {
+require_selected_coordinate() {
     coordinate=$1
-    if ! grep -F "$coordinate" "$report" >/dev/null; then
+    coordinate_lines=$(grep -F "$coordinate" "$report" || true)
+    if [ -z "$coordinate_lines" ]; then
         fail_missing "$coordinate"
+    fi
+
+    resolved_lines=$(printf '%s\n' "$coordinate_lines" | grep -F -- '->' || true)
+    [ -z "$resolved_lines" ] && return
+
+    expected_version=${coordinate##*:}
+    if printf '%s\n' "$resolved_lines" | sed -n 's/.*->[[:space:]]*\([0-9][0-9.]*\).*/\1/p' | grep -Fvx "$expected_version" >/dev/null; then
+        fail_forbidden "$resolved_lines"
     fi
 }
 
@@ -53,8 +62,8 @@ case "$cmp_version" in
 esac
 
 cmp_coordinate="com.sourcepoint.cmplibrary:cmplibrary:$cmp_version"
-require_coordinate "$cmp_coordinate"
-require_coordinate "$core_coordinate"
+require_selected_coordinate "$cmp_coordinate"
+require_selected_coordinate "$core_coordinate"
 
 legacy_local=$(grep -Ei 'Assets/Plugins/Android/[^[:space:]]*(cmplibrary|sourcepoint|kotlin|ktor)[^[:space:]]*\.(aar|jar)' "$report" || true)
 [ -z "$legacy_local" ] || fail_forbidden "$legacy_local"
