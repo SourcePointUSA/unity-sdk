@@ -7,7 +7,7 @@ project_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
 
 UNITY_PATH=${UNITY_PATH:-/Applications/Unity/Installs/6000.5.10f1/Unity.app/Contents/MacOS/Unity}
 UNITY_ANDROID_PLAYER_PATH=${UNITY_ANDROID_PLAYER_PATH:-/Applications/Unity/Installs/6000.5.10f1/PlaybackEngines/AndroidPlayer}
-ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$UNITY_ANDROID_PLAYER_PATH/SDK}
+ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$HOME/Library/Android/sdk}
 CMP_ANDROID_AVD=${CMP_ANDROID_AVD:-CMP_Unity_API_37}
 ANDROID_SERIAL=${ANDROID_SERIAL:-}
 ALTTESTER_DESKTOP_PATH=${ALTTESTER_DESKTOP_PATH:-/Applications/AltTesterDesktop.app}
@@ -66,10 +66,10 @@ find_android_tools() {
 
 preflight() {
     require_executable "$UNITY_PATH" "Unity 6000.5.10f1"
-    [ -d "$UNITY_ANDROID_PLAYER_PATH/SDK" ] || fail "Unity Android SDK is missing: $UNITY_ANDROID_PLAYER_PATH/SDK"
     [ -d "$UNITY_ANDROID_PLAYER_PATH/NDK" ] || fail "Unity Android NDK is missing: $UNITY_ANDROID_PLAYER_PATH/NDK"
     [ -d "$UNITY_ANDROID_PLAYER_PATH/OpenJDK" ] || fail "Unity Android OpenJDK is missing: $UNITY_ANDROID_PLAYER_PATH/OpenJDK"
     [ -d "$ALTTESTER_DESKTOP_PATH" ] || fail "AltTester Desktop is missing: $ALTTESTER_DESKTOP_PATH"
+    [ -d "$ANDROID_SDK_ROOT" ] || fail "Android SDK is missing: $ANDROID_SDK_ROOT. Set ANDROID_SDK_ROOT to an Android SDK containing platform-tools and emulator."
 
     find_android_tools
     require_executable "$adb_bin" "adb"
@@ -83,6 +83,36 @@ preflight() {
     "$APPIUM_BIN" plugin list --installed 2>&1 | grep -q 'altunity' || fail "Install Appium altunity: appium plugin install --source=npm appium-altunity-plugin"
     command -v curl >/dev/null 2>&1 || fail "curl is required for Appium readiness checks."
     command -v nc >/dev/null 2>&1 || fail "nc is required for AltTester port readiness checks."
+}
+
+find_unity_gradle_project() {
+    gradle_project=
+    for candidate in "$project_root"/Library/Bee/Android/Prj/*/Gradle; do
+        [ -f "$candidate/gradlew" ] && [ -d "$candidate/unityLibrary" ] || continue
+        gradle_project=$candidate
+        break
+    done
+    [ -n "$gradle_project" ] || fail "Unity generated Gradle project was not found beneath Library/Bee/Android/Prj/*/Gradle with gradlew and unityLibrary."
+}
+
+capture_and_assert_cmp_graph() {
+    find_unity_gradle_project
+    (
+        cd "$gradle_project"
+        ./gradlew :unityLibrary:dependencies --configuration releaseRuntimeClasspath
+    ) >"$artifact_dir/gradle-dependencies.txt" 2>&1
+
+    cmp_version=$(sed -n 's/.*com\.sourcepoint\.cmplibrary:cmplibrary:\([0-9][0-9.]*\).*/\1/p' \
+        "$project_root/Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml" | head -n 1)
+    [ -n "$cmp_version" ] || fail "Could not determine the CMP version from SourcepointDependencies.xml."
+    case "$cmp_version" in
+        7.12.0|7.15.13)
+            sh "$script_dir/assert-android-cmp-graph.sh" "$artifact_dir/gradle-dependencies.txt" "$cmp_version"
+            ;;
+        *)
+            echo "CMP graph report saved for $cmp_version; no Stage 2 assertion contract is defined for this version."
+            ;;
+    esac
 }
 
 cleanup() {
@@ -180,6 +210,7 @@ run_tests() {
         -cmpUiTestApk "$artifact_dir/ConsentMessagePlugin.apk" \
         -logFile "$artifact_dir/unity.log"
     [ -s "$artifact_dir/ConsentMessagePlugin.apk" ] || fail "Unity completed without a fresh APK at $artifact_dir/ConsentMessagePlugin.apk"
+    capture_and_assert_cmp_graph
 
     open "$ALTTESTER_DESKTOP_PATH"
     "$adb_bin" -s "$ANDROID_SERIAL" install -r "$artifact_dir/ConsentMessagePlugin.apk" >"$artifact_dir/adb-install.log" 2>&1

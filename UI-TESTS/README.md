@@ -29,6 +29,33 @@ the fresh APK, Unity/Appium/logcat logs, test discovery, TRX results, copied
 runsettings, and `effective-test-config.txt`. These files are intentionally
 ignored by Git and are the first place to inspect a failing run.
 
+## Stage 2 CMP dependency-graph gates
+
+Use these three gates during the Android CMP migration:
+
+```sh
+sh UI-TESTS/tests/assert-android-cmp-graph.test.sh
+```
+
+```sh
+# After EDM4U resolves com.sourcepoint.cmplibrary:cmplibrary:7.12.0
+UI-TESTS/run-android-ui-tests.sh
+```
+
+```sh
+# After EDM4U resolves com.sourcepoint.cmplibrary:cmplibrary:7.15.13
+UI-TESTS/run-android-ui-tests.sh
+```
+
+After every fresh Unity build, the runner writes
+`gradle-dependencies.txt` in that run's timestamped `UI-TESTS/artifacts/<run>`
+folder. It is the authoritative file for investigating Gradle version conflicts;
+rerun its assertion directly when diagnosing a retained artifact:
+
+```sh
+UI-TESTS/assert-android-cmp-graph.sh UI-TESTS/artifacts/<run>/gradle-dependencies.txt 7.12.0
+```
+
 ## 7.10.1 baseline acceptance
 
 Stage 1 was accepted on 2026-09-03 using Unity `6000.5.10f1` and the

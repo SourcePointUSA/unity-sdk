@@ -17,7 +17,23 @@ grep -F 'DOTNET_BIN' "$output_file" >/dev/null
 grep -F 'immersive_mode_confirmations confirmed' "$runner" >/dev/null
 
 mkdir -p "$fixture_root/android-player/SDK" "$fixture_root/android-player/NDK" \
-    "$fixture_root/android-player/OpenJDK" "$fixture_root/alt-tester"
+    "$fixture_root/android-player/OpenJDK" "$fixture_root/android-sdk/platform-tools" \
+    "$fixture_root/android-sdk/emulator" "$fixture_root/android-player-without-sdk/NDK" \
+    "$fixture_root/android-player-without-sdk/OpenJDK" "$fixture_root/alt-tester"
+
+cp "$test_dir/fixtures/command-succeeds.sh" "$fixture_root/android-sdk/platform-tools/adb"
+cp "$test_dir/fixtures/emulator-with-requested-avd.sh" "$fixture_root/android-sdk/emulator/emulator"
+
+if ! UNITY_PATH="$test_dir/fixtures/command-succeeds.sh" \
+    UNITY_ANDROID_PLAYER_PATH="$fixture_root/android-player-without-sdk" \
+    ANDROID_SDK_ROOT="$fixture_root/android-sdk" \
+    ALTTESTER_DESKTOP_PATH="$fixture_root/alt-tester" \
+    APPIUM_BIN="$test_dir/fixtures/appium-with-altunity-on-stderr.sh" \
+    DOTNET_BIN=/opt/homebrew/opt/dotnet@8/bin/dotnet \
+    sh "$runner" --preflight >"$output_file" 2>&1; then
+    cat "$output_file" >&2
+    exit 1
+fi
 
 if UNITY_PATH="$test_dir/fixtures/command-succeeds.sh" \
     UNITY_ANDROID_PLAYER_PATH="$fixture_root/android-player" \
