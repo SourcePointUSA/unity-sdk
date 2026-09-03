@@ -120,9 +120,13 @@ fi
 if [ -f "$initial_dir/results.trx" ]; then
     cp "$initial_dir/results.trx" "$artifact_dir/results.trx"
 else
-    record "Initial result: failed (no TRX produced; exit $initial_status)"
-    record 'Stable failures: unclassified-initial-run'
-    exit "${initial_status:-1}"
+    record "Initial result: inconclusive (no TRX produced; exit $initial_status)"
+    record 'Initial classification: infrastructure/inconclusive'
+    record "Infrastructure/inconclusive reason: no TRX produced (dotnet test exit $initial_status)"
+    if [ "$initial_status" -eq 0 ]; then
+        exit 1
+    fi
+    exit "$initial_status"
 fi
 
 if [ "$initial_status" -eq 0 ]; then
@@ -136,8 +140,9 @@ trx_outcomes "$initial_dir/results.trx" | sed -n \
     >"$failed_tests_file"
 
 if [ ! -s "$failed_tests_file" ]; then
-    record "Initial result: failed without a failed test record (exit $initial_status)"
-    record 'Stable failures: unclassified-initial-run'
+    record "Initial result: inconclusive (exit $initial_status with no failed test record)"
+    record 'Initial classification: infrastructure/inconclusive'
+    record "Infrastructure/inconclusive reason: nonzero dotnet test exit $initial_status with no failed test record"
     exit "$initial_status"
 fi
 

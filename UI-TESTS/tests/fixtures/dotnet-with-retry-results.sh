@@ -33,6 +33,21 @@ write_result() {
 }
 
 if [ -z "$test_name" ]; then
+    case "${FIXTURE_INITIAL_MODE:-failed-tests}" in
+        missing-trx)
+            printf '%s\n' 'Fixture infrastructure failure before TRX creation.'
+            exit 2
+            ;;
+        no-failed-record)
+            write_result SetupProbe Passed
+            exit 2
+            ;;
+        failed-tests) ;;
+        *)
+            echo "Unexpected fixture initial mode: $FIXTURE_INITIAL_MODE" >&2
+            exit 2
+            ;;
+    esac
     if [ "${FIXTURE_INCLUDE_STABLE:-0}" = 1 ]; then
         {
             printf '%s\n' '<TestRun><Results>'
