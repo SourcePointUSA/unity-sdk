@@ -30,6 +30,7 @@ assert_fails_with() {
 
 assert_passes good-7.12.0.txt 7.12.0
 assert_passes good-7.15.13.txt 7.15.13
+assert_fails_with missing-coroutines-android.txt 7.12.0 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
 assert_fails_with selected-cmp-core-mismatch.txt 7.12.0 'com.sourcepoint.cmplibrary:cmplibrary:7.12.0 -> 7.15.13'
 assert_fails_with selected-core-mismatch.txt 7.12.0 'com.sourcepoint:core:0.1.4 -> 0.1.16'
 assert_fails_with ktor-2-duplicate.txt 7.12.0 'io.ktor:ktor-client-core:2.3.9'

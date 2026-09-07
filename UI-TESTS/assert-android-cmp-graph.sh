@@ -49,10 +49,12 @@ cmp_version=$2
 case "$cmp_version" in
     7.12.0)
         core_coordinate=com.sourcepoint:core:0.1.4
+        coroutines_android_coordinate=org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0
         ktor_version_pattern='3\.0\.'
         ;;
     7.15.13)
         core_coordinate=com.sourcepoint:core:0.1.16
+        coroutines_android_coordinate=
         ktor_version_pattern='3\.'
         ;;
     *)
@@ -64,6 +66,7 @@ esac
 cmp_coordinate="com.sourcepoint.cmplibrary:cmplibrary:$cmp_version"
 require_selected_coordinate "$cmp_coordinate"
 require_selected_coordinate "$core_coordinate"
+[ -z "$coroutines_android_coordinate" ] || require_selected_coordinate "$coroutines_android_coordinate"
 
 legacy_local=$(grep -Ei 'Assets/Plugins/Android/[^[:space:]]*(cmplibrary|sourcepoint|kotlin|ktor)[^[:space:]]*\.(aar|jar)' "$report" || true)
 [ -z "$legacy_local" ] || fail_forbidden "$legacy_local"
@@ -85,4 +88,5 @@ fi
 echo "CMP Android dependency graph accepted for $cmp_version:"
 print_coordinate "$cmp_coordinate"
 print_coordinate "$core_coordinate"
+[ -z "$coroutines_android_coordinate" ] || print_coordinate "$coroutines_android_coordinate"
 printf '%s\n' "$ktor_lines"

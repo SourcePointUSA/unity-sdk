@@ -1,6 +1,7 @@
 <dependencies>
   <packages>
-    <package>com.sourcepoint.cmplibrary:cmplibrary:7.10.1</package>
+    <package>com.sourcepoint.cmplibrary:cmplibrary:7.12.0</package>
+    <package>org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0</package>
   </packages>
   <files />
   <settings>

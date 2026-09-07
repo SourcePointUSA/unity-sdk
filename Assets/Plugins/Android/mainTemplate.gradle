@@ -6,7 +6,8 @@ apply from: '../shared/common.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'com.sourcepoint.cmplibrary:cmplibrary:7.10.1' // Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml:42
+    implementation 'com.sourcepoint.cmplibrary:cmplibrary:7.12.0' // Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml:42
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0' // Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml:43
 // Android Resolver Dependencies End
 **DEPS**}
 
