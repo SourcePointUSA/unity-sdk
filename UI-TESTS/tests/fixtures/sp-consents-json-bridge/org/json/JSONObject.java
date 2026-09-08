@@ -18,6 +18,13 @@ public final class JSONObject {
         return this;
     }
 
+    public JSONObject(Map<String, ?> values) {
+        this.values.putAll(values);
+    }
+
+    public JSONObject() {
+    }
+
     @Override
     public String toString() {
         StringBuilder json = new StringBuilder("{");

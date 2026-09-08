@@ -13,7 +13,7 @@ namespace ConsentManagementProvider.Json
         public string[] rejectedVendors;
         public string[] rejectedCategories;
         public string childPmId;
-        public bool signedLspa;
+        public bool? signedLspa;
         public string webConsentPayload;
         public ConsentStatusWrapper consentStatus;
     }

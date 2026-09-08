@@ -67,16 +67,12 @@ namespace ConsentManagementProvider
             this.uuid = uuid;
             this.status = status;
             this.uspstring = uspstring;
-            if (this.rejectedCategories == null)
-            {
-                this.rejectedCategories = new List<string>();
-            }
-            this.rejectedCategories.AddRange(rejectedCategories);
-            if (this.rejectedVendors == null)
-            {
-                this.rejectedVendors = new List<string>();
-            }
-            this.rejectedVendors.AddRange(rejectedVendors);
+            this.rejectedCategories = rejectedCategories == null
+                ? new List<string>()
+                : new List<string>(rejectedCategories);
+            this.rejectedVendors = rejectedVendors == null
+                ? new List<string>()
+                : new List<string>(rejectedVendors);
             this.childPmId = childPmId;
             this.applies = applies;
             this.signedLspa = signedLspa;

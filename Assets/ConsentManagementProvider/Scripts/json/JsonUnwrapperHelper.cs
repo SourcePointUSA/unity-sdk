@@ -22,6 +22,7 @@ namespace ConsentManagementProvider.Json
                 webConsentPayload = wrapped.webConsentPayload,
                 euconsent = wrapped.euconsent,
                 TCData = wrapped.tcData,
+                acceptedCategories = wrapped.acceptedCategories,
                 grants = new Dictionary<string, SpVendorGrant>()
             };
             return unwrapped;

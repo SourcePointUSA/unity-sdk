@@ -26,6 +26,7 @@ import java.util.Map;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import kotlinx.serialization.json.JsonObject;
 
 /** Converts the object callbacks used by CMP 7.12 into the legacy Unity JSON contract. */
 public final class SpConsentsJsonBridge {
@@ -98,12 +99,13 @@ public final class SpConsentsJsonBridge {
 
     private static JSONObject toJson(GDPRConsent consent) throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("uuid", consent.getUuid());
+        json.put("uuid", nullable(consent.getUuid()));
         json.put("tcData", JsonToMapExtKt.toConsentJSONObj(consent.getTcData()));
         json.put("grants", grantsToJson(consent.getGrants()));
-        json.put("euconsent", consent.getEuconsent());
+        json.put("euconsent", nullable(consent.getEuconsent()));
         json.put("apply", consent.getApplies());
-        json.put("acceptedCategories", new JSONArray(consent.getAcceptedCategories()));
+        json.put("acceptedCategories", nullable(toJsonArray(consent.getAcceptedCategories())));
+        json.put("webConsentPayload", jsonPayload(consent.getWebConsentPayload()));
         json.put("consentStatus", nullable(toJson(consent.getConsentStatus())));
         json.put("googleConsentMode", nullable(toJson(consent.getGoogleConsentMode())));
         return json;
@@ -115,14 +117,25 @@ public final class SpConsentsJsonBridge {
 
     private static JSONObject toJson(CCPAConsent consent) throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("uuid", consent.getUuid());
+        json.put("uuid", nullable(consent.getUuid()));
         json.put("gppData", JsonToMapExtKt.toConsentJSONObj(consent.getGppData()));
-        json.put("status", consent.getStatus());
-        json.put("uspstring", consent.getUspstring());
-        json.put("rejectedCategories", new JSONArray(consent.getRejectedCategories()));
+        json.put("status", nullable(consent.getStatus()));
+        json.put("uspstring", nullable(consent.getUspstring()));
+        json.put("rejectedCategories", nullable(toJsonArray(consent.getRejectedCategories())));
+        json.put("childPmId", nullable(consent.getChildPmId()));
         json.put("apply", consent.getApplies());
-        json.put("rejectedVendors", new JSONArray(consent.getRejectedVendors()));
+        json.put("signedLspa", nullable(consent.getSignedLspa()));
+        json.put("webConsentPayload", jsonPayload(consent.getWebConsentPayload()));
+        json.put("rejectedVendors", nullable(toJsonArray(consent.getRejectedVendors())));
         return json;
+    }
+
+    private static JSONArray toJsonArray(List<?> values) {
+        return values == null ? null : new JSONArray(values);
+    }
+
+    private static Object jsonPayload(JsonObject payload) {
+        return payload == null ? JSONObject.NULL : payload.toString();
     }
 
     private static JSONObject toJson(UsNatConsent consent) throws JSONException {
