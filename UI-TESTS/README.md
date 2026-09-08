@@ -70,3 +70,22 @@ It discovered 22 tests and produced a fresh APK in
 `OpenPmLayersTest` timed out only while opening USNAT PM. An immediate isolated
 retry passed 1/1 (`/private/tmp/open-pm-retry/results.trx`), so the remaining
 failure was accepted as a sequential flaky result for the baseline checkpoint.
+
+## 7.12.0 checkpoint acceptance
+
+Stage 2 was accepted on 2026-09-08 with Android CMP `7.12.0`,
+`mobile-core:0.1.4`, Ktor `3.0.0`, and
+`kotlinx-coroutines-android:1.9.0`. The full command was:
+
+```sh
+EMULATOR_BIN=/Users/wombatmbp17/Library/Android/sdk/emulator/emulator \
+ANDROID_SDK_ROOT=/Users/wombatmbp17/Library/Android/sdk \
+DOTNET_BIN=/opt/homebrew/opt/dotnet@8/bin/dotnet \
+UI-TESTS/run-android-ui-tests.sh
+```
+
+It discovered and passed all 22 Android UI tests on `CMP_Unity_API_37` during
+the initial suite run; no retries or stable failures were recorded. Retain the
+timestamped run folder under `UI-TESTS/artifacts/` with its APK, TRX,
+`retry-summary.txt`, and `gradle-dependencies.txt` as the local checkpoint
+evidence.
