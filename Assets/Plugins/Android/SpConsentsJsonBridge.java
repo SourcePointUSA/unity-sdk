@@ -26,9 +26,8 @@ import java.util.Map;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
-import kotlinx.serialization.json.JsonObject;
 
-/** Converts the object callbacks used by CMP 7.12 into the legacy Unity JSON contract. */
+/** Converts the object callbacks used by CMP 7.12+ into the legacy Unity JSON contract. */
 public final class SpConsentsJsonBridge {
     private SpConsentsJsonBridge() {
     }
@@ -105,7 +104,7 @@ public final class SpConsentsJsonBridge {
         json.put("euconsent", nullable(consent.getEuconsent()));
         json.put("apply", consent.getApplies());
         json.put("acceptedCategories", nullable(toJsonArray(consent.getAcceptedCategories())));
-        json.put("webConsentPayload", jsonPayload(consent.getWebConsentPayload()));
+        json.put("webConsentPayload", webConsentPayload(consent));
         json.put("consentStatus", nullable(toJson(consent.getConsentStatus())));
         json.put("googleConsentMode", nullable(toJson(consent.getGoogleConsentMode())));
         return json;
@@ -125,7 +124,7 @@ public final class SpConsentsJsonBridge {
         json.put("childPmId", nullable(consent.getChildPmId()));
         json.put("apply", consent.getApplies());
         json.put("signedLspa", nullable(consent.getSignedLspa()));
-        json.put("webConsentPayload", jsonPayload(consent.getWebConsentPayload()));
+        json.put("webConsentPayload", webConsentPayload(consent));
         json.put("rejectedVendors", nullable(toJsonArray(consent.getRejectedVendors())));
         return json;
     }
@@ -134,8 +133,13 @@ public final class SpConsentsJsonBridge {
         return values == null ? null : new JSONArray(values);
     }
 
-    private static Object jsonPayload(JsonObject payload) {
-        return payload == null ? JSONObject.NULL : payload.toString();
+    private static Object webConsentPayload(Object consent) {
+        try {
+            Object payload = consent.getClass().getMethod("getWebConsentPayload").invoke(consent);
+            return payload == null ? JSONObject.NULL : payload.toString();
+        } catch (ReflectiveOperationException error) {
+            throw new IllegalStateException("Unable to read web consent payload.", error);
+        }
     }
 
     private static JSONObject toJson(UsNatConsent consent) throws JSONException {

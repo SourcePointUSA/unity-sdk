@@ -89,3 +89,25 @@ the initial suite run; no retries or stable failures were recorded. Retain the
 timestamped run folder under `UI-TESTS/artifacts/` with its APK, TRX,
 `retry-summary.txt`, and `gradle-dependencies.txt` as the local checkpoint
 evidence.
+
+## 7.15.13 release gate
+
+The final Android CMP `7.15.13` gate uses the same complete command:
+
+```sh
+EMULATOR_BIN=/Users/wombatmbp17/Library/Android/sdk/emulator/emulator \
+ANDROID_SDK_ROOT=/Users/wombatmbp17/Library/Android/sdk \
+DOTNET_BIN=/opt/homebrew/opt/dotnet@8/bin/dotnet \
+UI-TESTS/run-android-ui-tests.sh
+```
+
+On 2026-09-08 it built a fresh APK, accepted mobile-core `0.1.16` with
+Ktor `3.2.2`, and discovered 22 tests. The initial run passed 21 tests;
+`ClickRejectAllButtonTest` passed its first isolated fresh-session retry, so
+the command exited successfully with no stable failures.
+
+Each local release-gate run is retained under the ignored
+`UI-TESTS/artifacts/<YYYYMMDD-HHMMSS>/` convention. Keep the APK,
+`gradle-dependencies.txt`, `retry-summary.txt`, and the initial/retry TRX files
+together when handing off results; the accepted local run is
+`UI-TESTS/artifacts/20260908-124608/`.
