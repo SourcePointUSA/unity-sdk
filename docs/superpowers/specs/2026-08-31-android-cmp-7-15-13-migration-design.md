@@ -122,6 +122,15 @@ the existing resolver demonstrably blocks the migration.
 5. Update release documentation/changelog with the Android CMP version and
    the Ktor 3 compatibility boundary for Unity consumers.
 
+CMP 7.15.13 exposes `kotlinx.serialization.json.JsonObject` at runtime, but
+not on Unity's `debugCompileClasspath`. Internal Java bridge code therefore
+must not name that type at compile time, including through a method invocation
+whose declared return type is `JsonObject`. If the bridge needs the existing
+web-consent payload, obtain it through the public getter reflectively and keep
+the established nullable string-JSON contract. Retain a focused compile-
+classpath regression alongside the legacy payload-contract regression; this is
+an internal compatibility constraint, not authorization to add a public API.
+
 ## Verification gates
 
 The required sequence is:
