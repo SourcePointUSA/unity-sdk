@@ -21,6 +21,7 @@ adb_bin=${ADB_BIN:-}
 emulator_bin=${EMULATOR_BIN:-}
 appium_pid=
 emulator_pid=
+emulator_pid_file=
 logcat_pid=
 artifact_dir=
 
@@ -124,6 +125,9 @@ cleanup() {
     fi
     [ -z "$logcat_pid" ] || kill "$logcat_pid" 2>/dev/null || true
     [ -z "$appium_pid" ] || kill "$appium_pid" 2>/dev/null || true
+    if [ -z "$emulator_pid" ] && [ -n "$emulator_pid_file" ] && [ -r "$emulator_pid_file" ]; then
+        emulator_pid=$(sed -n '1p' "$emulator_pid_file")
+    fi
     [ -z "$emulator_pid" ] || kill "$emulator_pid" 2>/dev/null || true
     exit "$status"
 }
@@ -144,20 +148,13 @@ appium_is_ready() {
 }
 
 start_emulator_if_needed() {
-    if [ -n "$ANDROID_SERIAL" ]; then
-        "$adb_bin" -s "$ANDROID_SERIAL" get-state | grep -qx device || fail "Configured ANDROID_SERIAL '$ANDROID_SERIAL' is not an online device."
-        return
+    emulator_pid_file="$artifact_dir/emulator.pid"
+    ANDROID_SERIAL=$(sh "$script_dir/android-emulator-readiness.sh" \
+        "$adb_bin" "$emulator_bin" "$CMP_ANDROID_AVD" "$artifact_dir" \
+        "$ANDROID_SERIAL" "$emulator_pid_file")
+    if [ -r "$emulator_pid_file" ]; then
+        emulator_pid=$(sed -n '1p' "$emulator_pid_file")
     fi
-
-    ANDROID_SERIAL=$("$adb_bin" devices | awk '/^emulator-[0-9]+[[:space:]]+device$/ { print $1; exit }')
-    if [ -z "$ANDROID_SERIAL" ]; then
-        "$emulator_bin" -avd "$CMP_ANDROID_AVD" -no-boot-anim -no-snapshot-save >"$artifact_dir/emulator.log" 2>&1 &
-        emulator_pid=$!
-        wait_for "Android emulator device" "$adb_bin" wait-for-device
-        ANDROID_SERIAL=$("$adb_bin" devices | awk '/^emulator-[0-9]+[[:space:]]+device$/ { print $1; exit }')
-        [ -n "$ANDROID_SERIAL" ] || fail "Emulator booted without an online emulator serial."
-    fi
-    wait_for "Android boot completion" sh -c 'test "$("$1" -s "$2" shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = 1' sh "$adb_bin" "$ANDROID_SERIAL"
 }
 
 start_appium_if_needed() {

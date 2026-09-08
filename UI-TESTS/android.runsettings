@@ -3,7 +3,8 @@
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
     <Parameter name="platformName" value="Android" />
-    <Parameter name="deviceName" value="emulator-5554" />
+    <Parameter name="deviceName" value="Android Emulator" />
+    <Parameter name="appium:udid" value="" />
     <Parameter name="altTesterIP" value="127.0.0.1" />
     <Parameter name="appium:app" value="/BUILDS/Android/ConsentMessagePlugin.apk" />
     <Parameter name="appium:automationName" value="UiAutomator2" />

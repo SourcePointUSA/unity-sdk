@@ -61,6 +61,8 @@ grep -F 'Stable failures: StableTest' "$stable_summary" >/dev/null
 
 [ "$(grep -c -- '--filter Name=FlakyTest' "$fixture_root/stable/state/calls.txt")" -eq 2 ]
 [ "$(grep -c -- '--filter Name=StableTest' "$fixture_root/stable/state/calls.txt")" -eq 3 ]
+[ "$(grep -c -F 'TestRunParameters.Parameter(name="deviceName",value="Android Emulator")' "$fixture_root/stable/state/calls.txt")" -eq 6 ]
+[ "$(grep -c -F 'TestRunParameters.Parameter(name="appium:udid",value="fixture-emulator")' "$fixture_root/stable/state/calls.txt")" -eq 6 ]
 
 for attempt_dir in \
     "$fixture_root/stable/artifacts/test-attempts/initial" \
@@ -86,3 +88,5 @@ flaky_summary="$fixture_root/flaky/artifacts/retry-summary.txt"
 grep -F 'FlakyTest classification: flaky-pass' "$flaky_summary" >/dev/null
 grep -F 'Stable failures: none' "$flaky_summary" >/dev/null
 [ "$(grep -c -- '--filter Name=FlakyTest' "$fixture_root/flaky/state/calls.txt")" -eq 2 ]
+[ "$(grep -c -F 'TestRunParameters.Parameter(name="deviceName",value="Android Emulator")' "$fixture_root/flaky/state/calls.txt")" -eq 3 ]
+[ "$(grep -c -F 'TestRunParameters.Parameter(name="appium:udid",value="fixture-emulator")' "$fixture_root/flaky/state/calls.txt")" -eq 3 ]

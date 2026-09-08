@@ -28,7 +28,8 @@ namespace UnityAppiumTests
 			//shellHelper.StartAppium();
 			//shellHelper.StartAltTester();
 			var desiredCaps = new AppiumOptions();
-			desiredCaps.DeviceName = TestContext.Parameters["deviceName"];
+			TestRunParameterResolver.ApplyAndroidDeviceSelection(desiredCaps,
+				TestContext.Parameters["deviceName"], TestContext.Parameters["appium:udid"]);
 			desiredCaps.App = TestRunParameterResolver.ResolveAppPath(TestContext.Parameters["appium:app"], rootDir);
 			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
 			if (platformIOS)

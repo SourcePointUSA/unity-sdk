@@ -17,6 +17,7 @@ DOTNET_BIN=${DOTNET_BIN:-dotnet}
 ADB_BIN=${ADB_BIN:-adb}
 ANDROID_SERIAL=${ANDROID_SERIAL:-}
 CMP_UI_APPIUM_LOG=${CMP_UI_APPIUM_LOG:-}
+ANDROID_DEVICE_NAME=${ANDROID_DEVICE_NAME:-Android Emulator}
 
 attempts_dir="$artifact_dir/test-attempts"
 initial_dir="$attempts_dir/initial"
@@ -69,7 +70,8 @@ run_attempt() {
         if "$DOTNET_BIN" test "$test_project" --no-restore --settings "$runsettings" \
             --filter "Name=$filter_name" \
             --logger "trx;LogFileName=results.trx" --results-directory "$run_dir" -- \
-            "TestRunParameters.Parameter(name=\"deviceName\",value=\"$ANDROID_SERIAL\")" \
+            "TestRunParameters.Parameter(name=\"deviceName\",value=\"$ANDROID_DEVICE_NAME\")" \
+            "TestRunParameters.Parameter(name=\"appium:udid\",value=\"$ANDROID_SERIAL\")" \
             "TestRunParameters.Parameter(name=\"appium:app\",value=\"$apk_path\")" \
             >"$run_dir/dotnet-test.log" 2>&1; then
             attempt_status=0
@@ -79,7 +81,8 @@ run_attempt() {
     else
         if "$DOTNET_BIN" test "$test_project" --no-restore --settings "$runsettings" \
             --logger "trx;LogFileName=results.trx" --results-directory "$run_dir" -- \
-            "TestRunParameters.Parameter(name=\"deviceName\",value=\"$ANDROID_SERIAL\")" \
+            "TestRunParameters.Parameter(name=\"deviceName\",value=\"$ANDROID_DEVICE_NAME\")" \
+            "TestRunParameters.Parameter(name=\"appium:udid\",value=\"$ANDROID_SERIAL\")" \
             "TestRunParameters.Parameter(name=\"appium:app\",value=\"$apk_path\")" \
             >"$run_dir/dotnet-test.log" 2>&1; then
             attempt_status=0

@@ -19,7 +19,8 @@ fail_forbidden() {
 
 require_selected_coordinate() {
     coordinate=$1
-    coordinate_lines=$(grep -F "$coordinate" "$report" || true)
+    escaped_coordinate=$(printf '%s\n' "$coordinate" | sed 's/[][\\.^$*+?{}|()]/\\&/g')
+    coordinate_lines=$(grep -E "(^|[[:space:]])$escaped_coordinate([[:space:]]|$)" "$report" || true)
     if [ -z "$coordinate_lines" ]; then
         fail_missing "$coordinate"
     fi
@@ -81,8 +82,9 @@ if printf '%s\n' "$ktor_lines" | grep -Ev "io\.ktor:[^:[:space:]]+:$ktor_version
     fail_forbidden "Ktor versions outside required $ktor_version_pattern: $(printf '%s\n' "$ktor_lines" | grep -Ev "io\.ktor:[^:[:space:]]+:$ktor_version_pattern")"
 fi
 
-if [ "$cmp_version" = 7.12.0 ] && printf '%s\n' "$ktor_lines" | grep -E '[[:space:]]+->[[:space:]]*[0-9]+\.' | grep -Ev '[[:space:]]+->[[:space:]]*3\.0\.' >/dev/null; then
-    fail_forbidden "Ktor versions outside required 3.0.x: $(printf '%s\n' "$ktor_lines" | grep -E '[[:space:]]+->[[:space:]]*[0-9]+\.' | grep -Ev '[[:space:]]+->[[:space:]]*3\.0\.')"
+selected_ktor_lines=$(printf '%s\n' "$ktor_lines" | grep -E '[[:space:]]+->[[:space:]]*[0-9]+\.' || true)
+if [ -n "$selected_ktor_lines" ] && printf '%s\n' "$selected_ktor_lines" | grep -Ev "[[:space:]]+->[[:space:]]*$ktor_version_pattern" >/dev/null; then
+    fail_forbidden "Ktor versions outside required $ktor_version_pattern: $(printf '%s\n' "$selected_ktor_lines" | grep -Ev "[[:space:]]+->[[:space:]]*$ktor_version_pattern")"
 fi
 
 echo "CMP Android dependency graph accepted for $cmp_version:"

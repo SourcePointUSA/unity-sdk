@@ -35,4 +35,32 @@ public class TestRunParameterResolverTests
     {
         Assert.That(TestRunParameterResolver.UseChromeDriverAutodownload("/tmp/chromedriver"), Is.False);
     }
+
+    [Test]
+    public void ApplyAndroidDeviceSelectionUsesUdidAndHumanReadableDeviceName()
+    {
+        var options = new OpenQA.Selenium.Appium.AppiumOptions();
+
+        TestRunParameterResolver.ApplyAndroidDeviceSelection(
+            options,
+            "Android Emulator",
+            "emulator-5588");
+
+        var capabilities = options.ToCapabilities();
+        Assert.Multiple(() =>
+        {
+            Assert.That(capabilities.GetCapability("appium:deviceName"), Is.EqualTo("Android Emulator"));
+            Assert.That(capabilities.GetCapability("appium:udid"), Is.EqualTo("emulator-5588"));
+        });
+    }
+
+    [Test]
+    public void ApplyAndroidDeviceSelectionOmitsBlankOptionalUdid()
+    {
+        var options = new OpenQA.Selenium.Appium.AppiumOptions();
+
+        TestRunParameterResolver.ApplyAndroidDeviceSelection(options, "Android Emulator", string.Empty);
+
+        Assert.That(options.ToCapabilities().GetCapability("appium:udid"), Is.Null);
+    }
 }
