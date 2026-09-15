@@ -1,6 +1,8 @@
+# 3.3.0-beta-1
+* Update Android CMP to `7.15.13`. Consuming Unity applications must support its mobile-core `0.1.16` and Ktor 3 dependency graph; the public Unity API is unchanged.
+
 # 3.2.0
 * [DIA-5501](https://sourcepoint.atlassian.net/browse/DIA-5501) Update consent classes according to native SDK class structure. Several things were made nullable.
-* Update Android CMP to `7.15.13`. Consuming Unity applications must support its mobile-core `0.1.16` and Ktor 3 dependency graph; the public Unity API is unchanged.
 
 # 3.1.1 
 * [DIA-5912](https://sourcepoint.atlassian.net/browse/DIA-5912) In `CMPPostProcessBuild.cs`, during `OnPostProcessBuild`, move `SwiftBridge.swift` to the `Pod/ConsentViewController` folder.
