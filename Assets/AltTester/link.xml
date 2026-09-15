@@ -14,4 +14,8 @@
     <assembly fullname="AltTester.AltTesterUnitySDK.Driver">
         <type fullname="AltTester.*" preserve="all" />
     </assembly>
+
+    <assembly fullname="Assembly-CSharp">
+        <type fullname="PrivacySettings" preserve="all" />
+    </assembly>
 </linker>

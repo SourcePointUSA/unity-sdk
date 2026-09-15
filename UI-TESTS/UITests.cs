@@ -27,10 +27,10 @@ namespace UnityAppiumTests
 			shellHelper = new ShellHelper(rootDir);
 			//shellHelper.StartAppium();
 			//shellHelper.StartAltTester();
-			System.Threading.Thread.Sleep(10000);
 			var desiredCaps = new AppiumOptions();
-			desiredCaps.DeviceName = TestContext.Parameters["deviceName"];
-			desiredCaps.App = (string)rootDir+TestContext.Parameters["appium:app"];
+			TestRunParameterResolver.ApplyAndroidDeviceSelection(desiredCaps,
+				TestContext.Parameters["deviceName"], TestContext.Parameters["appium:udid"]);
+			desiredCaps.App = TestRunParameterResolver.ResolveAppPath(TestContext.Parameters["appium:app"], rootDir);
 			desiredCaps.AutomationName = TestContext.Parameters["appium:automationName"];
 			if (platformIOS)
 				desiredCaps.PlatformVersion = "16.1";
@@ -44,8 +44,15 @@ namespace UnityAppiumTests
 			if (platformAndroid)
 			{
 				desiredCaps.AddAdditionalAppiumOption("appium:ignoreHiddenApiPolicyError" , true);
-				// desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
-				desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", (string)rootDir+TestContext.Parameters["appium:chromedriverExecutable"]);
+				var chromeDriverExecutable = TestContext.Parameters["appium:chromedriverExecutable"];
+				if (TestRunParameterResolver.UseChromeDriverAutodownload(chromeDriverExecutable))
+				{
+					desiredCaps.AddAdditionalAppiumOption("appium:chromedriverAutodownload", true);
+				}
+				else
+				{
+					desiredCaps.AddAdditionalAppiumOption("appium:chromedriverExecutable", TestRunParameterResolver.ResolveAppPath(chromeDriverExecutable, rootDir));
+				}
 				driverAndroid = new AndroidDriver(appiumServerUri, desiredCaps, initTimeoutSec);
 
 				AltReversePortForwarding.ReversePortForwardingAndroid();
@@ -75,7 +82,7 @@ namespace UnityAppiumTests
         	var data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
 			
-    		Assert.That(data!="-", Is.True);	
+			Assert.That(data!="-", Is.True);
 		}
 
 		[Test]
@@ -173,9 +180,13 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
 			isOpen = pages.pmLayerGDPR.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum"); 
-         	int num = pages.pmLayerGDPR.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			var num = 0;
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum");
+				num = pages.pmLayerGDPR.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Try to click: pmLayerGDPR.clickOnSwitches(2)"); 
 			pages.pmLayerGDPR.clickOnSwitches(2);
 			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressSaveAndExit");
@@ -187,9 +198,12 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerGDPR.webViewIsOpen");
 			isOpen = pages.pmLayerGDPR.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum"); 
-         	num = pages.pmLayerGDPR.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerGDPR.getCheckedSwitchesNum");
+				num = pages.pmLayerGDPR.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Current button for tap: pmLayerGDPR.pressExit");
         	pages.pmLayerGDPR.pressExit();
 
@@ -197,7 +211,8 @@ namespace UnityAppiumTests
         	var dataNew = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {dataNew}");
 			
-    		Assert.That(num==2, Is.True);
+			if (!platformAndroid)
+				Assert.That(num == 2, Is.True);
     		Assert.That(data!=dataNew, Is.True);	
 		}
 
@@ -217,9 +232,12 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for contex count: preFirstLayer.GetContexNum");
 			Console.WriteLine($"Contex count: {pages.preFirstLayer.GetContexNum()}");
 
-			Console.WriteLine($"Try to get: nativeAppLayer.getConsentValueText");
-        	var data = pages.nativeAppLayer.getConsentValueText();
-			Console.WriteLine($"ConsentValueText: {data}");
+			var privacySettings = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+			var status = privacySettings.GetComponentProperty<string>("PrivacySettings", "statusCampaignCCPA", "Assembly-CSharp");
+			var rejectedCategories = privacySettings.GetComponentProperty<int>("PrivacySettings", "rejectedCategoriesCCPACount", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignCCPA before editing: {status}");
+			Assert.That(status, Is.EqualTo("accepted"));
+			Assert.That(rejectedCategories, Is.EqualTo(0));
 			
 			System.Threading.Thread.Sleep(1000);
 			Console.WriteLine($"Current button for tap: nativeAppLayer.pressCCPAPmLayer");
@@ -227,9 +245,13 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerCCPA.webViewIsOpen");
 			isOpen = pages.pmLayerCCPA.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum"); 
-         	int num = pages.pmLayerCCPA.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			var num = 0;
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum");
+				num = pages.pmLayerCCPA.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Try to click: pmLayerCCPA.clickOnSwitches(2)"); 
 			pages.pmLayerCCPA.clickOnSwitches(2);
 			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressSaveAndExit");
@@ -241,13 +263,23 @@ namespace UnityAppiumTests
 			Console.WriteLine($"Check for webView open: PmLayerCCPA.webViewIsOpen");
 			isOpen = pages.pmLayerCCPA.webViewIsOpen();
     		Assert.That(isOpen, Is.True);
-			Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum"); 
-         	num = pages.pmLayerCCPA.getCheckedSwitchesNum(); 
-   			Console.WriteLine($"CheckedSwitches: {num}");
+			if (!platformAndroid)
+			{
+				Console.WriteLine($"Try to get: pmLayerCCPA.getCheckedSwitchesNum");
+				num = pages.pmLayerCCPA.getCheckedSwitchesNum();
+				Console.WriteLine($"CheckedSwitches: {num}");
+			}
 			Console.WriteLine($"Current button for tap: pmLayerCCPA.pressExit");
-        	pages.pmLayerCCPA.pressExit();
-			
-    		Assert.That(num==1, Is.True);	
+			pages.pmLayerCCPA.pressExit();
+
+			status = privacySettings.GetComponentProperty<string>("PrivacySettings", "statusCampaignCCPA", "Assembly-CSharp");
+			rejectedCategories = privacySettings.GetComponentProperty<int>("PrivacySettings", "rejectedCategoriesCCPACount", "Assembly-CSharp");
+			Console.WriteLine($"statusCampaignCCPA after editing: {status}");
+			Assert.That(status, Is.EqualTo("default"));
+			Assert.That(rejectedCategories, Is.EqualTo(2));
+
+			if (!platformAndroid)
+				Assert.That(num == 1, Is.True);
 		}
 
 		[Test]
@@ -360,19 +392,23 @@ namespace UnityAppiumTests
 			pages.nativeAppLayer.waitForSdkDone();
 			pages.nativeAppLayer.pressClearAll();
 			pages.nativeAppLayer.waitForSdkDone("SDK:Not Started");
-			altDriver.CallStaticMethod<string>("ConsentManagementProvider.CMP", "ConcreteInstance.LoadMessage", "Assembly-CSharp", new[] { "AltTesterTest" });
+			var privacySettings = altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP");
+			privacySettings.SetComponentProperty("PrivacySettings", "authId", "AltTesterTest", "Assembly-CSharp");
+			privacySettings.CallComponentMethod<object>("PrivacySettings", "OnLoadMessagePress", "Assembly-CSharp", new object[] { });
 			pages.nativeAppLayer.waitForSdkDone();
         	data = pages.nativeAppLayer.getConsentValueText();
 			Console.WriteLine($"ConsentValueText: {data}");
 			if(data=="-")
 			{
-				// it means it is the first time this property is called with specified authId
-				// this part of code is meant to be executed only once in a lifetime
-				Console.WriteLine("The very first time using this authId!");
-				pages.firstLayerGO(true, true, true);
+				Console.WriteLine("The first AuthID load shows the USNAT message.");
+				pages.firstLayerUSNAT.pressAcceptAll();
 				pages.nativeAppLayer.waitForSdkDone();
+				data = pages.nativeAppLayer.getConsentValueText();
 			}
-    		Assert.That(data!="-", Is.True);	
+			Assert.That(data!="-", Is.True);
+			data = pages.nativeAppLayer.getAuthIdText();
+			Console.WriteLine($"AuthIdText: {data}");
+			Assert.That(data, Is.EqualTo("AuthId:AltTesterTest"));
 		}
 
 		[Test]

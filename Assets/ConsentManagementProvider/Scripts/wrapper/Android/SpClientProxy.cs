@@ -8,7 +8,9 @@ namespace ConsentManagementProvider.Android
     internal class SpClientProxy : AndroidJavaProxy
     {
         static readonly string NativeJavaInterfaceName = "com.sourcepoint.cmplibrary.UnitySpClient";
+        static readonly string SpConsentsJsonBridgeName = "com.sourcepoint.unity.SpConsentsJsonBridge";
         internal SpConsents _spConsents = null;
+        private Func<AndroidJavaObject, string> spConsentsJsonConverter = ConvertSpConsentsToJson;
         
         public SpClientProxy() : base(new AndroidJavaClass(NativeJavaInterfaceName)) { }
 
@@ -114,10 +116,20 @@ namespace ConsentManagementProvider.Android
         #region Not implemented or implemented partially
         void onConsentReady(AndroidJavaObject spConsents)
         {
+            onConsentReady(spConsentsJsonConverter(spConsents));
         }
 
         void onSpFinished(AndroidJavaObject spConsents)
         {
+            onSpFinished(spConsentsJsonConverter(spConsents));
+        }
+
+        private static string ConvertSpConsentsToJson(AndroidJavaObject spConsents)
+        {
+            using (AndroidJavaClass jsonBridge = new AndroidJavaClass(SpConsentsJsonBridgeName))
+            {
+                return jsonBridge.CallStatic<string>("toJson", spConsents);
+            }
         }
 
         /**

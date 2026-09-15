@@ -35,6 +35,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
     public static string statusCampaignGDPR = "default";
     public static string statusCampaignCCPA = "default";
     public static string statusCampaignUSNAT = "default";
+    public static int rejectedCategoriesCCPACount = -1;
 
     private MESSAGE_LANGUAGE language
     {
@@ -128,6 +129,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
         );
     }
 
+
     private void SuccessDelegate(GdprConsent customConsent)
     {
         Debug.Log($"I am your success callback!");
@@ -177,6 +179,7 @@ public class PrivacySettings : MonoBehaviour, IOnConsentReady, IOnConsentSpFinis
         statusCampaignGDPR =  UpdateStatuses(consents, CAMPAIGN_TYPE.GDPR);
         statusCampaignCCPA =  UpdateStatuses(consents, CAMPAIGN_TYPE.CCPA);
         statusCampaignUSNAT =  UpdateStatuses(consents, CAMPAIGN_TYPE.USNAT);
+        rejectedCategoriesCCPACount = consents.ccpa?.consents.rejectedCategories?.Count ?? -1;
     }
 
     public void OnConsentSpFinished()

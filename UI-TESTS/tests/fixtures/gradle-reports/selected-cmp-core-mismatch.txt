@@ -1,0 +1,6 @@
+releaseRuntimeClasspath - Runtime classpath of compilation 'release' (target  (androidJvm)).
++--- com.sourcepoint.cmplibrary:cmplibrary:7.12.0 -> 7.15.13
+|    +--- com.sourcepoint:core:0.1.4 -> 0.1.16
+|    +--- io.ktor:ktor-client-core:3.0.3
+|    +--- io.ktor:ktor-client-okhttp:3.0.3
+|    \--- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0
