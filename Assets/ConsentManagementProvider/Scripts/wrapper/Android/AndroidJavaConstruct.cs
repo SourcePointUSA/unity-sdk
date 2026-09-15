@@ -74,25 +74,32 @@ namespace ConsentManagementProvider.Android
 
         internal AndroidJavaObject ConstructCampaignType(CAMPAIGN_TYPE campaignType)
         {
-            AndroidJavaObject type = null;
-            AndroidJavaClass enumClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.exception.CampaignType");
+            KeyValuePair<string, string> reference = GetCampaignTypeJavaReference(campaignType);
+            if (string.IsNullOrEmpty(reference.Key))
+            {
+                CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");
+                return null;
+            }
+
+            AndroidJavaClass enumClass = new AndroidJavaClass(reference.Key);
+            AndroidJavaObject type = enumClass.GetStatic<AndroidJavaObject>(reference.Value);
+            CmpDebugUtil.Log($"CampaignType {campaignType} is OK");
+            return type;
+        }
+
+        internal static KeyValuePair<string, string> GetCampaignTypeJavaReference(CAMPAIGN_TYPE campaignType)
+        {
             switch (campaignType)
             {
                 case CAMPAIGN_TYPE.GDPR:
-                    type = enumClass.GetStatic<AndroidJavaObject>("GDPR");
-                    break;
                 case CAMPAIGN_TYPE.CCPA:
-                    type = enumClass.GetStatic<AndroidJavaObject>("CCPA");
-                    break;
                 case CAMPAIGN_TYPE.USNAT:
-                    type = enumClass.GetStatic<AndroidJavaObject>("USNAT");
-                    break;
+                    return new KeyValuePair<string, string>(
+                        "com.sourcepoint.cmplibrary.data.network.util.CampaignType",
+                        campaignType.ToString());
                 default:
-                    CmpDebugUtil.LogError("CampaignType is NULL. How did you get there?");
-                    break;
+                    return default;
             }
-            CmpDebugUtil.Log($"CampaignType {campaignType} is OK");
-            return type;
         }
 
         internal AndroidJavaObject ConstructMessageLanguage(MESSAGE_LANGUAGE lang)
@@ -152,13 +159,19 @@ namespace ConsentManagementProvider.Android
 
         private AndroidJavaObject ConstructCampaignEnv(CAMPAIGN_ENV environment)
         {
-            string enumName = CMPEnumMapper.GetCampaignEnvKey(environment);
-
-            AndroidJavaClass campaignsEnvClass = new AndroidJavaClass("com.sourcepoint.cmplibrary.data.network.util.CampaignsEnv");
-            AndroidJavaObject campaignEnv = campaignsEnvClass.GetStatic<AndroidJavaObject>(CMPEnumMapper.GetCampaignEnvKey(environment));
+            KeyValuePair<string, string> reference = GetCampaignEnvJavaReference(environment);
+            AndroidJavaClass campaignsEnvClass = new AndroidJavaClass(reference.Key);
+            AndroidJavaObject campaignEnv = campaignsEnvClass.GetStatic<AndroidJavaObject>(reference.Value);
 
             CmpDebugUtil.Log("campaignEnv is OK");
             return campaignEnv;
+        }
+
+        internal static KeyValuePair<string, string> GetCampaignEnvJavaReference(CAMPAIGN_ENV environment)
+        {
+            return new KeyValuePair<string, string>(
+                "com.sourcepoint.cmplibrary.model.CampaignsEnv",
+                CMPEnumMapper.GetCampaignEnvKey(environment));
         }
 
         internal void Dispose() => 

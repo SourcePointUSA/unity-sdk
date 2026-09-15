@@ -121,7 +121,7 @@ namespace AltTester.AltTesterUnitySDK.Commands
             {
                 var cameraValueProcessed = new PathSelector(cameraValue);
                 var gameObjectsCameraFound = FindObjects(null, cameraValueProcessed.FirstBound, false, true);
-                return UnityEngine.Camera.allCameras.ToList().Find(c => gameObjectsCameraFound.Find(d => c.gameObject.GetInstanceID() == d.GetInstanceID()));
+                return UnityEngine.Camera.allCameras.ToList().Find(c => gameObjectsCameraFound.Find(d => AltObjectId.Get(c.gameObject) == AltObjectId.Get(d)));
             }
 
         }

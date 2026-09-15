@@ -9,6 +9,7 @@ namespace ConsentManagementProvider.Android
 {
     internal class ConsentWrapperAndroid: ISpSdk
     {
+        private const string SpConsentsJsonBridgeName = "com.sourcepoint.unity.SpConsentsJsonBridge";
         internal static AndroidJavaObject consentLib;
         private AndroidJavaObject activity;
         private SpClientProxy spClient;
@@ -113,13 +114,31 @@ namespace ConsentManagementProvider.Android
         public void CustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
             customConsentClient = new CustomConsentClient(onSuccessDelegate);
-            consentLib.Call("customConsentGDPR", vendors, categories, legIntCategories, customConsentClient);
+            using (AndroidJavaClass jsonBridge = new AndroidJavaClass(SpConsentsJsonBridgeName))
+            {
+                jsonBridge.CallStatic(
+                    "customConsentGDPR",
+                    consentLib,
+                    vendors,
+                    categories,
+                    legIntCategories,
+                    customConsentClient);
+            }
         }
 
         public void DeleteCustomConsentGDPR(string[] vendors, string[] categories, string[] legIntCategories, Action<GdprConsent> onSuccessDelegate)
         {
             customConsentClient = new CustomConsentClient(onSuccessDelegate);
-            consentLib.Call("deleteCustomConsentTo", vendors, categories, legIntCategories, customConsentClient);
+            using (AndroidJavaClass jsonBridge = new AndroidJavaClass(SpConsentsJsonBridgeName))
+            {
+                jsonBridge.CallStatic(
+                    "deleteCustomConsentTo",
+                    consentLib,
+                    vendors,
+                    categories,
+                    legIntCategories,
+                    customConsentClient);
+            }
         }
 
         public void RejectAll(CAMPAIGN_TYPE campaignType) => consentLib.Call("rejectAll", constructor.ConstructCampaignType(campaignType));
@@ -142,7 +161,9 @@ namespace ConsentManagementProvider.Android
 
         public void ClearAllData()
         {
-            SpAndroidNativeUtils.ClearAllData();
+            AndroidConsentLifecycle.ScheduleClearAllData(
+                RunOnUiThread,
+                methodName => consentLib.Call(methodName));
         }
         
         public void Dispose()

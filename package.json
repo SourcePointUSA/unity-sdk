@@ -1,14 +1,17 @@
 {
   "name": "com.sourcepoint.unitycmp",
   "displayName": "Sourcepoint Consent Message Plugin",
-  "version": "3.2.0",
+  "version": "3.3.0-beta-1",
   "unity": "2022.3",
   "description": "Native UI Privacy Manager for both GDPR and CCPA legislations.",
   "author": {
     "name": "Dmytro Fedko",
     "email": "fedko.dmytro@gmail.com",
     "url": "https://github.com/SourcePointUSA/unity-sdk"
-  },  
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.2"
+  },
   "files": [
     "/Assets/Sourcepoint.asmdef",
     "/Assets/Sourcepoint.asmdef.meta",

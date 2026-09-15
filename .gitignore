@@ -57,6 +57,12 @@ Thumbs.db.meta
 
 *.keystore
 
+# Local AltTester runner state
+/Assets/Plugins/AltTester/AltTesterEditorSettings.asset
+
+# Visible, repository-local scratch artifacts
+/.utmp/
+
 #UI-TESTS related
 /UI-TESTS/bin/Debug/
 /UI-TESTS/obj/Debug/
