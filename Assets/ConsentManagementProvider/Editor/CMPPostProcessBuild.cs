@@ -2,12 +2,9 @@
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-using System;
-using System.Diagnostics;
 using System.IO;
-using UnityEditor.iOS.Xcode.Extensions;
-using UnityEngine;
-using ConsentManagementProvider; 
+using UnityEditor.Build;
+using ConsentManagementProvider;
 
 public static class CMPPostProcessBuild
 {    
@@ -20,49 +17,54 @@ public static class CMPPostProcessBuild
             string projPath = PBXProject.GetPBXProjectPath(buildPath);
 
             pbxProject.ReadFromFile(projPath);
-            string unityProjectGuid = pbxProject.ProjectGuid();
-            string unityMainTargetGuid = pbxProject.GetUnityMainTargetGuid();
-
-            pbxProject.AddBuildProperty(unityMainTargetGuid, "LIBRARY_SEARCH_PATHS", "\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\" \"/usr/lib/swift\"");
-            pbxProject.AddBuildProperty(unityProjectGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
-
-            ConfigureFrameworks(pbxProject, unityProjectGuid);
-            TieBridgingHeader(pbxProject, unityMainTargetGuid);
-            EnableCppModules(pbxProject);
-            EnableObjectiveCExceptions(pbxProject);
-            EnableBitcode(pbxProject, unityProjectGuid, false);
-
-            string bridgePath="Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
-            string newBridgePath="Pods/ConsentViewController/ConsentViewController/Classes/SwiftBridge.swift";
-            RemoveBridge(pbxProject,bridgePath);
-            ExecuteProcessTerminal("mv "+buildPath+"/"+bridgePath+" "+buildPath+"/"+newBridgePath);
+            ConfigureUnityBridge(pbxProject, buildPath);
             pbxProject.WriteToFile(projPath);
-
-            AddBridgeToPods(buildPath, newBridgePath);
 
             string plistPath = buildPath + "/Info.plist";
             AddParameterToInfoPlist(plistPath);
         }
     }
 
-    static void RemoveBridge(PBXProject proj, string bridgePath)
+    static void ConfigureUnityBridge(PBXProject project, string buildPath)
     {
-        string bridgeGuid = proj.FindFileGuidByProjectPath(bridgePath);
-        proj.RemoveFile(bridgeGuid);
-    }
+        string mainTarget = project.GetUnityMainTargetGuid();
+        string frameworkTarget = project.GetUnityFrameworkTargetGuid();
+        if (string.IsNullOrEmpty(mainTarget) || string.IsNullOrEmpty(frameworkTarget))
+        {
+            throw new BuildFailedException("CMP requires Unity-iPhone and UnityFramework targets in the iOS export.");
+        }
 
-    static void AddBridgeToPods(string path, string bridgePath)
-    {
-        PBXProject pbxPods = new PBXProject();
-        string podsPath = path+"/Pods/Pods.xcodeproj/project.pbxproj";
-        pbxPods.ReadFromFile(podsPath);
-        string bridgeGuid = pbxPods.AddFile(path+"/"+bridgePath,"Pods/ConsentViewController/SwiftBridge.swift");
-        string cmpGuid = pbxPods.TargetGuidByName("ConsentViewController");
-        string cmpCmpGuid = pbxPods.TargetGuidByName("ConsentViewController-ConsentViewController");
-        pbxPods.AddFileToBuild(cmpGuid,bridgeGuid);
-        pbxPods.AddBuildProperty(cmpGuid, "CODE_SIGN_IDENTITY", "");
-        pbxPods.AddBuildProperty(cmpCmpGuid, "CODE_SIGN_IDENTITY", "");
-        pbxPods.WriteToFile(podsPath);
+        const string bridgePath = "Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
+        if (!File.Exists(Path.Combine(buildPath, bridgePath)))
+        {
+            throw new BuildFailedException("CMP requires exported SwiftBridge.swift at " + bridgePath);
+        }
+        string bridgeGuid = project.FindFileGuidByProjectPath(bridgePath);
+        if (string.IsNullOrEmpty(bridgeGuid))
+        {
+            bridgeGuid = project.AddFile(bridgePath, bridgePath, PBXSourceTree.Source);
+        }
+        project.RemoveFileFromBuild(mainTarget, bridgeGuid);
+        project.AddFileToBuild(frameworkTarget, bridgeGuid);
+
+        foreach (string target in new[] { mainTarget, frameworkTarget })
+        {
+            project.SetBuildProperty(target, "CLANG_ENABLE_MODULES", "YES");
+            project.SetBuildProperty(target, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
+            project.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+            project.AddBuildProperty(target, "LIBRARY_SEARCH_PATHS", "$(inherited)");
+            project.AddBuildProperty(target, "LIBRARY_SEARCH_PATHS", "\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"");
+            project.AddBuildProperty(target, "LIBRARY_SEARCH_PATHS", "\"/usr/lib/swift\"");
+            project.AddBuildProperty(target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited)");
+            project.AddBuildProperty(target, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
+        }
+
+        project.SetBuildProperty(frameworkTarget, "DEFINES_MODULE", "YES");
+        project.SetBuildProperty(frameworkTarget, "SWIFT_VERSION", "5.0");
+        project.SetBuildProperty(frameworkTarget, "SWIFT_OBJC_INTERFACE_HEADER_NAME", "UnityFramework-Swift.h");
+        project.SetBuildProperty(frameworkTarget, "SWIFT_INSTALL_OBJC_HEADER", "YES");
+        project.SetBuildProperty(frameworkTarget, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "NO");
+        project.SetBuildProperty(mainTarget, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
     }
 
     static void AddParameterToInfoPlist(string plistPath)
@@ -84,74 +86,5 @@ public static class CMPPostProcessBuild
         File.WriteAllText(plistPath, plist.WriteToString());
     }
     
-    static void ConfigureFrameworks(PBXProject pbxProject, string targetGuid)
-    {
-        pbxProject.AddBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", "/usr/lib/swift");
-    }
-    
-    static void TieBridgingHeader(PBXProject pbxProject, string targetGuid)
-    {
-        pbxProject.SetBuildProperty(targetGuid, "SWIFT_OBJC_BRIDGING_HEADER", "Libraries/Plugins/iOS/Source/UnityPlugin-Bridging-Header.h");
-    }
-
-    private static void EnableBitcode(PBXProject pbxProject, string targetGuid, bool enabled)
-    {
-        pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", enabled ? "YES" : "NO");
-    }
-
-    static void EnableCppModules(PBXProject pbxProject)
-    {
-        pbxProject.AddBuildProperty(pbxProject.GetUnityMainTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
-        pbxProject.AddBuildProperty(pbxProject.GetUnityFrameworkTargetGuid(), "CLANG_ENABLE_MODULES", "YES");
-    }
-
-    static void EnableObjectiveCExceptions(PBXProject pbxProject)
-    {
-        pbxProject.SetBuildProperty (pbxProject.GetUnityMainTargetGuid(), "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
-        pbxProject.SetBuildProperty (pbxProject.GetUnityFrameworkTargetGuid(), "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
-    }
-    
-    static void LinkBinaryWithLibraries(PBXProject pbxProject, string targetGuid, string frameworkName)
-    {
-        //"true" will add the framework in the "Link Binary With Libraries" section with status "Optional", "false" will be "Required".
-        pbxProject.AddFrameworkToProject(targetGuid, frameworkName, false);
-    }
-    
-    static void EnableSwift(PBXProject pbxProject, string targetGuid)
-    {
-        pbxProject.AddBuildProperty(targetGuid, "DEFINES_MODULE", "YES");
-        pbxProject.AddBuildProperty(targetGuid, "SWIFT_VERSION", "4.0");
-        pbxProject.AddBuildProperty(targetGuid, "COREML_CODEGEN_LANGUAGE", "Swift");
-        pbxProject.AddBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
-    }
-
-    private static void ExecuteProcessTerminal(string argument)
-    {
-        try
-        {
-            UnityEngine.Debug.Log("============== Start Executing [" + argument + "] ===============");
-            ProcessStartInfo startInfo = new ProcessStartInfo()
-            {
-                FileName = "/bin/bash",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true,
-                Arguments = " -c \"" + argument + " \""
-            };
-            Process myProcess = new Process
-            {
-                StartInfo = startInfo
-            };
-            myProcess.Start();
-            myProcess.WaitForExit();
-            UnityEngine.Debug.Log("============== End ===============");
-        }
-        catch (Exception e)
-        {
-            UnityEngine.Debug.Log("Excetion on CMPPostProcessBuild");
-        }
-    }
 }
 #endif

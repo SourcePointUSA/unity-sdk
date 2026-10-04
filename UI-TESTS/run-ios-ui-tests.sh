@@ -202,6 +202,11 @@ run_tests() {
     (cd "$artifact_dir/Unity-iPhone" && "$POD_BIN" install) >"$artifact_dir/pod-install.log" 2>&1
     [ -s "$artifact_dir/Unity-iPhone/Podfile.lock" ] || fail 'pod install produced no Podfile.lock.'
     cp "$artifact_dir/Unity-iPhone/Podfile.lock" "$artifact_dir/Podfile.lock"
+    sh "$script_dir/assert-ios-cmp-export.sh" "$artifact_dir/Unity-iPhone" 7.12.11 0.1.17 >"$artifact_dir/export-assertion.log" 2>&1 || {
+        cat "$artifact_dir/export-assertion.log" >&2
+        fail "iOS CMP export assertion failed; see $artifact_dir/export-assertion.log"
+    }
+    cat "$artifact_dir/export-assertion.log"
     [ -d "$artifact_dir/Unity-iPhone/Unity-iPhone.xcworkspace" ] || fail 'pod install produced no Unity-iPhone.xcworkspace.'
     if [ "$simulator_state" != Booted ]; then
         "$XCRUN_BIN" simctl boot "$IOS_SIMULATOR_UDID" >"$artifact_dir/simulator.log" 2>&1

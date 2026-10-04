@@ -1,0 +1,9 @@
+{
+    objects = {
+        A00000000000000000000001 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000002 /* SwiftBridge.swift */; };
+        A00000000000000000000002 /* SwiftBridge.swift */ = {isa = PBXFileReference; path = SwiftBridge.swift; sourceTree = "<group>"; };
+        A00000000000000000000003 /* UnityFramework */ = {isa = PBXNativeTarget; buildPhases = (A00000000000000000000004,); name = UnityFramework; };
+        A00000000000000000000004 /* Sources */ = {isa = PBXSourcesBuildPhase; files = (A00000000000000000000001,); };
+        A00000000000000000000005 /* ConsentViewController */ = {isa = PBXGroup; children = (A00000000000000000000002,); path = Pods/ConsentViewController; sourceTree = "<group>"; };
+    };
+}

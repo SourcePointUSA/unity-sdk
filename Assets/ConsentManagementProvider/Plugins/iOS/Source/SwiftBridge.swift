@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import ConsentViewController
 
 @objc public class SwiftBridge: NSObject {
     public override init() {

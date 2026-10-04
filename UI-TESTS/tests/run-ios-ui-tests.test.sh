@@ -22,7 +22,11 @@ case "$(basename "$0")" in
                 ;;
             unity:*)
                 while [ "$#" -gt 0 ]; do
-                    if [ "$1" = -cmpUiTestXcodeProject ]; then shift; mkdir -p "$1"; fi
+                    if [ "$1" = -cmpUiTestXcodeProject ]; then
+                        shift
+                        mkdir -p "$1/Unity-iPhone.xcodeproj"
+                        cp "$FIXTURE_IOS_EXPORT/good/Unity-iPhone.xcodeproj/project.pbxproj" "$1/Unity-iPhone.xcodeproj/project.pbxproj"
+                    fi
                     shift
                 done
                 ;;
@@ -61,6 +65,7 @@ export UNITY_PATH="$fixture_root/bin/unity" UNITY_IOS_PLAYER_PATH="$fixture_root
 export ALTTESTER_DESKTOP_PATH="$fixture_root/alt-tester" DOTNET_BIN=dotnet
 export XCRUN_BIN=xcrun POD_BIN=pod XCODEBUILD_BIN=xcodebuild APPIUM_BIN=appium
 export CMP_UI_ARTIFACTS_DIR="$fixture_root/artifacts" FIXTURE_CALLS="$fixture_root/calls"
+export FIXTURE_IOS_EXPORT="$test_dir/fixtures/ios-cmp-export"
 export FIXTURE_APPIUM_PID="$fixture_root/appium.pid" FIXTURE_APPIUM_READY="$fixture_root/appium.ready"
 export IOS_SIMULATOR_UDID= CMP_IOS_SIMULATOR_NAME='iPhone 14'
 
@@ -119,6 +124,17 @@ grep -F 'DISCOVERED_TEST_COUNT=2' "$artifact/effective-test-config.txt" >/dev/nu
 [ -f "$artifact/Podfile.lock" ] && [ -f "$artifact/results.trx" ]
 [ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 1 ]
 ! grep -E '^(osascript |sleep )' "$FIXTURE_CALLS"
+
+# Resolved version drift must stop before Xcode/simulator startup or UI tests.
+export CMP_UI_ARTIFACTS_DIR="$fixture_root/wrong-cmp-artifacts"
+build_count=$(grep -c '^xcodebuild -workspace' "$FIXTURE_CALLS")
+if FIXTURE_BAD_CMP=1 sh "$runner" >"$fixture_root/wrong-cmp" 2>&1; then
+    echo 'FAIL: wrong CMP export reached the full suite' >&2; exit 1
+fi
+grep -F 'ConsentViewController (7.12.11)' "$fixture_root/wrong-cmp-artifacts/"*/export-assertion.log >/dev/null
+[ "$(grep -c '^xcodebuild -workspace' "$FIXTURE_CALLS")" -eq "$build_count" ]
+[ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 1 ]
+grep -F 'PASS: iOS CMP export versions and UnityFramework bridge ownership' "$artifact/export-assertion.log" >/dev/null
 
 # A failing initial suite is returned without retry; an already booted device
 # stays booted after both suite failure and build failure.

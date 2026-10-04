@@ -4,7 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
-#import "ConsentViewController-Swift.h"
+#import "UnityFramework-Swift.h"
 #import "UnityPlugin-Bridging-Header.h"
 
 static SwiftBridge * swiftBridge = nil;

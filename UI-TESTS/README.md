@@ -162,6 +162,13 @@ All iOS environment overrides are listed here and by `--help`:
 The runner restores and discovers the entire .NET project, invokes
 `IosUiTestBuild.Build`, runs `pod install` in that fresh export, and builds
 `Unity-iPhone.xcworkspace` for the selected simulator with signing disabled.
+Before building, it checks the actual resolved lockfile for
+`ConsentViewController 7.12.11`, its exact `SPMobileCore (= 0.1.17)` dependency,
+and installed `SPMobileCore 0.1.17`. It follows the Xcode target/source entries
+to require `SwiftBridge.swift` in `UnityFramework`, and rejects a bridge beneath
+`Pods/ConsentViewController`. The bridge remains under the Unity export’s
+`Libraries` directory; `Unity.mm` imports `UnityFramework-Swift.h`, generated
+by that owning target. The postprocess does not alter the Pods project.
 It boots the device only when needed and waits using `simctl bootstatus -b`.
 It starts Appium with `--use-plugins=altunity`, or reuses a ready local server
 at `127.0.0.1:4723` that the operator has already configured with that plugin.
@@ -186,6 +193,7 @@ dotnet-restore.log, test-discovery.txt, ios.runsettings
 Unity-iPhone/                 fresh Xcode export and original Podfile.lock
 Podfile.lock                  copy of actual resolved CocoaPods lockfile
 unity.log, unity-console.log, pod-install.log, xcodebuild.log
+export-assertion.log          resolved versions and bridge ownership gate
 DerivedData/                 fresh simulator app and Xcode outputs
 appium.log, alttester-desktop.log, simulator.log
 simctl-install.log, simctl-launch.log, dotnet-test.log, results.trx
@@ -200,8 +208,29 @@ Verify the runner's external command contract without Unity or a simulator:
 
 ```sh
 sh UI-TESTS/tests/run-ios-ui-tests.test.sh
+sh UI-TESTS/tests/assert-ios-cmp-export.test.sh
 sh -n UI-TESTS/run-ios-ui-tests.sh
 ```
+
+Rerun the export assertion against a retained fresh export when diagnosing an
+upgrade or target-ownership failure:
+
+```sh
+UI-TESTS/assert-ios-cmp-export.sh UI-TESTS/artifacts/<run>/Unity-iPhone 7.12.11 0.1.17
+```
+
+`sh UI-TESTS/tests/ios-postprocess.test.sh` additionally compiles the iOS
+postprocess with Mono and the installed Unity PBX managed library. It checks
+configuration behavior and validates the serialized project, without claiming
+to export or compile a simulator app. It requires `mcs`, `mono`, and an imported
+Unity project (`Library/ScriptAssemblies/Assembly-CSharp.dll`). Override
+`UNITY_CONTENTS_PATH` when Unity is installed elsewhere.
+
+If Xcode cannot generate `UnityFramework-Swift.h`, import the CMP module, or
+link the bridge, retain the artifact directory and diagnose the owning target’s
+Swift/module settings. Do not move the bridge into Pods as a fallback. A passing
+fixture gate requires a subsequent fresh export, Xcode build, launch, and initial
+full UI suite to establish release acceptance.
 
 ## iOS 7.7.1 baseline attempt
 
@@ -221,3 +250,15 @@ No fresh export, `Podfile.lock`, simulator `.app`, or TRX was produced. This is
 an environment-blocked baseline attempt, not a green iOS baseline. Install
 the matching Unity iOS module and rerun this command to obtain the initial
 full-suite acceptance evidence.
+
+## iOS 7.12.11 upgraded gate attempt
+
+On 2026-10-04, after selecting `ConsentViewController 7.12.11` and moving
+bridge configuration to `UnityFramework`, `UI-TESTS/run-ios-ui-tests.sh`
+exited **1** at the same missing `PlaybackEngines/iOSSupport` preflight check.
+Evidence is retained in `UI-TESTS/artifacts/20261004-221617-ios.K30yaK/`.
+The export assertion fixtures, real Unity PBX configuration harness, and all
+36 repository Unity EditMode tests passed. The actual export, resolved pod
+graph, generated Swift header, Xcode link, fresh launch, and full iOS UI suite
+remain unverified. Install the matching Unity iOS module and rerun the gate;
+this attempt is not release acceptance.
