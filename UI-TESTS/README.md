@@ -43,7 +43,7 @@ UI-TESTS/run-android-ui-tests.sh
 ```
 
 ```sh
-# After EDM4U resolves com.sourcepoint.cmplibrary:cmplibrary:7.15.13
+# After EDM4U resolves com.sourcepoint.cmplibrary:cmplibrary:7.15.14
 UI-TESTS/run-android-ui-tests.sh
 ```
 
@@ -90,9 +90,9 @@ timestamped run folder under `UI-TESTS/artifacts/` with its APK, TRX,
 `retry-summary.txt`, and `gradle-dependencies.txt` as the local checkpoint
 evidence.
 
-## 7.15.13 release gate
+## 7.15.14 release gate
 
-The final Android CMP `7.15.13` gate uses the same complete command:
+The final Android CMP `7.15.14` gate uses the same complete command:
 
 ```sh
 EMULATOR_BIN=/Users/wombatmbp17/Library/Android/sdk/emulator/emulator \
@@ -101,10 +101,9 @@ DOTNET_BIN=/opt/homebrew/opt/dotnet@8/bin/dotnet \
 UI-TESTS/run-android-ui-tests.sh
 ```
 
-On 2026-09-08 it built a fresh APK, accepted mobile-core `0.1.16` with
-Ktor `3.2.2`, and discovered 22 tests. The initial run passed 21 tests;
-`ClickRejectAllButtonTest` passed its first isolated fresh-session retry, so
-the command exited successfully with no stable failures.
+The dependency assertion requires `mobile-core:0.1.17` and Ktor `3.x` after a
+fresh Unity Android build. The actual UI test result must be captured in its
+timestamped run directory before a release is accepted.
 
 Each local release-gate run is retained under the ignored
 `UI-TESTS/artifacts/<YYYYMMDD-HHMMSS>/` convention. Keep the APK,

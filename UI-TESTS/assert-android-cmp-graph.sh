@@ -58,6 +58,11 @@ case "$cmp_version" in
         coroutines_android_coordinate=
         ktor_version_pattern='3\.'
         ;;
+    7.15.14)
+        core_coordinate=com.sourcepoint:core:0.1.17
+        coroutines_android_coordinate=
+        ktor_version_pattern='3\.'
+        ;;
     *)
         echo "ERROR: Unsupported CMP version: $cmp_version" >&2
         exit 2
