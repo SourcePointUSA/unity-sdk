@@ -10,6 +10,13 @@ This is a maintenance migration. It must not change the public Unity/C# API,
 require client code or Podfile changes, or use new iOS native APIs as a reason
 to expand scope.
 
+The existing shared C# contract is explicitly in scope for preservation:
+`CMP` exposes the platform-neutral public API and each native implementation
+continues to implement `ISpSdk`. The migration validates that this interface,
+its public facade behavior, callbacks, and consent JSON models stay aligned
+between Android and iOS. It does not create a second platform-specific public
+API.
+
 ## Release Pair and Version Policy
 
 Android and iOS have independently versioned release streams. "Synchronized"
@@ -172,5 +179,7 @@ second implementation path that edits `Pods`.
 
 - New Unity API surface for Global CMP, Preferences, or future native features.
 - Any Android dependency or implementation change.
-- A shared Android/iOS runner abstraction.
+- Refactoring the Android and iOS **test shell runners** into one shared
+  automation framework. This is unrelated to, and must not weaken, the shared
+  C# `ISpSdk`/`CMP` consumer API.
 - Customer-specific Podfile conflict workarounds.
