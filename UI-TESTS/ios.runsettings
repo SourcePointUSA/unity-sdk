@@ -4,7 +4,9 @@
   <TestRunParameters>
     <Parameter name="platformName" value="iOS" />
     <Parameter name="deviceName" value="iPhone 14" />
-    <Parameter name="appium:app" value="/BUILDS/IOS/ConsentMessagePlugin.app" />
+    <!-- The runner supplies the available simulator UDID and absolute fresh app. -->
+    <Parameter name="appium:udid" value="" />
+    <Parameter name="appium:app" value="" />
     <Parameter name="altTesterIP" value="127.0.0.1" />
     <Parameter name="appium:automationName" value="xcuitest" />
   </TestRunParameters>

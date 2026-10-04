@@ -1,4 +1,9 @@
-# Android UI test runner
+# Android and iOS UI test runners
+
+Both release runners build a fresh AltTester-instrumented app and retain their
+configuration, discovery output, build logs, and test results in timestamped
+artifact folders. Android instructions and checkpoint evidence follow below;
+the iOS runner is documented at the end of this guide.
 
 Run the Android suite from the repository root:
 
@@ -110,3 +115,109 @@ Each local release-gate run is retained under the ignored
 `gradle-dependencies.txt`, `retry-summary.txt`, and the initial/retry TRX files
 together when handing off results; the accepted local run is
 `UI-TESTS/artifacts/20260908-124608/`.
+
+## iOS UI test runner
+
+Run from the repository root on macOS:
+
+```sh
+UI-TESTS/run-ios-ui-tests.sh --preflight
+UI-TESTS/run-ios-ui-tests.sh
+```
+
+Install Unity `6000.5.10f1` with **iOS Build Support**, Xcode with command-line
+tools and an available iOS simulator runtime, CocoaPods, Python 3, .NET 8,
+Appium with its `xcuitest` driver and `altunity` plugin, and AltTester Desktop.
+The default simulator name is `iPhone 14`; name selection must find exactly
+one available device across all runtimes. Select a UDID explicitly when names
+are duplicated. `--preflight` checks selection and tools without booting or
+launching anything.
+
+For example, using the local Homebrew .NET 8 installation:
+
+```sh
+IOS_SIMULATOR_UDID=<available-simulator-udid> \
+DOTNET_BIN=/opt/homebrew/opt/dotnet@8/bin/dotnet \
+UI-TESTS/run-ios-ui-tests.sh
+```
+
+All iOS environment overrides are listed here and by `--help`:
+
+| Variable | Default / purpose |
+| --- | --- |
+| `UNITY_PATH` | `/Applications/Unity/Installs/6000.5.10f1/Unity.app/Contents/MacOS/Unity` |
+| `UNITY_IOS_PLAYER_PATH` | `/Applications/Unity/Installs/6000.5.10f1/PlaybackEngines/iOSSupport` |
+| `IOS_SIMULATOR_UDID` | Empty; an explicit available UDID takes precedence over name selection |
+| `CMP_IOS_SIMULATOR_NAME` | `iPhone 14`; exactly one available match required |
+| `POD_BIN` | `pod` |
+| `XCODEBUILD_BIN` | `xcodebuild` |
+| `XCRUN_BIN` | `xcrun` |
+| `APPIUM_BIN` | `appium` |
+| `DOTNET_BIN` | `dotnet`; a .NET 8 SDK must be installed |
+| `PYTHON_BIN` | `python3`; parses simulator JSON, plist data, and bounds readiness polling |
+| `ALTTESTER_DESKTOP_PATH` | `/Applications/AltTesterDesktop.app` |
+| `ALTTESTER_PORT` | `13000`; local readiness port |
+| `CMP_UI_ARTIFACTS_DIR` | `UI-TESTS/artifacts`; accepts an absolute or relative parent path |
+
+The runner restores and discovers the entire .NET project, invokes
+`IosUiTestBuild.Build`, runs `pod install` in that fresh export, and builds
+`Unity-iPhone.xcworkspace` for the selected simulator with signing disabled.
+It boots the device only when needed and waits using `simctl bootstatus -b`.
+It starts Appium with `--use-plugins=altunity`, or reuses a ready local server
+at `127.0.0.1:4723` that the operator has already configured with that plugin.
+The installed Appium driver and plugin are checked in either case.
+
+After opening AltTester Desktop, the runner installs and launches the fresh
+app, waits for the local AltTester port, and runs the entire .NET project once.
+`ios.runsettings` retains iOS/xcuitest and the AltTester host; explicit
+`appium:udid` and absolute `appium:app` command overrides select the fresh
+`DerivedData/Build/Products/<configuration>-iphonesimulator/ConsentMessagePlugin.app`.
+It does not use the historical `UI-TESTS/BUILDS` app. **iOS never silently
+retries tests**; the initial full-suite exit status is the runner's status.
+Cleanup stops only the Appium process and simulator booted by this invocation.
+An already running simulator or external Appium server remains available.
+
+Each full invocation creates `UI-TESTS/artifacts/<timestamp>-ios.<suffix>/`.
+Logs and results appear only for stages reached:
+
+```text
+effective-test-config.txt, exit-status.txt, preflight.log, simulators.json
+dotnet-restore.log, test-discovery.txt, ios.runsettings
+Unity-iPhone/                 fresh Xcode export and original Podfile.lock
+Podfile.lock                  copy of actual resolved CocoaPods lockfile
+unity.log, unity-console.log, pod-install.log, xcodebuild.log
+DerivedData/                 fresh simulator app and Xcode outputs
+appium.log, alttester-desktop.log, simulator.log
+simctl-install.log, simctl-launch.log, dotnet-test.log, results.trx
+```
+
+`effective-test-config.txt` records runtime/UDID, discovered count, fresh app,
+initial suite status, and invocation status. Later entries replace earlier
+`not-run` or unresolved entries. A preflight failure retains its error and
+exit status even though no test results or build output exist.
+
+Verify the runner's external command contract without Unity or a simulator:
+
+```sh
+sh UI-TESTS/tests/run-ios-ui-tests.test.sh
+sh -n UI-TESTS/run-ios-ui-tests.sh
+```
+
+## iOS 7.7.1 baseline attempt
+
+On 2026-10-04, while `SourcepointDependencies.xml` still selected
+`ConsentViewController` `7.7.1`, the command was:
+
+```sh
+UI-TESTS/run-ios-ui-tests.sh
+```
+
+The final attempt exited **1** at preflight: Unity `6000.5.10f1` lacks
+`PlaybackEngines/iOSSupport` (only AndroidPlayer and MacStandaloneSupport
+are installed). Evidence is retained in
+`UI-TESTS/artifacts/20261004-215618-ios.2z4fyi/`. Simulator runtime and UDID
+were not resolved; discovered count and suite status are `not-run`.
+No fresh export, `Podfile.lock`, simulator `.app`, or TRX was produced. This is
+an environment-blocked baseline attempt, not a green iOS baseline. Install
+the matching Unity iOS module and rerun this command to obtain the initial
+full-suite acceptance evidence.
