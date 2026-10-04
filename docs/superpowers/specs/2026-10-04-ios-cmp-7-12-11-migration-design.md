@@ -55,9 +55,11 @@ transparent:
   `SPMobileCore` in a custom Podfile gets a normal CocoaPods conflict. The SDK
   must not mask that conflict by modifying installed Pods.
 
-The package remains compatible with the pod's declared iOS 10 deployment
-target. The supported Xcode/CocoaPods toolchain is established by the release
-gate rather than assumed from the development machine.
+The update does not raise the package's existing Unity iOS deployment target
+of `13.0` (`ProjectSettings/ProjectSettings.asset`). The upstream pod still
+declares iOS `10.0`, so it introduces no stricter floor. The supported
+Xcode/CocoaPods toolchain is established by the release gate rather than
+assumed from the development machine.
 
 ## Current iOS Integration and Problem
 
