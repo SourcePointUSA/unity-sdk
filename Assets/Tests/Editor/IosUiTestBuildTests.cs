@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 #if !UNITY_2017
 using AltTester.AltTesterUnitySDK.Editor;
@@ -25,6 +26,7 @@ public class IosUiTestBuildTests
     [TestCase("-cmpUiTestXcodeProject", "build/cmp-ios-export")]
     [TestCase("-cmpUiTestXcodeProject", "/tmp/cmp-ios-export.app")]
     [TestCase("-cmpUiTestXcodeProject", "/tmp/cmp-ios-export.APP/")]
+    [TestCase("-cmpUiTestXcodeProject", "/tmp/cmp-ios-export.app/.")]
     public void ParseOutputPathRejectsMissingRelativeOrAppOutput(params string[] arguments)
     {
         var exception = Assert.Throws<ArgumentException>(() => ParseOutputPath(arguments));
@@ -33,6 +35,18 @@ public class IosUiTestBuildTests
     }
 
 #if !UNITY_2017
+    [Test]
+    public void ParseOutputPathRejectsAnExistingFileWithATrailingDirectorySeparator()
+    {
+        var existingFile = Path.GetFullPath(Path.Combine(Application.dataPath, "../ProjectSettings/ProjectVersion.txt"));
+        Assert.That(File.Exists(existingFile), Is.True, "The project version file is the regression fixture.");
+
+        var exception = Assert.Throws<ArgumentException>(() =>
+            ParseOutputPath("-cmpUiTestXcodeProject", existingFile + Path.DirectorySeparatorChar));
+
+        Assert.That(exception.Message, Does.Contain("-cmpUiTestXcodeProject"));
+    }
+
     [Test]
     public void InMemoryIosConfigurationDoesNotChangeTheSavedAltTesterConfiguration()
     {

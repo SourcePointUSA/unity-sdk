@@ -79,8 +79,8 @@ public static class IosUiTestBuild
                     throw new ArgumentException($"{OutputArgument} must be an absolute export directory.");
                 }
 
-                var directoryPath = outputPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                if (string.Equals(Path.GetExtension(directoryPath), ".app", StringComparison.OrdinalIgnoreCase) || File.Exists(outputPath))
+                var directoryPath = Path.GetFullPath(outputPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                if (string.Equals(Path.GetExtension(directoryPath), ".app", StringComparison.OrdinalIgnoreCase) || File.Exists(directoryPath))
                 {
                     throw new ArgumentException($"{OutputArgument} must name an Xcode export directory, not an application or file.");
                 }
