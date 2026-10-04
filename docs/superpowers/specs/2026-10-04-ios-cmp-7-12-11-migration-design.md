@@ -55,6 +55,13 @@ transparent:
   `SPMobileCore` in a custom Podfile gets a normal CocoaPods conflict. The SDK
   must not mask that conflict by modifying installed Pods.
 
+These are client-facing requirements, not implementation notes. The root
+`README.md` must publish them in an iOS upgrade section: the supported Unity
+iOS target, the fresh-export/normal-`pod install` upgrade path, the fact that
+no C# or Podfile edits are required, and the expected CocoaPods behavior for a
+customer-maintained incompatible pin. The release must not rely on this design
+document as the only place a package consumer can learn those constraints.
+
 The update does not raise the package's existing Unity iOS deployment target
 of `13.0` (`ProjectSettings/ProjectSettings.asset`). The upstream pod still
 declares iOS `10.0`, so it introduces no stricter floor. The supported
