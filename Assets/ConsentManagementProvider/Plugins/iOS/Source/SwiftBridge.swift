@@ -9,6 +9,17 @@ import Foundation
 import UIKit
 import ConsentViewController
 
+private struct UnityBridgeLogger {
+    var isDebug: Bool {
+        Bundle.main.object(forInfoDictionaryKey: "SPLogLevel") as? String == "debug"
+    }
+
+    func log(_ message: String) {
+        guard isDebug else { return }
+        NSLog("CMP SWIFT LOG: %@", message)
+    }
+}
+
 @objc public class SwiftBridge: NSObject {
     public override init() {
         config = Config(
@@ -57,7 +68,7 @@ import ConsentViewController
     lazy var usnatTargetingParams: SPTargetingParams = [:]
     
     var consentManager: SPSDK?
-    let logger: OSLogger = OSLogger.standard
+    private let logger = UnityBridgeLogger()
 
     public typealias СallbackCharMessage = @convention(c) (UnsafePointer<CChar>?) -> Void
     var callbackSystem: СallbackCharMessage = printChar
@@ -274,7 +285,7 @@ extension SwiftBridge {
     }
     
     public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-        if OSLogger.defaultLevel == .debug {
+        if logger.isDebug {
             printLog(items)
         }
     }

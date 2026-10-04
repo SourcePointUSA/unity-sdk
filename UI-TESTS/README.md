@@ -209,6 +209,7 @@ Verify the runner's external command contract without Unity or a simulator:
 ```sh
 sh UI-TESTS/tests/run-ios-ui-tests.test.sh
 sh UI-TESTS/tests/assert-ios-cmp-export.test.sh
+sh UI-TESTS/tests/ios-bridge-logging.test.sh
 sh -n UI-TESTS/run-ios-ui-tests.sh
 ```
 
@@ -225,6 +226,11 @@ configuration behavior and validates the serialized project, without claiming
 to export or compile a simulator app. It requires `mcs`, `mono`, and an imported
 Unity project (`Library/ScriptAssemblies/Assembly-CSharp.dll`). Override
 `UNITY_CONTENTS_PATH` when Unity is installed elsewhere.
+
+The logging check uses Xcode’s Swift compiler and Foundation to compile the
+bridge’s actual logger declaration and print consumer without pod internals.
+Unity-owned diagnostics read the app’s `SPLogLevel`: `debug` enables logging,
+while production, missing, and invalid values disable it.
 
 If Xcode cannot generate `UnityFramework-Swift.h`, import the CMP module, or
 link the bridge, retain the artifact directory and diagnose the owning target’s
