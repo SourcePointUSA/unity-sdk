@@ -29,6 +29,36 @@ public class IosSharedContractTests
     }
 
     [Test]
+    public void SwiftBridgeKeepsConsentDelegateTypesOutOfItsPublicObjcInterface()
+    {
+        var bridgeSourcePath = Path.Combine(Application.dataPath,
+            "ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift");
+        var bridgeSource = File.ReadAllText(bridgeSourcePath);
+
+        Assert.That(bridgeSource, Does.Not.Contain("extension SwiftBridge: SPDelegate"),
+            "SwiftBridge's generated Objective-C header must not expose the pod-owned SPDelegate protocol.");
+        Assert.That(bridgeSource, Does.Contain("private lazy var consentDelegate = ConsentDelegateAdapter(bridge: self)"),
+            "SwiftBridge must strongly retain the private adapter because the native SDK retains its delegate weakly.");
+        Assert.That(bridgeSource, Does.Contain("delegate: consentDelegate"),
+            "The native consent manager must receive the retained private adapter.");
+        Assert.That(bridgeSource, Does.Contain("private final class ConsentDelegateAdapter: NSObject, SPDelegate"),
+            "Only the private adapter may conform to the pod-owned delegate protocol.");
+
+        foreach (var callback in new[] {
+            "bridge?.handleSPUIReady(controller)",
+            "bridge?.handleAction(action, from: controller)",
+            "bridge?.handleSPUIFinished(controller)",
+            "bridge?.handleConsentReady(userData)",
+            "bridge?.handleSPFinished(userData)",
+            "bridge?.handleError(error)"
+        })
+        {
+            Assert.That(bridgeSource, Does.Contain(callback),
+                "The private delegate adapter must forward every native callback to SwiftBridge.");
+        }
+    }
+
+    [Test]
     public void CmpImplementsTheSharedFacadeContract()
     {
         Assert.That(typeof(ICmpSdk).IsAssignableFrom(typeof(CMP)), Is.True);

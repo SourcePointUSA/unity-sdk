@@ -68,6 +68,9 @@ private struct UnityBridgeLogger {
     lazy var usnatTargetingParams: SPTargetingParams = [:]
     
     var consentManager: SPSDK?
+    // SPSDK keeps its delegate weakly, so SwiftBridge owns this adapter for the
+    // lifetime of the manager while keeping pod-owned delegate types private.
+    private lazy var consentDelegate = ConsentDelegateAdapter(bridge: self)
     private let logger = UnityBridgeLogger()
 
     public typealias СallbackCharMessage = @convention(c) (UnsafePointer<CChar>?) -> Void
@@ -133,7 +136,7 @@ private struct UnityBridgeLogger {
                     ios14: SPCampaign()
                 ),
                 language: SPMessageLanguage.init(rawValue: language) ?? SPMessageLanguage.BrowserDefault,
-                delegate: self
+                delegate: consentDelegate
             )}()
             self.consentManager?.messageTimeoutInSeconds = messageTimeoutInSeconds
         }
@@ -229,9 +232,9 @@ private struct UnityBridgeLogger {
     }
 }
     
-// MARK: - SPDelegate implementation
-extension SwiftBridge: SPDelegate {
-    public func onSPUIReady(_ controller: UIViewController) {
+// MARK: - Native delegate callback handling
+extension SwiftBridge {
+    fileprivate func handleSPUIReady(_ controller: UIViewController) {
         let top = UIApplication.shared.firstKeyWindow?.rootViewController
         controller.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
         top?.present(controller, animated: true)
@@ -239,7 +242,7 @@ extension SwiftBridge: SPDelegate {
         callbacks.RunCallback(callbackType: .OnConsentUIReady, arg: "onSPUIReady")
     }
     
-    public func onAction(_ action: SPAction, from controller: UIViewController) {
+    fileprivate func handleAction(_ action: SPAction, from controller: UIViewController) {
         print("onAction:", action)
         logger.log("PURE SWIFT onAction")
         let responce: Dictionary<String, String> = [
@@ -253,28 +256,60 @@ extension SwiftBridge: SPDelegate {
         callbacks.RunCallback(callbackType: .OnConsentAction, arg: resp)
     }
     
-    public func onSPUIFinished(_ controller: UIViewController) {
+    fileprivate func handleSPUIFinished(_ controller: UIViewController) {
         UIApplication.shared.firstKeyWindow?.rootViewController?.dismiss(animated: true)
         logger.log("PURE SWIFT onSPUIFinished")
         callbacks.RunCallback(callbackType: .OnSPUIFinished, arg: "onSPUIFinished")
     }
     
-    public func onConsentReady(userData: SPUserData) {
+    fileprivate func handleConsentReady(_ userData: SPUserData) {
         print("onConsentReady:", userData)
         logger.log("PURE SWIFT onConsentReady")
         callbacks.RunCallback(callbackType: .OnConsentReady, arg: userData.toJSON())
     }
     
-    public func onSPFinished(userData: SPUserData) {
+    fileprivate func handleSPFinished(_ userData: SPUserData) {
         logger.log("SDK DONE")
         logger.log("PURE SWIFT onSPFinished")
         callbacks.RunCallback(callbackType: .OnSPFinished, arg: userData.toJSON())
     }
     
-    public func onError(error: SPError) {
+    fileprivate func handleError(_ error: SPError) {
         printLog("Something went wrong: ", error)
         logger.log("PURE SWIFT onError")
         callbacks.RunCallback(callbackType: .OnErrorCallback, arg: error.toJSON())
+    }
+}
+
+private final class ConsentDelegateAdapter: NSObject, SPDelegate {
+    private weak var bridge: SwiftBridge?
+
+    init(bridge: SwiftBridge) {
+        self.bridge = bridge
+    }
+
+    func onSPUIReady(_ controller: UIViewController) {
+        bridge?.handleSPUIReady(controller)
+    }
+
+    func onAction(_ action: SPAction, from controller: UIViewController) {
+        bridge?.handleAction(action, from: controller)
+    }
+
+    func onSPUIFinished(_ controller: UIViewController) {
+        bridge?.handleSPUIFinished(controller)
+    }
+
+    func onConsentReady(userData: SPUserData) {
+        bridge?.handleConsentReady(userData)
+    }
+
+    func onSPFinished(userData: SPUserData) {
+        bridge?.handleSPFinished(userData)
+    }
+
+    func onError(error: SPError) {
+        bridge?.handleError(error)
     }
 }
 
