@@ -19,6 +19,11 @@ done
 # runner must explicitly pin SYMROOT, and Xcode gives a command-line setting
 # precedence over the generated project setting.
 [ -n "$symroot" ] || { echo 'missing explicit SYMROOT' >&2; exit 1; }
-product="$symroot/Products/${FIXTURE_XCODE_CONFIGURATION:-Debug}-iphonesimulator/ConsentMessagePlugin.app"
+product="$symroot/${FIXTURE_XCODE_CONFIGURATION:-ReleaseForRunning}-iphonesimulator/ConsentMessagePlugin.app"
 mkdir -p "$product"
 printf '<?xml version="1.0"?><plist version="1.0"><dict><key>CFBundleIdentifier</key><string>com.DefaultCompany.ConsentMessagePlugin</string></dict></plist>\n' >"$product/Info.plist"
+if [ "${FIXTURE_MULTIPLE_APPS:-0}" = 1 ]; then
+    product="$symroot/Other-iphonesimulator/ConsentMessagePlugin.app"
+    mkdir -p "$product"
+    printf '<?xml version="1.0"?><plist version="1.0"><dict><key>CFBundleIdentifier</key><string>com.DefaultCompany.ConsentMessagePlugin</string></dict></plist>\n' >"$product/Info.plist"
+fi

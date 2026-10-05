@@ -226,12 +226,12 @@ run_tests() {
         -derivedDataPath "$artifact_dir/DerivedData" \
         SYMROOT="$artifact_dir/DerivedData/Build" CODE_SIGNING_ALLOWED=NO) >"$artifact_dir/xcodebuild.log" 2>&1
     app_path=
-    for candidate in "$artifact_dir"/DerivedData/Build/Products/*-iphonesimulator/ConsentMessagePlugin.app; do
+    for candidate in "$artifact_dir"/DerivedData/Build/*-iphonesimulator/ConsentMessagePlugin.app; do
         [ -d "$candidate" ] || continue
         [ -z "$app_path" ] || fail 'xcodebuild produced multiple simulator apps; inspect DerivedData.'
         app_path=$candidate
     done
-    [ -n "$app_path" ] || fail "xcodebuild produced no fresh ConsentMessagePlugin.app under $artifact_dir/DerivedData/Build/Products."
+    [ -n "$app_path" ] || fail "xcodebuild produced no fresh ConsentMessagePlugin.app under $artifact_dir/DerivedData/Build."
     bundle_id=$("$PYTHON_BIN" - "$app_path/Info.plist" <<'PY'
 import plistlib, sys
 with open(sys.argv[1], "rb") as source:

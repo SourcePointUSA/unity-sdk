@@ -118,7 +118,7 @@ sh "$runner" >"$fixture_root/run" 2>&1 || {
     exit 1
 }
 artifact=$(find "$CMP_UI_ARTIFACTS_DIR" -name effective-test-config.txt -exec dirname {} \;)
-app="$artifact/DerivedData/Build/Products/Debug-iphonesimulator/ConsentMessagePlugin.app"
+app="$artifact/DerivedData/Build/ReleaseForRunning-iphonesimulator/ConsentMessagePlugin.app"
 grep -F 'xcrun simctl bootstatus fixture-udid -b' "$FIXTURE_CALLS" >/dev/null
 grep -F 'xcrun simctl boot fixture-udid' "$FIXTURE_CALLS" >/dev/null
 grep -F 'xcrun simctl shutdown fixture-udid' "$FIXTURE_CALLS" >/dev/null
@@ -133,6 +133,15 @@ grep -F 'DISCOVERED_TEST_COUNT=2' "$artifact/effective-test-config.txt" >/dev/nu
 [ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 1 ]
 ! grep -F -- '-licensingIpc' "$FIXTURE_CALLS"
 ! grep -E '^(osascript |sleep )' "$FIXTURE_CALLS"
+
+# The isolated SYMROOT must not make a stale or duplicate simulator app eligible.
+export CMP_UI_ARTIFACTS_DIR="$fixture_root/multiple-apps-artifacts"
+test_count=$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")
+if FIXTURE_MULTIPLE_APPS=1 sh "$runner" >"$fixture_root/multiple-apps" 2>&1; then
+    echo 'FAIL: multiple fresh simulator apps passed' >&2; exit 1
+fi
+grep -F 'xcodebuild produced multiple simulator apps; inspect DerivedData.' "$fixture_root/multiple-apps" >/dev/null
+[ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq "$test_count" ]
 
 # A local licensing channel override must be a single argument only when supplied.
 : >"$FIXTURE_CALLS"
@@ -171,5 +180,5 @@ export CMP_UI_ARTIFACTS_DIR="$fixture_root/appium-start-artifacts"
 FIXTURE_START_APPIUM=1 FIXTURE_XCODE_CONFIGURATION=Release sh "$runner" >"$fixture_root/appium-start" 2>&1 || { cat "$fixture_root/appium-start"; exit 1; }
 grep -F 'appium --address 127.0.0.1 --port 4723 --use-plugins=altunity' "$FIXTURE_CALLS" >/dev/null
 ! kill -0 "$(sed -n '1p' "$FIXTURE_APPIUM_PID")" 2>/dev/null
-grep -F 'Release-iphonesimulator/ConsentMessagePlugin.app' "$FIXTURE_CALLS" >/dev/null
+grep -F 'ReleaseForRunning-iphonesimulator/ConsentMessagePlugin.app' "$FIXTURE_CALLS" >/dev/null
 printf 'PASS: iOS runner preflight, build, fresh-app handoff, no retries, and cleanup contracts\n'
