@@ -268,3 +268,57 @@ The export assertion fixtures, real Unity PBX configuration harness, and all
 graph, generated Swift header, Xcode link, fresh launch, and full iOS UI suite
 remain unverified. Install the matching Unity iOS module and rerun the gate;
 this attempt is not release acceptance.
+
+## Paired release acceptance status
+
+The declared pair is Android CMP `7.15.14` and iOS
+`ConsentViewController 7.12.11` with expected resolved `SPMobileCore 0.1.17`.
+The iOS migration remains **Unreleased**. There is no final successful iOS
+command, accepted simulator identity, or completed iOS UI test count to record
+yet. Local fixtures and EditMode tests do not establish native release acceptance.
+
+Task 4 repeated the complete iOS command on 2026-10-05:
+
+```sh
+UI-TESTS/run-ios-ui-tests.sh
+```
+
+It exited **1** at the missing Unity `iOSSupport` check. The first failing
+command's evidence is `UI-TESTS/artifacts/20261005-094809-ios.ejqZdK/`, including
+`preflight.log`, `effective-test-config.txt`, and `exit-status.txt`. Runtime/UDID
+remain unresolved; test discovery and the full suite are `not-run`. No export,
+resolved lockfile, generated Swift header, simulator app, or TRX exists for
+this attempt. An independent `xcodebuild -version` reported Xcode `27.0`
+(`27A266a`); this identifies the installed tool, not a tested toolchain.
+
+The repeated local checks had these results:
+
+| Check | Observed result |
+| --- | --- |
+| iOS runner fixtures and export assertion fixtures | Passed |
+| iOS runner shell syntax | Passed |
+| `IosSharedContractTests;IosUiTestBuildTests` in Unity `6000.5.10f1` | 18/18 passed |
+| `sp-consents-json-bridge.test.sh` | Blocked: Gradle cache lacks CMP `7.12.0`, core-android-debug `0.1.4`, Kotlin and serialization inputs |
+| `sp-consents-json-bridge-7.15-compile.test.sh` | Blocked: Gradle cache lacks CMP `7.15.13` and Kotlin inputs |
+| Fresh iOS export/build/launch/full UI gate | Blocked before export: Unity iOS Build Support missing |
+
+The Android checks retain their existing checkpoint inputs and were not
+rewritten to make this migration appear green. Historical Android acceptance
+above remains separate from these missing-cache results.
+
+Install the matching Unity iOS module, restore the Android checks' required
+cached artifacts, and ensure the selected CocoaPods executable works before
+rerunning the documented gates. A separate local `pod --version` check failed
+in the current shell because system Ruby and the RVM gem paths were mixed;
+an explicit RVM Ruby invocation then encountered an incompatible
+`/usr/local/bin/git`. The iOS runner has not reached CocoaPods, so no CocoaPods
+version or compatibility result is established. Fix the local Ruby/PATH setup
+or select a working `POD_BIN`; this is an operator prerequisite, not a customer
+Podfile workaround.
+
+After a green initial full iOS run, record its exact command, Xcode/CocoaPods
+versions, simulator runtime/UDID, discovered and passed counts, exit status,
+and retained artifact folder here before publishing the pair. Keep the
+`<timestamp>-ios.<suffix>/` export, actual `Podfile.lock`, logs, app, and TRX
+together. No successful run or release claim may be inferred from an earlier
+fixture result or a retry.

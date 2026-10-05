@@ -21,6 +21,46 @@ When importing `ConsentManagementProvider.unitypackage`, add the following entry
 
 Alternatively, install `com.unity.nuget.newtonsoft-json` version `3.2.2` from the Unity Package Manager before importing the `.unitypackage`.
 
+## iOS build requirements and native dependency upgrade
+
+The declared native dependency pair on this branch is Android CMP `7.15.14`
+and iOS `ConsentViewController 7.12.11`. The iOS pod depends on
+`SPMobileCore 0.1.17`, which CocoaPods installs transitively; do not add it
+manually. Android and iOS have independent version numbers. **The iOS migration
+is unreleased and awaits a fresh export, Xcode build, and complete iOS UI test
+run; this pair is not yet release-verified.**
+
+To build for iOS, use macOS with Unity's matching **iOS Build Support** module,
+Xcode and its command-line tools, CocoaPods, and External Dependency Manager
+for Unity. This repository's Unity iOS deployment target remains **iOS 13.0**;
+the migration does not raise it. A supported Xcode/CocoaPods version combination
+will be recorded after the release gate passes; no new minimum toolchain version
+has been established by this migration yet.
+
+When upgrading the SDK through UPM or a `.unitypackage`, update the package,
+make a **fresh Unity iOS export**, then run ordinary `pod install` in that
+export and build its generated `.xcworkspace` in Xcode. Install EDM4U before
+importing the SDK and allow it to resolve the declared dependencies. An older
+export or its `Podfile.lock` can retain the previous native libraries.
+
+Existing C# calls, scenes, callbacks, and consent JSON models need no changes.
+The shared `CMP`/`ICmpSdk`/`ISpSdk` API continues to serve both platforms; new
+native Global CMP or Preferences APIs are not added to the Unity API by this
+update. No manual Podfile edit, Pod-project edit, or SDK-specific CocoaPods
+workaround is required for the normal upgrade. The Unity package owns and
+configures its Swift bridge in the exported `UnityFramework` target.
+
+If a customer-maintained Podfile explicitly pins an incompatible
+`ConsentViewController` or `SPMobileCore` version, normal CocoaPods resolution
+fails with a dependency conflict. Such incompatible pins are unsupported;
+reconcile the custom dependency constraints before building. The SDK does not
+hide the conflict or modify installed Pods to bypass it.
+
+`SpConsentsJsonBridge.java` remains part of the Android package. It adapts
+Android's native consent callback/model format to the shared Unity consent
+JSON contract; updating the iOS pod does not remove that requirement. Package
+consumers do not need to configure or edit this adapter.
+
 ---
 
 # Instantiate consent UI
