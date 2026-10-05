@@ -34,6 +34,12 @@ internal static class TestRunParameterResolver
         return parsedPort;
     }
 
+    public static void ApplyIosHeadlessSimulatorMode(
+        OpenQA.Selenium.Appium.AppiumOptions options)
+    {
+        options.AddAdditionalAppiumOption("appium:isHeadless", true);
+    }
+
     public static string ResolveAppPath(string? appPath, string testRoot)
     {
         if (string.IsNullOrWhiteSpace(appPath))

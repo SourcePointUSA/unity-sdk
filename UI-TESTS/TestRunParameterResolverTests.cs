@@ -79,6 +79,26 @@ public class TestRunParameterResolverTests
         });
     }
 
+    [Test]
+    public void ApplyIosHeadlessSimulatorModeUsesW3CAppiumCapability()
+    {
+        var options = new OpenQA.Selenium.Appium.AppiumOptions();
+
+        TestRunParameterResolver.ApplyIosHeadlessSimulatorMode(options);
+
+        Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.EqualTo(true));
+    }
+
+    [Test]
+    public void ApplyAndroidDeviceSelectionDoesNotEnableIosHeadlessSimulatorMode()
+    {
+        var options = new OpenQA.Selenium.Appium.AppiumOptions();
+
+        TestRunParameterResolver.ApplyAndroidDeviceSelection(options, "Android Emulator", "emulator-5588");
+
+        Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.Null);
+    }
+
     [TestCase(null)]
     [TestCase("")]
     [TestCase("not-a-port")]

@@ -59,6 +59,7 @@ namespace UnityAppiumTests
 			}
 			if (platformIOS)
 			{
+				TestRunParameterResolver.ApplyIosHeadlessSimulatorMode(desiredCaps);
 				var altUnityPort = TestRunParameterResolver.ApplyIosAltUnityConnection(
 					desiredCaps,
 					TestContext.Parameters["altUnityHost"],
