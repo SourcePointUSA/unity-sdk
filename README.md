@@ -438,22 +438,28 @@ Upon completion, the sdk will call either `onConsentReady` in case of success or
 
 # Build for iOS
 
-Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed. 
-
-You also need to check lines `33`, `55` and `90` of the `CMPPostProcessBuild` script, the paths may differ. Check that the path of the file `SwiftBridge.swift` in the Unity project matches that specified in the `33` line and the `55` line in the exported Xcode project. You also need to check the path of the file `UnityPlugin-Bridging-Header.h` in the project exported to xcode with path on line `90`.
+Follow the [iOS build requirements and native dependency upgrade](#ios-build-requirements-and-native-dependency-upgrade)
+instructions above: make a fresh Unity iOS export, run ordinary `pod install`
+in the export directory, and build the generated `.xcworkspace` in Xcode.
+The package's `CMPPostProcessBuild` automatically configures `SwiftBridge.swift`
+in the Unity-owned `UnityFramework` target. Consumers do not need to edit the
+postprocessor, bridge paths, bridging headers, Podfile, or Pods project.
 
 ## Troubleshooting
 
 ### If you use 2.3.3-3.0.0 versions of Unity SDK
 You might to use a custom template for Gradle, please refer to ["Plugins\Android\mainTemplate.gradle"](https://github.com/SourcePointUSA/unity-sdk/pull/59/commits/160302338c2f99de0f0b744fd9db4777931d96bf), lines 41-43.
 
-### `ConsentViewController-Swift.h` file not found (IOS)
-Every time you update the Unity SDK from an older to a newer version, you are likely to encounter the absence of the newer version of the native iOS SDK in your build machine's cocoapods cache.
-The fix is:
-Try to update cocoapods to the latest version (1.15.2 at the moment) on your build machine and execute the commands consequently:
-1) pod update  
-2) pod install 
+### `UnityFramework-Swift.h` file not found (iOS)
 
-In the terminal where the "Podfile" is situated (usually, it is situated in the folder where Unity exports the Xcode project). 
-It will fetch the native ConsentViewController version specified in Podfile (X.Y.Z) in your build machine cache. 
-It should be performed once, after this the build machine will have an X.Y.Z version of SDK in cocoapod's cache and consequent builds will go smoothly.
+`Unity.mm` uses the generated `UnityFramework-Swift.h` header from the target
+that owns `SwiftBridge.swift`. Start with a fresh Unity export, run ordinary
+`pod install`, and open the generated `.xcworkspace`. Check the first Swift
+compiler error and confirm that the exported `UnityFramework` target contains
+`SwiftBridge.swift`; a header error can follow an earlier Swift compilation
+failure. Retain the Unity export, CocoaPods output, and Xcode build log when
+reporting the failure so the package's target configuration can be diagnosed.
+Do not move the bridge into Pods, edit a Pod project, or bypass dependency
+conflicts with manual Podfile changes. This integration has no blanket
+`pod update` or CocoaPods version workaround; a supported toolchain will be
+recorded after the pending release gate passes.
