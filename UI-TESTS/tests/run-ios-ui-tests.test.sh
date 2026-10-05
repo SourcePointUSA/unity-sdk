@@ -21,6 +21,9 @@ case "$(basename "$0")" in
                 exit "${FIXTURE_TEST_EXIT:-0}"
                 ;;
             unity:*)
+                [ "${1:-}" = -buildTarget ] && [ "${2:-}" = iOS ] || {
+                    echo 'FAIL: Unity must launch with -buildTarget iOS' >&2; exit 1;
+                }
                 while [ "$#" -gt 0 ]; do
                     if [ "$1" = -cmpUiTestXcodeProject ]; then
                         shift
@@ -108,7 +111,11 @@ if IOS_SIMULATOR_UDID=missing-udid sh "$runner" --preflight >"$fixture_root/udid
     echo 'FAIL: unavailable explicit UDID passed' >&2; exit 1
 fi
 
-sh "$runner" >"$fixture_root/run" 2>&1 || { cat "$fixture_root/run"; exit 1; }
+sh "$runner" >"$fixture_root/run" 2>&1 || {
+    cat "$fixture_root/run"
+    cat "$CMP_UI_ARTIFACTS_DIR/"*/unity-console.log
+    exit 1
+}
 artifact=$(find "$CMP_UI_ARTIFACTS_DIR" -name effective-test-config.txt -exec dirname {} \;)
 app="$artifact/DerivedData/Build/Products/Debug-iphonesimulator/ConsentMessagePlugin.app"
 grep -F 'xcrun simctl bootstatus fixture-udid -b' "$FIXTURE_CALLS" >/dev/null

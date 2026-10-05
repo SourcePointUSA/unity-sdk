@@ -195,7 +195,7 @@ run_tests() {
     printf 'DISCOVERED_TEST_COUNT=%s\n' "$test_count" >>"$artifact_dir/effective-test-config.txt"
     echo "Discovered $test_count UI tests."
 
-    "$UNITY_PATH" -batchmode -quit -nographics -projectPath "$project_root" \
+    "$UNITY_PATH" -buildTarget iOS -batchmode -quit -nographics -projectPath "$project_root" \
         -executeMethod IosUiTestBuild.Build -cmpUiTestXcodeProject "$artifact_dir/Unity-iPhone" \
         -logFile "$artifact_dir/unity.log" >"$artifact_dir/unity-console.log" 2>&1
     [ -d "$artifact_dir/Unity-iPhone" ] || fail 'Unity completed without a fresh Xcode export.'

@@ -17,19 +17,13 @@ public static class IosUiTestBuild
 #if UNITY_2017
         throw new NotSupportedException("CMP UI test iOS batch exports require Unity versions that return BuildReport.");
 #else
-        var previousBuildTarget = EditorUserBuildSettings.activeBuildTarget;
-        var previousBuildTargetGroup = BuildPipeline.GetBuildTargetGroup(previousBuildTarget);
+        ValidateBatchTarget(EditorUserBuildSettings.activeBuildTarget);
         var persistedConfiguration = LoadExistingConfiguration();
         var configuration = CreateInMemoryConfigurationCopy(persistedConfiguration);
 
         try
         {
             AltTesterEditorWindow.EditorConfiguration = configuration;
-
-            if (!EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.iOS, BuildTarget.iOS))
-            {
-                throw new InvalidOperationException("Unable to switch the active build target to iOS.");
-            }
 
             configuration.platform = AltPlatform.iOS;
             configuration.BuildLocationPath = outputPath;
@@ -41,18 +35,7 @@ public static class IosUiTestBuild
         finally
         {
             AltTesterEditorWindow.EditorConfiguration = persistedConfiguration;
-            try
-            {
-                UnityEngine.Object.DestroyImmediate(configuration);
-            }
-            finally
-            {
-                if (previousBuildTarget != BuildTarget.NoTarget && previousBuildTargetGroup != BuildTargetGroup.Unknown &&
-                    !EditorUserBuildSettings.SwitchActiveBuildTarget(previousBuildTargetGroup, previousBuildTarget))
-                {
-                    throw new InvalidOperationException($"Unable to restore the active build target to {previousBuildTarget}.");
-                }
-            }
+            UnityEngine.Object.DestroyImmediate(configuration);
         }
 #endif
     }
@@ -93,6 +76,14 @@ public static class IosUiTestBuild
     }
 
 #if !UNITY_2017
+    private static void ValidateBatchTarget(BuildTarget activeTarget)
+    {
+        if (activeTarget != BuildTarget.iOS)
+        {
+            throw new InvalidOperationException("Start the Unity batch export with -buildTarget iOS; the active build target must already be iOS.");
+        }
+    }
+
     private static AltEditorConfiguration LoadExistingConfiguration()
     {
         var configurationGuids = AssetDatabase.FindAssets("AltTesterEditorSettings");

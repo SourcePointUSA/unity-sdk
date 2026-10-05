@@ -36,6 +36,29 @@ public class IosUiTestBuildTests
 
 #if !UNITY_2017
     [Test]
+    public void BatchTargetValidationAcceptsAnEditorStartedForIos()
+    {
+        ValidateBatchTarget(BuildTarget.iOS);
+    }
+
+    [TestCase(BuildTarget.Android)]
+    [TestCase(BuildTarget.StandaloneOSX)]
+    [TestCase(BuildTarget.NoTarget)]
+    public void BatchTargetValidationRejectsOtherTargetsBeforeExport(BuildTarget target)
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() => ValidateBatchTarget(target));
+        Assert.That(exception.Message, Does.Contain("-buildTarget iOS"));
+    }
+
+    private static void ValidateBatchTarget(BuildTarget target)
+    {
+        var validator = BuilderType().GetMethod("ValidateBatchTarget", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.That(validator, Is.Not.Null, "Batch export must validate the launch target instead of switching in-process.");
+        try { validator.Invoke(null, new object[] { target }); }
+        catch (TargetInvocationException error) when (error.InnerException != null) { throw error.InnerException; }
+    }
+
+    [Test]
     public void ParseOutputPathRejectsAnExistingFileWithATrailingDirectorySeparator()
     {
         var existingFile = Path.GetFullPath(Path.Combine(Application.dataPath, "../ProjectSettings/ProjectVersion.txt"));

@@ -162,6 +162,10 @@ All iOS environment overrides are listed here and by `--help`:
 The runner restores and discovers the entire .NET project, invokes
 `IosUiTestBuild.Build`, runs `pod install` in that fresh export, and builds
 `Unity-iPhone.xcworkspace` for the selected simulator with signing disabled.
+Unity starts with `-buildTarget iOS` so the batch editor imports for iOS before
+executing the export method. The builder validates that target and restores the
+persisted AltTester configuration after the build; it does not switch or restore
+Unity targets during batch execution.
 Before building, it checks the actual resolved lockfile for
 `ConsentViewController 7.12.11`, its exact `SPMobileCore (= 0.1.17)` dependency,
 and installed `SPMobileCore 0.1.17`. It follows the Xcode target/source entries
@@ -169,6 +173,12 @@ to require `SwiftBridge.swift` in `UnityFramework`, and rejects a bridge beneath
 `Pods/ConsentViewController`. The bridge remains under the Unity export’s
 `Libraries` directory; `Unity.mm` imports `UnityFramework-Swift.h`, generated
 by that owning target. The postprocess does not alter the Pods project.
+Asset imports use
+`Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift`;
+UPM imports use
+`Libraries/com.sourcepoint.unitycmp/Assets/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift`.
+Exactly one existing source is required; its PBX file reference is reused when
+available. A missing or duplicate bridge fails with the candidate paths named.
 It boots the device only when needed and waits using `simctl bootstatus -b`.
 It starts Appium with `--use-plugins=altunity`, or reuses a ready local server
 at `127.0.0.1:4723` that the operator has already configured with that plugin.
@@ -221,9 +231,10 @@ UI-TESTS/assert-ios-cmp-export.sh UI-TESTS/artifacts/<run>/Unity-iPhone 7.12.11 
 ```
 
 `sh UI-TESTS/tests/ios-postprocess.test.sh` additionally compiles the iOS
-postprocess with Mono and the installed Unity PBX managed library. It checks
-configuration behavior and validates the serialized project, without claiming
-to export or compile a simulator app. It requires `mcs`, `mono`, and an imported
+postprocess with Unity’s bundled native Mono/compiler and PBX managed library.
+It checks configuration behavior for both asset and UPM exports and validates
+each serialized project, without claiming to export or compile a simulator app.
+It requires the installed Unity managed libraries and an imported
 Unity project (`Library/ScriptAssemblies/Assembly-CSharp.dll`). Override
 `UNITY_CONTENTS_PATH` when Unity is installed elsewhere.
 

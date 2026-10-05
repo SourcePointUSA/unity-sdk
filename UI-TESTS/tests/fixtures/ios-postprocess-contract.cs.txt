@@ -28,7 +28,7 @@ class IosPostprocessContract
             var framework = project.AddTarget("UnityFramework", "framework", "com.apple.product-type.framework");
             project.AddSourcesBuildPhase(main);
             project.AddSourcesBuildPhase(framework);
-            const string bridge = "Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
+            string bridge = args[1];
             var source = Path.Combine(args[0], bridge);
             Directory.CreateDirectory(Path.GetDirectoryName(source));
             File.WriteAllText(source, "import Foundation\n");
@@ -46,12 +46,21 @@ class IosPostprocessContract
             var first = project.WriteToString();
             configure.Invoke(null, new object[] { project, args[0] });
             Check(project.WriteToString() == first, "Repeated configuration duplicates PBX build entries/settings");
+            var competingBridge = bridge.StartsWith("Libraries/com.sourcepoint.unitycmp/")
+                ? "Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift"
+                : "Libraries/com.sourcepoint.unitycmp/Assets/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
+            var competingSource = Path.Combine(args[0], competingBridge);
+            Directory.CreateDirectory(Path.GetDirectoryName(competingSource));
+            File.WriteAllText(competingSource, "import Foundation\n");
+            try { configure.Invoke(null, new object[] { project, args[0] }); throw new Exception("Duplicate exported bridges were accepted"); }
+            catch (TargetInvocationException error) { Check(error.InnerException.Message.Contains("Multiple exported SwiftBridge.swift"), "Duplicate source error is not explicit"); }
+            File.Delete(competingSource);
             Directory.CreateDirectory(Path.Combine(args[0], "Unity-iPhone.xcodeproj"));
             project.WriteToFile(Path.Combine(args[0], "Unity-iPhone.xcodeproj/project.pbxproj"));
             File.Delete(source);
             try { configure.Invoke(null, new object[] { project, args[0] }); throw new Exception("Missing exported bridge was accepted"); }
             catch (TargetInvocationException error) { Check(error.InnerException.Message.Contains("SwiftBridge.swift"), "Missing source error does not name SwiftBridge.swift"); }
-            Console.WriteLine("PASS: real Unity PBX bridge configuration, idempotence, missing source failure");
+            Console.WriteLine("PASS: real Unity PBX bridge configuration, idempotence, duplicate and missing source failures");
             return 0;
         }
         catch (Exception error) { Console.Error.WriteLine("FAIL: " + error); return 1; }

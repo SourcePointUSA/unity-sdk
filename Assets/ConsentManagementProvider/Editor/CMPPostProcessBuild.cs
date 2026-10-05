@@ -34,12 +34,12 @@ public static class CMPPostProcessBuild
             throw new BuildFailedException("CMP requires Unity-iPhone and UnityFramework targets in the iOS export.");
         }
 
-        const string bridgePath = "Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift";
-        if (!File.Exists(Path.Combine(buildPath, bridgePath)))
+        string bridgePath = FindUnityBridgePath(buildPath);
+        string bridgeGuid = project.FindFileGuidByRealPath(bridgePath);
+        if (string.IsNullOrEmpty(bridgeGuid))
         {
-            throw new BuildFailedException("CMP requires exported SwiftBridge.swift at " + bridgePath);
+            bridgeGuid = project.FindFileGuidByProjectPath(bridgePath);
         }
-        string bridgeGuid = project.FindFileGuidByProjectPath(bridgePath);
         if (string.IsNullOrEmpty(bridgeGuid))
         {
             bridgeGuid = project.AddFile(bridgePath, bridgePath, PBXSourceTree.Source);
@@ -65,6 +65,29 @@ public static class CMPPostProcessBuild
         project.SetBuildProperty(frameworkTarget, "SWIFT_INSTALL_OBJC_HEADER", "YES");
         project.SetBuildProperty(frameworkTarget, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "NO");
         project.SetBuildProperty(mainTarget, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+    }
+
+    static string FindUnityBridgePath(string buildPath)
+    {
+        string[] candidates = {
+            "Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift",
+            "Libraries/com.sourcepoint.unitycmp/Assets/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift"
+        };
+        string found = null;
+        foreach (string candidate in candidates)
+        {
+            if (!File.Exists(Path.Combine(buildPath, candidate))) continue;
+            if (found != null)
+            {
+                throw new BuildFailedException("Multiple exported SwiftBridge.swift sources found: " + found + " and " + candidate);
+            }
+            found = candidate;
+        }
+        if (found == null)
+        {
+            throw new BuildFailedException("CMP requires exported SwiftBridge.swift in the asset or UPM layout: " + string.Join(", ", candidates));
+        }
+        return found;
     }
 
     static void AddParameterToInfoPlist(string plistPath)

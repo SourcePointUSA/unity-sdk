@@ -59,7 +59,7 @@
 
 - [ ] **Step 4: Implement `IosUiTestBuild`**
 
-  Mirror the proven Android builder's configuration-copy/`try`-`finally` discipline, but switch to `BuildTarget.iOS` / `BuildTargetGroup.iOS`, set `AltPlatform.iOS`, and pass the requested absolute export directory to `AltBuilder.BuildGame`. Require `BuildReport.summary.result == Succeeded`, zero errors, and a non-empty `<export>/Unity-iPhone.xcodeproj/project.pbxproj`; log the report and export path. Restore both the selected Unity build target and the persisted AltTester configuration even after an exception.
+  Mirror the proven Android builder's configuration-copy/`try`-`finally` discipline, but launch the batch editor with `-buildTarget iOS` and validate that `EditorUserBuildSettings.activeBuildTarget` is already iOS. Set `AltPlatform.iOS` and pass the requested absolute export directory and `BuildTarget.iOS` / `BuildTargetGroup.iOS` to `AltBuilder.BuildGame`. Require `BuildReport.summary.result == Succeeded`, zero errors, and a non-empty `<export>/Unity-iPhone.xcodeproj/project.pbxproj`; log the report and export path. Restore the persisted AltTester configuration even after an exception. Do not call `SwitchActiveBuildTarget` or restore Unity targets during batch execution.
 
 - [ ] **Step 5: Run the focused Unity EditMode tests and source checks**
 
@@ -104,7 +104,7 @@
 
   Use `set -eu` and the Android runner's fail-fast/artifact/cleanup conventions. Default to Unity `6000.5.10f1`, its `PlaybackEngines/iOSSupport` directory, `/Applications/AltTesterDesktop.app`, `.NET 8`, and `iPhone 14`; allow each to be overridden. Resolve `IOS_SIMULATOR_UDID` explicitly, or resolve `CMP_IOS_SIMULATOR_NAME` only when exactly one available simulator matches; fail on zero or ambiguous matches. Boot with `xcrun simctl boot` when needed and wait with `xcrun simctl bootstatus <udid> -b`.
 
-  In a timestamped artifact directory, restore/discover the .NET tests, invoke Unity with `-executeMethod IosUiTestBuild.Build -cmpUiTestXcodeProject <artifact>/Unity-iPhone`, run `pod install` from that export, and capture each command's log. Build the generated workspace with `xcodebuild -workspace Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphonesimulator -destination platform=iOS\ Simulator,id=<udid> -derivedDataPath <artifact>/DerivedData CODE_SIGNING_ALLOWED=NO`; derive the fresh `ConsentMessagePlugin.app` under that DerivedData path, not from `UI-TESTS/BUILDS`.
+  In a timestamped artifact directory, restore/discover the .NET tests, start Unity with `-buildTarget iOS` before the batch/export arguments `-executeMethod IosUiTestBuild.Build -cmpUiTestXcodeProject <artifact>/Unity-iPhone`, run `pod install` from that export, and capture each command's log. Build the generated workspace with `xcodebuild -workspace Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphonesimulator -destination platform=iOS\ Simulator,id=<udid> -derivedDataPath <artifact>/DerivedData CODE_SIGNING_ALLOWED=NO`; derive the fresh `ConsentMessagePlugin.app` under that DerivedData path, not from `UI-TESTS/BUILDS`.
 
   Start or reuse a local Appium server configured with the installed `xcuitest` driver and `altunity` plugin, install/launch the fresh app with `simctl`, wait for the AltTester port, then run the entire .NET project once with runsettings and explicit `appium:udid`/`appium:app` overrides. Emit one TRX and effective configuration file. Cleanup only Appium and simulator processes started by this invocation.
 
@@ -164,6 +164,8 @@
   First update `Unity.mm` to import `UnityFramework-Swift.h`, the generated header for the target that owns both the Objective-C++ facade and `SwiftBridge.swift`. In `CMPPostProcessBuild`, remove `RemoveBridge`, `AddBridgeToPods`, `ExecuteProcessTerminal`, the shell `mv`, and every `Pods.xcodeproj`/`ConsentViewController/Classes` path assumption. Keep only checked PBX configuration for the Unity target: ensure the Swift source belongs to `UnityFramework`, enable the needed Swift module/runtime settings on the owning Unity targets, preserve required framework/search-path and Info.plist behavior, and write the main PBX project once.
 
   Do not add a fallback that mutates Pods. If the fresh export cannot produce `UnityFramework-Swift.h` or link the bridge, stop and diagnose the target setup before proceeding.
+
+  Resolve the one existing Swift bridge in either the asset-import layout (`Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift`) or UPM layout (`Libraries/com.sourcepoint.unitycmp/Assets/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift`). Reuse its existing PBX reference. Cover both layouts with the real Unity PBX harness, and fail explicitly when neither source or multiple candidates exist.
 
 - [ ] **Step 5: Update the declared pod and run focused checks**
 
