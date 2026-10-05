@@ -14,6 +14,26 @@ internal static class TestRunParameterResolver
         }
     }
 
+    public static int ApplyIosAltUnityConnection(
+        OpenQA.Selenium.Appium.AppiumOptions options,
+        string? host,
+        string? port)
+    {
+        if (string.IsNullOrWhiteSpace(host))
+        {
+            throw new ArgumentException("A non-empty altUnityHost test parameter is required.", nameof(host));
+        }
+
+        if (!int.TryParse(port, out var parsedPort) || parsedPort is < 1 or > 65535)
+        {
+            throw new ArgumentException("A valid altUnityPort test parameter is required.", nameof(port));
+        }
+
+        options.AddAdditionalAppiumOption("appium:altUnityHost", host);
+        options.AddAdditionalAppiumOption("appium:altUnityPort", parsedPort);
+        return parsedPort;
+    }
+
     public static string ResolveAppPath(string? appPath, string testRoot)
     {
         if (string.IsNullOrWhiteSpace(appPath))

@@ -112,7 +112,7 @@ if IOS_SIMULATOR_UDID=missing-udid sh "$runner" --preflight >"$fixture_root/udid
     echo 'FAIL: unavailable explicit UDID passed' >&2; exit 1
 fi
 
-sh "$runner" >"$fixture_root/run" 2>&1 || {
+ALTTESTER_PORT=16001 sh "$runner" >"$fixture_root/run" 2>&1 || {
     cat "$fixture_root/run"
     cat "$CMP_UI_ARTIFACTS_DIR/"*/unity-console.log
     exit 1
@@ -128,6 +128,8 @@ grep -F -- "-workspace Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphone
 grep -F "xcrun simctl install fixture-udid $app" "$FIXTURE_CALLS" >/dev/null
 grep -F 'TestRunParameters.Parameter(name="appium:udid",value="fixture-udid")' "$FIXTURE_CALLS" >/dev/null
 grep -F "TestRunParameters.Parameter(name=\"appium:app\",value=\"$app\")" "$FIXTURE_CALLS" >/dev/null
+grep -F 'TestRunParameters.Parameter(name="altUnityHost",value="127.0.0.1")' "$FIXTURE_CALLS" >/dev/null
+grep -F 'TestRunParameters.Parameter(name="altUnityPort",value="16001")' "$FIXTURE_CALLS" >/dev/null
 grep -F 'DISCOVERED_TEST_COUNT=2' "$artifact/effective-test-config.txt" >/dev/null
 [ -f "$artifact/Podfile.lock" ] && [ -f "$artifact/results.trx" ]
 [ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 1 ]

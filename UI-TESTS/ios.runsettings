@@ -8,6 +8,8 @@
     <Parameter name="appium:udid" value="" />
     <Parameter name="appium:app" value="" />
     <Parameter name="altTesterIP" value="127.0.0.1" />
+    <Parameter name="altUnityHost" value="127.0.0.1" />
+    <Parameter name="altUnityPort" value="13000" />
     <Parameter name="appium:automationName" value="xcuitest" />
   </TestRunParameters>
 </RunSettings>

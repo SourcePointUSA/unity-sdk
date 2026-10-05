@@ -58,9 +58,22 @@ namespace UnityAppiumTests
 				AltReversePortForwarding.ReversePortForwardingAndroid();
 			}
 			if (platformIOS)
+			{
+				var altUnityPort = TestRunParameterResolver.ApplyIosAltUnityConnection(
+					desiredCaps,
+					TestContext.Parameters["altUnityHost"],
+					TestContext.Parameters["altUnityPort"]);
 				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
+				altDriver = new AltDriver(
+					host: TestContext.Parameters["altUnityHost"],
+					port: altUnityPort,
+					enableLogging: false);
+			}
 
-        	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
+			if (platformAndroid)
+			{
+				altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"], enableLogging: false);
+			}
 
 			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(240));
 			pages = new Pages(TestContext.Parameters["platformName"] ?? "android", webDriverWait, driverAndroid, driverIOS, altDriver);

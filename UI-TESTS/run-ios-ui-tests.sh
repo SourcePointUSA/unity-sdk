@@ -259,6 +259,8 @@ PY
         "TestRunParameters.Parameter(name=\"deviceName\",value=\"$simulator_name\")" \
         "TestRunParameters.Parameter(name=\"appium:udid\",value=\"$IOS_SIMULATOR_UDID\")" \
         "TestRunParameters.Parameter(name=\"appium:app\",value=\"$app_path\")" \
+        "TestRunParameters.Parameter(name=\"altUnityHost\",value=\"127.0.0.1\")" \
+        "TestRunParameters.Parameter(name=\"altUnityPort\",value=\"$ALTTESTER_PORT\")" \
         >"$artifact_dir/dotnet-test.log" 2>&1 || suite_status=$?
     printf 'SUITE_EXIT_STATUS=%s\n' "$suite_status" >>"$artifact_dir/effective-test-config.txt"
     cat "$artifact_dir/dotnet-test.log"
