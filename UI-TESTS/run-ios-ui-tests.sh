@@ -223,7 +223,8 @@ run_tests() {
     (cd "$artifact_dir/Unity-iPhone" && "$XCODEBUILD_BIN" \
         -workspace Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphonesimulator \
         -destination "platform=iOS Simulator,id=$IOS_SIMULATOR_UDID" \
-        -derivedDataPath "$artifact_dir/DerivedData" CODE_SIGNING_ALLOWED=NO) >"$artifact_dir/xcodebuild.log" 2>&1
+        -derivedDataPath "$artifact_dir/DerivedData" \
+        SYMROOT="$artifact_dir/DerivedData/Build" CODE_SIGNING_ALLOWED=NO) >"$artifact_dir/xcodebuild.log" 2>&1
     app_path=
     for candidate in "$artifact_dir"/DerivedData/Build/Products/*-iphonesimulator/ConsentMessagePlugin.app; do
         [ -d "$candidate" ] || continue

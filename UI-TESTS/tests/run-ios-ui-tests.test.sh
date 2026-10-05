@@ -124,7 +124,7 @@ grep -F 'xcrun simctl boot fixture-udid' "$FIXTURE_CALLS" >/dev/null
 grep -F 'xcrun simctl shutdown fixture-udid' "$FIXTURE_CALLS" >/dev/null
 grep -F "pod cwd=$artifact/Unity-iPhone install" "$FIXTURE_CALLS" >/dev/null
 grep -F -- "-executeMethod IosUiTestBuild.Build -cmpUiTestXcodeProject $artifact/Unity-iPhone" "$FIXTURE_CALLS" >/dev/null
-grep -F -- "-workspace Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphonesimulator -destination platform=iOS Simulator,id=fixture-udid -derivedDataPath $artifact/DerivedData CODE_SIGNING_ALLOWED=NO" "$FIXTURE_CALLS" >/dev/null
+grep -F -- "-workspace Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphonesimulator -destination platform=iOS Simulator,id=fixture-udid -derivedDataPath $artifact/DerivedData SYMROOT=$artifact/DerivedData/Build CODE_SIGNING_ALLOWED=NO" "$FIXTURE_CALLS" >/dev/null
 grep -F "xcrun simctl install fixture-udid $app" "$FIXTURE_CALLS" >/dev/null
 grep -F 'TestRunParameters.Parameter(name="appium:udid",value="fixture-udid")' "$FIXTURE_CALLS" >/dev/null
 grep -F "TestRunParameters.Parameter(name=\"appium:app\",value=\"$app\")" "$FIXTURE_CALLS" >/dev/null
