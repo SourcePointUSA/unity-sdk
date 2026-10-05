@@ -28,12 +28,12 @@ public static class IosUiTestBuild
             configuration.platform = AltPlatform.iOS;
             configuration.BuildLocationPath = outputPath;
 
-            ExportWithExternalPodInstall(() =>
+            ExportForArm64Simulator(() => ExportWithExternalPodInstall(() =>
             {
                 var report = AltBuilder.BuildGame(BuildTarget.iOS, BuildTargetGroup.iOS, outputPath: outputPath, useCurrentEditorConfiguration: true);
                 LogBuildReport(outputPath, report);
                 EnsureBuildSucceeded(outputPath, report);
-            });
+            }));
         }
         finally
         {
@@ -79,6 +79,23 @@ public static class IosUiTestBuild
     }
 
 #if !UNITY_2017
+    private static void ExportForArm64Simulator(Action export)
+    {
+        var previousSdk = PlayerSettings.iOS.sdkVersion;
+        var previousArchitecture = PlayerSettings.iOS.simulatorSdkArchitecture;
+        try
+        {
+            PlayerSettings.iOS.sdkVersion = iOSSdkVersion.SimulatorSDK;
+            PlayerSettings.iOS.simulatorSdkArchitecture = AppleMobileArchitectureSimulator.ARM64;
+            export();
+        }
+        finally
+        {
+            PlayerSettings.iOS.sdkVersion = previousSdk;
+            PlayerSettings.iOS.simulatorSdkArchitecture = previousArchitecture;
+        }
+    }
+
     private static void ExportWithExternalPodInstall(Action export)
     {
         var previousValue = Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration;

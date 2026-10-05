@@ -11,6 +11,54 @@ using NUnit.Framework;
 public class IosUiTestBuildTests
 {
 #if !UNITY_2017
+    [TestCase(iOSSdkVersion.DeviceSDK, AppleMobileArchitectureSimulator.X86_64, false)]
+    [TestCase(iOSSdkVersion.DeviceSDK, AppleMobileArchitectureSimulator.ARM64, false)]
+    [TestCase(iOSSdkVersion.DeviceSDK, AppleMobileArchitectureSimulator.Universal, false)]
+    [TestCase(iOSSdkVersion.SimulatorSDK, AppleMobileArchitectureSimulator.X86_64, false)]
+    [TestCase(iOSSdkVersion.SimulatorSDK, AppleMobileArchitectureSimulator.ARM64, false)]
+    [TestCase(iOSSdkVersion.SimulatorSDK, AppleMobileArchitectureSimulator.Universal, false)]
+    [TestCase(iOSSdkVersion.DeviceSDK, AppleMobileArchitectureSimulator.X86_64, true)]
+    [TestCase(iOSSdkVersion.DeviceSDK, AppleMobileArchitectureSimulator.ARM64, true)]
+    [TestCase(iOSSdkVersion.DeviceSDK, AppleMobileArchitectureSimulator.Universal, true)]
+    [TestCase(iOSSdkVersion.SimulatorSDK, AppleMobileArchitectureSimulator.X86_64, true)]
+    [TestCase(iOSSdkVersion.SimulatorSDK, AppleMobileArchitectureSimulator.ARM64, true)]
+    [TestCase(iOSSdkVersion.SimulatorSDK, AppleMobileArchitectureSimulator.Universal, true)]
+    public void UiExportUsesArm64SimulatorAndRestoresPlayerSettings(
+        iOSSdkVersion originalSdk, AppleMobileArchitectureSimulator originalArchitecture, bool failExport)
+    {
+        var savedSdk = PlayerSettings.iOS.sdkVersion;
+        var savedArchitecture = PlayerSettings.iOS.simulatorSdkArchitecture;
+        try
+        {
+            PlayerSettings.iOS.sdkVersion = originalSdk;
+            PlayerSettings.iOS.simulatorSdkArchitecture = originalArchitecture;
+            var method = BuilderType().GetMethod("ExportForArm64Simulator", BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.That(method, Is.Not.Null, "The UI export must select ARM64 Simulator without changing customer build settings.");
+            var invoked = false;
+            Action export = () =>
+            {
+                invoked = true;
+                Assert.That(PlayerSettings.iOS.sdkVersion, Is.EqualTo(iOSSdkVersion.SimulatorSDK));
+                Assert.That(PlayerSettings.iOS.simulatorSdkArchitecture, Is.EqualTo(AppleMobileArchitectureSimulator.ARM64));
+                if (failExport) throw new InvalidOperationException("export failure");
+            };
+            if (failExport)
+            {
+                var error = Assert.Throws<TargetInvocationException>(() => method.Invoke(null, new object[] { export }));
+                Assert.That(error.InnerException, Is.TypeOf<InvalidOperationException>());
+            }
+            else method.Invoke(null, new object[] { export });
+            Assert.That(invoked, Is.True);
+            Assert.That(PlayerSettings.iOS.sdkVersion, Is.EqualTo(originalSdk));
+            Assert.That(PlayerSettings.iOS.simulatorSdkArchitecture, Is.EqualTo(originalArchitecture));
+        }
+        finally
+        {
+            PlayerSettings.iOS.sdkVersion = savedSdk;
+            PlayerSettings.iOS.simulatorSdkArchitecture = savedArchitecture;
+        }
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     public void ExportDefersPodInstallAndRestoresResolverPreference(bool originalValue)
