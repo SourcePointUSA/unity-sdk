@@ -1,0 +1,45 @@
+using System;
+using System.IO;
+using System.Reflection;
+
+class IosPodfileContract
+{
+    static int Main(string[] args)
+    {
+        try
+        {
+            var method = typeof(CMPPostProcessBuild).GetMethod("ConfigureCmpPodfile", BindingFlags.NonPublic | BindingFlags.Static);
+            Check(method != null, "CMP Podfile deployment-floor configuration is missing");
+            if (args.Length == 2) {
+                string original = File.ReadAllText(args[0]);
+                File.WriteAllText(args[0], (string)method.Invoke(null, new object[] { original, args[1] }));
+                return 0;
+            }
+            string input = "platform :ios, '15.0'\n# post_install mentioned in a comment\ntarget 'UnityFramework' do\n  pod 'ConsentViewController', '7.12.11'\nend\n";
+            string result = (string)method.Invoke(null, new object[] { input, "15.0" });
+            Check(result.StartsWith(input), "Existing Podfile content was modified");
+            Check(result != input, "No compatibility hook was emitted");
+            Check((string)method.Invoke(null, new object[] { result, "15.0" }) == result, "Repeated export duplicates hook");
+            string raised = (string)method.Invoke(null, new object[] { result, "16.0" });
+            File.WriteAllText(args[0], result);
+            File.WriteAllText(args[0] + ".raised", raised);
+            foreach (string custom in new[] { "post_install do |installer|\nend\n", "post_install { |installer| puts installer }\n" }) {
+                try { method.Invoke(null, new object[] { custom, "15.0" }); throw new Exception("Customer post_install was silently accepted"); }
+                catch (TargetInvocationException error) { Check(error.InnerException.Message.Contains("post_install") && error.InnerException.Message.Contains("fresh"), "Custom hook failure is not actionable"); }
+            }
+            foreach (string invalid in new[] { "", "$(inherited)", "15.0'; system('oops')" }) {
+                try { method.Invoke(null, new object[] { input, invalid }); throw new Exception("Invalid exported floor was accepted"); }
+                catch (TargetInvocationException) { }
+            }
+            try {
+                method.Invoke(null, new object[] { "# BEGIN Sourcepoint CMP deployment target\n" + result, "15.0" });
+                throw new Exception("Duplicate generated marker was accepted");
+            }
+            catch (TargetInvocationException error) { Check(error.InnerException.Message.Contains("fresh"), "Malformed owned hook error is not actionable"); }
+            Console.WriteLine("PASS: Podfile preservation, idempotence, floor update, custom hook and invalid floor failures");
+            return 0;
+        }
+        catch (Exception error) { Console.Error.WriteLine("FAIL: " + error); return 1; }
+    }
+    static void Check(bool condition, string message) { if (!condition) throw new Exception(message); }
+}

@@ -62,11 +62,19 @@ no C# or Podfile edits are required, and the expected CocoaPods behavior for a
 customer-maintained incompatible pin. The release must not rely on this design
 document as the only place a package consumer can learn those constraints.
 
-The update does not raise the package's existing Unity iOS deployment target
-of `13.0` (`ProjectSettings/ProjectSettings.asset`). The upstream pod still
-declares iOS `10.0`, so it introduces no stricter floor. The supported
-Xcode/CocoaPods toolchain is established by the release gate rather than
-assumed from the development machine.
+The historical project setting was `13.0`, but the real Unity 6.5
+(`6000.5.10f1`) export observed on 2026-10-05 has an iOS `15.0` floor.
+The upstream pods still declare iOS `10.0`; Xcode 27 rejects their resulting
+targets even when the Podfile platform is `15.0`. A package-owned callback at
+order 45 (after EDM4U Podfile generation, before installation at 50) therefore
+adds one marked, idempotent standard CocoaPods `post_install` hook. It raises
+only the `ConsentViewController`, `ConsentViewController-ConsentViewController`
+resource bundle, and `SPMobileCore` target floors to the exported Unity app
+floor, retaining higher values and unrelated targets. It neither edits the
+installed Pods PBX directly nor invokes shell commands. An existing custom
+`post_install` hook is rejected clearly rather than composed unsafely or
+silently replaced. Root README documents this customer limitation. Full
+release acceptance still requires the Xcode build and UI gate.
 
 ## Current iOS Integration and Problem
 

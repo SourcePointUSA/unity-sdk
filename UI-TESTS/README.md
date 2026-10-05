@@ -341,3 +341,32 @@ and retained artifact folder here before publishing the pair. Keep the
 `<timestamp>-ios.<suffix>/` export, actual `Podfile.lock`, logs, app, and TRX
 together. No successful run or release claim may be inferred from an earlier
 fixture result or a retry.
+
+### Xcode 27 deployment-target compatibility (2026-10-05)
+
+The resumed Unity 6.5 (`6000.5.10f1`) export resolves the expected pods and
+exports the Unity app at iOS `15.0`. The initial Xcode 27 build rejected the
+pods' declared iOS `10.0` deployment targets despite the generated Podfile
+already declaring `platform :ios, '15.0'`. The package now emits a standard
+CocoaPods `post_install` hook before EDM4U installation, aligning only CMP,
+its resource bundle, and mobile-core targets to the actual exported app floor.
+Higher floors and unrelated dependencies are preserved. A custom pre-existing
+hook causes an explicit export failure. Run the behavioral fixture with:
+
+```sh
+sh UI-TESTS/tests/ios-podfile.test.sh
+```
+
+This fixture executes the generated Ruby and checks the resulting target
+settings, idempotence, custom-hook rejection, and exported-floor updates;
+it does not replace the real CocoaPods/Xcode/UI gate.
+
+On the retained export `UI-TESTS/artifacts/20261005-215536-ios.WIIbe8/Unity-iPhone`,
+ordinary Homebrew CocoaPods `1.16.2` installation with the generated hook
+succeeded (exit 0). Inspection using the installed `xcodeproj` library confirms
+all configurations of `ConsentViewController`,
+`ConsentViewController-ConsentViewController`, and `SPMobileCore` now use
+`15.0`. CocoaPods reported the existing app target's explicit
+`ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES` override; the app continues to own
+Swift runtime embedding. The resumed full build and UI result must be
+recorded separately.

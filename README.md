@@ -32,10 +32,11 @@ run; this pair is not yet release-verified.**
 
 To build for iOS, use macOS with Unity's matching **iOS Build Support** module,
 Xcode and its command-line tools, CocoaPods, and External Dependency Manager
-for Unity. This repository's Unity iOS deployment target remains **iOS 13.0**;
-the migration does not raise it. A supported Xcode/CocoaPods version combination
-will be recorded after the release gate passes; no new minimum toolchain version
-has been established by this migration yet.
+for Unity. **Unity 6.5 (`6000.5.10f1`) exports this sample with an iOS 15.0
+deployment target**, even though the historical project setting was 13.0.
+Use the actual minimum version supported by your Unity editor; raising it also
+raises the minimum iOS version for your customers. A supported Xcode/CocoaPods
+version combination will be recorded after the complete release gate passes.
 
 When upgrading the SDK through UPM or a `.unitypackage`, update the package,
 make a **fresh Unity iOS export**, then run ordinary `pod install` in that
@@ -46,9 +47,21 @@ export or its `Podfile.lock` can retain the previous native libraries.
 Existing C# calls, scenes, callbacks, and consent JSON models need no changes.
 The shared `CMP`/`ICmpSdk`/`ISpSdk` API continues to serve both platforms; new
 native Global CMP or Preferences APIs are not added to the Unity API by this
-update. No manual Podfile edit, Pod-project edit, or SDK-specific CocoaPods
-workaround is required for the normal upgrade. The Unity package owns and
-configures its Swift bridge in the exported `UnityFramework` target.
+update. No manual Podfile or Pod-project edit is required for the normal
+upgrade. The Unity package owns and configures its Swift bridge in the exported
+`UnityFramework` target. Before EDM4U installs Pods, the package adds one standard
+CocoaPods `post_install` hook to the generated Podfile. It raises only
+`ConsentViewController`, its resource bundle, and `SPMobileCore` deployment
+targets to the exported Unity app's minimum iOS version, preserving higher
+targets and unrelated dependencies. This avoids Xcode 27 rejecting those
+pods' historical iOS 10.0 targets; subsequent ordinary `pod install` runs retain
+the setting.
+
+A customer-maintained Podfile that already defines `post_install` is not
+automatically composable with this generated hook. Export fails with an
+actionable message instead of silently replacing a hook or registering two.
+Use a fresh EDM4U-generated Podfile for the supported automatic integration;
+custom CocoaPods lifecycle hooks require a deliberately maintained integration.
 
 If a customer-maintained Podfile explicitly pins an incompatible
 `ConsentViewController` or `SPMobileCore` version, normal CocoaPods resolution
