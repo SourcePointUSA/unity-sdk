@@ -146,6 +146,7 @@ All iOS environment overrides are listed here and by `--help`:
 | Variable | Default / purpose |
 | --- | --- |
 | `UNITY_PATH` | `/Applications/Unity/Installs/6000.5.10f1/Unity.app/Contents/MacOS/Unity` |
+| `UNITY_LICENSING_IPC` | Empty; optionally names an existing licensing IPC channel for local editor/CI troubleshooting |
 | `UNITY_IOS_PLAYER_PATH` | `/Applications/Unity/Installs/6000.5.10f1/PlaybackEngines/iOSSupport` |
 | `IOS_SIMULATOR_UDID` | Empty; an explicit available UDID takes precedence over name selection |
 | `CMP_IOS_SIMULATOR_NAME` | `iPhone 14`; exactly one available match required |
@@ -166,6 +167,13 @@ Unity starts with `-buildTarget iOS` so the batch editor imports for iOS before
 executing the export method. The builder validates that target and restores the
 persisted AltTester configuration after the build; it does not switch or restore
 Unity targets during batch execution.
+The export temporarily disables EDM4U's workspace-integrated pod install and
+restores that preference in `finally`; the runner performs one explicit install
+using `POD_BIN`. This keeps the selected CocoaPods environment effective even
+when EDM4U discovers another installation (for example, RVM).
+Unity's default licensing discovery remains enabled unless `UNITY_LICENSING_IPC`
+is supplied. Use that override only when the local editor/CI environment needs
+an already-running licensing channel; channel names are machine-specific.
 Before building, it checks the actual resolved lockfile for
 `ConsentViewController 7.12.11`, its exact `SPMobileCore (= 0.1.17)` dependency,
 and installed `SPMobileCore 0.1.17`. It follows the Xcode target/source entries

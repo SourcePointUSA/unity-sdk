@@ -10,6 +10,52 @@ using NUnit.Framework;
 
 public class IosUiTestBuildTests
 {
+#if !UNITY_2017
+    [TestCase(false)]
+    [TestCase(true)]
+    public void ExportDefersPodInstallAndRestoresResolverPreference(bool originalValue)
+    {
+        VerifyPodInstallScope(originalValue, false);
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FailedExportRestoresResolverPreference(bool originalValue)
+    {
+        VerifyPodInstallScope(originalValue, true);
+    }
+
+    private static void VerifyPodInstallScope(bool originalValue, bool failExport)
+    {
+        var savedValue = Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration;
+        try
+        {
+            Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration = originalValue;
+            var method = BuilderType().GetMethod("ExportWithExternalPodInstall", BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.That(method, Is.Not.Null, "The UI export must defer pod install to the runner and restore resolver preferences.");
+            var invoked = false;
+            Action export = () =>
+            {
+                invoked = true;
+                Assert.That(Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration, Is.True);
+                if (failExport) throw new InvalidOperationException("export failure");
+            };
+            if (failExport)
+            {
+                var error = Assert.Throws<TargetInvocationException>(() => method.Invoke(null, new object[] { export }));
+                Assert.That(error.InnerException, Is.TypeOf<InvalidOperationException>());
+            }
+            else method.Invoke(null, new object[] { export });
+            Assert.That(invoked, Is.True);
+            Assert.That(Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration, Is.EqualTo(originalValue));
+        }
+        finally
+        {
+            Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration = savedValue;
+        }
+    }
+
+#endif
     [Test]
     public void ParseOutputPathReturnsRequiredAbsoluteExportDirectory()
     {

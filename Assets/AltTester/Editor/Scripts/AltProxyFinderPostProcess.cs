@@ -73,7 +73,11 @@ public static class AltProxyFinderPostProcess
             project.AddPublicHeaderToBuild(unityFrameworkGuid, unityRenderingGuid);
 
             string unitySharedDeclsGuid = project.FindFileGuidByProjectPath("Classes/Unity/UnitySharedDecls.h");
-            project.AddPublicHeaderToBuild(unityFrameworkGuid, unitySharedDeclsGuid);
+            // Unity 6 exports no longer include this legacy header.
+            if (!string.IsNullOrEmpty(unitySharedDeclsGuid))
+            {
+                project.AddPublicHeaderToBuild(unityFrameworkGuid, unitySharedDeclsGuid);
+            }
 
             // Save project
             project.WriteToFile(projectPath);

@@ -5,6 +5,7 @@ set -eu
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 project_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
 UNITY_PATH=${UNITY_PATH:-/Applications/Unity/Installs/6000.5.10f1/Unity.app/Contents/MacOS/Unity}
+UNITY_LICENSING_IPC=${UNITY_LICENSING_IPC:-}
 UNITY_IOS_PLAYER_PATH=${UNITY_IOS_PLAYER_PATH:-/Applications/Unity/Installs/6000.5.10f1/PlaybackEngines/iOSSupport}
 IOS_SIMULATOR_UDID=${IOS_SIMULATOR_UDID:-}
 CMP_IOS_SIMULATOR_NAME=${CMP_IOS_SIMULATOR_NAME:-iPhone 14}
@@ -34,6 +35,7 @@ Exports a fresh AltTester-instrumented iOS simulator app and runs the entire
 
 Environment overrides:
   UNITY_PATH                 Unity executable (default: Unity 6000.5.10f1).
+  UNITY_LICENSING_IPC         Optional existing Unity licensing IPC channel.
   UNITY_IOS_PLAYER_PATH      Unity PlaybackEngines/iOSSupport directory.
   IOS_SIMULATOR_UDID         Explicit available simulator UDID (takes precedence).
   CMP_IOS_SIMULATOR_NAME     Exactly one available name match (default: iPhone 14).
@@ -160,6 +162,7 @@ run_tests() {
     echo "Artifacts: $artifact_dir"
     {
         printf 'UNITY_PATH=%s\n' "$UNITY_PATH"
+        printf 'UNITY_LICENSING_IPC=%s\n' "$UNITY_LICENSING_IPC"
         printf 'UNITY_IOS_PLAYER_PATH=%s\n' "$UNITY_IOS_PLAYER_PATH"
         printf 'CMP_IOS_SIMULATOR_NAME=%s\n' "$CMP_IOS_SIMULATOR_NAME"
         printf 'IOS_SIMULATOR_UDID=%s\n' "$IOS_SIMULATOR_UDID"
@@ -195,7 +198,11 @@ run_tests() {
     printf 'DISCOVERED_TEST_COUNT=%s\n' "$test_count" >>"$artifact_dir/effective-test-config.txt"
     echo "Discovered $test_count UI tests."
 
-    "$UNITY_PATH" -buildTarget iOS -batchmode -quit -nographics -projectPath "$project_root" \
+    set --
+    if [ -n "$UNITY_LICENSING_IPC" ]; then
+        set -- -licensingIpc "$UNITY_LICENSING_IPC"
+    fi
+    "$UNITY_PATH" -buildTarget iOS -batchmode -quit -nographics -projectPath "$project_root" "$@" \
         -executeMethod IosUiTestBuild.Build -cmpUiTestXcodeProject "$artifact_dir/Unity-iPhone" \
         -logFile "$artifact_dir/unity.log" >"$artifact_dir/unity-console.log" 2>&1
     [ -d "$artifact_dir/Unity-iPhone" ] || fail 'Unity completed without a fresh Xcode export.'

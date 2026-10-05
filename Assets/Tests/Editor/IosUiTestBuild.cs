@@ -28,9 +28,12 @@ public static class IosUiTestBuild
             configuration.platform = AltPlatform.iOS;
             configuration.BuildLocationPath = outputPath;
 
-            var report = AltBuilder.BuildGame(BuildTarget.iOS, BuildTargetGroup.iOS, outputPath: outputPath, useCurrentEditorConfiguration: true);
-            LogBuildReport(outputPath, report);
-            EnsureBuildSucceeded(outputPath, report);
+            ExportWithExternalPodInstall(() =>
+            {
+                var report = AltBuilder.BuildGame(BuildTarget.iOS, BuildTargetGroup.iOS, outputPath: outputPath, useCurrentEditorConfiguration: true);
+                LogBuildReport(outputPath, report);
+                EnsureBuildSucceeded(outputPath, report);
+            });
         }
         finally
         {
@@ -76,6 +79,21 @@ public static class IosUiTestBuild
     }
 
 #if !UNITY_2017
+    private static void ExportWithExternalPodInstall(Action export)
+    {
+        var previousValue = Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration;
+        try
+        {
+            // The runner owns pod install so its explicit POD_BIN is respected.
+            Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration = true;
+            export();
+        }
+        finally
+        {
+            Google.IOSResolver.SkipPodInstallWhenUsingWorkspaceIntegration = previousValue;
+        }
+    }
+
     private static void ValidateBatchTarget(BuildTarget activeTarget)
     {
         if (activeTarget != BuildTarget.iOS)

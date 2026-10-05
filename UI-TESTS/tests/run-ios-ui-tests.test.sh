@@ -71,6 +71,7 @@ export CMP_UI_ARTIFACTS_DIR="$fixture_root/artifacts" FIXTURE_CALLS="$fixture_ro
 export FIXTURE_IOS_EXPORT="$test_dir/fixtures/ios-cmp-export"
 export FIXTURE_APPIUM_PID="$fixture_root/appium.pid" FIXTURE_APPIUM_READY="$fixture_root/appium.ready"
 export IOS_SIMULATOR_UDID= CMP_IOS_SIMULATOR_NAME='iPhone 14'
+export UNITY_LICENSING_IPC=
 
 sh "$runner" --help >"$fixture_root/help"
 for name in UNITY_PATH UNITY_IOS_PLAYER_PATH IOS_SIMULATOR_UDID CMP_IOS_SIMULATOR_NAME POD_BIN XCODEBUILD_BIN APPIUM_BIN ALTTESTER_DESKTOP_PATH CMP_UI_ARTIFACTS_DIR; do
@@ -130,7 +131,13 @@ grep -F "TestRunParameters.Parameter(name=\"appium:app\",value=\"$app\")" "$FIXT
 grep -F 'DISCOVERED_TEST_COUNT=2' "$artifact/effective-test-config.txt" >/dev/null
 [ -f "$artifact/Podfile.lock" ] && [ -f "$artifact/results.trx" ]
 [ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 1 ]
+! grep -F -- '-licensingIpc' "$FIXTURE_CALLS"
 ! grep -E '^(osascript |sleep )' "$FIXTURE_CALLS"
+
+# A local licensing channel override must be a single argument only when supplied.
+: >"$FIXTURE_CALLS"
+UNITY_LICENSING_IPC='fixture-license-channel' sh "$runner" >"$fixture_root/licensing-run" 2>&1
+grep -F -- '-licensingIpc fixture-license-channel' "$FIXTURE_CALLS" >/dev/null
 
 # Resolved version drift must stop before Xcode/simulator startup or UI tests.
 export CMP_UI_ARTIFACTS_DIR="$fixture_root/wrong-cmp-artifacts"
