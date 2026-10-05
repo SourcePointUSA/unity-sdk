@@ -2,12 +2,35 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using ConsentManagementProvider;
 using NUnit.Framework;
 using UnityEngine;
 
 public class IosSharedContractTests
 {
+    [Test]
+    public void IosConsentPodIsNotAddedToAllTargetsAndBridgeRemainsInUnityFramework()
+    {
+        var dependenciesPath = Path.Combine(Application.dataPath,
+            "ConsentManagementProvider/Editor/SourcepointDependencies.xml");
+        var dependencies = XDocument.Load(dependenciesPath);
+        var consentPod = dependencies.Descendants("iosPod")
+            .SingleOrDefault(pod => (string)pod.Attribute("name") == "ConsentViewController");
+
+        Assert.That(consentPod, Is.Not.Null, "The iOS ConsentViewController dependency must remain declared.");
+        Assert.That(consentPod.Attribute("addToAllTargets"), Is.Null,
+            "ConsentViewController and transitive SPMobileCore must not be linked into Unity-iPhone and UnityFramework.");
+
+        var postProcessPath = Path.Combine(Application.dataPath,
+            "ConsentManagementProvider/Editor/CMPPostProcessBuild.cs");
+        var postProcess = File.ReadAllText(postProcessPath);
+        Assert.That(postProcess, Does.Contain("project.RemoveFileFromBuild(mainTarget, bridgeGuid)"),
+            "The native bridge must be removed from the Unity-iPhone target.");
+        Assert.That(postProcess, Does.Contain("project.AddFileToBuild(frameworkTarget, bridgeGuid)"),
+            "The native bridge must remain compiled by UnityFramework, the sole owner of the CMP pod.");
+    }
+
     [Test]
     public void NativeBridgeImportsSwiftHeadersFromTheirOwningFrameworksInDependencyOrder()
     {
