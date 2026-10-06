@@ -36,6 +36,7 @@ internal static class TestRunParameterResolver
     {
         options.AddAdditionalAppiumOption("appium:isHeadless", true);
         options.AddAdditionalAppiumOption("appium:waitForQuiescence", false);
+        options.AddAdditionalAppiumOption("appium:waitForIdleTimeout", 0);
     }
 
     public static string ResolveAppPath(string? appPath, string testRoot)

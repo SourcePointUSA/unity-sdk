@@ -81,6 +81,7 @@ public class TestRunParameterResolverTests
         {
             Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.EqualTo(true));
             Assert.That(options.ToCapabilities().GetCapability("appium:waitForQuiescence"), Is.EqualTo(false));
+            Assert.That(options.ToCapabilities().GetCapability("appium:waitForIdleTimeout"), Is.EqualTo(0));
         });
     }
 
@@ -93,6 +94,7 @@ public class TestRunParameterResolverTests
 
         Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.Null);
         Assert.That(options.ToCapabilities().GetCapability("appium:waitForQuiescence"), Is.Null);
+        Assert.That(options.ToCapabilities().GetCapability("appium:waitForIdleTimeout"), Is.Null);
     }
 
     [TestCase(null)]
