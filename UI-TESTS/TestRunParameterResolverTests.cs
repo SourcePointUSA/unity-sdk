@@ -80,7 +80,7 @@ public class TestRunParameterResolverTests
         Assert.Multiple(() =>
         {
             Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.EqualTo(true));
-            Assert.That(options.ToCapabilities().GetCapability("appium:shouldWaitForQuiescence"), Is.EqualTo(false));
+            Assert.That(options.ToCapabilities().GetCapability("appium:waitForQuiescence"), Is.EqualTo(false));
         });
     }
 
@@ -92,7 +92,7 @@ public class TestRunParameterResolverTests
         TestRunParameterResolver.ApplyAndroidDeviceSelection(options, "Android Emulator", "emulator-5588");
 
         Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.Null);
-        Assert.That(options.ToCapabilities().GetCapability("appium:shouldWaitForQuiescence"), Is.Null);
+        Assert.That(options.ToCapabilities().GetCapability("appium:waitForQuiescence"), Is.Null);
     }
 
     [TestCase(null)]
