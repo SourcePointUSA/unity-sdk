@@ -65,18 +65,9 @@ public class TestRunParameterResolverTests
     }
 
     [Test]
-    public void ApplyIosAltUnityConnectionUsesW3CAppiumCapabilities()
+    public void ResolveIosAltUnityPortValidatesDirectAltTesterConnection()
     {
-        var options = new OpenQA.Selenium.Appium.AppiumOptions();
-
-        TestRunParameterResolver.ApplyIosAltUnityConnection(options, "127.0.0.1", "13000");
-
-        var capabilities = options.ToCapabilities();
-        Assert.Multiple(() =>
-        {
-            Assert.That(capabilities.GetCapability("appium:altUnityHost"), Is.EqualTo("127.0.0.1"));
-            Assert.That(capabilities.GetCapability("appium:altUnityPort"), Is.EqualTo(13000));
-        });
+        Assert.That(TestRunParameterResolver.ResolveIosAltUnityPort("127.0.0.1", "13000"), Is.EqualTo(13000));
     }
 
     [Test]
@@ -103,12 +94,10 @@ public class TestRunParameterResolverTests
     [TestCase("")]
     [TestCase("not-a-port")]
     [TestCase("70000")]
-    public void ApplyIosAltUnityConnectionRejectsInvalidPort(string? port)
+    public void ResolveIosAltUnityPortRejectsInvalidPort(string? port)
     {
-        var options = new OpenQA.Selenium.Appium.AppiumOptions();
-
         Assert.That(
-            () => TestRunParameterResolver.ApplyIosAltUnityConnection(options, "127.0.0.1", port),
+            () => TestRunParameterResolver.ResolveIosAltUnityPort("127.0.0.1", port),
             Throws.ArgumentException.With.Message.Contains("altUnityPort"));
     }
 }

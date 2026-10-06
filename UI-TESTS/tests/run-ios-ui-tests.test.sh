@@ -130,6 +130,7 @@ grep -F 'TestRunParameters.Parameter(name="appium:udid",value="fixture-udid")' "
 grep -F "TestRunParameters.Parameter(name=\"appium:app\",value=\"$app\")" "$FIXTURE_CALLS" >/dev/null
 grep -F 'TestRunParameters.Parameter(name="altUnityHost",value="127.0.0.1")' "$FIXTURE_CALLS" >/dev/null
 grep -F 'TestRunParameters.Parameter(name="altUnityPort",value="16001")' "$FIXTURE_CALLS" >/dev/null
+! grep -F 'appium plugin list --installed' "$FIXTURE_CALLS"
 grep -F 'DISCOVERED_TEST_COUNT=2' "$artifact/effective-test-config.txt" >/dev/null
 [ -f "$artifact/Podfile.lock" ] && [ -f "$artifact/results.trx" ]
 [ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 1 ]
@@ -180,7 +181,8 @@ fi
 [ "$(grep -c '^dotnet test .*--logger trx' "$FIXTURE_CALLS")" -eq 2 ]
 export CMP_UI_ARTIFACTS_DIR="$fixture_root/appium-start-artifacts"
 FIXTURE_START_APPIUM=1 FIXTURE_XCODE_CONFIGURATION=Release sh "$runner" >"$fixture_root/appium-start" 2>&1 || { cat "$fixture_root/appium-start"; exit 1; }
-grep -F 'appium --address 127.0.0.1 --port 4723 --use-plugins=altunity' "$FIXTURE_CALLS" >/dev/null
+grep -F 'appium --address 127.0.0.1 --port 4723' "$FIXTURE_CALLS" >/dev/null
+! grep -F -- '--use-plugins=altunity' "$FIXTURE_CALLS"
 ! kill -0 "$(sed -n '1p' "$FIXTURE_APPIUM_PID")" 2>/dev/null
 grep -F 'ReleaseForRunning-iphonesimulator/ConsentMessagePlugin.app' "$FIXTURE_CALLS" >/dev/null
 printf 'PASS: iOS runner preflight, build, fresh-app handoff, no retries, and cleanup contracts\n'

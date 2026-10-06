@@ -51,7 +51,7 @@ Environment overrides:
 
 --preflight validates prerequisites and simulator selection only; it does not
 boot a simulator or launch Unity, Appium, AltTester Desktop, or tests.
-An existing Appium server at 127.0.0.1:4723 must already enable altunity.
+An existing Appium server at 127.0.0.1:4723 is reused when ready.
 EOF
 }
 
@@ -98,7 +98,6 @@ preflight() {
     "$DOTNET_BIN" --list-sdks | grep -E '^[[:space:]]*8\.' >/dev/null || fail '.NET 8 SDK is missing.'
     require_command "$APPIUM_BIN" Appium
     "$APPIUM_BIN" driver list --installed --json | grep -q 'xcuitest' || fail 'Install Appium xcuitest: appium driver install xcuitest'
-    "$APPIUM_BIN" plugin list --installed 2>&1 | grep -q 'altunity' || fail 'Install Appium altunity: appium plugin install --source=npm appium-altunity-plugin'
     require_command curl curl
     require_command nc nc
     require_command open 'macOS open'
@@ -242,9 +241,9 @@ PY
     printf 'APPIUM_APP=%s\nAPP_BUNDLE_ID=%s\n' "$app_path" "$bundle_id" >>"$artifact_dir/effective-test-config.txt"
 
     if appium_is_ready; then
-        printf 'Reusing external Appium at 127.0.0.1:4723; it must already enable altunity.\n' >"$artifact_dir/appium.log"
+        printf 'Reusing external Appium at 127.0.0.1:4723.\n' >"$artifact_dir/appium.log"
     else
-        "$APPIUM_BIN" --address 127.0.0.1 --port 4723 --use-plugins=altunity >"$artifact_dir/appium.log" 2>&1 &
+        "$APPIUM_BIN" --address 127.0.0.1 --port 4723 >"$artifact_dir/appium.log" 2>&1 &
         appium_pid=$!
         wait_for_service Appium curl -fsS --max-time 2 http://127.0.0.1:4723/status
     fi

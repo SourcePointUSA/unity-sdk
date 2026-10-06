@@ -60,8 +60,7 @@ namespace UnityAppiumTests
 			if (platformIOS)
 			{
 				TestRunParameterResolver.ApplyIosHeadlessSimulatorMode(desiredCaps);
-				var altUnityPort = TestRunParameterResolver.ApplyIosAltUnityConnection(
-					desiredCaps,
+				var altUnityPort = TestRunParameterResolver.ResolveIosAltUnityPort(
 					TestContext.Parameters["altUnityHost"],
 					TestContext.Parameters["altUnityPort"]);
 				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);

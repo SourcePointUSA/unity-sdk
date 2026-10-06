@@ -127,7 +127,7 @@ UI-TESTS/run-ios-ui-tests.sh
 
 Install Unity `6000.5.10f1` with **iOS Build Support**, Xcode with command-line
 tools and an available iOS simulator runtime, CocoaPods, Python 3, .NET 8,
-Appium with its `xcuitest` driver and `altunity` plugin, and AltTester Desktop.
+Appium with its `xcuitest` driver and AltTester Desktop.
 The default simulator name is `iPhone 14`; name selection must find exactly
 one available device across all runtimes. Select a UDID explicitly when names
 are duplicated. `--preflight` checks selection and tools without booting or
@@ -188,9 +188,10 @@ UPM imports use
 Exactly one existing source is required; its PBX file reference is reused when
 available. A missing or duplicate bridge fails with the candidate paths named.
 It boots the device only when needed and waits using `simctl bootstatus -b`.
-It starts Appium with `--use-plugins=altunity`, or reuses a ready local server
-at `127.0.0.1:4723` that the operator has already configured with that plugin.
-The installed Appium driver and plugin are checked in either case.
+It starts ordinary Appium, or reuses a ready local server at `127.0.0.1:4723`.
+Only the installed `xcuitest` driver is checked. AltTester communication uses
+the direct AltDriver connection configured by `altUnityHost` and `altUnityPort`,
+not an Appium plugin.
 
 After opening AltTester Desktop, the runner installs and launches the fresh
 app, waits for the local AltTester port, and runs the entire .NET project once.
