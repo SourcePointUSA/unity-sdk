@@ -64,6 +64,9 @@ namespace UnityAppiumTests
 					TestContext.Parameters["altUnityHost"],
 					TestContext.Parameters["altUnityPort"]);
 				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
+				driverIOS.SetSetting(
+					TestRunParameterResolver.IosWdaAnimationCoolOffTimeoutSetting,
+					TestRunParameterResolver.IosWdaAnimationCoolOffTimeout);
 				altDriver = new AltDriver(
 					host: TestContext.Parameters["altUnityHost"],
 					port: altUnityPort,

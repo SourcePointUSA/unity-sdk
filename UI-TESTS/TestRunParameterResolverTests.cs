@@ -97,6 +97,18 @@ public class TestRunParameterResolverTests
         Assert.That(options.ToCapabilities().GetCapability("appium:waitForIdleTimeout"), Is.Null);
     }
 
+    [Test]
+    public void IosWdaAnimationCoolOffSettingDisablesThePostActionDelay()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(TestRunParameterResolver.IosWdaAnimationCoolOffTimeoutSetting,
+                Is.EqualTo("animationCoolOffTimeout"));
+            Assert.That(TestRunParameterResolver.IosWdaAnimationCoolOffTimeout,
+                Is.EqualTo(0));
+        });
+    }
+
     [TestCase(null)]
     [TestCase("")]
     [TestCase("not-a-port")]

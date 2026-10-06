@@ -2,6 +2,9 @@ namespace UnityAppiumTests;
 
 internal static class TestRunParameterResolver
 {
+    public const string IosWdaAnimationCoolOffTimeoutSetting = "animationCoolOffTimeout";
+    public const int IosWdaAnimationCoolOffTimeout = 0;
+
     public static void ApplyAndroidDeviceSelection(
         OpenQA.Selenium.Appium.AppiumOptions options,
         string? deviceName,
