@@ -35,6 +35,7 @@ internal static class TestRunParameterResolver
         OpenQA.Selenium.Appium.AppiumOptions options)
     {
         options.AddAdditionalAppiumOption("appium:isHeadless", true);
+        options.AddAdditionalAppiumOption("appium:shouldWaitForQuiescence", false);
     }
 
     public static string ResolveAppPath(string? appPath, string testRoot)

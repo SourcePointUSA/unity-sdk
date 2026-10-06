@@ -77,7 +77,11 @@ public class TestRunParameterResolverTests
 
         TestRunParameterResolver.ApplyIosHeadlessSimulatorMode(options);
 
-        Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.EqualTo(true));
+        Assert.Multiple(() =>
+        {
+            Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.EqualTo(true));
+            Assert.That(options.ToCapabilities().GetCapability("appium:shouldWaitForQuiescence"), Is.EqualTo(false));
+        });
     }
 
     [Test]
@@ -88,6 +92,7 @@ public class TestRunParameterResolverTests
         TestRunParameterResolver.ApplyAndroidDeviceSelection(options, "Android Emulator", "emulator-5588");
 
         Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.Null);
+        Assert.That(options.ToCapabilities().GetCapability("appium:shouldWaitForQuiescence"), Is.Null);
     }
 
     [TestCase(null)]
