@@ -2,20 +2,23 @@ namespace UnityAppiumTests;
 
 internal static class IosOnboarding
 {
-    internal static void DismissIfPresent(Action clickButton, Action acceptAlert)
+    internal static void DismissIfPresent(Func<Action> findButtonAction, Func<Action> findAlertAction)
     {
+        Action? clickButton = null;
         try
         {
-            clickButton();
+            clickButton = findButtonAction();
         }
         catch (WebDriverTimeoutException)
         {
             // The onboarding button is absent after its bounded discovery wait.
         }
+        clickButton?.Invoke();
 
+        Action? acceptAlert = null;
         try
         {
-            acceptAlert();
+            acceptAlert = findAlertAction();
         }
         catch (WebDriverTimeoutException)
         {
@@ -23,7 +26,8 @@ internal static class IosOnboarding
         }
         catch (NoAlertPresentException)
         {
-            // The system alert can disappear between discovery and acceptance.
+            // No system alert is available during discovery.
         }
+        acceptAlert?.Invoke();
     }
 }

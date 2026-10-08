@@ -9,8 +9,8 @@ public class IosOnboardingTests
         var actions = new List<string>();
 
         IosOnboarding.DismissIfPresent(
-            () => actions.Add("button clicked"),
-            () => actions.Add("alert accepted"));
+            () => () => actions.Add("button clicked"),
+            () => () => actions.Add("alert accepted"));
 
         Assert.That(actions, Is.EqualTo(new[] { "button clicked", "alert accepted" }));
     }
@@ -21,7 +21,7 @@ public class IosOnboardingTests
         var clicked = false;
 
         Assert.DoesNotThrow(() => IosOnboarding.DismissIfPresent(
-            () => clicked = true,
+            () => () => clicked = true,
             () => throw new NoAlertPresentException()));
 
         Assert.That(clicked, Is.True);
@@ -42,7 +42,7 @@ public class IosOnboardingTests
 
         IosOnboarding.DismissIfPresent(
             () => throw new WebDriverTimeoutException("Onboarding button absent"),
-            () => accepted = true);
+            () => () => accepted = true);
 
         Assert.That(accepted, Is.True);
     }
@@ -52,6 +52,18 @@ public class IosOnboardingTests
     {
         Assert.Throws<WebDriverException>(() => IosOnboarding.DismissIfPresent(
             () => throw new WebDriverException("Session disconnected"),
-            () => Assert.Fail("Alert must not be checked after a driver failure")));
+            () => throw new AssertionException("Alert must not be checked after a driver failure")));
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void ActionTimeoutIsNotMistakenForMissingPrompt(bool buttonActionTimesOut)
+    {
+        Action timeout = () => throw new WebDriverTimeoutException("Visible prompt action timed out");
+        Action success = () => { };
+
+        Assert.Throws<WebDriverTimeoutException>(() => IosOnboarding.DismissIfPresent(
+            () => buttonActionTimesOut ? timeout : success,
+            () => buttonActionTimesOut ? success : timeout));
     }
 }
