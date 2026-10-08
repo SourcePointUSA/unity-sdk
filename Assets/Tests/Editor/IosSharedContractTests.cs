@@ -102,7 +102,7 @@ public class IosSharedContractTests
         Assert.That(bridgeSource, Does.Contain("\"spCode\": error.spCode"));
         Assert.That(bridgeSource, Does.Contain("\"description\": error.description"));
         Assert.That(bridgeSource, Does.Contain("\"failureReason\": error.failureReason"));
-        Assert.That(bridgeSource, Does.Contain("\"campaignType\": String(describing: error.campaignType)"));
+        Assert.That(bridgeSource, Does.Contain("\"campaignType\": error.campaignType.rawValue"));
         Assert.That(bridgeSource, Does.Contain("JSONSerialization.data(withJSONObject: payload"),
             "The bridge must emit a JSON string even though SPError itself is not Codable.");
     }

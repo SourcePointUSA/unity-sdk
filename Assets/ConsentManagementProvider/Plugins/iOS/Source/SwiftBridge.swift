@@ -286,7 +286,7 @@ extension SwiftBridge {
             "spCode": error.spCode,
             "description": error.description,
             "failureReason": error.failureReason,
-            "campaignType": String(describing: error.campaignType)
+            "campaignType": error.campaignType.rawValue
         ]
 
         guard let data = try? JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys]),
