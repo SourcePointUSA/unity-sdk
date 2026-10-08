@@ -277,7 +277,23 @@ extension SwiftBridge {
     fileprivate func handleError(_ error: SPError) {
         printLog("Something went wrong: ", error)
         logger.log("PURE SWIFT onError")
-        callbacks.RunCallback(callbackType: .OnErrorCallback, arg: error.toJSON())
+        callbacks.RunCallback(callbackType: .OnErrorCallback, arg: errorPayload(error))
+    }
+
+    private func errorPayload(_ error: SPError) -> String {
+        let payload: [String: Any] = [
+            "code": error.code,
+            "spCode": error.spCode,
+            "description": error.description,
+            "failureReason": error.failureReason,
+            "campaignType": String(describing: error.campaignType)
+        ]
+
+        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys]),
+              let json = String(data: data, encoding: .utf8) else {
+            return "{\"code\":\(error.code),\"spCode\":\"serialization_failed\"}"
+        }
+        return json
     }
 }
 

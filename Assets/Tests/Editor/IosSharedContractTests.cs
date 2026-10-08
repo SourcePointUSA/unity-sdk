@@ -82,6 +82,32 @@ public class IosSharedContractTests
     }
 
     [Test]
+    public void SwiftBridgeSerializesNativeErrorsWithStableFields()
+    {
+        var bridgeSourcePath = Path.Combine(Application.dataPath,
+            "ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift");
+        var bridgeSource = File.ReadAllText(bridgeSourcePath);
+        var handleErrorStart = bridgeSource.IndexOf("fileprivate func handleError(_ error: SPError)", StringComparison.Ordinal);
+        var delegateStart = bridgeSource.IndexOf("private final class ConsentDelegateAdapter", StringComparison.Ordinal);
+
+        Assert.That(handleErrorStart, Is.GreaterThanOrEqualTo(0));
+        Assert.That(delegateStart, Is.GreaterThan(handleErrorStart));
+
+        var handleError = bridgeSource.Substring(handleErrorStart, delegateStart - handleErrorStart);
+        Assert.That(handleError, Does.Not.Contain("error.toJSON()"),
+            "SPError is an NSError, so NSObject JSON conversion can emit no payload.");
+        Assert.That(handleError, Does.Contain("errorPayload(error)"),
+            "The callback must use the bridge-owned error serializer.");
+        Assert.That(bridgeSource, Does.Contain("\"code\": error.code"));
+        Assert.That(bridgeSource, Does.Contain("\"spCode\": error.spCode"));
+        Assert.That(bridgeSource, Does.Contain("\"description\": error.description"));
+        Assert.That(bridgeSource, Does.Contain("\"failureReason\": error.failureReason"));
+        Assert.That(bridgeSource, Does.Contain("\"campaignType\": String(describing: error.campaignType)"));
+        Assert.That(bridgeSource, Does.Contain("JSONSerialization.data(withJSONObject: payload"),
+            "The bridge must emit a JSON string even though SPError itself is not Codable.");
+    }
+
+    [Test]
     public void CmpImplementsTheSharedFacadeContract()
     {
         Assert.That(typeof(ICmpSdk).IsAssignableFrom(typeof(CMP)), Is.True);
