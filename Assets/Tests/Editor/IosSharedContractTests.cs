@@ -108,6 +108,28 @@ public class IosSharedContractTests
     }
 
     [Test]
+    public void ClearAllDataRecreatesTheIosManagerFromItsPreviousConfiguration()
+    {
+        var bridgeSourcePath = Path.Combine(Application.dataPath,
+            "ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift");
+        var bridgeSource = File.ReadAllText(bridgeSourcePath);
+        var clearStart = bridgeSource.IndexOf("@objc public func onClearConsentTap()", StringComparison.Ordinal);
+        var nextMethod = bridgeSource.IndexOf("@objc public func loadPrivacyManager", clearStart, StringComparison.Ordinal);
+
+        Assert.That(clearStart, Is.GreaterThanOrEqualTo(0));
+        Assert.That(nextMethod, Is.GreaterThan(clearStart));
+        Assert.That(bridgeSource, Does.Contain("private var consentManagerConfiguration"),
+            "The bridge must retain enough configuration to rebuild its manager after clearing persisted data.");
+        Assert.That(bridgeSource, Does.Contain("private func makeConsentManager"),
+            "Manager construction must be shared by initial configuration and clear-data recovery.");
+
+        var clearAll = bridgeSource.Substring(clearStart, nextMethod - clearStart);
+        Assert.That(clearAll, Does.Contain("SPConsentManager.clearAllData()"));
+        Assert.That(clearAll, Does.Contain("consentManager = makeConsentManager(configuration)"),
+            "ClearAll must replace the live manager so LoadMessage does not reuse stale in-memory consent state.");
+    }
+
+    [Test]
     public void CmpImplementsTheSharedFacadeContract()
     {
         Assert.That(typeof(ICmpSdk).IsAssignableFrom(typeof(CMP)), Is.True);

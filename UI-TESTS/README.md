@@ -229,6 +229,7 @@ Verify the runner's external command contract without Unity or a simulator:
 sh UI-TESTS/tests/run-ios-ui-tests.test.sh
 sh UI-TESTS/tests/assert-ios-cmp-export.test.sh
 sh UI-TESTS/tests/ios-bridge-logging.test.sh
+sh UI-TESTS/tests/ios-clearall-lifecycle.test.sh
 sh -n UI-TESTS/run-ios-ui-tests.sh
 ```
 
@@ -251,6 +252,18 @@ The logging check uses Xcode’s Swift compiler and Foundation to compile the
 bridge’s actual logger declaration and print consumer without pod internals.
 Unity-owned diagnostics read the app’s `SPLogLevel`: `debug` enables logging,
 while production, missing, and invalid values disable it.
+
+## iOS ClearAll lifecycle regression
+
+`SPConsentManager.clearAllData()` clears persistent storage but does not reset
+an already-live manager's in-memory coordinator. Therefore the Unity iOS bridge
+rebuilds its manager from the last validated configuration immediately after
+`ClearAllData()`. A subsequent `LoadMessage()` then observes the cleared
+repository instead of reusing accepted consent state. This is iOS-only; it does
+not change the public C# API or Android behavior.
+
+Run `sh UI-TESTS/tests/ios-clearall-lifecycle.test.sh` to guard the bridge
+invariant, then use a fresh simulator app to execute `ClearAllButtonTest`.
 
 If Xcode cannot generate `UnityFramework-Swift.h`, import the CMP module, or
 link the bridge, retain the artifact directory and diagnose the owning target’s

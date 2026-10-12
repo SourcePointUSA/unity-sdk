@@ -59,6 +59,15 @@ private struct UnityBridgeLogger {
         var categories: [String] = []
         var legIntCategories: [String] = []
     }
+
+    private struct ConsentManagerConfiguration {
+        let accountId: Int
+        let propertyId: Int
+        let propertyName: SPPropertyName
+        let campaigns: SPCampaigns
+        let language: SPMessageLanguage
+        let messageTimeoutInSeconds: Double
+    }
     
     var idfaStatus: SPIDFAStatus { SPIDFAStatus.current() }
     var myVendorAccepted: VendorStatus = .Unknown
@@ -68,6 +77,7 @@ private struct UnityBridgeLogger {
     lazy var usnatTargetingParams: SPTargetingParams = [:]
     
     var consentManager: SPSDK?
+    private var consentManagerConfiguration: ConsentManagerConfiguration?
     // SPSDK keeps its delegate weakly, so SwiftBridge owns this adapter for the
     // lifetime of the manager while keeping pod-owned delegate types private.
     private lazy var consentDelegate = ConsentDelegateAdapter(bridge: self)
@@ -125,7 +135,7 @@ private struct UnityBridgeLogger {
                 self.callbacks.RunCallback(callbackType: .OnErrorCallback, arg: "`propertyName` invalid!")
                 return
             }
-            self.consentManager = { SPConsentManager(
+            let configuration = ConsentManagerConfiguration(
                 accountId: accountId,
                 propertyId: propertyId,
                 propertyName: propName,
@@ -136,10 +146,24 @@ private struct UnityBridgeLogger {
                     ios14: SPCampaign()
                 ),
                 language: SPMessageLanguage.init(rawValue: language) ?? SPMessageLanguage.BrowserDefault,
-                delegate: consentDelegate
-            )}()
-            self.consentManager?.messageTimeoutInSeconds = messageTimeoutInSeconds
+                messageTimeoutInSeconds: messageTimeoutInSeconds
+            )
+            self.consentManagerConfiguration = configuration
+            self.consentManager = makeConsentManager(configuration)
         }
+
+    private func makeConsentManager(_ configuration: ConsentManagerConfiguration) -> SPSDK {
+        let manager = SPConsentManager(
+            accountId: configuration.accountId,
+            propertyId: configuration.propertyId,
+            propertyName: configuration.propertyName,
+            campaigns: configuration.campaigns,
+            language: configuration.language,
+            delegate: consentDelegate
+        )
+        manager.messageTimeoutInSeconds = configuration.messageTimeoutInSeconds
+        return manager
+    }
     
     @objc public func addCustomVendor(vendor: String) {
         config.vendors.append(vendor)
@@ -174,6 +198,9 @@ private struct UnityBridgeLogger {
     @objc public func onClearConsentTap() {
         print("PURE SWIFT onClearConsentTap")
         SPConsentManager.clearAllData()
+        if let configuration = consentManagerConfiguration {
+            consentManager = makeConsentManager(configuration)
+        }
         myVendorAccepted = .Unknown
     }
     
