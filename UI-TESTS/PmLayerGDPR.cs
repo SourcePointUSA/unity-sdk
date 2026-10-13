@@ -23,10 +23,10 @@ namespace UnityAppiumTests
         public override string switchPostfix => "]";
         public override string[] switches => new[]
         {
-            "1",
-            "2",
-            "3",
-            "4"
+            "Store and/or access information on a device",
+            "Use limited data to select advertising",
+            "Create profiles for personalised advertising",
+            "Use profiles to select personalised advertising"
         };
         public override string attributeName => "checked";
         public override string attributeValue => "true";

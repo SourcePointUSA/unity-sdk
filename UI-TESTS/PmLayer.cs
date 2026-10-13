@@ -21,6 +21,18 @@ namespace UnityAppiumTests
         public void pressExit() => driverHelper.pressButton(exitButtonPath, textViewPath);
         public bool webViewIsOpen() => driverHelper.webViewIsOpen(textViewPath);
 
+        protected virtual OpenQA.Selenium.By AndroidSwitchLocator(string switchName) =>
+            OpenQA.Selenium.By.XPath(AndroidLocator.PrivacyManagerToggle(switchName));
+
+        protected OpenQA.Selenium.By SwitchLocator(string switchName, string additionalPrefix = "", bool byIosClass = false)
+        {
+            if (driverHelper.platform == "Android")
+                return AndroidSwitchLocator(switchName);
+            if (byIosClass)
+                return MobileBy.IosClassChain(switchPrefix + additionalPrefix + switchName + switchPostfix);
+            return OpenQA.Selenium.By.XPath(switchPrefix + additionalPrefix + switchName + switchPostfix);
+        }
+
         public void clickOnSwitches(int num = 1, bool needSwipe = false, string additionalPrefix = "", bool byIosClass = false)
         {
             if (needSwipe)
@@ -29,10 +41,7 @@ namespace UnityAppiumTests
             foreach (string _switchName in switches)
             {
                 IWebElement _switch;
-                if (byIosClass)
-                    _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.IosClassChain(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
-                else
-                    _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
+                _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(SwitchLocator(_switchName, additionalPrefix, byIosClass)));
                 _switch.Click();
                 clicks++;
                 if (num <= clicks)
@@ -47,7 +56,7 @@ namespace UnityAppiumTests
             int num = 0;
             foreach (string _switchName in switches)
             {
-                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+additionalPrefix+_switchName+switchPostfix)));
+                IWebElement _switch = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(SwitchLocator(_switchName, additionalPrefix)));
                 if(_switch.GetAttribute(attributeName) != null && _switch.GetAttribute(attributeName).Equals(attributeValue))
                     num++;
             }

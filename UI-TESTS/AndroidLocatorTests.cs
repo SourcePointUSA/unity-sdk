@@ -29,4 +29,18 @@ public class AndroidLocatorTests
     {
         Assert.That(AndroidLocator.SwitchAt(1), Is.EqualTo("(//android.widget.Switch)[1]"));
     }
+
+    [Test]
+    public void PrivacyManagerToggleMatchesItsPurposeLabel()
+    {
+        Assert.That(AndroidLocator.PrivacyManagerToggle("Store and/or access information on a device"), Is.EqualTo(
+            "//android.widget.ToggleButton[@text='Store and/or access information on a device']"));
+    }
+
+    [Test]
+    public void PrivacyManagerCategoryToggleMatchesTheCategoryRow()
+    {
+        Assert.That(AndroidLocator.PrivacyManagerCategoryToggle("Category 2"), Is.EqualTo(
+            "//android.view.View[android.widget.TextView[@text='Category 2']]/android.widget.ToggleButton"));
+    }
 }

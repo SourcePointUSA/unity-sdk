@@ -23,12 +23,12 @@ namespace UnityAppiumTests
             if (driverHelper.platform == "iOS") //While 'platformIOS' we can`t get state of usnat
                 return "custom";
             
-            IWebElement _switchFirst = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+switches.First()+switchPostfix)));
+            IWebElement _switchFirst = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(SwitchLocator(switches.First())));
             bool _switchFirstVal = false;
             if(_switchFirst.GetAttribute("checked") != null && _switchFirst.GetAttribute("checked").Equals("true"))
                 _switchFirstVal = true;
             
-            IWebElement _switchSecond = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath(switchPrefix+switches.Last()+switchPostfix)));
+            IWebElement _switchSecond = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(SwitchLocator(switches.Last())));
             bool _switchSecondVal = false;
             if(_switchSecond.GetAttribute("checked") != null && _switchSecond.GetAttribute("checked").Equals("true"))
                 _switchSecondVal = true;
@@ -50,7 +50,11 @@ namespace UnityAppiumTests
         public override string exitButtonPath => AndroidLocator.ButtonWithLabel("Cancel");
         public override string switchPrefix => "(//android.widget.Switch)[";
         public override string switchPostfix => "]";
-        public override string[] switches => new[] {"1", "2"};
+        public override string[] switches => new[]
+        {
+            "Opt into the processing of my sensitive personal information",
+            "Do not sell or share my personal information / opt out of targeted advertising (If you select On you are asking us not to sell or share your personal information and opting out of targeted advertising)"
+        };
         public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
 

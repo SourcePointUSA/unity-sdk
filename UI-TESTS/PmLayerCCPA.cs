@@ -4,6 +4,9 @@ namespace UnityAppiumTests
     {
         public abstract string switchValueOn { get; }
 
+        protected override OpenQA.Selenium.By AndroidSwitchLocator(string switchName) =>
+            OpenQA.Selenium.By.XPath(AndroidLocator.PrivacyManagerCategoryToggle(switchName));
+
         public void clickOnSwitches(int num = 1) => base.clickOnSwitches(num, true, switchValueOn, driverHelper.platform == "iOS");
         public int getCheckedSwitchesNum() 
         {
@@ -31,9 +34,9 @@ namespace UnityAppiumTests
         public override string switchPostfix => "]";
         public override string[] switches => new[]
         {
-            "1",
-            "2",
-            "3"
+            "Category 1",
+            "Category 2",
+            "Category 3"
         };
         public override WebDriverWait wait => webDriverWait;
         public WebDriverWait webDriverWait;
