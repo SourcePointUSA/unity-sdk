@@ -1,8 +1,10 @@
-# Unreleased
-
-* Declare iOS `ConsentViewController 7.12.11` with transitive `SPMobileCore 0.1.17`, paired with Android CMP `7.15.14`. Release acceptance is pending the complete Xcode build and iOS UI suite.
-* Preserve the shared public Unity C# API. Unity 6.5 (`6000.5.10f1`) exports the sample with an iOS `15.0` deployment target; align the CMP/core/resource pod targets through one standard generated CocoaPods `post_install` hook for Xcode 27 compatibility, preserving higher and unrelated target settings. Custom existing hooks fail clearly instead of being silently overwritten.
-* Compile the package-owned Swift bridge in `UnityFramework`, removing shell moves and mutation of CocoaPods projects. Publish the normal fresh-export/`pod install` upgrade path and custom Podfile conflict behavior in `README.md`.
+# 3.4.0
+* Declare iOS `ConsentViewController 7.12.11` with transitive `SPMobileCore 0.1.17`, paired with Android CMP `7.15.14`.
+* Preserve the shared public Unity C# API. Unity 6.5 (`6000.5.10f1`) exports the sample with an iOS `15.0` deployment target.
+- Align the CMP/core/resource pod targets through one standard generated CocoaPods `post_install` hook for Xcode 27 compatibility, preserving higher and unrelated target settings. 
+- Custom existing CocoaPods hooks fail clearly instead of being silently overwritten.
+* Compile the package-owned Swift bridge in `UnityFramework`, removing shell moves and mutation of CocoaPods projects. 
+- Publish the normal fresh-export/`pod install` upgrade path and custom Podfile conflict behavior in `README.md`.
 
 # 3.3.0-beta-1
 * Update Android CMP to `7.15.14`, which resolves `mobile-core:0.1.17` and Ktor `3.2.2`; the public Unity API is unchanged.
