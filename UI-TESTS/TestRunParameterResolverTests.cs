@@ -63,4 +63,62 @@ public class TestRunParameterResolverTests
 
         Assert.That(options.ToCapabilities().GetCapability("appium:udid"), Is.Null);
     }
+
+    [Test]
+    public void ResolveIosAltUnityPortValidatesDirectAltTesterConnection()
+    {
+        Assert.That(TestRunParameterResolver.ResolveIosAltUnityPort("127.0.0.1", "13000"), Is.EqualTo(13000));
+    }
+
+    [Test]
+    public void ApplyIosHeadlessSimulatorModeUsesW3CAppiumCapability()
+    {
+        var options = new OpenQA.Selenium.Appium.AppiumOptions();
+
+        TestRunParameterResolver.ApplyIosHeadlessSimulatorMode(options);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.EqualTo(true));
+            Assert.That(options.ToCapabilities().GetCapability("appium:fullReset"), Is.EqualTo(true));
+            Assert.That(options.ToCapabilities().GetCapability("appium:waitForQuiescence"), Is.EqualTo(false));
+            Assert.That(options.ToCapabilities().GetCapability("appium:waitForIdleTimeout"), Is.EqualTo(0));
+        });
+    }
+
+    [Test]
+    public void ApplyAndroidDeviceSelectionDoesNotEnableIosHeadlessSimulatorMode()
+    {
+        var options = new OpenQA.Selenium.Appium.AppiumOptions();
+
+        TestRunParameterResolver.ApplyAndroidDeviceSelection(options, "Android Emulator", "emulator-5588");
+
+        Assert.That(options.ToCapabilities().GetCapability("appium:isHeadless"), Is.Null);
+        Assert.That(options.ToCapabilities().GetCapability("appium:fullReset"), Is.Null);
+        Assert.That(options.ToCapabilities().GetCapability("appium:waitForQuiescence"), Is.Null);
+        Assert.That(options.ToCapabilities().GetCapability("appium:waitForIdleTimeout"), Is.Null);
+    }
+
+    [Test]
+    public void IosWdaAnimationCoolOffSettingDisablesThePostActionDelay()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(TestRunParameterResolver.IosWdaAnimationCoolOffTimeoutSetting,
+                Is.EqualTo("animationCoolOffTimeout"));
+            Assert.That(TestRunParameterResolver.IosWdaAnimationCoolOffTimeout,
+                Is.EqualTo(0));
+        });
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("not-a-port")]
+    [TestCase("70000")]
+    public void ResolveIosAltUnityPortRejectsInvalidPort(string? port)
+    {
+        Assert.That(
+            () => TestRunParameterResolver.ResolveIosAltUnityPort("127.0.0.1", port),
+            Throws.ArgumentException.With.Message.Contains("altUnityPort"));
+    }
 }

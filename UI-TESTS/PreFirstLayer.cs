@@ -65,9 +65,11 @@ namespace UnityAppiumTests
         public override string SelectFirstLayer()
         {
             string layer = SelectFirstLayerGen<IOSDriver>(driver, x => driver.Contexts);
-			IWebElement bringItOn = webDriverWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath("//XCUIElementTypeButton[@name='Bring it on']"))); 
-			bringItOn.Click();
-            driver.SwitchTo().Alert().Accept();
+            // These first-launch prompts are optional, so use a shorter wait than CMP content.
+            var onboardingWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            IosOnboarding.DismissIfPresent(
+                () => onboardingWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(OpenQA.Selenium.By.XPath("//XCUIElementTypeButton[@name='Bring it on']"))).Click,
+                () => onboardingWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent()).Accept);
             return layer;
         }
         

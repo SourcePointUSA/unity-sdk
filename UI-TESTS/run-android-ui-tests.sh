@@ -109,7 +109,7 @@ capture_and_assert_cmp_graph() {
         "$project_root/Assets/ConsentManagementProvider/Editor/SourcepointDependencies.xml" | head -n 1)
     [ -n "$cmp_version" ] || fail "Could not determine the CMP version from SourcepointDependencies.xml."
     case "$cmp_version" in
-        7.12.0|7.15.13)
+        7.12.0|7.15.13|7.15.14)
             sh "$script_dir/assert-android-cmp-graph.sh" "$artifact_dir/gradle-dependencies.txt" "$cmp_version"
             ;;
         *)

@@ -21,6 +21,59 @@ When importing `ConsentManagementProvider.unitypackage`, add the following entry
 
 Alternatively, install `com.unity.nuget.newtonsoft-json` version `3.2.2` from the Unity Package Manager before importing the `.unitypackage`.
 
+## iOS build requirements and native dependency upgrade
+
+The declared native dependency pair on this branch is Android CMP `7.15.14`
+and iOS `ConsentViewController 7.12.11`. The iOS pod depends on
+`SPMobileCore 0.1.17`, which CocoaPods installs transitively; do not add it
+manually. Android and iOS have independent version numbers. **The iOS migration
+is unreleased and awaits a fresh export, Xcode build, and complete iOS UI test
+run; this pair is not yet release-verified.**
+
+To build for iOS, use macOS with Unity's matching **iOS Build Support** module,
+Xcode and its command-line tools, CocoaPods, and External Dependency Manager
+for Unity. **Unity 6.5 (`6000.5.10f1`) exports this sample with an iOS 15.0
+deployment target**, even though the historical project setting was 13.0.
+Use the actual minimum version supported by your Unity editor; raising it also
+raises the minimum iOS version for your customers. A supported Xcode/CocoaPods
+version combination will be recorded after the complete release gate passes.
+
+When upgrading the SDK through UPM or a `.unitypackage`, update the package,
+make a **fresh Unity iOS export**, then run ordinary `pod install` in that
+export and build its generated `.xcworkspace` in Xcode. Install EDM4U before
+importing the SDK and allow it to resolve the declared dependencies. An older
+export or its `Podfile.lock` can retain the previous native libraries.
+
+Existing C# calls, scenes, callbacks, and consent JSON models need no changes.
+The shared `CMP`/`ICmpSdk`/`ISpSdk` API continues to serve both platforms; new
+native Global CMP or Preferences APIs are not added to the Unity API by this
+update. No manual Podfile or Pod-project edit is required for the normal
+upgrade. The Unity package owns and configures its Swift bridge in the exported
+`UnityFramework` target. Before EDM4U installs Pods, the package adds one standard
+CocoaPods `post_install` hook to the generated Podfile. It raises only
+`ConsentViewController`, its resource bundle, and `SPMobileCore` deployment
+targets to the exported Unity app's minimum iOS version, preserving higher
+targets and unrelated dependencies. This avoids Xcode 27 rejecting those
+pods' historical iOS 10.0 targets; subsequent ordinary `pod install` runs retain
+the setting.
+
+A customer-maintained Podfile that already defines `post_install` is not
+automatically composable with this generated hook. Export fails with an
+actionable message instead of silently replacing a hook or registering two.
+Use a fresh EDM4U-generated Podfile for the supported automatic integration;
+custom CocoaPods lifecycle hooks require a deliberately maintained integration.
+
+If a customer-maintained Podfile explicitly pins an incompatible
+`ConsentViewController` or `SPMobileCore` version, normal CocoaPods resolution
+fails with a dependency conflict. Such incompatible pins are unsupported;
+reconcile the custom dependency constraints before building. The SDK does not
+hide the conflict or modify installed Pods to bypass it.
+
+`SpConsentsJsonBridge.java` remains part of the Android package. It adapts
+Android's native consent callback/model format to the shared Unity consent
+JSON contract; updating the iOS pod does not remove that requirement. Package
+consumers do not need to configure or edit this adapter.
+
 ---
 
 # Instantiate consent UI
@@ -398,22 +451,28 @@ Upon completion, the sdk will call either `onConsentReady` in case of success or
 
 # Build for iOS
 
-Since Unity Editor exports the pre-built project to Xcode on iOS build, there are several necessary steps to perform so you can compile your solution. They are implemented inside the `CMPPostProcessBuild` [PostProcessBuild] script. Supplement or modify it if it is needed. 
-
-You also need to check lines `33`, `55` and `90` of the `CMPPostProcessBuild` script, the paths may differ. Check that the path of the file `SwiftBridge.swift` in the Unity project matches that specified in the `33` line and the `55` line in the exported Xcode project. You also need to check the path of the file `UnityPlugin-Bridging-Header.h` in the project exported to xcode with path on line `90`.
+Follow the [iOS build requirements and native dependency upgrade](#ios-build-requirements-and-native-dependency-upgrade)
+instructions above: make a fresh Unity iOS export, run ordinary `pod install`
+in the export directory, and build the generated `.xcworkspace` in Xcode.
+The package's `CMPPostProcessBuild` automatically configures `SwiftBridge.swift`
+in the Unity-owned `UnityFramework` target. Consumers do not need to edit the
+postprocessor, bridge paths, bridging headers, Podfile, or Pods project.
 
 ## Troubleshooting
 
 ### If you use 2.3.3-3.0.0 versions of Unity SDK
 You might to use a custom template for Gradle, please refer to ["Plugins\Android\mainTemplate.gradle"](https://github.com/SourcePointUSA/unity-sdk/pull/59/commits/160302338c2f99de0f0b744fd9db4777931d96bf), lines 41-43.
 
-### `ConsentViewController-Swift.h` file not found (IOS)
-Every time you update the Unity SDK from an older to a newer version, you are likely to encounter the absence of the newer version of the native iOS SDK in your build machine's cocoapods cache.
-The fix is:
-Try to update cocoapods to the latest version (1.15.2 at the moment) on your build machine and execute the commands consequently:
-1) pod update  
-2) pod install 
+### `UnityFramework-Swift.h` file not found (iOS)
 
-In the terminal where the "Podfile" is situated (usually, it is situated in the folder where Unity exports the Xcode project). 
-It will fetch the native ConsentViewController version specified in Podfile (X.Y.Z) in your build machine cache. 
-It should be performed once, after this the build machine will have an X.Y.Z version of SDK in cocoapod's cache and consequent builds will go smoothly.
+`Unity.mm` uses the generated `UnityFramework-Swift.h` header from the target
+that owns `SwiftBridge.swift`. Start with a fresh Unity export, run ordinary
+`pod install`, and open the generated `.xcworkspace`. Check the first Swift
+compiler error and confirm that the exported `UnityFramework` target contains
+`SwiftBridge.swift`; a header error can follow an earlier Swift compilation
+failure. Retain the Unity export, CocoaPods output, and Xcode build log when
+reporting the failure so the package's target configuration can be diagnosed.
+Do not move the bridge into Pods, edit a Pod project, or bypass dependency
+conflicts with manual Podfile changes. This integration has no blanket
+`pod update` or CocoaPods version workaround; a supported toolchain will be
+recorded after the pending release gate passes.

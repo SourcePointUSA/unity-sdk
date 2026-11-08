@@ -2,6 +2,9 @@ namespace UnityAppiumTests;
 
 internal static class TestRunParameterResolver
 {
+    public const string IosWdaAnimationCoolOffTimeoutSetting = "animationCoolOffTimeout";
+    public const int IosWdaAnimationCoolOffTimeout = 0;
+
     public static void ApplyAndroidDeviceSelection(
         OpenQA.Selenium.Appium.AppiumOptions options,
         string? deviceName,
@@ -12,6 +15,32 @@ internal static class TestRunParameterResolver
         {
             options.AddAdditionalAppiumOption("appium:udid", udid);
         }
+    }
+
+    public static int ResolveIosAltUnityPort(
+        string? host,
+        string? port)
+    {
+        if (string.IsNullOrWhiteSpace(host))
+        {
+            throw new ArgumentException("A non-empty altUnityHost test parameter is required.", nameof(host));
+        }
+
+        if (!int.TryParse(port, out var parsedPort) || parsedPort is < 1 or > 65535)
+        {
+            throw new ArgumentException("A valid altUnityPort test parameter is required.", nameof(port));
+        }
+
+        return parsedPort;
+    }
+
+    public static void ApplyIosHeadlessSimulatorMode(
+        OpenQA.Selenium.Appium.AppiumOptions options)
+    {
+        options.AddAdditionalAppiumOption("appium:isHeadless", true);
+        options.AddAdditionalAppiumOption("appium:fullReset", true);
+        options.AddAdditionalAppiumOption("appium:waitForQuiescence", false);
+        options.AddAdditionalAppiumOption("appium:waitForIdleTimeout", 0);
     }
 
     public static string ResolveAppPath(string? appPath, string testRoot)

@@ -10,4 +10,10 @@ public static class AndroidLocator
 
     public static string SwitchAt(int index) =>
         $"(//android.widget.Switch)[{index}]";
+
+    public static string PrivacyManagerToggle(string label) =>
+        $"//android.widget.ToggleButton[@text='{label}']";
+
+    public static string PrivacyManagerCategoryToggle(string category) =>
+        $"//android.view.View[android.widget.TextView[@text='{category}']]/android.widget.ToggleButton";
 }

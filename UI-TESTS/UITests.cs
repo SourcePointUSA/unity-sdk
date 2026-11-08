@@ -58,11 +58,46 @@ namespace UnityAppiumTests
 				AltReversePortForwarding.ReversePortForwardingAndroid();
 			}
 			if (platformIOS)
+			{
+				TestRunParameterResolver.ApplyIosHeadlessSimulatorMode(desiredCaps);
+				var altUnityPort = TestRunParameterResolver.ResolveIosAltUnityPort(
+					TestContext.Parameters["altUnityHost"],
+					TestContext.Parameters["altUnityPort"]);
 				driverIOS = new IOSDriver(appiumServerUri, desiredCaps, initTimeoutSec);
+				driverIOS.SetSetting(
+					TestRunParameterResolver.IosWdaAnimationCoolOffTimeoutSetting,
+					TestRunParameterResolver.IosWdaAnimationCoolOffTimeout);
+				altDriver = new AltDriver(
+					host: TestContext.Parameters["altUnityHost"],
+					port: altUnityPort,
+					enableLogging: false);
+			}
 
-        	altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"],enableLogging: false);
+			if (platformAndroid)
+			{
+				altDriver = new AltDriver(host: TestContext.Parameters["altTesterIP"], enableLogging: false);
+			}
 
 			webDriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(240));
+			if (platformIOS)
+			{
+				var native = new NativeAppLayer(altDriver);
+				var status = new Dictionary<string, Func<string>>
+				{
+					["SDK"] = native.getSdkStatus,
+					["consent"] = native.getConsentValueText
+				};
+				foreach (var field in new[] { "statusCampaignGDPR", "statusCampaignCCPA", "statusCampaignUSNAT" })
+				{
+					status[field] = () => altDriver.FindObject(AltTester.AltTesterUnitySDK.Driver.By.NAME, "Privacy Settings CMP")
+						.GetComponentProperty<string>("PrivacySettings", field, "Assembly-CSharp");
+				}
+				var diagnostics = new IosTimeoutDiagnostics(NUnit.Framework.TestContext.CurrentContext.WorkDirectory,
+					NUnit.Framework.TestContext.CurrentContext.Test.Name, () => driverIOS!.PageSource,
+					() => driverIOS!.GetScreenshot().AsByteArray, status,
+					path => NUnit.Framework.TestContext.AddTestAttachment(path));
+				webDriverWait = new IosDiagnosticWait(driverIOS!, TimeSpan.FromSeconds(240), diagnostics);
+			}
 			pages = new Pages(TestContext.Parameters["platformName"] ?? "android", webDriverWait, driverAndroid, driverIOS, altDriver);
 		}
 

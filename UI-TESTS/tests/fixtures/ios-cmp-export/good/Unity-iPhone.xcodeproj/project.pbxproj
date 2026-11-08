@@ -1,0 +1,23 @@
+// !$*UTF8*$!
+{
+    archiveVersion = 1;
+    objectVersion = 56;
+    objects = {
+        A00000000000000000000001 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000002 /* SwiftBridge.swift */; };
+        A00000000000000000000002 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libraries/ConsentManagementProvider/Plugins/iOS/Source/SwiftBridge.swift; sourceTree = SOURCE_ROOT; };
+        A00000000000000000000003 /* UnityFramework */ = {
+            isa = PBXNativeTarget;
+            buildPhases = (
+                A00000000000000000000004 /* Sources */,
+            );
+            name = UnityFramework;
+            productName = UnityFramework;
+        };
+        A00000000000000000000004 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            files = (
+                A00000000000000000000001 /* SwiftBridge.swift in Sources */,
+            );
+        };
+    };
+}

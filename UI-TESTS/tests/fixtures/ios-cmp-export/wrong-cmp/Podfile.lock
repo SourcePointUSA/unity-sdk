@@ -1,0 +1,7 @@
+PODS:
+  - ConsentViewController (7.7.1):
+    - SPMobileCore (= 0.1.17)
+  - SPMobileCore (0.1.17)
+
+DEPENDENCIES:
+  - ConsentViewController (= 7.7.1)
